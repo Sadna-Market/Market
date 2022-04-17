@@ -2,16 +2,54 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/log4j.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HowToUseWithLog4j.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/ExternalService/PaymentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/ExternalService/SupplyService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/IMarket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/BuyStrategy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/DiscountPolicy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Inventory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Store.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/Response/ProductResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/Response/ShoppingCartResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/Response/StoreResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Market.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Market.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/HowToUseWithLog4j.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/HowToUseWithLog4j.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/History.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Inventory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Permission.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/ProductType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/ShoppingBag.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/ShoppingCart.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Store.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/System.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserComponent/Manager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserComponent/Owner.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserComponent/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserComponent/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserComponent/UserManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserComponent/UserManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/ExternalService/PaymentService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/ExternalService/SupplyService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/History.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/History.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/BuyPolicy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ProductType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ShoppingBag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ShoppingBag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ShoppingCart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ShoppingCart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Discount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/System.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/Owner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Owner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserComponent/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/ExternalService/PaymentService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/ExternalService/SupplyService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../white diagram.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/../white diagram.drawio" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,6 +58,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -52,6 +91,18 @@
       <recent name="C:\Users\lielk\Desktop\Market\src" />
     </key>
   </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
   <component name="RunManager" selected="Application.HowToUseWithLog4j">
     <configuration name="HowToUseWithLog4j" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="HowToUseWithLog4j" />
@@ -80,7 +131,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -97,5 +148,16 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
