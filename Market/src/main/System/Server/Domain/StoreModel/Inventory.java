@@ -1,4 +1,4 @@
-package main.System.Server.Domain.Market;
+package main.System.Server.Domain.StoreModel;
 
 public class Inventory {
 

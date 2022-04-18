@@ -1,8 +1,7 @@
-package main.System.Server.Domain.UserComponent;
+package main.System.Server.Domain.UserModel;
 
 import main.System.Server.Domain.Market.Permission;
-import main.System.Server.Domain.Market.ShoppingCart;
-import main.System.Server.Domain.Market.Store;
+import main.System.Server.Domain.StoreModel.Store;
 
 import java.util.List;
 

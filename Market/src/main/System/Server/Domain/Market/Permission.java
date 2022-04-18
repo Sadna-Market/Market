@@ -1,6 +1,7 @@
 package main.System.Server.Domain.Market;
 
-import main.System.Server.Domain.UserComponent.User;
+import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.User;
 
 public class Permission {
     User grantee;

@@ -1,9 +1,11 @@
-package main.System.Server.Domain.Market;
+package main.System.Server.Domain.UserModel;
+
+import main.System.Server.Domain.StoreModel.Store;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingCart {
-    ConcurrentHashMap<Integer,ShoppingBag> shoppingBagHash; //<store id , shopping bag>
+    ConcurrentHashMap<Integer, ShoppingBag> shoppingBagHash; //<store id , shopping bag>
     //todo is it ok for the assosiatin class
 
     public boolean addNewProductToShoppingBag(int ProductId, Store Store, int quantity){

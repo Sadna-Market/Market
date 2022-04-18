@@ -1,4 +1,4 @@
-package main.System.Server.Domain.ExternalService;
+package main.ExternalService;
 
 
 //threadsafe

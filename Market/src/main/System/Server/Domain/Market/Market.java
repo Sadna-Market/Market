@@ -1,8 +1,12 @@
 package main.System.Server.Domain.Market;
 
-import main.System.Server.Domain.UserComponent.Response.StoreResponse;
-import main.System.Server.Domain.UserComponent.User;
-import main.System.Server.Domain.UserComponent.UserManager;
+import main.System.Server.Domain.StoreModel.BuyStrategy;
+import main.System.Server.Domain.StoreModel.DiscountPolicy;
+import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.Response.StoreResponse;
+import main.System.Server.Domain.UserModel.ShoppingCart;
+import main.System.Server.Domain.UserModel.User;
+import main.System.Server.Domain.UserModel.UserManager;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +48,7 @@ public class Market {
         return purchase.order(shoppingCart);
     }
 
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         Store store = new Store();
         StoreHashMap.put(store.getStoreId(),store);
         userManager.addFounder(userId,store);

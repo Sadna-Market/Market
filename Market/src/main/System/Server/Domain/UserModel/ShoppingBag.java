@@ -1,8 +1,6 @@
-package main.System.Server.Domain.Market;
+package main.System.Server.Domain.UserModel;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import main.System.Server.Domain.StoreModel.Store;
 
 public class ShoppingBag {
     Store store;

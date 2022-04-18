@@ -1,6 +1,6 @@
-package main.System.Server.Domain.Market;
+package main.System.Server.Domain.StoreModel;
 
-import main.System.Server.Domain.UserComponent.Response.StoreResponse;
+import main.System.Server.Domain.Market.Permission;
 
 import java.util.List;
 
@@ -36,5 +36,8 @@ public class Store {
 
     public boolean getStoreOrderHistory() {
         return false;
+    }
+
+    public static class BuyPolicy {
     }
 }
