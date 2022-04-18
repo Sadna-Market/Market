@@ -1,6 +1,6 @@
-package main.System.Server.Domain.UserComponent;
+package main.System.Server.Domain.UserModel;
 
-import main.System.Server.Domain.Market.Store;
+import main.System.Server.Domain.StoreModel.Store;
 
 import java.util.HashMap;
 

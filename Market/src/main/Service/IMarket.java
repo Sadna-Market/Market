@@ -1,12 +1,12 @@
-package main.System.Server.Domain;
+package main.Service;
 
 
-import main.System.Server.Domain.Market.BuyPolicy;
-import main.System.Server.Domain.Market.BuyStrategy;
-import main.System.Server.Domain.Market.DiscountPolicy;
-import main.System.Server.Domain.UserComponent.Response.ProductResponse;
-import main.System.Server.Domain.UserComponent.Response.ShoppingCartResponse;
-import main.System.Server.Domain.UserComponent.Response.StoreResponse;
+import main.System.Server.Domain.StoreModel.BuyStrategy;
+import main.System.Server.Domain.StoreModel.DiscountPolicy;
+import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.Response.ProductResponse;
+import main.System.Server.Domain.UserModel.Response.ShoppingCartResponse;
+import main.System.Server.Domain.UserModel.Response.StoreResponse;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public interface IMarket {
 
 
     //2.3.2
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy);
+    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy);
 
 
     //2.4.1.1
