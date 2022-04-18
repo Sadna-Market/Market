@@ -1,7 +1,11 @@
 package main.System.Server.Domain.UserComponent;
 
-public class UserManager {
+import main.System.Server.Domain.Market.Store;
 
+import java.util.HashMap;
+
+public class UserManager {
+    HashMap<Integer,User> users;
 
     public boolean Login(String email, int password) {
         return false;
@@ -31,4 +35,39 @@ public class UserManager {
         return null;
     }
 
+    public void addFounder(int userId, Store store) {
+        users.get(userId).addFounder(store);
+    }
+
+    public boolean isOwner(int userId, int storeId) {
+        return false;
+    }
+
+    public boolean addNewStoreOwner(int userId, Store store, int newOwnerId) {
+        if(isOwner(userId,store.getStoreId())){
+            User newOwner = users.get(newOwnerId);
+            return newOwner.addNewStoreOwner(users.get(userId),store);
+        }
+        return false;
+    }
+
+    public boolean addNewStoreManager(int userId, Store store, int newMangerId) {
+        if(isOwner(userId,store.getStoreId())){
+            User newManager = users.get(newMangerId);
+            return newManager.addNewStoreManager(users.get(userId),store);
+        }
+        return false;
+    }
+
+    public boolean setManagerPermissions(int userId, Store store, int managerId) {
+        if(isOwner(userId,store.getStoreId())){
+            User Manager = users.get(managerId);
+            return Manager.setManagerPermissions(users.get(userId),store);
+        }
+        return false;
+    }
+
+    public boolean getRolesInStore(int userId, Store store) {
+        return users.get(userId).getRolesInStore(store);
+    }
 }

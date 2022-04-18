@@ -44,6 +44,68 @@ public class Market {
         return purchase.order(shoppingCart);
     }
 
+    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+        Store store = new Store();
+        StoreHashMap.put(store.getStoreId(),store);
+        userManager.addFounder(userId,store);
+        return false;
+    }
 
 
+    public boolean addNewProductToStore(int userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
+        if(userManager.isOwner(userId , storeId)){
+            return StoreHashMap.get(storeId).addNewProduct(productId,productName,categori,price, quantity,description);
+        }
+        return false;
+    }
+
+    public boolean deleteProductFromStore(int userId, int storeId, int productId) {
+        if(userManager.isOwner(userId ,storeId)){
+            return StoreHashMap.get(storeId).removeProduct(productId);
+        }
+        return false;
+    }
+
+    public boolean setProductInStore(int userId, int storeId, int productId, String productName, String category, int price, int quantity, String description) {
+        if(userManager.isOwner(userId ,storeId)){
+            return StoreHashMap.get(storeId).setProduct(productId,productName,category,price, quantity,description);
+        }
+        return false;
+    }
+
+    public boolean addNewStoreOwner(int userId, int storeId, int newOwnerId) {
+        Store store = StoreHashMap.get(storeId);
+        return userManager.addNewStoreOwner(userId,store,newOwnerId);
+    }
+
+    public boolean addNewStoreManager(int userId, int storeId, int newMangerId) {
+        Store store = StoreHashMap.get(storeId);
+        return userManager.addNewStoreManager(userId,store,newMangerId);
+    }
+
+    public boolean setManagerPermissions(int userId, int storeId, int managerId) {
+        Store store = StoreHashMap.get(storeId);
+        return userManager.setManagerPermissions(userId,store,managerId);
+    }
+
+    public boolean deleteStore(int userId, int storeId) {
+        if(userManager.isOwner(userId ,storeId)){
+            Store store = StoreHashMap.remove(storeId);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getStoreRoles(int userId, int storeId) {
+        Store store = StoreHashMap.get(storeId);
+        return userManager.getRolesInStore(userId,store);
+    }
+
+    public boolean getStoreOrderHistory(int userId, int storeId) {
+        if(userManager.isOwner(userId ,storeId)){
+            Store store = StoreHashMap.get(storeId);
+            return store.getStoreOrderHistory();
+        }
+        return false;
+    }
 }

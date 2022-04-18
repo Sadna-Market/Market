@@ -4,6 +4,7 @@ import main.System.Server.Domain.Market.*;
 import main.System.Server.Domain.UserComponent.Response.ProductResponse;
 import main.System.Server.Domain.UserComponent.Response.ShoppingCartResponse;
 import main.System.Server.Domain.UserComponent.Response.StoreResponse;
+import main.System.Server.Domain.UserComponent.User;
 import main.System.Server.Domain.UserComponent.UserManager;
 
 import java.util.List;
@@ -83,51 +84,52 @@ public class Facade implements IMarket {
 
     @Override
     public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        return false;
+        return market.OpenNewStore(userId,discountPolicy,buyPolicy,buyStrategy);
     }
 
     @Override
-    public boolean AddNewProductToStore(int productId, String productName, String categori, double price, int quantity, String description) {
-        return false;
+    public boolean AddNewProductToStore(int userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
+      return market.addNewProductToStore(userId,storeId, productId, productName,categori,price, quantity, description);
     }
 
     @Override
-    public boolean DeleteProductFromStore(int UserId, int productId) {
-        return false;
+    public boolean DeleteProductFromStore(int userId, int storeId, int productId) {
+        return market.deleteProductFromStore(userId,storeId,productId);
     }
 
     @Override
-    public boolean SetProductInSore(int UserId, int productId) {
-        return false;
+    public boolean SetProductInStore(int userId, int storeId, int productId, String productName, String category, double price, int quantity, String description) {
+        return market.setProductInStore(userId,storeId,productId,productName,category,productId,quantity,description);
     }
 
     @Override
     public boolean AddNewStoreOwner(int UserId, int StoreId, int newOwnerId) {
-        return false;
+        return market.addNewStoreOwner(UserId, StoreId, newOwnerId);
     }
 
     @Override
     public boolean AddNewStoreManger(int UserId, int StoreId, int newMangerId) {
-        return false;
+        return market.addNewStoreManager(UserId, StoreId, newMangerId);
     }
 
     @Override
     public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId) {
-        return false;
+        return market.setManagerPermissions(UserId, StoreId, ManagerId);
     }
+
 
     @Override
     public boolean DeleteStore(int UserId, int StoreId) {
-        return false;
+        return market.deleteStore(UserId, StoreId);
     }
 
     @Override
     public boolean getStoreRoles(int UserId, int StoreId) {
-        return false;
+        return market.getStoreRoles(UserId,StoreId);
     }
 
     @Override
     public boolean getStoreOrderHistory(int UserId, int StoreId) {
-        return false;
+        return market.getStoreOrderHistory(UserId,StoreId);
     }
 }

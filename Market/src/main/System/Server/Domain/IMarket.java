@@ -60,14 +60,14 @@ public interface IMarket {
 
 
     //2.4.1.1
-    public boolean AddNewProductToStore(int productId,String productName,String categori, double price, int quantity,String description);
+    public boolean AddNewProductToStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
 
 
     //2.4.1.2
-    public boolean DeleteProductFromStore(int UserId ,int productId);
+    public boolean DeleteProductFromStore(int UserId ,int storeId,int productId);
 
     //2.4.1.3
-    public boolean SetProductInSore(int UserId, int productId);
+    public boolean SetProductInStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
 
 
     //2.4.4
