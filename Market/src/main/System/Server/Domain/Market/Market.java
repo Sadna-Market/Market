@@ -377,11 +377,12 @@ public class Market {
 
     public boolean getStoreOrderHistory(int userId, int storeId) {
         if(userManager.isOwner(userId ,storeId)){
-            Store store = stores.get(storeId);
+            Store store = getStore(storeId);
             return store.getStoreOrderHistory();
         }
         return false;
     }
+
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
             userManager = new UserManager();

@@ -41,7 +41,7 @@ public class Store {
     }
 
     public boolean getStoreOrderHistory() {
-        return false;
+        return true;
     }
 
     public int getRate() {

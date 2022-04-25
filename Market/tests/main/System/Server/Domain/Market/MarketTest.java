@@ -285,11 +285,36 @@ class MarketTest {
         assertFalse(market.deleteStore(i,1));
     }
 
+    @DisplayName("getStoreOrderHistory  - successful -UserID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,4,6})
     @Test
-    void getStoreRoles() {
+    void getStoreOrderHistory(int i) {
+        assertTrue(market.getStoreOrderHistory(i,1));
     }
 
+    @DisplayName("getStoreOrderHistory  - successful -StoreID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,4,6})
     @Test
-    void getStoreOrderHistory() {
+    void getStoreOrderHistory2(int i) {
+        assertTrue(market.getStoreOrderHistory(1,i));
     }
+
+    @DisplayName("getStoreOrderHistory  - failure -StoreID")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-2,-40,-66666,90})
+    @Test
+    void getStoreOrderHistory3(int i) {
+        assertFalse(market.getStoreOrderHistory(1,i));
+    }
+
+    @DisplayName("getStoreOrderHistory  - failure -UserID")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-2,-40,-66666,0})
+    @Test
+    void getStoreOrderHistory4(int i) {
+        assertFalse(market.getStoreOrderHistory(i,1));
+    }
+
 }
