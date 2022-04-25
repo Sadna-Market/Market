@@ -48,10 +48,35 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public List<ProductResponse> ProductSearch(String productName, String category) {
-        market.ProductSearch(productName,category);
+    public List<Integer> searchProductByName(String productName) {
         return null;
     }
+
+    @Override
+    public List<Integer> searchProductByDesc(String desc) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByRate(int rate) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByCategory(int category) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByStoreRate(int rate) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByRangePrices(int productId, int min, int max) {
+        return null;
+    }
+
 
     @Override
     public boolean AddProductToShoppingBag(int userId,int storeId,int productId , int quantity) {

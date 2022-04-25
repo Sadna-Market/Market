@@ -110,4 +110,12 @@ class ProductTypeTest {
     void containDesc2(String name) {
         assertFalse(pt.containDesc(name));
     }
+
+    @DisplayName("SetRate  -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,5,6,7,8,9,10})
+    @Test
+    void rate(int i) {
+        assertTrue(pt.setRate(i));
+    }
 }

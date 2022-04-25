@@ -33,7 +33,6 @@ public interface IMarket {
     public StoreResponse GetStoreInfo(int StoreID);
 
     //2.2.2
-    public List<ProductResponse> ProductSearch(String productName, String category);
     public List<Integer> searchProductByName(String productName);
     public List<Integer> searchProductByDesc(String desc);
     public List<Integer> searchProductByRate(int rate);

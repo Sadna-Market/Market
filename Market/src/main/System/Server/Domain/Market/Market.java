@@ -21,6 +21,7 @@ public class Market {
     UserManager userManager;
     ConcurrentHashMap<Integer, Store> stores = new ConcurrentHashMap<>();
     ConcurrentHashMap<Integer, ProductType> productTypes = new ConcurrentHashMap<>();
+    int productCounter=1;
     private StampedLock lock_stores= new StampedLock(), lock_TP = new StampedLock();
 
     public Market(UserManager userManager) {
@@ -68,6 +69,10 @@ public class Market {
     }
 
     public List<Integer> searchProductByRate(int minRate) {
+        if (minRate<0 || minRate>10){
+            logger.warn("args invalid");
+            return null;
+        }
         long stamp = lock_TP.readLock();
         logger.debug("ProductSearchByRate() catch the ReadLock.");
         try{
@@ -85,6 +90,10 @@ public class Market {
     }
 
     public List<Integer> searchProductByStoreRate(int rate) {
+        if (rate<0 || rate>10){
+            logger.warn("args is invalid");
+            return null;
+        }
         long stamp = lock_stores.readLock();
         logger.debug("searchProductByStoreRate() catch the ReadLock.");
         try{
@@ -102,6 +111,10 @@ public class Market {
     }
 
     public List<Integer> searchProductByRangePrices(int productID,int min,int max) {
+        if (min>max){
+            logger.warn("min bigger then max - invalid");
+            return null;
+        }
         long stamp = lock_stores.readLock();
         logger.debug("searchProductByRangePrices() catch the ReadLock.");
         try{
@@ -127,6 +140,47 @@ public class Market {
             logger.debug("searchProductByRangePrices() released the ReadLock.");
         }
     }
+
+    //post-cond: the return value is empty List and not null!
+    public List<Integer> searchProductByCategory(int category) {
+        long stamp = lock_TP.readLock();
+        logger.debug("ProductSearchByCategory() catch the ReadLock.");
+        try{
+            List<Integer> output=new ArrayList<>();
+            for (ProductType p : productTypes.values()){
+                if (p.getCategory()==category)
+                    output.add(p.getProductID());
+            }
+            return output;
+        }
+        finally {
+            lock_TP.unlockRead(stamp);
+            logger.debug("ProductSearchByRate() released the ReadLock.");
+        }
+    }
+
+    public boolean addProductType(String name, String desc){
+        if (name==null || desc==null){
+            logger.warn("the args is null");
+            return false;
+        }
+        if (name==""){
+            logger.warn("the name is empty");
+            return false;
+        }
+        long stamp = lock_TP.writeLock();
+        logger.debug("addProductType() catch the WriteLock.");
+        try{
+            int value= productCounter++;
+            productTypes.put(value,new ProductType(value,name,desc));
+            return true;
+        }
+        finally {
+            lock_TP.unlockWrite(stamp);
+            logger.debug("addProductType() release the WriteLock.");
+        }
+    }
+
     public Store getStore(int storeID){
         long stamp= lock_stores.readLock();
         logger.debug("getStore() catch the ReadLock.");
@@ -150,29 +204,6 @@ public class Market {
             logger.debug("getProductType() released the ReadLock.");
         }
     }
-
-    public List<Integer> searchProductByCategory(int category) {
-        long stamp = lock_TP.readLock();
-        logger.debug("ProductSearchByCategory() catch the ReadLock.");
-        try{
-            List<Integer> output=new ArrayList<>();
-            for (ProductType p : productTypes.values()){
-                if (p.getCategory()==category)
-                    output.add(p.getProductID());
-            }
-            return output;
-        }
-        finally {
-            lock_TP.unlockRead(stamp);
-            logger.debug("ProductSearchByRate() released the ReadLock.");
-        }
-    }
-
-
-    public List<ProductType> ProductSearch(String productName, String category) {
-        return null;
-    }
-
 
     //todo maybe need to change the position of the func ?
     public boolean AddProductToShoppingBag(int userId, int StoreId, int ProductId, int quantity) {
@@ -255,5 +286,18 @@ public class Market {
             return store.getStoreOrderHistory();
         }
         return false;
+    }
+    /* forbidden to use with this function except Test*/
+    public void setForTesting(){
+        for (int i=0; i<10; i++){
+            Store s= new Store();
+            s.setRate(i);
+            stores.put(i,s);}
+        for (int i=0; i<10; i++){
+            ProductType p=new ProductType(productCounter++,"product"+i,"hello");
+            p.setRate(i);
+            p.setCategory(i%3);
+            productTypes.put(i,p);
+        }
     }
 }

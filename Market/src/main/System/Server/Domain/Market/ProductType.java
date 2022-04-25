@@ -45,17 +45,21 @@ public class ProductType {
         }
     }
 
-    public void setRate(int r) {
+    public boolean setRate(int r) {
+        if (r<0 || r>10)
+            return false;
         long stamp = rateLock.writeLock();
         logger.debug("getRate catch the WriteLock");
         try{
             rate = ((rate*counter_rates)+r)/(counter_rates+1);
             counter_rates++;
+            return true;
         }
         finally {
-            rateLock.unlockRead(stamp);
+            rateLock.unlockWrite(stamp);
             logger.debug("getRate released the ReadLock");
         }
+
     }
 
     public boolean storeExist(int storeID){
