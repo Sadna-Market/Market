@@ -226,7 +226,9 @@ public class Market {
 
     //todo maybe need to change the position of the func ?
     public boolean AddProductToShoppingBag(int userId, int StoreId, int ProductId, int quantity) {
+        long stamp = lock_stores.readLock();
         Store s = stores.get(StoreId);
+        lock_stores.unlockRead(stamp);
         if (s==null){
             logger.warn("the storeID is not exist in the market");
             return false;
@@ -243,8 +245,14 @@ public class Market {
     }
 
     public boolean order(int userId){
-        ShoppingCart shoppingCart = userManager.getUser(userId).getShoppingCart();
-        return purchase.order(shoppingCart);
+        try {
+            ShoppingCart shoppingCart = userManager.getUser(userId).getShoppingCart();
+            return purchase.order(shoppingCart);
+        }
+        catch (Exception e){
+            return false;
+        }
+
     }
 
     public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
