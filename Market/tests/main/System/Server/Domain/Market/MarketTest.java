@@ -252,13 +252,6 @@ class MarketTest {
         assertFalse(market.setProductInStore(1,1,i,"","",15,15,""));
     }
 
-    @Test
-    void addNewStoreOwner() {
-    }
-
-    @Test
-    void addNewStoreManager() {
-    }
 
     @Test
     void setManagerPermissions() {

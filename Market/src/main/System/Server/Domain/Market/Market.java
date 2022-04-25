@@ -327,12 +327,12 @@ public class Market {
     }
 
     public boolean addNewStoreOwner(int userId, int storeId, int newOwnerId) {
-        Store store = stores.get(storeId);
+        Store store = getStore(storeId);
         return userManager.addNewStoreOwner(userId,store,newOwnerId);
     }
 
     public boolean addNewStoreManager(int userId, int storeId, int newMangerId) {
-        Store store = stores.get(storeId);
+        Store store = getStore(storeId);
         return userManager.addNewStoreManager(userId,store,newMangerId);
     }
 
