@@ -20,6 +20,7 @@ public class Market {
     Purchase purchase;
     UserManager userManager;
     ConcurrentHashMap<Integer, Store> stores = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Integer, Store> closeStores = new ConcurrentHashMap<>();
     ConcurrentHashMap<Integer, ProductType> productTypes = new ConcurrentHashMap<>();
     int productCounter=1,storeCounter=1;
 
@@ -337,20 +338,40 @@ public class Market {
     }
 
     public boolean setManagerPermissions(int userId, int storeId, int managerId) {
-        Store store = stores.get(storeId);
+        Store store = getStore(storeId);
         return userManager.setManagerPermissions(userId,store,managerId);
     }
 
     public boolean deleteStore(int userId, int storeId) {
         if(userManager.isOwner(userId ,storeId)){
-            Store store = stores.remove(storeId);
-            return true;
+            Store s= getStore(storeId);
+            if (s==null){
+                logger.warn("this store not open.");
+                return false;
+            }
+            if (s.closeStore()){
+                long stamp = lock_stores.writeLock();
+                logger.debug("catch WriteLock");
+                try {
+                    stores.remove(s);
+                    closeStores.put(s.getStoreId(),s);
+                }
+                finally {
+                    lock_stores.unlockWrite(stamp);
+                    logger.debug("released WriteLock");
+                }
+                logger.info("market update that Store #"+storeId+" close");
+                return true;
+            }
+            logger.warn("market didnt close the store,closeStore() returned false");
+            return false;
         }
+        logger.warn("market didnt close the store, the user is not owner.");
         return false;
     }
 
     public boolean getStoreRoles(int userId, int storeId) {
-        Store store = stores.get(storeId);
+        Store store = getStore(storeId);
         return userManager.getRolesInStore(userId,store);
     }
 

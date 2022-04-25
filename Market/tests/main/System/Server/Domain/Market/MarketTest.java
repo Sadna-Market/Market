@@ -253,12 +253,36 @@ class MarketTest {
     }
 
 
+    @DisplayName("deleteStore3  - successful -UserID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,4,6})
     @Test
-    void setManagerPermissions() {
+    void deleteStore(int i) {
+        assertTrue(market.deleteStore(i,1));
     }
 
+    @DisplayName("deleteStore3  - successful -StoreID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,4,6})
     @Test
-    void deleteStore() {
+    void deleteStore2(int i) {
+        assertTrue(market.deleteStore(1,i));
+    }
+
+    @DisplayName("deleteStore3  - failure -StoreID")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-2,-40,-66666,90})
+    @Test
+    void deleteStore3(int i) {
+        assertFalse(market.deleteStore(1,i));
+    }
+
+    @DisplayName("deleteStore3  - failure -UserID")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-2,-40,-66666,0})
+    @Test
+    void deleteStore4(int i) {
+        assertFalse(market.deleteStore(i,1));
     }
 
     @Test

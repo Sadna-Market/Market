@@ -61,6 +61,10 @@ public class Store {
         return "";
     }
 
+    public boolean closeStore() {
+        return true;
+    }
+
     public static class BuyPolicy {
     }
 
