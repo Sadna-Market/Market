@@ -34,6 +34,13 @@ public interface IMarket {
 
     //2.2.2
     public List<ProductResponse> ProductSearch(String productName, String category);
+    public List<Integer> searchProductByName(String productName);
+    public List<Integer> searchProductByDesc(String desc);
+    public List<Integer> searchProductByRate(int rate);
+    public List<Integer> searchProductByCategory(int category);
+    public List<Integer> searchProductByStoreRate(int rate);
+    public List<Integer> searchProductByRangePrices(int productId,int min,int max);
+
 
     //2.2.3
     public boolean AddProductToShoppingBag(int userId,int storeId,int productId , int quantity) ;

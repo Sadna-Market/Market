@@ -38,6 +38,13 @@ public class Store {
         return false;
     }
 
+    public int getRate() {
+        return -1;
+    }
+
+    public int getProductPrice(int productID) {
+    }
+
     public static class BuyPolicy {
     }
 }

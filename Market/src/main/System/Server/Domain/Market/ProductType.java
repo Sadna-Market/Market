@@ -17,18 +17,45 @@ public class ProductType {
      */
 
     int productID;
+    int rate=0, counter_rates=0;
+
     String productName;
     String description;
     int category;
     List<Integer> stores=new ArrayList<>();
 
-    private StampedLock lock_stores= new StampedLock();
+    private StampedLock lock_stores= new StampedLock(),rateLock=new StampedLock();
 
     public ProductType(int productID, String productName, String description) {
         this.productID = productID;
         this.productName = productName;
         this.description = description;
         logger.debug("the productID: "+productID+" received successfully");
+    }
+
+    public int getRate() {
+        long stamp = rateLock.readLock();
+        logger.debug("getRate catch the ReadLock");
+        try{
+            return rate;
+        }
+        finally {
+            rateLock.unlockRead(stamp);
+            logger.debug("getRate released the ReadLock");
+        }
+    }
+
+    public void setRate(int r) {
+        long stamp = rateLock.writeLock();
+        logger.debug("getRate catch the WriteLock");
+        try{
+            rate = ((rate*counter_rates)+r)/(counter_rates+1);
+            counter_rates++;
+        }
+        finally {
+            rateLock.unlockRead(stamp);
+            logger.debug("getRate released the ReadLock");
+        }
     }
 
     public boolean storeExist(int storeID){

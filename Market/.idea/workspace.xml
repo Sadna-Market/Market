@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/ProductTypeTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/ProductTypeTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Service/IMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/IMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +76,7 @@
       <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ProductTypeTest.containDesc2">
+  <component name="RunManager" selected="JUnit.ProductTypeTest">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -169,11 +171,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ProductTypeTest" />
         <item itemvalue="JUnit.ProductTypeTest.containDesc2" />
         <item itemvalue="JUnit.ProductTypeTest.containName2" />
         <item itemvalue="JUnit.ProductTypeTest.containName (1)" />
         <item itemvalue="JUnit.ProductTypeTest.containName" />
-        <item itemvalue="JUnit.ProductTypeTest" />
       </list>
     </recent_temporary>
   </component>
@@ -192,7 +194,7 @@
       <workItem from="1650290444225" duration="8376000" />
       <workItem from="1650303466104" duration="3527000" />
       <workItem from="1650389836537" duration="2010000" />
-      <workItem from="1650843533677" duration="8301000" />
+      <workItem from="1650843533677" duration="11837000" />
     </task>
     <servers />
   </component>
