@@ -2,7 +2,6 @@ package main.System.Server.Domain.StoreModel;
 
 import main.System.Server.Domain.Market.Permission;
 
-import javax.print.ServiceUI;
 import java.util.List;
 import java.util.Random;
 
@@ -51,6 +50,10 @@ public class Store {
 
     public void setRate(int r){
         rate=r;
+    }
+
+    public String getProductInStoreInfo(int productID) {
+        return null;
     }
 
     public static class BuyPolicy {

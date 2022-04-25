@@ -30,7 +30,8 @@ public interface IMarket {
     public boolean Login(String email , int password);
 
     //2.2.1
-    public StoreResponse GetStoreInfo(int StoreID);
+    public Store getStore(int StoreID);
+    public String getInfoProductInStore(int storeID, int productID);
 
     //2.2.2
     public List<Integer> searchProductByName(String productName);

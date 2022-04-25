@@ -43,9 +43,15 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public StoreResponse GetStoreInfo(int StoreID) {
-        return market.GetStoreInfo(StoreID);
+    public Store getStore(int storeID) {
+        return market.getStore(storeID);
     }
+
+    @Override
+    public String getInfoProductInStore(int storeID, int productID) {
+        return market.getInfoProductInStore(storeID,productID);
+    }
+
 
     @Override
     public List<Integer> searchProductByName(String productName) {

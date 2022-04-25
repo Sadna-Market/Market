@@ -155,9 +155,6 @@ class MarketTest {
         assertEquals(0,market.searchProductByCategory(i).size());
     }
 
-    @Test
-    void productSearch() {
-    }
 
     @Test
     void addProductToShoppingBag() {

@@ -22,16 +22,46 @@ public class Market {
     ConcurrentHashMap<Integer, Store> stores = new ConcurrentHashMap<>();
     ConcurrentHashMap<Integer, ProductType> productTypes = new ConcurrentHashMap<>();
     int productCounter=1;
+
+    /*
+    if you want to use with stores - acquire the lock - lock_stores
+    if you want to use with ProductType, productCounter - acquire - lock_TP
+     */
     private StampedLock lock_stores= new StampedLock(), lock_TP = new StampedLock();
+
+
+
 
     public Market(UserManager userManager) {
         this.userManager = userManager;
     }
 
-    //search the store
-    public StoreResponse GetStoreInfo(int StoreID) {
-        //Stores.get(StoreID).GetStoreInfo();
-        return null;
+
+    public Store getStore(int storeID){
+        long stamp= lock_stores.readLock();
+        logger.debug("getStore() catch the ReadLock.");
+        try{
+            return stores.get(storeID);
+        }
+        finally {
+            lock_stores.unlockRead(stamp);
+            logger.debug("getStore() released the ReadLock.");
+        }
+    }
+
+    public String getInfoProductInStore(int storeID, int productID){
+        long stamp = lock_stores.readLock();
+        logger.debug("getInfoProductInStore released the ReadLock");
+        try {
+            return stores.get(storeID).getProductInStoreInfo(productID);
+        }
+        catch (Exception e){
+            return null;
+        }
+        finally {
+            lock_stores.unlockRead(stamp);
+            logger.debug("getInfoProductInStore released the ReadLock");
+        }
     }
 
     public List<Integer> searchProductByName(String name){
@@ -181,17 +211,6 @@ public class Market {
         }
     }
 
-    public Store getStore(int storeID){
-        long stamp= lock_stores.readLock();
-        logger.debug("getStore() catch the ReadLock.");
-        try{
-            return stores.get(storeID);
-        }
-        finally {
-            lock_stores.unlockRead(stamp);
-            logger.debug("getStore() released the ReadLock.");
-        }
-    }
 
     public ProductType getProductType(int productID){
         long stamp= lock_TP.readLock();
@@ -207,13 +226,18 @@ public class Market {
 
     //todo maybe need to change the position of the func ?
     public boolean AddProductToShoppingBag(int userId, int StoreId, int ProductId, int quantity) {
-        //get store
         Store s = stores.get(StoreId);
-        //check if the store has the quantity of the product in the stock
+        if (s==null){
+            logger.warn("the storeID is not exist in the market");
+            return false;
+        }
         if (s.isProductExistInStock(ProductId, quantity)) {
             User user = userManager.getUser(userId);
-            Store store = stores.get(StoreId);
-            return user.getShoppingCart().addNewProductToShoppingBag(ProductId, store, quantity);
+            if (user==null) {
+                logger.warn("the userID is not exist in the system.");
+                return false;
+            }
+            return user.getShoppingCart().addNewProductToShoppingBag(ProductId, s, quantity);
         }
         return false;
     }
