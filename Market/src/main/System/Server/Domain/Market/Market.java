@@ -316,6 +316,7 @@ public class Market {
         for (int i=0; i<10; i++){
             Store s= new Store();
             s.setRate(i);
+            s.addNewProduct(1,"Asd","5",0.5,100,"");
             stores.put(i,s);}
         for (int i=0; i<10; i++){
             ProductType p=new ProductType(productCounter++,"product"+i,"hello");

@@ -53,7 +53,7 @@ public class Store {
     }
 
     public String getProductInStoreInfo(int productID) {
-        return null;
+        return "";
     }
 
     public static class BuyPolicy {

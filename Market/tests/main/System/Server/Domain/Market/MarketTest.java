@@ -1,5 +1,6 @@
 package main.System.Server.Domain.Market;
 
+import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.UserManager;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -30,8 +31,29 @@ class MarketTest {
         logger.info("the test finished  to run right now");
     }
 
+    @DisplayName("getInfoProductInStore  -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {1,3,5,7,9})
     @Test
-    void getStoreInfo() {
+    void getStoreInfo(int i) {
+        market.addNewProductToStore(1,i,1,"Asd","a",0.5,100,"");
+        assertNotNull(market.getInfoProductInStore(i,1));
+    }
+
+    @DisplayName("getStore  -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {1,3,5,7,9})
+    @Test
+    void getStore(int i) {
+        assertEquals(i,market.getStore(i).getRate());
+    }
+
+    @DisplayName("getStore  -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,10,15,100})
+    @Test
+    void getStore2(int i) {
+        assertNull(market.getStore(i));
     }
 
     @DisplayName("searchProductByName  -  successful")
@@ -108,21 +130,6 @@ class MarketTest {
         assertNotNull(market.searchProductByRangePrices(1,101,150));
     }
 
-    @DisplayName("getStore  -  successful")
-    @ParameterizedTest
-    @ValueSource(ints = {1,3,5,7,9})
-    @Test
-    void getStore(int i) {
-        assertEquals(i,market.getStore(i).getRate());
-    }
-
-    @DisplayName("getStore  -  failure")
-    @ParameterizedTest
-    @ValueSource(ints = {-1,10,15,100})
-    @Test
-    void getStore2(int i) {
-        assertNull(market.getStore(i));
-    }
 
     @DisplayName("getProductType  -  successful")
     @ParameterizedTest
@@ -155,7 +162,8 @@ class MarketTest {
         assertEquals(0,market.searchProductByCategory(i).size());
     }
 
-
+    //this test is not for UnitTest -> the market here is gateway and just check valid
+    //we will check that on integration tests
     @Test
     void addProductToShoppingBag() {
     }
