@@ -280,27 +280,25 @@ public class Market {
 
 
     public boolean addNewProductToStore(int userId, int storeId, int productId, String productName, String category, double price, int quantity, String description) {
-        if(userManager.isOwner(userId , storeId)){
+        if (checkValid(userId,storeId,productId)){
             ProductType p= getProductType(productId);
             Store s=getStore(storeId);
-            if (p==null){
-                logger.warn("the storeID is invalid.");
-                return false;
-                }
-            if (s==null){
-                logger.warn("the StoreID is invalid.");
-                return false;
-            }
             return s.addNewProduct(p,productName,category,price,quantity,description);
         }
-        else{
-            logger.warn("userID is not owner of the Store.");
-            return false;
-        }
+        return false;
     }
 
     public boolean deleteProductFromStore(int userId, int storeId, int productId) {
-        if(userManager.isOwner(userId , storeId)){
+        if (checkValid(userId,storeId,productId)){
+            ProductType p= getProductType(productId);
+            Store s=getStore(storeId);
+            return s.removeProduct(p);
+        }
+        return false;
+    }
+
+    private boolean checkValid(int userid,int storeId,int productId){
+        if(userManager.isOwner(userid , storeId)){
             ProductType p= getProductType(productId);
             Store s=getStore(storeId);
             if (p==null){
@@ -311,7 +309,7 @@ public class Market {
                 logger.warn("the StoreID is invalid.");
                 return false;
             }
-            return s.removeProduct(p);
+            return true;
         }
         else{
             logger.warn("userID is not owner of the Store.");
@@ -320,8 +318,10 @@ public class Market {
     }
 
     public boolean setProductInStore(int userId, int storeId, int productId, String productName, String category, int price, int quantity, String description) {
-        if(userManager.isOwner(userId ,storeId)){
-            return stores.get(storeId).setProduct(productId,productName,category,price, quantity,description);
+        if (checkValid(userId,storeId,productId)){
+            ProductType p= getProductType(productId);
+            Store s=getStore(storeId);
+            return s.setProduct(p,productName,category,price, quantity,description);
         }
         return false;
     }

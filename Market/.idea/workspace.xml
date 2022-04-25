@@ -74,7 +74,7 @@
       <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.MarketTest.deleteProductFromStore3">
+  <component name="RunManager" selected="JUnit.MarketTest.setProductInStore2">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -84,38 +84,6 @@
       <option name="TEST_OBJECT" value="CLASS" />
       <properties />
       <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.addNewProductToStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="METHOD_NAME" value="addNewProductToStore(int)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.addNewProductToStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="METHOD_NAME" value="addNewProductToStore2(int)" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -168,13 +136,45 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MarketTest.setProductInStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="setProductInStore(int)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MarketTest.setProductInStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="setProductInStore2(int)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MarketTest.setProductInStore2" />
+        <item itemvalue="JUnit.MarketTest.setProductInStore" />
         <item itemvalue="JUnit.MarketTest.deleteProductFromStore3" />
         <item itemvalue="JUnit.MarketTest.deleteProductFromStore4" />
         <item itemvalue="JUnit.MarketTest.deleteProductFromStore" />
-        <item itemvalue="JUnit.MarketTest.addNewProductToStore" />
-        <item itemvalue="JUnit.MarketTest.addNewProductToStore2" />
       </list>
     </recent_temporary>
   </component>
@@ -193,7 +193,7 @@
       <workItem from="1650290444225" duration="8376000" />
       <workItem from="1650303466104" duration="3527000" />
       <workItem from="1650389836537" duration="2010000" />
-      <workItem from="1650843533677" duration="27119000" />
+      <workItem from="1650843533677" duration="28048000" />
     </task>
     <servers />
   </component>
@@ -227,6 +227,11 @@
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
           <line>258</line>
           <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>320</line>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

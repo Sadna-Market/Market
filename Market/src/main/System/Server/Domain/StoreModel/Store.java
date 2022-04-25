@@ -36,8 +36,8 @@ public class Store {
         return true;
     }
 
-    public boolean setProduct(int productId, String productName, String category, int price, int quantity, String description) {
-        return inventory.setProduct(productId, productName, category, price, quantity, description);
+    public boolean setProduct(ProductType productId, String productName, String category, int price, int quantity, String description) {
+        return true;
     }
 
     public boolean getStoreOrderHistory() {

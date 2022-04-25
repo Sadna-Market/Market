@@ -235,8 +235,21 @@ class MarketTest {
         assertFalse(market.deleteProductFromStore(1,1,i));
     }
 
+
+    @DisplayName("setProductInStore  -  successful-storeID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,3,5,7,0})
     @Test
-    void setProductInStore() {
+    void setProductInStore(int i) {
+        assertTrue(market.setProductInStore(1,i,1,"","",15,15,""));
+    }
+
+    @DisplayName("setProductInStore  -  failure-productID")
+    @ParameterizedTest
+    @ValueSource(ints = {200,-300,500,-800})
+    @Test
+    void setProductInStore2(int i) {
+        assertFalse(market.setProductInStore(1,1,i,"","",15,15,""));
     }
 
     @Test
