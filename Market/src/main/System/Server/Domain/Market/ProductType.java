@@ -102,6 +102,11 @@ public class ProductType {
         return category;
     }
 
-
+    public boolean containName(String name){
+        return productName.contains(name);
+    }
+    public boolean containDesc(String desc){
+        return description.contains(desc);
+    }
 
 }

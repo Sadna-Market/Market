@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/ProductTypeTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/ProductTypeTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +74,7 @@
       <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ProductTypeTest">
+  <component name="RunManager" selected="JUnit.ProductTypeTest.containDesc2">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -103,7 +103,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProductTypeTest.addStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProductTypeTest.containDesc2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
@@ -113,13 +113,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
-      <option name="METHOD_NAME" value="addStore" />
+      <option name="METHOD_NAME" value="containDesc2(java.lang.String)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProductTypeTest.addStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProductTypeTest.containName (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
@@ -129,13 +129,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
-      <option name="METHOD_NAME" value="addStore2" />
+      <option name="METHOD_NAME" value="containName(java.lang.String)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProductTypeTest.getStores" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProductTypeTest.containName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
@@ -145,13 +145,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
-      <option name="METHOD_NAME" value="getStores" />
+      <option name="METHOD_NAME" value="containName(int)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProductTypeTest.storeExist3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProductTypeTest.containName2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
@@ -161,7 +161,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
-      <option name="METHOD_NAME" value="storeExist3" />
+      <option name="METHOD_NAME" value="containName2(java.lang.String)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -169,11 +169,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ProductTypeTest.containDesc2" />
+        <item itemvalue="JUnit.ProductTypeTest.containName2" />
+        <item itemvalue="JUnit.ProductTypeTest.containName (1)" />
+        <item itemvalue="JUnit.ProductTypeTest.containName" />
         <item itemvalue="JUnit.ProductTypeTest" />
-        <item itemvalue="JUnit.ProductTypeTest.addStore2" />
-        <item itemvalue="JUnit.ProductTypeTest.addStore" />
-        <item itemvalue="JUnit.ProductTypeTest.getStores" />
-        <item itemvalue="JUnit.ProductTypeTest.storeExist3" />
       </list>
     </recent_temporary>
   </component>
@@ -192,7 +192,7 @@
       <workItem from="1650290444225" duration="8376000" />
       <workItem from="1650303466104" duration="3527000" />
       <workItem from="1650389836537" duration="2010000" />
-      <workItem from="1650843533677" duration="7494000" />
+      <workItem from="1650843533677" duration="8301000" />
     </task>
     <servers />
   </component>

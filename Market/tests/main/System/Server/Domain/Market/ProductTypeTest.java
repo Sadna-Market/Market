@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
@@ -77,4 +78,36 @@ class ProductTypeTest {
             assertFalse(pt.addStore(i));
     }
 
+
+    @DisplayName("containName  -  successful")
+    @ParameterizedTest
+    @ValueSource(strings = {"Abba","a","Ganov","Abba Ganov"})
+    @Test
+    void containName(String name) {
+        assertTrue(pt.containName(name));
+    }
+
+    @DisplayName("containName  -  failure")
+    @ParameterizedTest
+    @ValueSource(strings = {"abba","B","ganov","abba ganov"})
+    @Test
+    void containName2(String name) {
+        assertFalse(pt.containName(name));
+    }
+
+    @DisplayName("containDesc  -  successful")
+    @ParameterizedTest
+    @ValueSource(strings = {"0","90","","90210"})
+    @Test
+    void containDesc(String name) {
+        assertTrue(pt.containDesc(name));
+    }
+
+    @DisplayName("containName  -  failure")
+    @ParameterizedTest
+    @ValueSource(strings = {"8","01209","0000","11"," "})
+    @Test
+    void containDesc2(String name) {
+        assertFalse(pt.containDesc(name));
+    }
 }
