@@ -31,8 +31,9 @@ public class Store {
         return true;
     }
 
-    public boolean removeProduct(int productId) {
-        return inventory.removeProduct(productId);
+    public boolean removeProduct(ProductType productId) {
+       // return inventory.removeProduct(productId);
+        return true;
     }
 
     public boolean setProduct(int productId, String productName, String category, int price, int quantity, String description) {

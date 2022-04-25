@@ -148,14 +148,14 @@ class MarketTest {
         assertNull(market.getProductType(i));
     }
 
-    @DisplayName("getProductType  -  successful")
+    @DisplayName("searchProductByCategory  -  successful")
     @ParameterizedTest
     @ValueSource(ints = {1,2,0})
     @Test
     void searchProductByCategory(int i) {
         assertEquals(i==0? 4:3,market.searchProductByCategory(i).size());
     }
-    @DisplayName("getProductType  -  failure")
+    @DisplayName("searchProductByCategory  -  failure")
     @ParameterizedTest
     @ValueSource(ints = {4,5,6,-1})
     @Test
@@ -186,7 +186,7 @@ class MarketTest {
         assertFalse(market.OpenNewStore(i,new DiscountPolicy(),null,null));
     }
 
-    @DisplayName("openNewStore  -  successful")
+    @DisplayName("addNewProductToStore  -  successful")
     @ParameterizedTest
     @ValueSource(ints = {20,6293,185})
     @Test
@@ -194,7 +194,7 @@ class MarketTest {
         assertTrue(market.addNewProductToStore(i,1,1,"","" ,0.5,15,""));
     }
 
-    @DisplayName("openNewStore  -  failure")
+    @DisplayName("addNewProductToStore  -  failure")
     @ParameterizedTest
     @ValueSource(ints = {-20,-6293,-185,0})
     @Test
@@ -202,8 +202,37 @@ class MarketTest {
         assertFalse(market.addNewProductToStore(i,1,1,"","" ,0.5,15,""));
     }
 
+    @DisplayName("deleteProductFromStore  -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {1,7,9,4})
     @Test
-    void deleteProductFromStore() {
+    void deleteProductFromStore(int i) {
+        assertTrue(market.deleteProductFromStore(i,1,1));
+    }
+
+    @DisplayName("deleteProductFromStore  -  failure-UserID")
+    @ParameterizedTest
+    @ValueSource(ints = {-2,-7,-9,-4})
+    @Test
+    void deleteProductFromStore2(int i) {
+        assertFalse(market.deleteProductFromStore(i,1,1));
+    }
+
+
+    @DisplayName("deleteProductFromStore  -  failure-storeID")
+    @ParameterizedTest
+    @ValueSource(ints = {-2,-7,-9,-4})
+    @Test
+    void deleteProductFromStore3(int i) {
+        assertFalse(market.deleteProductFromStore(1,i,1));
+    }
+
+    @DisplayName("deleteProductFromStore  -  failure-productID")
+    @ParameterizedTest
+    @ValueSource(ints = {-2,-7,-9,-4})
+    @Test
+    void deleteProductFromStore4(int i) {
+        assertFalse(market.deleteProductFromStore(1,1,i));
     }
 
     @Test

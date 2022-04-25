@@ -300,10 +300,23 @@ public class Market {
     }
 
     public boolean deleteProductFromStore(int userId, int storeId, int productId) {
-        if(userManager.isOwner(userId ,storeId)){
-            return stores.get(storeId).removeProduct(productId);
+        if(userManager.isOwner(userId , storeId)){
+            ProductType p= getProductType(productId);
+            Store s=getStore(storeId);
+            if (p==null){
+                logger.warn("the storeID is invalid.");
+                return false;
+            }
+            if (s==null){
+                logger.warn("the StoreID is invalid.");
+                return false;
+            }
+            return s.removeProduct(p);
         }
-        return false;
+        else{
+            logger.warn("userID is not owner of the Store.");
+            return false;
+        }
     }
 
     public boolean setProductInStore(int userId, int storeId, int productId, String productName, String category, int price, int quantity, String description) {
