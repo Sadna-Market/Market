@@ -7,22 +7,46 @@ import main.System.Server.Domain.UserModel.Response.StoreResponse;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
+import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.StampedLock;
 
 public class Market {
-
+    static Logger logger=Logger.getLogger(Market.class);
     Purchase purchase;
     UserManager userManager;
     ConcurrentHashMap<Integer, Store> StoreHashMap = new ConcurrentHashMap<>();
-    ConcurrentHashMap<Integer, ProductType> ProductTypeHashMap = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Integer, ProductType> productTypes = new ConcurrentHashMap<>();
+    private StampedLock lock_stores= new StampedLock(), lock_TP = new StampedLock();
 
+    public Market(UserManager userManager) {
+        this.userManager = userManager;
+    }
 
     //search the store
     public StoreResponse GetStoreInfo(int StoreID) {
-        StoreHashMap.get(StoreID).GetStoreInfo();
+        //Stores.get(StoreID).GetStoreInfo();
         return null;
+    }
+
+    public List<ProductType> searchProductByName(String name){
+        long stamp = lock_TP.readLock();
+        logger.debug("searchProductByName() catch the ReadLock.");
+        try{
+            List<ProductType> output=new ArrayList<>();
+            for (ProductType p : productTypes.values()){
+                if (p.getProductName().contains(name))
+                    output.add(p);
+            }
+            return output;
+        }
+        finally {
+            lock_TP.unlockRead(stamp);
+            logger.debug("searchProductByName() released the ReadLock.");
+        }
     }
 
     public List<ProductType> ProductSearch(String productName, String category) {

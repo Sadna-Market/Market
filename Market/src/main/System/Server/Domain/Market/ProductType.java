@@ -49,12 +49,13 @@ public class ProductType {
         try{
             List<Integer> output=new ArrayList<>();
             for (Integer storeID : stores) output.add(storeID);
+            return output;
         }
         finally {
             lock_stores.unlockRead(stamp);
             logger.debug("getStores() released the ReadLock.");
         }
-        return stores;
+
     }
 
     public boolean addStore(int storeID){
