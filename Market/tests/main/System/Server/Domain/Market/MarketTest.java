@@ -1,5 +1,6 @@
 package main.System.Server.Domain.Market;
 
+import main.System.Server.Domain.StoreModel.DiscountPolicy;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.UserManager;
 import org.apache.log4j.Logger;
@@ -168,16 +169,37 @@ class MarketTest {
     void addProductToShoppingBag() {
     }
 
+
+    @DisplayName("openNewStore  -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3})
     @Test
-    void order() {
+    void openNewStore(int i) {
+        assertTrue(market.OpenNewStore(i,new DiscountPolicy(),null,null));
     }
 
+    @DisplayName("openNewStore  -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-2,-555,0})
     @Test
-    void openNewStore() {
+    void openNewStore2(int i) {
+        assertFalse(market.OpenNewStore(i,new DiscountPolicy(),null,null));
     }
 
+    @DisplayName("openNewStore  -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {20,6293,185})
     @Test
-    void addNewProductToStore() {
+    void addNewProductToStore2(int i) {
+        assertTrue(market.addNewProductToStore(i,1,1,"","" ,0.5,15,""));
+    }
+
+    @DisplayName("openNewStore  -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {-20,-6293,-185,0})
+    @Test
+    void addNewProductToStore(int i) {
+        assertFalse(market.addNewProductToStore(i,1,1,"","" ,0.5,15,""));
     }
 
     @Test

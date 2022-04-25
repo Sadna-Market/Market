@@ -21,7 +21,7 @@ public class Market {
     UserManager userManager;
     ConcurrentHashMap<Integer, Store> stores = new ConcurrentHashMap<>();
     ConcurrentHashMap<Integer, ProductType> productTypes = new ConcurrentHashMap<>();
-    int productCounter=1;
+    int productCounter=1,storeCounter=1;
 
     /*
     if you want to use with stores - acquire the lock - lock_stores
@@ -256,18 +256,47 @@ public class Market {
     }
 
     public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        Store store = new Store();
-        stores.put(store.getStoreId(),store);
-        userManager.addFounder(userId,store);
-        return false;
+        if (!userManager.isLogin(userId)){
+            logger.warn("the userID does not connect");
+            return false;
+        }
+        long stamp = lock_stores.writeLock();
+        logger.debug("OpenNewStore catch the WriteLock");
+        try {
+            Store store = new Store(discountPolicy, buyPolicy, buyStrategy);
+            stores.put(storeCounter++, store);
+            userManager.addFounder(userId, store);
+            logger.info("new Store join to the Market");
+            return true;
+        }
+        finally {
+            lock_stores.unlockWrite(stamp);
+            logger.debug("OpenNewStore released the WriteLock");
+        }
+    }
+    public UserManager getUserManager(){
+        return userManager;
     }
 
 
-    public boolean addNewProductToStore(int userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
+    public boolean addNewProductToStore(int userId, int storeId, int productId, String productName, String category, double price, int quantity, String description) {
         if(userManager.isOwner(userId , storeId)){
-            return stores.get(storeId).addNewProduct(productId,productName,categori,price, quantity,description);
+            ProductType p= getProductType(productId);
+            Store s=getStore(storeId);
+            if (p==null){
+                logger.warn("the storeID is invalid.");
+                return false;
+                }
+            if (s==null){
+                logger.warn("the StoreID is invalid.");
+                return false;
+            }
+            return s.addNewProduct(p,productName,category,price,quantity,description);
         }
-        return false;
+        else{
+            logger.warn("userID is not owner of the Store.");
+            return false;
+        }
     }
 
     public boolean deleteProductFromStore(int userId, int storeId, int productId) {
@@ -321,16 +350,17 @@ public class Market {
     }
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
-        for (int i=0; i<10; i++){
-            Store s= new Store();
-            s.setRate(i);
-            s.addNewProduct(1,"Asd","5",0.5,100,"");
-            stores.put(i,s);}
+            userManager = new UserManager();
         for (int i=0; i<10; i++){
             ProductType p=new ProductType(productCounter++,"product"+i,"hello");
             p.setRate(i);
             p.setCategory(i%3);
             productTypes.put(i,p);
         }
+        for (int i=0; i<10; i++){
+            Store s= new Store(null,null,null);
+            s.setRate(i);
+            s.addNewProduct(getProductType(1),"Asd","5",0.5,100,"");
+            stores.put(i,s);}
     }
 }

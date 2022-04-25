@@ -28,7 +28,7 @@ public class UserManager {
     }
 
     public boolean isLogin(int UserId){
-        return false;
+        return UserId>0;
     }
 
     public User getUser(int UserId){
@@ -36,11 +36,11 @@ public class UserManager {
     }
 
     public void addFounder(int userId, Store store) {
-        users.get(userId).addFounder(store);
+        //users.get(userId).addFounder(store);
     }
 
     public boolean isOwner(int userId, int storeId) {
-        return false;
+        return userId>0;
     }
 
     public boolean addNewStoreOwner(int userId, Store store, int newOwnerId) {
