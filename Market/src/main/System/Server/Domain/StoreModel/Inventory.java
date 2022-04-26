@@ -71,7 +71,14 @@ public class Inventory {
         }
     }
 
-
+    public boolean tellProductStoreIsClose() {
+        for (Map.Entry<Integer, ProductStore> entry : getProducts().entrySet()) {
+            boolean success = entry.getValue().getProductType().removeStore(getStoreId());
+            if(!success)
+                return false;
+        }
+        return true;
+    }
 
     public ProductStore getProductStoreAfterBuy(Integer productID, Integer productQuantity) {
         ProductStore productStore = getProducts().get(productID);

@@ -166,6 +166,15 @@ public class Store {
         return inventory.getProductLock(productID);
     }
 
+    //requirement II.4.9  (only owners)
+    public boolean closeStore() {
+        boolean success = inventory.tellProductStoreIsClose();
+        isOpen = false;
+        //sends message to managers.
+        return success;
+    }
+
+
 }
 
 
