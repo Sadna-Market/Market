@@ -2,7 +2,6 @@ package main.System.Server.Domain.StoreModel;
 
 import main.System.Server.Domain.Market.ProductType;
 import org.apache.log4j.Logger;
-
 import java.util.concurrent.locks.StampedLock;
 
 public class ProductStore {

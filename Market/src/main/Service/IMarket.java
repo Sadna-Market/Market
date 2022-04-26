@@ -30,10 +30,17 @@ public interface IMarket {
     public boolean Login(String email , int password);
 
     //2.2.1
-    public StoreResponse GetStoreInfo(int StoreID);
+    public Store getStore(int StoreID);
+    public String getInfoProductInStore(int storeID, int productID);
 
     //2.2.2
-    public List<ProductResponse> ProductSearch(String productName, String category);
+    public List<Integer> searchProductByName(String productName);
+    public List<Integer> searchProductByDesc(String desc);
+    public List<Integer> searchProductByRate(int rate);
+    public List<Integer> searchProductByCategory(int category);
+    public List<Integer> searchProductByStoreRate(int rate);
+    public List<Integer> searchProductByRangePrices(int productId,int min,int max);
+
 
     //2.2.3
     public boolean AddProductToShoppingBag(int userId,int storeId,int productId , int quantity) ;
@@ -56,18 +63,19 @@ public interface IMarket {
 
 
     //2.3.2
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy);
+    public boolean OpenNewStore(int userId,String name,String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy);
 
 
     //2.4.1.1
-    public boolean AddNewProductToStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
+    public boolean AddNewProductToStore(int userId , int StoreId, int productId, double price, int quantity);
 
 
     //2.4.1.2
     public boolean DeleteProductFromStore(int UserId ,int storeId,int productId);
 
     //2.4.1.3
-    public boolean SetProductInStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
+    public boolean setProductPriceInStore(int userId , int StoreId, int productId, double price);
+    public boolean setProductQuantityInStore(int userId , int StoreId, int productId, int quantity);
 
 
     //2.4.4
@@ -81,7 +89,7 @@ public interface IMarket {
     public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId);
 
     //2.4.9
-    public boolean DeleteStore(int UserId, int StoreId);
+    public boolean closeStore(int UserId, int StoreId);
 
 
     //2.4.11

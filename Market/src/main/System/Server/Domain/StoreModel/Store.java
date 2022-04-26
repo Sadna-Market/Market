@@ -2,12 +2,12 @@ package main.System.Server.Domain.StoreModel;
 
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
+
 import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
-
 
 public class Store {
 
@@ -44,6 +44,7 @@ public class Store {
         history = new ConcurrentHashMap<>();
         this.discountPolicy = discountPolicy; //this version is null
         this.buyPolicy = buyPolicy; //this version is null
+
     }
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
@@ -61,6 +62,7 @@ public class Store {
     public boolean isProductExistInStock(int productId, int quantity){
         return inventory.isProductExistInStock(productId ,quantity);
     }
+
 
     //requirement II.4.1 (only owners)
     public boolean addNewProduct(ProductType productType, int quantity, double price) {
@@ -235,6 +237,7 @@ public class Store {
 
     public DiscountPolicy getDiscountPolicy() {
         return discountPolicy;
+
     }
 
     public BuyPolicy getBuyPolicy() {
