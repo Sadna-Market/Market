@@ -51,18 +51,13 @@ public class Market {
     }
 
     public String getInfoProductInStore(int storeID, int productID){
-        long stamp = lock_stores.readLock();
-        logger.debug("getInfoProductInStore released the ReadLock");
-        try {
-            return stores.get(storeID).getProductInStoreInfo(productID);
-        }
-        catch (Exception e){
+        ProductType p=getProductType(productID);
+        if (p==null){
+            logger.warn("productID is invalid in the system.");
             return null;
         }
-        finally {
-            lock_stores.unlockRead(stamp);
-            logger.debug("getInfoProductInStore released the ReadLock");
-        }
+        Store s=getStore(storeID);
+        return s.getProductInStoreInfo(productID);
     }
 
     public List<Integer> searchProductByName(String name){
