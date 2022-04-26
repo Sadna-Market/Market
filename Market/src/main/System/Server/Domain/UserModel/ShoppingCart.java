@@ -24,6 +24,7 @@ public class ShoppingCart {
 
     public boolean isCartExist(int storeId){
         return shoppingBagHash.containsKey(storeId);
+
     }
 
     public boolean setProductQuantity(int storeId,int productId, int quantity)
@@ -60,6 +61,9 @@ public class ShoppingCart {
         }
         else {
             return false;
+
+
+
         }
     }
 
