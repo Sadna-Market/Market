@@ -2,6 +2,7 @@ package main.System.Server.Domain.Market;
 
 import main.System.Server.Domain.StoreModel.BuyStrategy;
 import main.System.Server.Domain.StoreModel.DiscountPolicy;
+import main.System.Server.Domain.StoreModel.History;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
 import main.System.Server.Domain.UserModel.ShoppingCart;
@@ -369,12 +370,15 @@ public class Market {
         return userManager.getRolesInStore(userId,store);
     }
 
-    public boolean getStoreOrderHistory(int userId, int storeId) {
+    public List<History> getStoreOrderHistory(int userId, int storeId) {
         if(userManager.isOwner(userId ,storeId)){
             Store store = getStore(storeId);
             return store.getStoreOrderHistory();
         }
-        return false;
+        return null;
+    }
+    public List<History> getUserHistoryInStore(int userID,int storeID){
+        stores.get(storeID).getUserHistory("");
     }
 
     /* forbidden to use with this function except Test*/

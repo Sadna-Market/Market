@@ -3,6 +3,7 @@ package main.System.Server.Domain.StoreModel;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -43,8 +44,8 @@ public class Store {
         return true;
     }
 
-    public boolean getStoreOrderHistory() {
-        return true;
+    public List<History> getStoreOrderHistory() {
+        return new ArrayList<>();
     }
 
     public int getRate() {
@@ -74,6 +75,9 @@ public class Store {
 
     public boolean setProductQuantity(int productId, int quantity) {
         return true;
+    }
+
+    public void getUserHistory(String s) {
     }
 
     public static class BuyPolicy {
