@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="#56 add new product to store" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="#48 get price of product">
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/History.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/History.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,7 +129,7 @@
       <workItem from="1650786368987" duration="17468000" />
       <workItem from="1650816966316" duration="7232000" />
       <workItem from="1650868319024" duration="12213000" />
-      <workItem from="1650955112853" duration="20101000" />
+      <workItem from="1650955112853" duration="20410000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -157,7 +159,35 @@
       <option name="project" value="LOCAL" />
       <updated>1650983676316</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="#57 remove product to store">
+      <created>1650983732189</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1650983732189</updated>
+    </task>
+    <task id="LOCAL-00006" summary="#58 set quantity in store">
+      <created>1650983828471</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1650983828471</updated>
+    </task>
+    <task id="LOCAL-00007" summary="#58 set product price in store">
+      <created>1650983897444</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1650983897444</updated>
+    </task>
+    <task id="LOCAL-00008" summary="#48 get price of product">
+      <created>1650983972290</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1650983972290</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,6 +211,24 @@
     <MESSAGE value="#48 product search" />
     <MESSAGE value="#56 check if product in stock" />
     <MESSAGE value="#56 add new product to store" />
-    <option name="LAST_COMMIT_MESSAGE" value="#56 add new product to store" />
+    <MESSAGE value="#57 remove product to store" />
+    <MESSAGE value="#58 set quantity in store" />
+    <MESSAGE value="#58 set product price in store" />
+    <MESSAGE value="#48 get price of product" />
+    <option name="LAST_COMMIT_MESSAGE" value="#48 get price of product" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java</url>
+          <line>63</line>
+          <properties class="main.System.Server.Domain.StoreModel.Inventory" method="setProductPrice">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

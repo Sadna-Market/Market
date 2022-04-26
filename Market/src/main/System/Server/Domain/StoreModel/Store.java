@@ -91,6 +91,25 @@ public class Store {
         return inventory.getPrice(productId);
     }
 
+    //requirement II.4.13 & II.6.4 (only system manager)
+    public List<History> getUserHistory(String user) {
+        List<History> userHistory = new ArrayList<>();
+        for (Map.Entry<Integer, History> entry : history.entrySet()) {
+            if(entry.getValue().getUser().equals(user))
+                userHistory.add(entry.getValue());
+        }
+        return userHistory;
+    }
+
+    //niv tests
+    public List<Integer> getTIDHistory(){
+        List<Integer> TIDHistory = new ArrayList<>();
+        for (History h: getStoreOrderHistory()) {
+            TIDHistory.add(h.getTID());
+        }
+        return TIDHistory;
+    }
+
 }
 
 
