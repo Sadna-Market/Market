@@ -2,12 +2,9 @@ package main.System.Server.Domain.StoreModel;
 
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
-import main.System.Server.Domain.UserModel.ShoppingBag;
 import org.apache.log4j.Logger;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
 

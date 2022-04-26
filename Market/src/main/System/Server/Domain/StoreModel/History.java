@@ -5,10 +5,10 @@ import org.apache.log4j.Logger;
 import java.util.List;
 
 public class History {
-    private int TID;
-    private double finalPrice;
-    private List<ProductStore> products;
-    private String user;
+    private final int TID;
+    private final double finalPrice;
+    private final List<ProductStore> products;
+    private final String user;
 
     static Logger logger=Logger.getLogger(History.class);
 
