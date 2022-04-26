@@ -189,6 +189,7 @@ public class Market {
         try{
             int value= productCounter++;
             productTypes.put(value,new ProductType(value,name,desc));
+            logger.info("new productType add to the market.");
             return true;
         }
         finally {
@@ -212,9 +213,7 @@ public class Market {
 
     //todo maybe need to change the position of the func ?
     public boolean AddProductToShoppingBag(int userId, int StoreId, int ProductId, int quantity) {
-        long stamp = lock_stores.readLock();
-        Store s = stores.get(StoreId);
-        lock_stores.unlockRead(stamp);
+        Store s=getStore(StoreId);
         if (s==null){
             logger.warn("the storeID is not exist in the market");
             return false;
