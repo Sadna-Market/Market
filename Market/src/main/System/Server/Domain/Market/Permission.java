@@ -2,6 +2,7 @@ package main.System.Server.Domain.Market;
 
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.User;
+import main.System.Server.Domain.UserModel.userTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Permission {
         granteeType = null;
         grantorType = null;
     }
-
+    //createPermission;
 
     public void setPermissionTypes(userTypes granteeType, userTypes grantorType) {
         //case 1: grantor-system ,grantee- owner

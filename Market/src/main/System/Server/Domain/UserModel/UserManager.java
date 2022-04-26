@@ -79,7 +79,6 @@ public class UserManager {
             return true;
         }
         return false;
-
     }
 
 
@@ -114,10 +113,14 @@ public class UserManager {
 
 
 
-    public boolean isOwner(User user,Store store) {
+    public boolean isOwner(UUID user,Store store) {
+        if(!isLogged(user)){
+            return false;
+        }
+        User u = LoginUsers.get(user);
         logger.debug("UserManager isOwner");
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return permissionManager.getGranteeUserType(user,store)== userTypes.owner;
+        return permissionManager.getGranteeUserType(u,store).equals(userTypes.owner);
 
     }
 
@@ -125,7 +128,7 @@ public class UserManager {
         logger.debug("UserManager addNewStoreOwner");
         if(isLogged(userId) ) {
             User loggedUser = LoginUsers.get(userId);
-            if (isOwner(loggedUser,store)) {
+            if (isOwner(userId,store)) {
                 User newOwner = members.get(newOwnerEmail);
                 return loggedUser.addNewStoreOwner(newOwner,store);
             }
@@ -147,7 +150,7 @@ public class UserManager {
 
         if(isLogged(uuid) ) {
             User loggedUser = LoginUsers.get(uuid);
-            if (isOwner(loggedUser,store)) {
+            if (isOwner(uuid,store)) {
                 User newManager = members.get(newMangerEmail);
                 return loggedUser.addNewStoreManager(newManager,store);
             }}
@@ -160,7 +163,7 @@ public class UserManager {
         logger.debug("UserManager setManagerPermissions");
         if(isLogged(userId) ) {
             User loggedUser = LoginUsers.get(userId);
-            if (isOwner(loggedUser,store)) {
+            if (isOwner(userId,store)) {
                 User Manager = members.get(email);
                 return loggedUser.setManagerPermissions(Manager,store,perm);
             }

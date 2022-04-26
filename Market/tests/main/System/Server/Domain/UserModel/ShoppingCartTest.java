@@ -17,7 +17,7 @@ class ShoppingCartTest {
 
     @Test
     void addNewProductToShoppingBag() {
-        Store s= new Store();
+        Store s= new Store(null,null ,null,null);
         shoppingCart.addNewProductToShoppingBag(1,s,20); //the cart not exist
         Assertions.assertTrue(shoppingCart.isCartExist(s.getStoreId())); //
         Assertions.assertTrue(shoppingCart.addNewProductToShoppingBag(2,s,20)); // cart exsist
@@ -27,7 +27,7 @@ class ShoppingCartTest {
 
     @Test
     void setProductQuantity() {
-        Store s = new Store();
+        Store s= new Store(null,null ,null,null);
         Assertions.assertFalse(shoppingCart.setProductQuantity(s.getStoreId(),1,20)); //shoppingcartNotExists
         shoppingCart.addNewProductToShoppingBag(1,s,20);
         Assertions.assertFalse(shoppingCart.setProductQuantity(s.getStoreId(),2,10)); //productNotExistsInShoppincart
@@ -36,7 +36,7 @@ class ShoppingCartTest {
 
     @Test
     void removeProductFromShoppingBag() {
-        Store s= new Store();
+        Store s= new Store(null,null ,null,null);
         shoppingCart.addNewProductToShoppingBag(1,s,20); //the cart not exist
         Assertions.assertTrue(shoppingCart.getHashShoppingCart().get(s.getStoreId()).isContainProduct(1));
         shoppingCart.removeProductFromShoppingBag(s.getStoreId(),1);
@@ -46,7 +46,7 @@ class ShoppingCartTest {
 
     @Test
     void removeShoppingCart(){
-        Store s= new Store();
+        Store s= new Store(null,null ,null,null);
         shoppingCart.addNewProductToShoppingBag(1,s,20); //the cart not exist
         Assertions.assertTrue(shoppingCart.getHashShoppingCart().containsKey(s.getStoreId()));
         shoppingCart.removeShoppingCart(s.getStoreId());

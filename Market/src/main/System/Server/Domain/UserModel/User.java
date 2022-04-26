@@ -3,7 +3,6 @@ package main.System.Server.Domain.UserModel;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
-import main.System.Server.Domain.Market.userTypes;
 import main.System.Server.Domain.StoreModel.Store;
 
 import java.util.Collections;
@@ -69,17 +68,17 @@ public class User extends Guest{
     }
 
     public boolean addFounder(Store store) {
-        return PermissionManager.getInstance().createPermission(this,store,null,userTypes.owner,userTypes.system);
+        return PermissionManager.getInstance().createPermission(this,store,null,userTypes.owner,userTypes.system).value;
     }
 
     public boolean addNewStoreOwner(User user, Store store) {
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.createPermission(user,store,this, userTypes.owner,userTypes.owner));
+        return (permissionManager.createPermission(user,store,this, userTypes.owner,userTypes.owner)).value;
     }
 
     public boolean addNewStoreManager(User user, Store store) {
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.createPermission(user,store,this, userTypes.manager,userTypes.owner));    }
+        return (permissionManager.createPermission(user,store,this, userTypes.manager,userTypes.owner)).value;    }
 
     public boolean setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
         PermissionManager permissionManager =PermissionManager.getInstance();

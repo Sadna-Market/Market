@@ -14,7 +14,7 @@ class ShoppingBagTest {
     @BeforeEach
     void start(){
         shoppingBag= new ShoppingBag(s);
-        s = new Store();
+        s = new Store(null,null,null,null);
 
     }
 

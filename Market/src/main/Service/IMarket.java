@@ -2,9 +2,7 @@ package main.Service;
 
 
 import main.System.Server.Domain.Market.permissionType;
-import main.System.Server.Domain.StoreModel.BuyStrategy;
-import main.System.Server.Domain.StoreModel.DiscountPolicy;
-import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.UserModel.Response.ProductResponse;
 import main.System.Server.Domain.UserModel.Response.ShoppingCartResponse;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
@@ -32,10 +30,17 @@ public interface IMarket {
     public boolean Login(UUID userid, String email, String password);
 
     //2.2.1
-    public StoreResponse GetStoreInfo(int StoreID);
+    public Store getStore(int StoreID);
+    public String getInfoProductInStore(int storeID, int productID);
 
     //2.2.2
-    public List<ProductResponse> ProductSearch(String productName, String category);
+    public List<Integer> searchProductByName(String productName);
+    public List<Integer> searchProductByDesc(String desc);
+    public List<Integer> searchProductByRate(int rate);
+    public List<Integer> searchProductByCategory(int category);
+    public List<Integer> searchProductByStoreRate(int rate);
+    public List<Integer> searchProductByRangePrices(int productId,int min,int max);
+
 
     //2.2.3
     public boolean AddProductToShoppingBag(UUID userId,int storeId,int productId , int quantity);
@@ -55,32 +60,33 @@ public interface IMarket {
 
 
     //2.3.2
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy);
+    public boolean OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy);
 
 
     //2.4.1.1
-    public boolean AddNewProductToStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
+    public boolean AddNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) ;
 
 
     //2.4.1.2
-    public boolean DeleteProductFromStore(int UserId ,int storeId,int productId);
+    public boolean DeleteProductFromStore(UUID userId, int storeId, int productId);
 
     //2.4.1.3
-    public boolean SetProductInStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
+    public boolean setProductPriceInStore(UUID userId, int storeId, int productId, double price) ;
+    public boolean setProductQuantityInStore(UUID userId, int storeId, int productId,  int quantity);
 
 
     //2.4.4
-    public boolean AddNewStoreOwner(int UserId,int StoreId, int newOwnerId);
+    public boolean AddNewStoreOwner(UUID UserId, int StoreId, String OwnerEmail) ;
 
 
     //2.4.6
-    public  boolean AddNewStoreManger(int UserId, int StoreId, int newMangerId);
+    public boolean AddNewStoreManger(UUID UserId, int StoreId,  String mangerEmil) ;
 
     //2.4.7
-    public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId, permissionType.permissionEnum per);
+    public boolean SetMangerPermissions(UUID UserId, int StoreId, String mangerEmil, permissionType.permissionEnum per);
 
     //2.4.9
-    public boolean DeleteStore(int UserId, int StoreId);
+    public boolean closeStore(UUID UserId, int StoreId);
 
 
     //2.4.11
@@ -88,7 +94,7 @@ public interface IMarket {
 
 
     //2.6.5 && //2.4.13
-    public boolean getStoreOrderHistory(int UserId,int StoreId);
+    public List<History> getStoreOrderHistory(UUID UserId, int StoreId) ;
 
 
     //todo 2.5 use case
