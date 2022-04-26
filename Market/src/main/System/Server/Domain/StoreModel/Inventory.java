@@ -70,6 +70,12 @@ public class Inventory {
             return true;
         }
     }
+
+    public Double getPrice(Integer productID) {
+        ProductStore productStore = products.get(productID);
+        return productStore == null ? null : productStore.getPrice();
+    }
+
     public ProductStore getProduct(int productId) {
         return products.get(productId);
     }

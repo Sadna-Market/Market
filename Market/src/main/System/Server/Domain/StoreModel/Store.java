@@ -85,6 +85,12 @@ public class Store {
     public boolean setProductPrice(int productId, double price) {
         return inventory.setProductPrice(productId, price);
     }
+
+    //requirement II.2.2
+    public Double getProductPrice(int productId) {
+        return inventory.getPrice(productId);
+    }
+
 }
 
 
