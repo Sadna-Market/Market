@@ -58,8 +58,15 @@ public class UserManager {
 
 
     public  boolean Login(UUID userID,String email, String password) {
-return false;
-
+        logger.debug("UserManager Login");
+        if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password)) {
+            User LogUser = members.get(email);
+            LoginUsers.put(userID, LogUser);
+            GuestVisitors.remove(userID);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean Logout(UUID userId) {
