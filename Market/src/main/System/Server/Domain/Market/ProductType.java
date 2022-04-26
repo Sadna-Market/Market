@@ -64,13 +64,29 @@ public class ProductType {
 
     public boolean storeExist(int storeID){
         long stamp= lock_stores.readLock();
-        logger.debug("storeExist() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try{
             return stores.contains(storeID);
         }
         finally {
             lock_stores.unlockRead(stamp);
-            logger.debug("storeExist() released the ReadLock.");
+            logger.debug("released the ReadLock.");
+        }
+    }
+
+    public boolean removeStore(int storeID){
+        if (!storeExist(storeID)){
+            logger.warn("the store in not in the list of this product.");
+            return false;
+        }
+        long stamp= lock_stores.writeLock();
+        logger.debug("catch the WriteLock.");
+        try{
+            return stores.remove(Integer.valueOf(storeID));
+        }
+        finally {
+            lock_stores.unlockWrite(stamp);
+            logger.debug("released the WriteLock.");
         }
     }
 
