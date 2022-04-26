@@ -88,8 +88,15 @@ return false;
 
     }
     public boolean addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
-        return false;
+        logger.debug("UserManager addNewStoreManager");
 
+        if(isLogged(uuid) ) {
+            User loggedUser = LoginUsers.get(uuid);
+            if (isOwner(loggedUser,store)) {
+                User newManager = members.get(newMangerEmail);
+                return loggedUser.addNewStoreManager(newManager,store);
+            }}
+        return false;
     }
 
 

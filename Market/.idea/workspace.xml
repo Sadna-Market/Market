@@ -2,10 +2,43 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/out/production/Market/META-INF/Market.kotlin_module" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/javax.mail-1.6.2.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/ExternalService/PaymentService$PaymentServiceWrapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/ExternalService/PaymentService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/ExternalService/SupplyService$SupplyServiceWrapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/ExternalService/SupplyService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/Service/IMarket.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/PermissionManager$PermissionManagerWrapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/PermissionManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/BuyStrategy.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Discount.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/DiscountPolicy.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/History.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Inventory.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store$BuyPolicy.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Guest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ProductResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ShoppingCartResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/StoreResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/ShoppingBag.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/ShoppingCart.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Validator.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/ShoppingBagTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/ShoppingCartTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserTest.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/javax.mail-1.6.2.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/permissionType.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/userTypes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Guest.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Validator.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/ShoppingBagTest.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/ShoppingCartTest.java" afterDir="false" />
@@ -47,7 +80,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Manager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Owner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Guest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Owner.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingBag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingBag.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingCart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingCart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" afterDir="false" />
