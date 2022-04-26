@@ -2,15 +2,15 @@ package main.System.Server.Domain;
 
 import main.Service.IMarket;
 import main.System.Server.Domain.Market.Market;
-import main.System.Server.Domain.StoreModel.BuyStrategy;
-import main.System.Server.Domain.StoreModel.DiscountPolicy;
-import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.Market.permissionType;
+import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.UserModel.Response.ProductResponse;
 import main.System.Server.Domain.UserModel.Response.ShoppingCartResponse;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
 import main.System.Server.Domain.UserModel.UserManager;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Facade implements IMarket {
     UserManager userManager;
@@ -23,23 +23,23 @@ public class Facade implements IMarket {
 
 
     @Override
-    public boolean GuestVisit() {
+    public UUID GuestVisit() {
         return userManager.GuestVisit();
     }
 
     @Override
-    public boolean GuestLeave(int guestId) {
+    public boolean GuestLeave(UUID guestId) {
         return userManager.GuestLeave(guestId);
     }
 
     @Override
-    public boolean AddNewMember(String email, int Password) {
-        return userManager.AddNewMember(email,Password);
+    public boolean AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
+        return userManager.AddNewMember(uuid,email,Password,phoneNumber,CreditCared,CreditDate);
     }
 
     @Override
-    public boolean Login(String email, int password) {
-        return userManager.Login(email,password);
+    public boolean Login(UUID userid, String email, String password) {
+        return userManager.Login(userid,email,password);
     }
 
     @Override
@@ -49,7 +49,8 @@ public class Facade implements IMarket {
 
     @Override
     public String getInfoProductInStore(int storeID, int productID) {
-        return market.getInfoProductInStore(storeID,productID);
+      market.getInfoProductInStore(storeID,productID);
+      return null;
     }
 
 
@@ -85,80 +86,80 @@ public class Facade implements IMarket {
 
 
     @Override
-    public boolean AddProductToShoppingBag(int userId,int storeId,int productId , int quantity) {
+    public boolean AddProductToShoppingBag(UUID userId,int storeId,int productId , int quantity) {
         return market.AddProductToShoppingBag(userId,storeId,productId,quantity);
     }
 
     @Override
-    public ShoppingCartResponse GetShoppingCart(int userId) {
-        userManager.getUser(userId).getShoppingCart();
+    public ShoppingCartResponse GetShoppingCart(UUID userId) {
+        userManager.getUserShoppingCart(userId);
         return null;
     }
 
     @Override
-    public boolean RemoveProductFromShoppingBag(int userId,int storeId, int productId) {
-        return userManager.getUser(userId).getShoppingCart().removeProductFromShoppingBag(storeId,productId);
+    public boolean RemoveProductFromShoppingBag(UUID userId,int storeId, int productId) {
+        return userManager.getUserShoppingCart(userId).removeProductFromShoppingBag(storeId,productId);
     }
 
     @Override
-    public boolean setProductQuantityShoppingBag(int userId, int productId, int storeId,int quantity) {
-        return userManager.getUser(userId).getShoppingCart().setProductQuantity(storeId,productId,quantity);
+    public boolean setProductQuantityShoppingBag(UUID userId, int productId, int storeId,int quantity) {
+        return userManager.getUserShoppingCart(userId).setProductQuantity(storeId,productId,quantity);
     }
 
     @Override
-    public boolean orderShoppingCart(int userId) {
+    public boolean orderShoppingCart(UUID userId) {
         return market.order(userId);
     }
 
     @Override
-    public boolean Logout(int userId) {
+    public boolean Logout(UUID userId) {
         return userManager.Logout(userId);
     }
 
 
     @Override
-    public boolean OpenNewStore(int userId,String name, String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    public boolean OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         return market.OpenNewStore(userId,name,founder,discountPolicy,buyPolicy,buyStrategy);
     }
 
     @Override
-    public boolean AddNewProductToStore(int userId, int storeId, int productId, double price, int quantity) {
+    public boolean AddNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
       return market.addNewProductToStore(userId,storeId, productId,price, quantity);
     }
 
     @Override
-    public boolean DeleteProductFromStore(int userId, int storeId, int productId) {
+    public boolean DeleteProductFromStore(UUID userId, int storeId, int productId) {
         return market.deleteProductFromStore(userId,storeId,productId);
     }
 
     @Override
-    public boolean setProductPriceInStore(int userId, int storeId, int productId, double price) {
+    public boolean setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
         return market.setProductPriceInStore(userId,storeId,productId,price);
     }
 
     @Override
-    public boolean setProductQuantityInStore(int userId, int storeId, int productId,  int quantity) {
+    public boolean setProductQuantityInStore(UUID userId, int storeId, int productId,  int quantity) {
         return market.setProductQuantityInStore(userId,storeId,productId,quantity);
     }
 
     @Override
-    public boolean AddNewStoreOwner(int UserId, int StoreId, int newOwnerId) {
-        return market.addNewStoreOwner(UserId, StoreId, newOwnerId);
+    public boolean AddNewStoreOwner(UUID UserId, int StoreId, String OwnerEmail) {
+        return market.addNewStoreOwner(UserId, StoreId, OwnerEmail);
     }
 
     @Override
-    public boolean AddNewStoreManger(int UserId, int StoreId, int newMangerId) {
-        return market.addNewStoreManager(UserId, StoreId, newMangerId);
+    public boolean AddNewStoreManger(UUID UserId, int StoreId,  String mangerEmil) {
+        return market.addNewStoreManager(UserId, StoreId, mangerEmil);
     }
 
     @Override
-    public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId) {
-        return market.setManagerPermissions(UserId, StoreId, ManagerId);
+    public boolean SetMangerPermissions(UUID UserId, int StoreId, String mangerEmil, permissionType.permissionEnum per) {
+        return market.setManagerPermissions(UserId, StoreId, mangerEmil,per);
     }
 
 
     @Override
-    public boolean closeStore(int UserId, int StoreId) {
+    public boolean closeStore(UUID UserId, int StoreId) {
         return market.closeStore(UserId, StoreId);
     }
 
@@ -168,7 +169,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public boolean getStoreOrderHistory(int UserId, int StoreId) {
+    public List<History> getStoreOrderHistory(UUID UserId, int StoreId) {
         return market.getStoreOrderHistory(UserId,StoreId);
     }
 }

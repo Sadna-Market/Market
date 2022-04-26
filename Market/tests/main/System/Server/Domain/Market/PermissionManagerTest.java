@@ -23,13 +23,13 @@ class PermissionManagerTest {
 
     @BeforeEach
     void setUp() {
-        founder = new User("founder");
-        owner1 = new User("owner1");
-        owner2 = new User("owner2");
-        manager = new User("manager");
-        manager2 = new User("manager2");
-        member = new User("member");
-        store1 = new Store();
+        founder = new User("founder","abc123D!","0678987655","1234567891234567","1234");
+        owner1 = new User("owner1","abc123D!","0678987655","1234567891234567","1234");
+        owner2 = new User("owner2","abc123D!","0678987655","1234567891234567","1234");
+        manager = new User("manager","abc123D!","0678987655","1234567891234567","1234");
+        manager2 = new User("manager2","abc123D!","0678987655","1234567891234567","1234");
+        member = new User("member","abc123D!","0678987655","1234567891234567","1234");
+        store1 = new Store(null,null,null,null);
         permissionManager = PermissionManager.getInstance();
 
     }
@@ -82,8 +82,8 @@ class PermissionManagerTest {
         //try to remove permission type but with another owner that not appointed this manager
         assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner1));
 
-        User user1 = new User("user11");
-        User user2 = new User("user22");
+        User user1 = new User("user11","abc123D!","0678987655","1234567891234567","1234");
+        User user2 = new User("user22","abc123D!","0678987655","1234567891234567","1234");
 
         //try to remove permission type with users that not owner or manager in this store
         assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, user1, store1, user2));
@@ -141,7 +141,7 @@ class PermissionManagerTest {
         assertEquals(permissionManager.getGranteeUserType(owner1, store1), userTypes.owner);
         assertEquals(permissionManager.getGranteeUserType(manager2, store1), userTypes.manager);
 
-        User user1 = new User("user121");
+        User user1 = new User("user121","abc123D!","0678987655","1234567891234567","1234");
         assertEquals(permissionManager.getGranteeUserType(user1, store1), userTypes.member);
 
 

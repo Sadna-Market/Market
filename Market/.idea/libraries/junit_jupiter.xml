@@ -10,6 +10,7 @@
       <root url="jar://$PROJECT_DIR$/lib/junit-jupiter-params-5.4.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/junit-jupiter-engine-5.4.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/junit-platform-engine-1.4.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/javax.mail-1.6.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

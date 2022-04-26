@@ -1,9 +1,6 @@
 package main.System.Server.Domain.Market;
 
-import main.System.Server.Domain.StoreModel.BuyStrategy;
-import main.System.Server.Domain.StoreModel.DiscountPolicy;
-import main.System.Server.Domain.StoreModel.History;
-import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
@@ -13,6 +10,7 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 
@@ -30,8 +28,7 @@ public class Market {
     if you want to use with ProductType, productCounter - acquire - lock_TP
      */
     private StampedLock lock_stores= new StampedLock(), lock_TP = new StampedLock();
-
-
+    private Store buyPolicy;
 
 
     public Market(UserManager userManager) {
@@ -51,7 +48,7 @@ public class Market {
         }
     }
 
-    public String getInfoProductInStore(int storeID, int productID){
+    public ProductStore getInfoProductInStore(int storeID, int productID){
         ProductType p=getProductType(productID);
         if (p==null){
             logger.warn("productID is invalid in the system.");
@@ -213,26 +210,25 @@ public class Market {
     }
 
     //todo maybe need to change the position of the func ?
-    public boolean AddProductToShoppingBag(int userId, int StoreId, int ProductId, int quantity) {
+    public boolean AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
         Store s=getStore(StoreId);
         if (s==null){
             logger.warn("the storeID is not exist in the market");
             return false;
         }
         if (s.isProductExistInStock(ProductId, quantity)) {
-            User user = userManager.getUser(userId);
-            if (user==null) {
+            if (!userManager.isOnline(userId)) {
                 logger.warn("the userID is not exist in the system.");
                 return false;
             }
-            return user.getShoppingCart().addNewProductToShoppingBag(ProductId, s, quantity);
+            return userManager.getUserShoppingCart(userId).addNewProductToShoppingBag(ProductId, s, quantity);
         }
         return false;
     }
 
-    public boolean order(int userId){
+    public boolean order(UUID userId){
         try {
-            ShoppingCart shoppingCart = userManager.getUser(userId).getShoppingCart();
+            ShoppingCart shoppingCart = userManager.getUserShoppingCart(userId);
             return purchase.order(shoppingCart);
         }
         catch (Exception e){
@@ -241,12 +237,12 @@ public class Market {
 
     }
 
-    public boolean OpenNewStore(int userId,String name,String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        if (!userManager.isLogin(userId)){
+    public boolean OpenNewStore(UUID userId,String name,String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+        if (!userManager.isLogged(userId)){
             logger.warn("the userID does not connect");
             return false;
         }
-        Store store = new Store(name,founder,discountPolicy, buyPolicy, buyStrategy);
+        Store store = new Store(name,discountPolicy, buyPolicy,founder);
         long stamp = lock_stores.writeLock();
         logger.debug("OpenNewStore catch the WriteLock");
         try {
@@ -266,36 +262,38 @@ public class Market {
     }
 
 
-    public boolean addNewProductToStore(int userId, int storeId, int productId, double price, int quantity) {
+    public boolean addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
         if (checkValid(userId,storeId,productId)){
             ProductType p= getProductType(productId);
             Store s=getStore(storeId);
-            return s.addNewProduct(p,price,quantity);
+            return s.addNewProduct(p,quantity,price);
         }
         return false;
     }
 
-    public boolean deleteProductFromStore(int userId, int storeId, int productId) {
+    public boolean deleteProductFromStore(UUID userId, int storeId, int productId) {
         if (checkValid(userId,storeId,productId)){
             ProductType p= getProductType(productId);
             Store s=getStore(storeId);
-            return s.removeProduct(p);
+            return s.removeProduct(p.getProductID());
         }
         return false;
     }
 
-    private boolean checkValid(int userid,int storeId,int productId){
-        if(userManager.isOwner(userid , storeId)){
+    private boolean checkValid(UUID userid,int storeId,int productId){
+        Store s=getStore(storeId);
+
+        if (s==null){
+            logger.warn("the StoreID is invalid.");
+            return false;
+        }
+        if(userManager.isOwner(userid , s)){
             ProductType p= getProductType(productId);
-            Store s=getStore(storeId);
             if (p==null){
                 logger.warn("the storeID is invalid.");
                 return false;
             }
-            if (s==null){
-                logger.warn("the StoreID is invalid.");
-                return false;
-            }
+
             return true;
         }
         else{
@@ -304,7 +302,7 @@ public class Market {
         }
     }
 
-    public boolean setProductPriceInStore(int userId, int storeId, int productId, double price) {
+    public boolean setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
         if (checkValid(userId,storeId,productId)){
             Store s=getStore(storeId);
             return s.setProductPrice(productId,price);
@@ -312,7 +310,7 @@ public class Market {
         return false;
     }
 
-    public boolean setProductQuantityInStore(int userId, int storeId, int productId, int quantity) {
+    public boolean setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
         if (checkValid(userId,storeId,productId)){
             Store s=getStore(storeId);
             return s.setProductQuantity(productId, quantity);
@@ -322,28 +320,29 @@ public class Market {
 
 
 
-    public boolean addNewStoreOwner(int userId, int storeId, int newOwnerId) {
+    public boolean addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
         Store store = getStore(storeId);
-        return userManager.addNewStoreOwner(userId,store,newOwnerId);
+        return userManager.addNewStoreOwner(userId,store,newOnerEmail);
     }
 
-    public boolean addNewStoreManager(int userId, int storeId, int newMangerId) {
+    public boolean addNewStoreManager(UUID userId, int storeId, String newMangermail) {
         Store store = getStore(storeId);
-        return userManager.addNewStoreManager(userId,store,newMangerId);
+        return userManager.addNewStoreManager(userId,store,newMangermail);
     }
 
-    public boolean setManagerPermissions(int userId, int storeId, int managerId) {
+    public boolean setManagerPermissions(UUID userId, int storeId, String mangerMail,permissionType.permissionEnum perm) {
         Store store = getStore(storeId);
-        return userManager.setManagerPermissions(userId,store,managerId);
+        return userManager.setManagerPermissions(userId,store,mangerMail,perm);
     }
 
-    public boolean closeStore(int userId, int storeId) {
-        if(userManager.isOwner(userId ,storeId)){
-            Store s= getStore(storeId);
-            if (s==null){
-                logger.warn("this store not open.");
-                return false;
-            }
+    public boolean closeStore(UUID userId, int storeId) {
+        Store s= getStore(storeId);
+        if (s==null){
+            logger.warn("this store not open.");
+            return false;
+        }
+        if(userManager.isOwner(userId ,s)){
+
             if (s.closeStore()){
                 long stamp = lock_stores.writeLock();
                 logger.debug("catch WriteLock");
@@ -370,20 +369,21 @@ public class Market {
         return userManager.getRolesInStore(userId,store);
     }
 
-    public List<History> getStoreOrderHistory(int userId, int storeId) {
-        if(userManager.isOwner(userId ,storeId)){
-            Store store = getStore(storeId);
+    public List<History> getStoreOrderHistory(UUID userId, int storeId) {
+        Store store = getStore(storeId);
+
+        if(userManager.isOwner(userId ,store)){
             return store.getStoreOrderHistory();
         }
         return null;
     }
     public List<History> getUserHistoryInStore(int userID,int storeID){
-        stores.get(storeID).getUserHistory("");
+      return  stores.get(storeID).getUserHistory("");
     }
 
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
-            userManager = new UserManager();
+        userManager = new UserManager();
         for (int i=0; i<10; i++){
             ProductType p=new ProductType(productCounter++,"product"+i,"hello");
             p.setRate(i);
@@ -391,9 +391,9 @@ public class Market {
             productTypes.put(i,p);
         }
         for (int i=0; i<10; i++){
-            Store s= new Store(null,null,null);
-            s.setRate(i);
-            s.addNewProduct(getProductType(1),0.5,100);
+            Store s= new Store(null,null,null,null);
+            s.newStoreRate(i);
+            s.addNewProduct(getProductType(1),100,0.5);
             stores.put(i,s);}
     }
 }
