@@ -51,6 +51,15 @@ public class Inventory {
 
     }
 
+    public boolean setProductQuantity(int productId, int quantity) {
+        ProductStore productStore = products.get(productId);
+        if(productStore == null)
+            return false;
+        else{
+            productStore.setQuantity(quantity);
+            return true;
+        }
+    }
     public ProductStore getProduct(int productId) {
         return products.get(productId);
     }

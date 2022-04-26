@@ -75,6 +75,11 @@ public class Store {
         return inventory.removeProduct(productId);
     }
 
+    //requirement II.4.1 & II.2.5 (only owners)
+    //if change to quantity 0 not delete product (need to find the product price later)
+    public boolean setProductQuantity(int productId, int quantity) {
+        return inventory.setProductQuantity(productId, quantity);
+    }
 }
 
 
