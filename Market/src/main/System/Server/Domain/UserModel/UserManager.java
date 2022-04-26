@@ -47,8 +47,13 @@ public class UserManager {
     }
 
     public boolean GuestLeave(UUID guestId) {
-     return false;
-    }
+        logger.debug("UserManager GuestLeave");
+        if (!GuestVisitors.containsKey(guestId)) {
+            return false;
+        } else {
+            GuestVisitors.remove(guestId);
+            return true;
+        }    }
 
 
 
