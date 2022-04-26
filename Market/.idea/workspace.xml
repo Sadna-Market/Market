@@ -6,7 +6,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/Service/IMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/IMarket.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +192,7 @@
       <workItem from="1650290444225" duration="8376000" />
       <workItem from="1650303466104" duration="3527000" />
       <workItem from="1650389836537" duration="2010000" />
-      <workItem from="1650843533677" duration="38566000" />
+      <workItem from="1650843533677" duration="38769000" />
     </task>
     <servers />
   </component>

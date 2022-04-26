@@ -158,8 +158,8 @@ public class Facade implements IMarket {
 
 
     @Override
-    public boolean DeleteStore(int UserId, int StoreId) {
-        return market.deleteStore(UserId, StoreId);
+    public boolean closeStore(int UserId, int StoreId) {
+        return market.closeStore(UserId, StoreId);
     }
 
     @Override

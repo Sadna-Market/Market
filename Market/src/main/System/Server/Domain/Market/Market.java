@@ -336,7 +336,7 @@ public class Market {
         return userManager.setManagerPermissions(userId,store,managerId);
     }
 
-    public boolean deleteStore(int userId, int storeId) {
+    public boolean closeStore(int userId, int storeId) {
         if(userManager.isOwner(userId ,storeId)){
             Store s= getStore(storeId);
             if (s==null){

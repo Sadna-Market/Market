@@ -89,7 +89,7 @@ public interface IMarket {
     public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId);
 
     //2.4.9
-    public boolean DeleteStore(int UserId, int StoreId);
+    public boolean closeStore(int UserId, int StoreId);
 
 
     //2.4.11
