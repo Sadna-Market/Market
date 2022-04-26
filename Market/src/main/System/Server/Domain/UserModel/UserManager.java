@@ -79,8 +79,15 @@ return false;
     }
 
     public boolean addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
+        logger.debug("UserManager addNewStoreOwner");
+        if(isLogged(userId) ) {
+            User loggedUser = LoginUsers.get(userId);
+            if (isOwner(loggedUser,store)) {
+                User newOwner = members.get(newOwnerEmail);
+                return loggedUser.addNewStoreOwner(newOwner,store);
+            }
+        }
         return false;
-
     }
 
     public boolean addFounder(UUID userId, Store store) {
