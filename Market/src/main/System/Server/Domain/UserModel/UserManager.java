@@ -83,8 +83,30 @@ public class UserManager {
 
     public boolean AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
 
-        return false;
+        long stamp= LockUsers.writeLock();
+        try {
+            logger.debug("UserManager AddNewMember");
+            if (!isOnline(uuid)) {
+                return false;
+            }
+            if (members.containsKey(email)) {
+                System.out.println("lllllllllllllllllllll");
 
+                return false;
+            }
+            if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)||
+                    !Validator.isValidCreditCard(CreditCared)||!Validator.isValidCreditDate(CreditDate)){
+                System.out.println("ppppppppppllllll");
+
+                return false;
+            }
+            User user = new User(email, Password,phoneNumber,CreditCared,CreditDate);
+            System.out.println("lllllllllllllllllllll");
+            members.put(email, user);
+            return true;
+        }finally {
+            LockUsers.unlockWrite(stamp);
+        }
 
     }
 
