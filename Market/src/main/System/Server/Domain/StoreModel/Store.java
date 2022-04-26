@@ -51,6 +51,9 @@ public class Store {
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
+    public ProductStore getProductInStoreInfo(int productId){
+        return inventory.getProduct(productId);
+    }
 
     //requirement II.2.1
     public List<ProductStore> GetStoreProducts() {
