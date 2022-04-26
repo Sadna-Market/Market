@@ -1,6 +1,7 @@
 package main.Service;
 
 
+import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.StoreModel.BuyStrategy;
 import main.System.Server.Domain.StoreModel.DiscountPolicy;
 import main.System.Server.Domain.StoreModel.Store;
@@ -9,6 +10,7 @@ import main.System.Server.Domain.UserModel.Response.ShoppingCartResponse;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 //Api of all
 public interface IMarket {
@@ -18,16 +20,16 @@ public interface IMarket {
     //todo i just declare all the funcs, in the futer we will change the passing args and the return value acording to the drishot.
 
     // 2.1.1 when a user enter to the system he recognized us a guest visitor
-    public boolean GuestVisit();
+    public UUID GuestVisit();
 
     //2.1.2
-    public boolean GuestLeave(int guestId);
+    public boolean GuestLeave(UUID guestId);
 
     //2.1.3
-    public boolean AddNewMember(String email, int Password);
+    public boolean AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate);
 
     //2.1.4
-    public boolean Login(String email , int password);
+    public boolean Login(UUID userid, String email, String password);
 
     //2.2.1
     public StoreResponse GetStoreInfo(int StoreID);
@@ -36,23 +38,20 @@ public interface IMarket {
     public List<ProductResponse> ProductSearch(String productName, String category);
 
     //2.2.3
-    public boolean AddProductToShoppingBag(int userId,int storeId,int productId , int quantity) ;
+    public boolean AddProductToShoppingBag(UUID userId,int storeId,int productId , int quantity);
     //todo in the use case we write that the func does not takes any args. but i think it mast have user id/email to identife the correct user.
     //2.2.4.1
-    public ShoppingCartResponse GetShoppingCart(int userId);
-
+    public ShoppingCartResponse GetShoppingCart(UUID userId);
     //2.2.4.2
     //todo update the id of use case in the pdf its not correct, and change the description its shopping bag !not cart!
-    public boolean RemoveProductFromShoppingBag(int userId,int storeId, int productId);
-    //2.2.4.3
+    public boolean RemoveProductFromShoppingBag(UUID userId,int storeId, int productId);    //2.2.4.3
     //todo soppingbag/sopping cart??
-    public boolean setProductQuantityShoppingBag(int userId, int productId, int storeId,int quantity);
-
+    public boolean setProductQuantityShoppingBag(UUID userId, int productId, int storeId,int quantity);
     //2.2.5
-    public boolean orderShoppingCart(int userId);
+    public boolean orderShoppingCart(UUID userId);
 
     //2.3.1
-    public boolean Logout(int userId);
+    public boolean Logout(UUID userId);
 
 
     //2.3.2
@@ -78,7 +77,7 @@ public interface IMarket {
     public  boolean AddNewStoreManger(int UserId, int StoreId, int newMangerId);
 
     //2.4.7
-    public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId);
+    public boolean SetMangerPermissions(int UserId, int StoreId, int ManagerId, permissionType.permissionEnum per);
 
     //2.4.9
     public boolean DeleteStore(int UserId, int StoreId);

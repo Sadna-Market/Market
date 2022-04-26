@@ -9,6 +9,7 @@ import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Market {
@@ -31,73 +32,60 @@ public class Market {
 
 
     //todo maybe need to change the position of the func ?
-    public boolean AddProductToShoppingBag(int userId, int StoreId, int ProductId, int quantity) {
+    public boolean AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
         //get store
         Store s = StoreHashMap.get(StoreId);
         //check if the store has the quantity of the product in the stock
         if (s.isProductExistInStock(ProductId, quantity)) {
-            User user = userManager.getUser(userId);
             Store store = StoreHashMap.get(StoreId);
-            return user.getShoppingCart().addNewProductToShoppingBag(ProductId, store, quantity);
+            return userManager.getUserShoppingCart(userId).addNewProductToShoppingBag(ProductId, store, quantity);
         }
         return false;
     }
 
-    public boolean order(int userId){
-        ShoppingCart shoppingCart = userManager.getUser(userId).getShoppingCart();
+    public boolean order(UUID userId){
+        ShoppingCart shoppingCart = userManager.getUserShoppingCart(userId);
         return purchase.order(shoppingCart);
     }
 
     public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         Store store = new Store();
-        StoreHashMap.put(store.getStoreId(),store);
-        userManager.addFounder(userId,store);
         return false;
     }
 
 
-    public boolean addNewProductToStore(int userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
-        if(userManager.isOwner(userId , storeId)){
-            return StoreHashMap.get(storeId).addNewProduct(productId,productName,categori,price, quantity,description);
-        }
+    public boolean addNewProductToStore(UUID userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
+
         return false;
     }
 
     public boolean deleteProductFromStore(int userId, int storeId, int productId) {
-        if(userManager.isOwner(userId ,storeId)){
-            return StoreHashMap.get(storeId).removeProduct(productId);
-        }
+
         return false;
     }
 
     public boolean setProductInStore(int userId, int storeId, int productId, String productName, String category, int price, int quantity, String description) {
-        if(userManager.isOwner(userId ,storeId)){
-            return StoreHashMap.get(storeId).setProduct(productId,productName,category,price, quantity,description);
-        }
+
         return false;
     }
 
     public boolean addNewStoreOwner(int userId, int storeId, int newOwnerId) {
-        Store store = StoreHashMap.get(storeId);
-        return userManager.addNewStoreOwner(userId,store,newOwnerId);
+        return false;
     }
 
     public boolean addNewStoreManager(int userId, int storeId, int newMangerId) {
-        Store store = StoreHashMap.get(storeId);
-        return userManager.addNewStoreManager(userId,store,newMangerId);
+        return false;
     }
 
-    public boolean setManagerPermissions(int userId, int storeId, int managerId) {
+    public boolean setManagerPermissions(int userId, int storeId, int managerId,permissionType.permissionEnum per) {
         Store store = StoreHashMap.get(storeId);
-        return userManager.setManagerPermissions(userId,store,managerId);
+        return false;
     }
 
     public boolean deleteStore(int userId, int storeId) {
-        if(userManager.isOwner(userId ,storeId)){
             Store store = StoreHashMap.remove(storeId);
             return true;
-        }
-        return false;
+
     }
 
     public boolean getStoreRoles(int userId, int storeId) {
@@ -106,10 +94,8 @@ public class Market {
     }
 
     public boolean getStoreOrderHistory(int userId, int storeId) {
-        if(userManager.isOwner(userId ,storeId)){
             Store store = StoreHashMap.get(storeId);
             return store.getStoreOrderHistory();
         }
-        return false;
     }
-}
+

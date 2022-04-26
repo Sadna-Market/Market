@@ -1,14 +1,38 @@
 package main.System.Server.Domain.StoreModel;
 
 import main.System.Server.Domain.Market.Permission;
+import main.System.Server.Domain.UserModel.User;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Store {
     Inventory inventory ;
     int StoreId;
-    List<Permission> ManagerPermission;
 
+    private List<Permission> accessPermission; // all the permission that have in this store
+
+
+    public void addAccessPermission(Permission p){
+        accessPermission.add(p);
+    }
+    public void removeAccessPermission(Permission p){
+        accessPermission.remove(p);
+    }
+    public List<Permission> getAccessPermission(){
+        return accessPermission;
+    }
+
+    //all the user that have a permission in this store
+    public  List<User> getGranteeUsers() {
+        List<User> granteeUser=new LinkedList<>();
+        for (Permission permission  : accessPermission)
+        {
+            granteeUser.add(permission.getGrantee());
+        }
+
+        return granteeUser;
+    }
     public int getStoreId(){
         return StoreId;
     }
