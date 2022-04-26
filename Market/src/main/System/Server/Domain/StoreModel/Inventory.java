@@ -71,6 +71,19 @@ public class Inventory {
         }
     }
 
+
+
+    public ProductStore getProductStoreAfterBuy(Integer productID, Integer productQuantity) {
+        ProductStore productStore = getProducts().get(productID);
+        return (productStore == null) ? null : new ProductStore(productStore.getProductType(),productQuantity,productStore.getPrice());
+
+    }
+
+    public StampedLock getProductLock(int productID) {
+        ProductStore productStore = products.get(productID);
+        return productStore == null ? null : productStore.getProductLock();
+    }
+
     public Double getPrice(Integer productID) {
         ProductStore productStore = products.get(productID);
         return productStore == null ? null : productStore.getPrice();

@@ -115,6 +115,57 @@ public class Store {
         return TIDHistory;
     }
 
+    //requirement II.2.5
+    public boolean addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
+        List<ProductStore> productsBuy = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
+            Integer productID = entry.getKey();
+            Integer productQuantity = entry.getValue();
+            ProductStore productStore = inventory.getProductStoreAfterBuy(productID, productQuantity);
+            if(productStore == null)
+                return false;
+            productsBuy.add(productStore);
+        }
+        history.put(TID, new History(TID, finalPrice, productsBuy, user));
+        return true;
+    }
+
+    //requirement II.2.5
+    //productsInBag <productID,quantity>
+    public ConcurrentHashMap<Integer, Integer> checkBuyPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+        if(buyPolicy == null)
+            return productsInBag;
+        else
+            return buyPolicy.checkShoppingBag(user,productsInBag);
+    }
+
+    //requirement II.2.5
+    //productsInBag <productID,quantity>
+    public double checkDiscountPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+        if(discountPolicy == null)
+            return 0.0;
+        else
+            return discountPolicy.checkShoppingBag(user,productsInBag);
+    }
+
+    //requirement II.2.5
+    //productsInBag <productID,quantity>
+    public double calculateBagPrice(ConcurrentHashMap<Integer, Integer> productsInBag){
+        double bagPrice = 0.0;
+        for (Map.Entry<Integer, Integer> entry : productsInBag.entrySet()) {
+            Integer productID = entry.getKey();
+            Integer productQuantity = entry.getValue();
+            bagPrice += (inventory.getPrice(productID))*productQuantity;
+        }
+        return bagPrice;
+    }
+
+    //requirement II.2.5
+    //return null if products not exist
+    public StampedLock getProductLock(int productID){
+        return inventory.getProductLock(productID);
+    }
+
 }
 
 
