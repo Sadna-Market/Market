@@ -48,8 +48,8 @@ public class Store {
         return rate;
     }
 
-    public int getProductPrice(int productID) {
-        return new Random().nextInt(100);
+    public Double getProductPrice(int productID) {
+        return 3.0;
     }
     int rate=0;
 

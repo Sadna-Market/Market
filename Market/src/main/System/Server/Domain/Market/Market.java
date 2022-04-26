@@ -121,7 +121,7 @@ public class Market {
             return null;
         }
         long stamp = lock_stores.readLock();
-        logger.debug("searchProductByStoreRate() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try{
             List<Integer> output=new ArrayList<>();
             for (Store store : stores.values()){
@@ -132,7 +132,7 @@ public class Market {
         }
         finally {
             lock_stores.unlockRead(stamp);
-            logger.debug("searchProductByStoreRate() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
@@ -141,30 +141,20 @@ public class Market {
             logger.warn("min bigger then max - invalid");
             return null;
         }
-        long stamp = lock_stores.readLock();
-        logger.debug("searchProductByRangePrices() catch the ReadLock.");
-        try{
-            List<Integer> output=new ArrayList<>();
-            ProductType pt= productTypes.get(productID);
-            if (pt==null){
-                logger.warn("the productId is not exist in the system");
-                return null;
-            }
-            else{
-                List<Integer> pt_stores =pt.getStores();
-                for (Integer i: pt_stores){
-                    Store s= getStore(i);
-                    int price=s.getProductPrice(productID);
-                    if (price<=max & price>=min)
-                        output.add(i);
-                }
-                return output;
-            }
+        List<Integer> output=new ArrayList<>();
+        ProductType pt= getProductType(productID);
+        if (pt==null){
+            logger.warn("the productId is not exist in the system");
+            return null;
         }
-        finally {
-            lock_stores.unlockRead(stamp);
-            logger.debug("searchProductByRangePrices() released the ReadLock.");
+        List<Integer> pt_stores =pt.getStores();
+        for (Integer i: pt_stores){
+            Store s= getStore(i);
+            Double price=s.getProductPrice(productID);
+            if (price!=null &&(price<= (double) max & price>=(double) min))
+                output.add(i);
         }
+        return output;
     }
 
     //post-cond: the return value is empty List and not null!
