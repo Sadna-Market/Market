@@ -92,6 +92,11 @@ public class Store {
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
+    public List<History> getStoreOrderHistory() {
+        return new ArrayList<>(history.values());
+    }
+
+    //requirement II.4.13 & II.6.4 (only system manager)
     public List<History> getUserHistory(String user) {
         List<History> userHistory = new ArrayList<>();
         for (Map.Entry<Integer, History> entry : history.entrySet()) {
