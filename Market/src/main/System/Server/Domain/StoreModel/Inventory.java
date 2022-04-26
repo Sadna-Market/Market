@@ -25,9 +25,15 @@ public class Inventory {
 
     /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
 
+    public boolean isProductExistInStock(int productId, int quantity){
+        ProductStore productStore = products.get(productId) ;
+        return productStore != null && productStore.getQuantity() >= quantity;
+    }
+
     public ProductStore getProduct(int productId) {
         return products.get(productId);
     }
+
 
 
     ////////////////////////////////////////// Getters and Setters //////////////////////////////////////////////////
