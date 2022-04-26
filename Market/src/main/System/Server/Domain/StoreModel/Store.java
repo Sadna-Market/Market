@@ -68,6 +68,14 @@ public class Store {
         return true;
     }
 
+    public boolean setProductPrice(int productId, double price) {
+        return true;
+    }
+
+    public boolean setProductQuantity(int productId, int quantity) {
+        return true;
+    }
+
     public static class BuyPolicy {
     }
 

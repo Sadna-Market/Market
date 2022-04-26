@@ -74,7 +74,8 @@ public interface IMarket {
     public boolean DeleteProductFromStore(int UserId ,int storeId,int productId);
 
     //2.4.1.3
-    public boolean SetProductInStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
+    public boolean setProductPriceInStore(int userId , int StoreId, int productId, double price);
+    public boolean setProductQuantityInStore(int userId , int StoreId, int productId, int quantity);
 
 
     //2.4.4

@@ -132,8 +132,13 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public boolean SetProductInStore(int userId, int storeId, int productId, String productName, String category, double price, int quantity, String description) {
-        return market.setProductInStore(userId,storeId,productId,productName,category,productId,quantity,description);
+    public boolean setProductPriceInStore(int userId, int storeId, int productId, double price) {
+        return market.setProductPriceInStore(userId,storeId,productId,price);
+    }
+
+    @Override
+    public boolean setProductQuantityInStore(int userId, int storeId, int productId,  int quantity) {
+        return market.setProductQuantityInStore(userId,storeId,productId,quantity);
     }
 
     @Override

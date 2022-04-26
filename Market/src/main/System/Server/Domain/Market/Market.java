@@ -303,14 +303,23 @@ public class Market {
         }
     }
 
-    public boolean setProductInStore(int userId, int storeId, int productId, String productName, String category, int price, int quantity, String description) {
+    public boolean setProductPriceInStore(int userId, int storeId, int productId, double price) {
         if (checkValid(userId,storeId,productId)){
-            ProductType p= getProductType(productId);
             Store s=getStore(storeId);
-            return s.setProduct(p,productName,category,price, quantity,description);
+            return s.setProductPrice(productId,price);
         }
         return false;
     }
+
+    public boolean setProductQuantityInStore(int userId, int storeId, int productId, int quantity) {
+        if (checkValid(userId,storeId,productId)){
+            Store s=getStore(storeId);
+            return s.setProductQuantity(productId, quantity);
+        }
+        return false;
+    }
+
+
 
     public boolean addNewStoreOwner(int userId, int storeId, int newOwnerId) {
         Store store = getStore(storeId);
