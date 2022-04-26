@@ -145,8 +145,15 @@ return false;
 
     public ShoppingCart getUserShoppingCart(UUID userId)
     {
-        return null;
+        logger.debug("UserManager getUserShoppingCart");
 
+        if(GuestVisitors.containsKey(userId)){
+            return GuestVisitors.get(userId).getShoppingCart();
+        }
+        else if(members.containsKey(userId)){
+            return members.get(userId).getShoppingCart();
+        }
+        else return null;
     }
 
     /** ch

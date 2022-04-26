@@ -90,8 +90,11 @@ public class User extends Guest{
         return false;
     }
 
-    public synchronized boolean isPasswordEquals(String password){
+    public  boolean isPasswordEquals(String password){
         return this.Password.equals( password);
     }
 
+    public ShoppingCart getShoppingCart(){
+        return this.shoppingCart;
+    }
 }
