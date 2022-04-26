@@ -80,6 +80,11 @@ public class Store {
     public boolean setProductQuantity(int productId, int quantity) {
         return inventory.setProductQuantity(productId, quantity);
     }
+
+    //requirement II.4.1  (only owners)
+    public boolean setProductPrice(int productId, double price) {
+        return inventory.setProductPrice(productId, price);
+    }
 }
 
 

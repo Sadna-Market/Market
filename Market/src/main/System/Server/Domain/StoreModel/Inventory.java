@@ -60,6 +60,16 @@ public class Inventory {
             return true;
         }
     }
+
+    public boolean setProductPrice(int productId, double price) {
+        ProductStore productStore = products.get(productId);
+        if(productStore == null)
+            return false;
+        else{
+            productStore.setPrice(price);
+            return true;
+        }
+    }
     public ProductStore getProduct(int productId) {
         return products.get(productId);
     }
