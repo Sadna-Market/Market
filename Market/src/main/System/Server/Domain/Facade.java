@@ -117,8 +117,8 @@ public class Facade implements IMarket {
 
 
     @Override
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        return market.OpenNewStore(userId,discountPolicy,buyPolicy,buyStrategy);
+    public boolean OpenNewStore(int userId,String name, String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+        return market.OpenNewStore(userId,name,founder,discountPolicy,buyPolicy,buyStrategy);
     }
 
     @Override

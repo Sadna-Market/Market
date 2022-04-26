@@ -240,15 +240,15 @@ public class Market {
 
     }
 
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    public boolean OpenNewStore(int userId,String name,String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         if (!userManager.isLogin(userId)){
             logger.warn("the userID does not connect");
             return false;
         }
+        Store store = new Store(name,founder,discountPolicy, buyPolicy, buyStrategy);
         long stamp = lock_stores.writeLock();
         logger.debug("OpenNewStore catch the WriteLock");
         try {
-            Store store = new Store(discountPolicy, buyPolicy, buyStrategy);
             stores.put(storeCounter++, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");

@@ -63,7 +63,7 @@ public interface IMarket {
 
 
     //2.3.2
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy);
+    public boolean OpenNewStore(int userId,String name,String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy);
 
 
     //2.4.1.1

@@ -14,6 +14,9 @@ public class Store {
     public Store(DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
     }
 
+    public Store(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    }
+
     public int getStoreId(){
         return StoreId;
     }

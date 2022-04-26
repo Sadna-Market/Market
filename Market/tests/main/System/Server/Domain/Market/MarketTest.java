@@ -175,7 +175,7 @@ class MarketTest {
     @ValueSource(ints = {1,2,3})
     @Test
     void openNewStore(int i) {
-        assertTrue(market.OpenNewStore(i,new DiscountPolicy(),null,null));
+        assertTrue(market.OpenNewStore(i,null,null,new DiscountPolicy(),null,null));
     }
 
     @DisplayName("openNewStore  -  failure")
@@ -183,7 +183,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-555,0})
     @Test
     void openNewStore2(int i) {
-        assertFalse(market.OpenNewStore(i,new DiscountPolicy(),null,null));
+        assertFalse(market.OpenNewStore(i,null,null,new DiscountPolicy(),null,null));
     }
 
     @DisplayName("addNewProductToStore  -  successful")
