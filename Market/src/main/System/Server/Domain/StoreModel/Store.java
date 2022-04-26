@@ -30,7 +30,7 @@ public class Store {
         return inventory.isProductExistInStock(productId,quantity);
     }
 
-    public boolean addNewProduct(ProductType productId, String productName, String categori, double price, int quantity, String description) {
+    public boolean addNewProduct(ProductType productId, double price, int quantity) {
         return true;
     }
 

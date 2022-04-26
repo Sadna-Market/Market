@@ -37,7 +37,7 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,9})
     @Test
     void getStoreInfo(int i) {
-        market.addNewProductToStore(1,i,1,"Asd","a",0.5,100,"");
+        market.addNewProductToStore(1,i,1,0.5,100);
         assertNotNull(market.getInfoProductInStore(i,1));
     }
 
@@ -191,7 +191,7 @@ class MarketTest {
     @ValueSource(ints = {20,6293,185})
     @Test
     void addNewProductToStore2(int i) {
-        assertTrue(market.addNewProductToStore(i,1,1,"","" ,0.5,15,""));
+        assertTrue(market.addNewProductToStore(i,1,1,0.5,15));
     }
 
     @DisplayName("addNewProductToStore  -  failure")
@@ -199,7 +199,7 @@ class MarketTest {
     @ValueSource(ints = {-20,-6293,-185,0})
     @Test
     void addNewProductToStore(int i) {
-        assertFalse(market.addNewProductToStore(i,1,1,"","" ,0.5,15,""));
+        assertFalse(market.addNewProductToStore(i,1,1,0.5,15));
     }
 
     @DisplayName("deleteProductFromStore  -  successful")

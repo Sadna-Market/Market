@@ -259,16 +259,17 @@ public class Market {
             logger.debug("OpenNewStore released the WriteLock");
         }
     }
+
     public UserManager getUserManager(){
         return userManager;
     }
 
 
-    public boolean addNewProductToStore(int userId, int storeId, int productId, String productName, String category, double price, int quantity, String description) {
+    public boolean addNewProductToStore(int userId, int storeId, int productId, double price, int quantity) {
         if (checkValid(userId,storeId,productId)){
             ProductType p= getProductType(productId);
             Store s=getStore(storeId);
-            return s.addNewProduct(p,productName,category,price,quantity,description);
+            return s.addNewProduct(p,price,quantity);
         }
         return false;
     }
@@ -379,7 +380,7 @@ public class Market {
         for (int i=0; i<10; i++){
             Store s= new Store(null,null,null);
             s.setRate(i);
-            s.addNewProduct(getProductType(1),"Asd","5",0.5,100,"");
+            s.addNewProduct(getProductType(1),0.5,100);
             stores.put(i,s);}
     }
 }

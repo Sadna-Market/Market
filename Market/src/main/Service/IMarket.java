@@ -67,7 +67,7 @@ public interface IMarket {
 
 
     //2.4.1.1
-    public boolean AddNewProductToStore(int userId , int StoreId, int productId,String productName,String category, double price, int quantity,String description);
+    public boolean AddNewProductToStore(int userId , int StoreId, int productId, double price, int quantity);
 
 
     //2.4.1.2

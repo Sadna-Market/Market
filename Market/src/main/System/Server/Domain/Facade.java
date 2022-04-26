@@ -122,8 +122,8 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public boolean AddNewProductToStore(int userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
-      return market.addNewProductToStore(userId,storeId, productId, productName,categori,price, quantity, description);
+    public boolean AddNewProductToStore(int userId, int storeId, int productId, double price, int quantity) {
+      return market.addNewProductToStore(userId,storeId, productId,price, quantity);
     }
 
     @Override
