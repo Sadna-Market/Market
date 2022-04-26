@@ -174,6 +174,105 @@ public class Store {
         return success;
     }
 
+    public void newStoreRate(int rate){
+        numOfRated++;
+        this.rate = ((this.rate*(numOfRated-1)) + rate) / numOfRated;
+    }
+
+
+/*    //requirement II.4.11  (only owners)
+    public List<String> getStoreManagers(){
+        List<String> managers = new ArrayList<>();
+        for(Permission p: getSafePermission()){
+            if(p.getGranteeType() == userTypes.manager)
+                managers.add(p.getGrantee().getEmail());
+        }
+        return managers;
+    }
+
+    //requirement II.4.11  (only owners)
+    public List<String> getStoreOwners(){
+        List<String> owners = new ArrayList<>();
+        for(Permission p: getSafePermission()){
+            if(p.getGranteeType() == userTypes.owner)
+                owners.add(p.getGrantee().getEmail());
+        }
+        return owners;
+    }*/
+
+    //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
+    public void addPermission(Permission p){
+        safePermission.add(p);
+    }
+
+    //requirement II.4.7 (only owners)
+    public void removePermission(Permission p){
+        safePermission.remove(p);
+    }
+    public List<Permission> getPermission(){
+        return safePermission;
+    }
+
+
+    /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
+
+    public int getStoreId(){
+        return storeId;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public DiscountPolicy getDiscountPolicy() {
+        return discountPolicy;
+    }
+
+    public BuyPolicy getBuyPolicy() {
+        return buyPolicy;
+    }
+
+    public String getFounder() {
+        return founder;
+    }
+
+    public List<Permission> getSafePermission() {
+        return safePermission;
+    }
+
+    public void setHistory(ConcurrentHashMap<Integer,History> history) {
+        this.history = history;
+    }
+
+    //requirement II.4.2  (only owners)
+    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
+        this.discountPolicy = discountPolicy;
+    }
+
+    //requirement II.4.2  (only owners)
+    public void setBuyPolicy(BuyPolicy buyPolicy) {
+        this.buyPolicy = buyPolicy;
+    }
+
+    public void setFounder(String founder) {
+        this.founder = founder;
+    }
+
+    public ConcurrentHashMap<Integer, History> getHistory() {
+        return history;
+    }
 
 }
 
