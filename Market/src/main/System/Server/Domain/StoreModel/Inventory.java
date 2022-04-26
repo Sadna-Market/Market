@@ -30,6 +30,16 @@ public class Inventory {
         return productStore != null && productStore.getQuantity() >= quantity;
     }
 
+    public boolean addNewProduct(ProductType newProduct, int quantity, double price) {
+        if(products.containsKey(newProduct.getProductID()))
+            return false;
+        else {
+            ProductStore toAdd = new ProductStore(newProduct, quantity, price);
+            products.put(newProduct.getProductID(), toAdd);
+            return newProduct.addStore(getStoreId());
+        }
+    }
+
     public ProductStore getProduct(int productId) {
         return products.get(productId);
     }

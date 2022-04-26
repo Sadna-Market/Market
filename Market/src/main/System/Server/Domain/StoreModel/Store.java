@@ -60,10 +60,16 @@ public class Store {
         return new ArrayList<>(inventory.getProducts().values());
     }
 
-    //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
+        //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
     public boolean isProductExistInStock(int productId, int quantity){
         return inventory.isProductExistInStock(productId ,quantity);
     }
+
+    //requirement II.4.1 (only owners)
+    public boolean addNewProduct(ProductType productType, int quantity, double price) {
+        return inventory.addNewProduct(productType, quantity, price);
+    }
+
 }
 
 
