@@ -58,8 +58,13 @@ return false;
     }
 
     public boolean Logout(UUID userId) {
+        if (LoginUsers.containsKey(userId)) {
+            LoginUsers.remove(userId);
+            Guest guest = new Guest();
+            GuestVisitors.put(userId, guest);
+            return true;
+        }
         return false;
-
 
     }
 
