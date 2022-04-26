@@ -70,6 +70,11 @@ public class Store {
         return inventory.addNewProduct(productType, quantity, price);
     }
 
+    //requirement II.4.1 (only owners)
+    public boolean removeProduct(int productId) {
+        return inventory.removeProduct(productId);
+    }
+
 }
 
 

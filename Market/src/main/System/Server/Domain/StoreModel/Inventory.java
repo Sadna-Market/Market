@@ -40,6 +40,17 @@ public class Inventory {
         }
     }
 
+    public boolean removeProduct(int productId) {
+        ProductStore removed = products.remove(productId);
+        if(removed == null)
+            return false;
+        else{
+            removed.getProductType().removeStore(getStoreId());
+            return true;
+        }
+
+    }
+
     public ProductStore getProduct(int productId) {
         return products.get(productId);
     }
