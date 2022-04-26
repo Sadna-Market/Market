@@ -11,20 +11,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 
 /**
-userManger mange all users in the system its saved all the users that sign in to the system ,users that logged and all current guests
-then someone enter to the system the system will generate an a unique userID,
-the user id will not saved in the db
-the user id is used only for manging the current online visitor : Guests , Members
-*/
+ userManger mange all users in the system its saved all the users that sign in to the system ,users that logged and all current guests
+ then someone enter to the system the system will generate an a unique userID,
+ the user id will not saved in the db
+ the user id is used only for manging the current online visitor : Guests , Members
+ */
 
 public class UserManager {
     private StampedLock LockUsers= new StampedLock();
 
-/** menage all the members that have a saved user in the system , key : Emile , value : User*/
+    /** menage all the members that have a saved user in the system , key : Emile , value : User*/
     ConcurrentHashMap<String,User> members;  // menage all the members that have a saved user in the system , key : Emile , value : User
-/** menage all the Visitors in the System , Visitors is set combines a members and gusts. key : userId , value Guest */
+    /** menage all the Visitors in the System , Visitors is set combines a members and gusts. key : userId , value Guest */
     ConcurrentHashMap<UUID,Guest> GuestVisitors ;
-/**menage all the logged in users in the system, key : user id  , value : User*/
+    /**menage all the logged in users in the system, key : user id  , value : User*/
     ConcurrentHashMap<UUID,User> LoginUsers;
 
     static Logger logger= Logger.getLogger(ShoppingBag.class);
@@ -38,11 +38,11 @@ public class UserManager {
 
 
     public UUID GuestVisit() {
-            logger.debug("UserManager GuestVisit");
-            UUID newid = UUID.randomUUID();
-            Guest guest = new Guest();
-            GuestVisitors.put(newid, guest);
-            return newid;
+        logger.debug("UserManager GuestVisit");
+        UUID newid = UUID.randomUUID();
+        Guest guest = new Guest();
+        GuestVisitors.put(newid, guest);
+        return newid;
 
     }
 
@@ -53,7 +53,8 @@ public class UserManager {
         } else {
             GuestVisitors.remove(guestId);
             return true;
-        }    }
+        }
+    }
 
 
 
@@ -67,6 +68,7 @@ public class UserManager {
         } else {
             return false;
         }
+
     }
 
     public boolean Logout(UUID userId) {
@@ -113,7 +115,9 @@ public class UserManager {
 
 
     public boolean isOwner(User user,Store store) {
-        return false;
+        logger.debug("UserManager isOwner");
+        PermissionManager permissionManager =PermissionManager.getInstance();
+        return permissionManager.getGranteeUserType(user,store)== userTypes.owner;
 
     }
 
@@ -130,8 +134,13 @@ public class UserManager {
     }
 
     public boolean addFounder(UUID userId, Store store) {
-        return false;
+        logger.debug("UserManager addFounder");
 
+        if(isLogged(userId)) {
+            User user = LoginUsers.get(userId);
+            return user.addFounder(store);
+        }
+        return false;
     }
     public boolean addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
         logger.debug("UserManager addNewStoreManager");
@@ -161,8 +170,9 @@ public class UserManager {
 
     public boolean getRolesInStore(int userId, Store store)
     {
-        return false;
+        logger.debug("UserManager getRolesInStore");
 
+        return members.get(userId).getRolesInStore(store);
     }
 
 
@@ -172,9 +182,14 @@ public class UserManager {
      * @return boolean
      */
     public boolean isLogged(UUID uuid){
-        return false;
+        logger.debug("UserManager isLogged");
 
-
+        if(LoginUsers.containsKey(uuid)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public ShoppingCart getUserShoppingCart(UUID userId)
@@ -197,26 +212,33 @@ public class UserManager {
      * @return boolean
      */
     public boolean isOnline(UUID uuid){
-        return false;
+        logger.debug("UserManager isOnline");
 
+        if (LoginUsers.containsKey(uuid) || GuestVisitors.containsKey(uuid)) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
 
     public ConcurrentHashMap<String, User> getMembers() {
-        return null;
+        logger.debug("UserManager getMembers");
 
+        return members;
     }
 
 
     public ConcurrentHashMap<UUID, Guest> getGuestVisitors() {
-        return null;
-
+        logger.debug("UserManager getGuestVisitors");
+        return GuestVisitors;
     }
 
 
     public ConcurrentHashMap<UUID, User> getLoginUsers() {
-       return null;
+        logger.debug("UserManager getLoginUsers");
+        return LoginUsers;
     }
 
 }

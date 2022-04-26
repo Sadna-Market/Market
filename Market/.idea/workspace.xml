@@ -86,7 +86,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.UserManagerTest">
+  <component name="RunManager" selected="JUnit.All in Market">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -167,10 +167,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in Market" />
         <item itemvalue="JUnit.UserManagerTest" />
         <item itemvalue="JUnit.UserManagerTest.loginExistMember" />
         <item itemvalue="Application.Validator" />
-        <item itemvalue="JUnit.All in Market" />
         <item itemvalue="JUnit.ShoppingCartTest" />
       </list>
     </recent_temporary>
