@@ -43,15 +43,46 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public StoreResponse GetStoreInfo(int StoreID) {
-        return market.GetStoreInfo(StoreID);
+    public Store getStore(int storeID) {
+        return market.getStore(storeID);
     }
 
     @Override
-    public List<ProductResponse> ProductSearch(String productName, String category) {
-        market.ProductSearch(productName,category);
+    public String getInfoProductInStore(int storeID, int productID) {
+        return market.getInfoProductInStore(storeID,productID);
+    }
+
+
+    @Override
+    public List<Integer> searchProductByName(String productName) {
         return null;
     }
+
+    @Override
+    public List<Integer> searchProductByDesc(String desc) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByRate(int rate) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByCategory(int category) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByStoreRate(int rate) {
+        return null;
+    }
+
+    @Override
+    public List<Integer> searchProductByRangePrices(int productId, int min, int max) {
+        return null;
+    }
+
 
     @Override
     public boolean AddProductToShoppingBag(int userId,int storeId,int productId , int quantity) {
@@ -86,13 +117,13 @@ public class Facade implements IMarket {
 
 
     @Override
-    public boolean OpenNewStore(int userId, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        return market.OpenNewStore(userId,discountPolicy,buyPolicy,buyStrategy);
+    public boolean OpenNewStore(int userId,String name, String founder, DiscountPolicy discountPolicy, Store.BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+        return market.OpenNewStore(userId,name,founder,discountPolicy,buyPolicy,buyStrategy);
     }
 
     @Override
-    public boolean AddNewProductToStore(int userId, int storeId, int productId, String productName, String categori, double price, int quantity, String description) {
-      return market.addNewProductToStore(userId,storeId, productId, productName,categori,price, quantity, description);
+    public boolean AddNewProductToStore(int userId, int storeId, int productId, double price, int quantity) {
+      return market.addNewProductToStore(userId,storeId, productId,price, quantity);
     }
 
     @Override
@@ -101,8 +132,13 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public boolean SetProductInStore(int userId, int storeId, int productId, String productName, String category, double price, int quantity, String description) {
-        return market.setProductInStore(userId,storeId,productId,productName,category,productId,quantity,description);
+    public boolean setProductPriceInStore(int userId, int storeId, int productId, double price) {
+        return market.setProductPriceInStore(userId,storeId,productId,price);
+    }
+
+    @Override
+    public boolean setProductQuantityInStore(int userId, int storeId, int productId,  int quantity) {
+        return market.setProductQuantityInStore(userId,storeId,productId,quantity);
     }
 
     @Override
@@ -122,8 +158,8 @@ public class Facade implements IMarket {
 
 
     @Override
-    public boolean DeleteStore(int UserId, int StoreId) {
-        return market.deleteStore(UserId, StoreId);
+    public boolean closeStore(int UserId, int StoreId) {
+        return market.closeStore(UserId, StoreId);
     }
 
     @Override
