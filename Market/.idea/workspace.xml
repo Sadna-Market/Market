@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add permissions &amp; getters and setters">
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/History.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/History.java" afterDir="false" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="finished basic functions">
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,7 +129,7 @@
       <workItem from="1650786368987" duration="17468000" />
       <workItem from="1650816966316" duration="7232000" />
       <workItem from="1650868319024" duration="12213000" />
-      <workItem from="1650955112853" duration="21133000" />
+      <workItem from="1650955112853" duration="21238000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -223,7 +222,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650984482305</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="finished basic functions">
+      <created>1650984753733</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1650984753733</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,6 +262,7 @@
     <MESSAGE value="#53 buy shopping bag from store" />
     <MESSAGE value="#62 close store" />
     <MESSAGE value="add permissions &amp; getters and setters" />
-    <option name="LAST_COMMIT_MESSAGE" value="add permissions &amp; getters and setters" />
+    <MESSAGE value="finished basic functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished basic functions" />
   </component>
 </project>

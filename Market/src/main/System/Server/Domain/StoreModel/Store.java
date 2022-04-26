@@ -30,8 +30,8 @@ public class Store {
     static Logger logger=Logger.getLogger(Store.class);
 
     /////////////////////////////////////////////// Constructors ///////////////////////////////////////////////////
-    //requirement II.3.2
 
+    //requirement II.3.2
     public Store(String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
         int storeId = nextStoreId.incrementAndGet();
         inventory = new Inventory(storeId);
@@ -57,7 +57,7 @@ public class Store {
         return new ArrayList<>(inventory.getProducts().values());
     }
 
-        //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
+    //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
     public boolean isProductExistInStock(int productId, int quantity){
         return inventory.isProductExistInStock(productId ,quantity);
     }
