@@ -96,6 +96,8 @@ public interface IMarket {
     //2.6.5 && //2.4.13
     public List<History> getStoreOrderHistory(UUID UserId, int StoreId) ;
 
+    public List<History> getUserHistoryInStore(String userID,int storeID);
+
 
     //todo 2.5 use case
 

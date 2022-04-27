@@ -173,4 +173,9 @@ public class Facade implements IMarket {
     public List<History> getStoreOrderHistory(UUID UserId, int StoreId) {
         return market.getStoreOrderHistory(UserId,StoreId);
     }
+    @Override
+    public List<History> getUserHistoryInStore(String userID,int storeID){
+        return market.getUserHistoryInStore(userID,storeID);
+
+    }
 }

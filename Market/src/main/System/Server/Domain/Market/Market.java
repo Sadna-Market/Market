@@ -1,5 +1,7 @@
 package main.System.Server.Domain.Market;
 
+import Stabs.StoreStab;
+import Stabs.UserManagerStab;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
@@ -372,19 +374,29 @@ public class Market {
 
     public List<History> getStoreOrderHistory(UUID userId, int storeId) {
         Store store = getStore(storeId);
+        if (store==null){
+            logger.warn("the storeId is invalid");
+            return null;
+        }
 
         if(userManager.isOwner(userId ,store)){
             return store.getStoreOrderHistory();
         }
         return null;
     }
-    public List<History> getUserHistoryInStore(int userID,int storeID){
-        return  stores.get(storeID).getUserHistory("");
-    }
+
+    public List<History> getUserHistoryInStore(String userID,int storeID){
+        Store store=getStore(storeID);
+        if (store==null){
+            logger.warn("this storeID not exist in the system.");
+            return null;
+        }
+        return  stores.get(storeID).getUserHistory(userID);
+
 
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
-        userManager = new UserManager();
+        userManager = new UserManagerStab();
         for (int i=0; i<10; i++){
             ProductType p=new ProductType(productCounter++,"product"+i,"hello");
             p.setRate(i);
@@ -392,9 +404,9 @@ public class Market {
             productTypes.put(i,p);
         }
         for (int i=0; i<10; i++){
-            Store s= new Store(null,null,null,null);
-            s.newStoreRate(i);
+            Store s= new StoreStab();
             s.addNewProduct(getProductType(1),100,0.5);
+            s.newStoreRate(i);
             stores.put(i,s);}
     }
 }

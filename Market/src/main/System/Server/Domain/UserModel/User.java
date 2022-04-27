@@ -83,7 +83,8 @@ public class User extends Guest{
 
     public ATResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.addManagerPermissionType(perm,user,store,this));
+        ATResponseObj<Boolean> b=permissionManager.addManagerPermissionType(perm,user,store,this);
+        return !b.errorOccurred();
     }
 
     public boolean getRolesInStore(Store store){
