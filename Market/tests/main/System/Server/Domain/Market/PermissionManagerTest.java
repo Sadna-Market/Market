@@ -62,8 +62,8 @@ class PermissionManagerTest {
         permissionManager.createPermission(owner2, store1, owner1, userTypes.owner, userTypes.owner);//owner->owner
         permissionManager.createPermission(manager2, store1, owner2, userTypes.manager, userTypes.owner);//owner->manager
 
-        assertFalse(permissionManager.addManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner1));
-        assertTrue(permissionManager.addManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner2));
+        assertFalse(permissionManager.addManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner1).value);
+        assertTrue(permissionManager.addManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner2).value);
 
     }
 
@@ -77,19 +77,19 @@ class PermissionManagerTest {
 
 
         //remove permission type that not exist in this manager permission
-        assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.deleteStore, manager2, store1, owner2));
+        assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.deleteStore, manager2, store1, owner2).value);
 
         //try to remove permission type but with another owner that not appointed this manager
-        assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner1));
+        assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner1).value);
 
         User user1 = new User("user11","abc123D!","0678987655","1234567891234567","1234");
         User user2 = new User("user22","abc123D!","0678987655","1234567891234567","1234");
 
         //try to remove permission type with users that not owner or manager in this store
-        assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, user1, store1, user2));
+        assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, user1, store1, user2).value);
 
         //remove permission type
-        assertTrue(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner2));
+        assertTrue(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner2).value);
 
     }
 
@@ -99,10 +99,10 @@ class PermissionManagerTest {
         permissionManager.createPermission(manager2, store1, founder, userTypes.manager, userTypes.owner);//owner->manager
 
         //delete manager permission
-        assertTrue(permissionManager.removeManagerPermissionCompletely(manager2, store1, founder));
+        assertTrue(permissionManager.removeManagerPermissionCompletely(manager2, store1, founder).value);
 
         //delete manager permission that not already manager in this store
-        assertFalse(permissionManager.removeManagerPermissionCompletely(manager2, store1, founder));
+        assertFalse(permissionManager.removeManagerPermissionCompletely(manager2, store1, founder).value);
 
     }
 

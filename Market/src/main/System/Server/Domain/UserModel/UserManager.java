@@ -4,11 +4,13 @@ import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.Market.userTypes;
 import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import org.apache.log4j.Logger;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
+//*
 
 /**
  userManger mange all users in the system its saved all the users that sign in to the system ,users that logged and all current guests
@@ -17,7 +19,14 @@ import java.util.concurrent.locks.StampedLock;
  the user id is used only for manging the current online visitor : Guests , Members
  */
 
+
+
 public class UserManager {
+    int notLoged = 10;
+    int notonline = 11;
+    int notvalidInput =12;
+    int notMember =13;
+
     private StampedLock LockUsers= new StampedLock();
 
     /** menage all the members that have a saved user in the system , key : Emile , value : User*/
@@ -82,29 +91,30 @@ public class UserManager {
     }
 
 
-    public boolean AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
+    public ATResponseObj<Boolean> AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
 
         long stamp= LockUsers.writeLock();
         try {
-            logger.debug("UserManager AddNewMember");
             if (!isOnline(uuid)) {
-                return false;
+                ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+                a.errorMsg = ""+notLoged;
+                return a;
             }
             if (members.containsKey(email)) {
-                System.out.println("lllllllllllllllllllll");
 
-                return false;
-            }
+                ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+                a.errorMsg = ""+notMember;
+                return a;            }
             if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)||
                     !Validator.isValidCreditCard(CreditCared)||!Validator.isValidCreditDate(CreditDate)){
-                System.out.println("ppppppppppllllll");
 
-                return false;
+                ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+                a.errorMsg = ""+notvalidInput;
+                return a;
             }
             User user = new User(email, Password,phoneNumber,CreditCared,CreditDate);
-            System.out.println("lllllllllllllllllllll");
             members.put(email, user);
-            return true;
+            return new ATResponseObj<>(true);
         }finally {
             LockUsers.unlockWrite(stamp);
         }
@@ -115,6 +125,7 @@ public class UserManager {
 
     public boolean isOwner(UUID user,Store store) {
         if(!isLogged(user)){
+
             return false;
         }
         User u = LoginUsers.get(user);
@@ -124,7 +135,7 @@ public class UserManager {
 
     }
 
-    public boolean addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
+    public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
         logger.debug("UserManager addNewStoreOwner");
         if(isLogged(userId) ) {
             User loggedUser = LoginUsers.get(userId);
@@ -133,19 +144,23 @@ public class UserManager {
                 return loggedUser.addNewStoreOwner(newOwner,store);
             }
         }
-        return false;
+        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        a.errorMsg = ""+notLoged;
+        return a;
     }
 
-    public boolean addFounder(UUID userId, Store store) {
+    public ATResponseObj<Boolean> addFounder(UUID userId, Store store) {
         logger.debug("UserManager addFounder");
 
         if(isLogged(userId)) {
             User user = LoginUsers.get(userId);
             return user.addFounder(store);
         }
-        return false;
+        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        a.errorMsg = ""+notLoged;
+        return a;
     }
-    public boolean addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
+    public ATResponseObj<Boolean> addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
         logger.debug("UserManager addNewStoreManager");
 
         if(isLogged(uuid) ) {
@@ -154,12 +169,14 @@ public class UserManager {
                 User newManager = members.get(newMangerEmail);
                 return loggedUser.addNewStoreManager(newManager,store);
             }}
-        return false;
+        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        a.errorMsg = ""+notLoged;
+        return a;
     }
 
 
 
-    public boolean setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
+    public ATResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
         logger.debug("UserManager setManagerPermissions");
         if(isLogged(userId) ) {
             User loggedUser = LoginUsers.get(userId);
@@ -168,13 +185,14 @@ public class UserManager {
                 return loggedUser.setManagerPermissions(Manager,store,perm);
             }
         }
-        return false;
+        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        a.errorMsg = ""+notLoged;
+        return a;
     }
 
     public boolean getRolesInStore(int userId, Store store)
     {
         logger.debug("UserManager getRolesInStore");
-
         return members.get(userId).getRolesInStore(store);
     }
 
@@ -186,7 +204,6 @@ public class UserManager {
      */
     public boolean isLogged(UUID uuid){
         logger.debug("UserManager isLogged");
-
         if(LoginUsers.containsKey(uuid)){
             return true;
         }
@@ -195,15 +212,15 @@ public class UserManager {
         }
     }
 
-    public ShoppingCart getUserShoppingCart(UUID userId)
+    public ATResponseObj<ShoppingCart> getUserShoppingCart(UUID userId)
     {
         logger.debug("UserManager getUserShoppingCart");
 
         if(GuestVisitors.containsKey(userId)){
-            return GuestVisitors.get(userId).getShoppingCart();
+            return new ATResponseObj<>( GuestVisitors.get(userId).getShoppingCart());
         }
         else if(members.containsKey(userId)){
-            return members.get(userId).getShoppingCart();
+            return new ATResponseObj<>( members.get(userId).getShoppingCart());
         }
         else return null;
     }

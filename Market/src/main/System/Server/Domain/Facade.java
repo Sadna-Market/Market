@@ -34,7 +34,8 @@ public class Facade implements IMarket {
 
     @Override
     public boolean AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
-        return userManager.AddNewMember(uuid,email,Password,phoneNumber,CreditCared,CreditDate);
+        userManager.AddNewMember(uuid,email,Password,phoneNumber,CreditCared,CreditDate);
+        return false;
     }
 
     @Override
@@ -98,12 +99,12 @@ public class Facade implements IMarket {
 
     @Override
     public boolean RemoveProductFromShoppingBag(UUID userId,int storeId, int productId) {
-        return userManager.getUserShoppingCart(userId).removeProductFromShoppingBag(storeId,productId);
+        return userManager.getUserShoppingCart(userId).value.removeProductFromShoppingBag(storeId,productId);
     }
 
     @Override
     public boolean setProductQuantityShoppingBag(UUID userId, int productId, int storeId,int quantity) {
-        return userManager.getUserShoppingCart(userId).setProductQuantity(storeId,productId,quantity);
+        return userManager.getUserShoppingCart(userId).value.setProductQuantity(storeId,productId,quantity);
     }
 
     @Override
@@ -144,17 +145,17 @@ public class Facade implements IMarket {
 
     @Override
     public boolean AddNewStoreOwner(UUID UserId, int StoreId, String OwnerEmail) {
-        return market.addNewStoreOwner(UserId, StoreId, OwnerEmail);
+        return market.addNewStoreOwner(UserId, StoreId, OwnerEmail).value;
     }
 
     @Override
     public boolean AddNewStoreManger(UUID UserId, int StoreId,  String mangerEmil) {
-        return market.addNewStoreManager(UserId, StoreId, mangerEmil);
+        return market.addNewStoreManager(UserId, StoreId, mangerEmil).value;
     }
 
     @Override
     public boolean SetMangerPermissions(UUID UserId, int StoreId, String mangerEmil, permissionType.permissionEnum per) {
-        return market.setManagerPermissions(UserId, StoreId, mangerEmil,per);
+        return market.setManagerPermissions(UserId, StoreId, mangerEmil,per).value;
     }
 
 
