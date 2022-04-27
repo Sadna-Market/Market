@@ -24,12 +24,13 @@ public class Facade implements IMarket {
 
     @Override
     public UUID GuestVisit() {
-        return userManager.GuestVisit();
+
+        return userManager.GuestVisit().value;
     }
 
     @Override
     public boolean GuestLeave(UUID guestId) {
-        return userManager.GuestLeave(guestId);
+        return userManager.GuestLeave(guestId).value;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class Facade implements IMarket {
 
     @Override
     public boolean Login(UUID userid, String email, String password) {
-        return userManager.Login(userid,email,password);
+        return userManager.Login(userid,email,password).value;
     }
 
     @Override
@@ -114,7 +115,8 @@ public class Facade implements IMarket {
 
     @Override
     public boolean Logout(UUID userId) {
-        return userManager.Logout(userId);
+        userManager.Logout(userId);
+        return false;
     }
 
 
@@ -172,5 +174,10 @@ public class Facade implements IMarket {
     @Override
     public List<History> getStoreOrderHistory(UUID UserId, int StoreId) {
         return market.getStoreOrderHistory(UserId,StoreId);
+    }
+    @Override
+    public List<History> getUserHistoryInStore(String userID,int storeID){
+        return market.getUserHistoryInStore(userID,storeID);
+
     }
 }

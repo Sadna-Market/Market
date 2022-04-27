@@ -1,5 +1,6 @@
 package main.System.Server.Domain.UserModel;
 
+import main.ErrorCode;
 import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.Market.userTypes;
@@ -27,6 +28,7 @@ public class UserManager {
     int notvalidInput =12;
     int notMember =13;
 
+
     private StampedLock LockUsers= new StampedLock();
 
     /** menage all the members that have a saved user in the system , key : Emile , value : User*/
@@ -46,48 +48,54 @@ public class UserManager {
 
 
 
-    public UUID GuestVisit() {
+    public ATResponseObj<UUID> GuestVisit(){
         logger.debug("UserManager GuestVisit");
         UUID newid = UUID.randomUUID();
         Guest guest = new Guest();
         GuestVisitors.put(newid, guest);
-        return newid;
+        return new ATResponseObj<>(newid);
 
     }
 
-    public boolean GuestLeave(UUID guestId) {
+    public ATResponseObj<Boolean> GuestLeave(UUID guestId) {
         logger.debug("UserManager GuestLeave");
         if (!GuestVisitors.containsKey(guestId)) {
-            return false;
+            ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+            a.errorMsg = ""+ ErrorCode.NOTONLINE;
+            return a;
         } else {
             GuestVisitors.remove(guestId);
-            return true;
+            ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (true);
+
+            return a;
         }
     }
 
 
 
-    public  boolean Login(UUID userID,String email, String password) {
+    public ATResponseObj<Boolean> Login(UUID userID,String email, String password) {
         logger.debug("UserManager Login");
         if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password)) {
             User LogUser = members.get(email);
             LoginUsers.put(userID, LogUser);
             GuestVisitors.remove(userID);
-            return true;
+            return new ATResponseObj<>(true);
         } else {
-            return false;
+            ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+            return a;
         }
 
     }
 
-    public boolean Logout(UUID userId) {
+    public ATResponseObj<Boolean> Logout(UUID userId) {
         if (LoginUsers.containsKey(userId)) {
             LoginUsers.remove(userId);
             Guest guest = new Guest();
             GuestVisitors.put(userId, guest);
-            return true;
+            return new ATResponseObj<>(true);
         }
-        return false;
+        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        return a;
     }
 
 
@@ -233,7 +241,6 @@ public class UserManager {
      */
     public boolean isOnline(UUID uuid){
         logger.debug("UserManager isOnline");
-
         if (LoginUsers.containsKey(uuid) || GuestVisitors.containsKey(uuid)) {
             return true;
         } else {
