@@ -1,9 +1,11 @@
 package main.System.Server.Domain;
 
+import com.sun.mail.imap.protocol.ListInfo;
 import main.Service.IMarket;
 import main.System.Server.Domain.Market.Market;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.StoreModel.*;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import main.System.Server.Domain.UserModel.Response.ProductResponse;
 import main.System.Server.Domain.UserModel.Response.ShoppingCartResponse;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
@@ -46,50 +48,58 @@ public class Facade implements IMarket {
 
     @Override
     public Store getStore(int storeID) {
-        return market.getStore(storeID);
+        ATResponseObj<Store> store=market.getStore(storeID);
+        return store.errorOccurred()? null: store.value;
     }
 
     @Override
     public String getInfoProductInStore(int storeID, int productID) {
-      market.getInfoProductInStore(storeID,productID);
-      return null;
+      ATResponseObj<String> s=market.getInfoProductInStore(storeID,productID);
+      return s.errorOccurred()? null:s.value;
     }
 
 
     @Override
     public List<Integer> searchProductByName(String productName) {
-        return null;
+        ATResponseObj<List<Integer>> list=market.searchProductByName(productName);
+        return list.errorOccurred()? null: list.value;
     }
 
     @Override
     public List<Integer> searchProductByDesc(String desc) {
-        return null;
+        ATResponseObj<List<Integer>> list=market.searchProductByDesc(desc);
+        return list.errorOccurred()? null: list.value;
     }
 
     @Override
     public List<Integer> searchProductByRate(int rate) {
-        return null;
+        ATResponseObj<List<Integer>> list=market.searchProductByRate(rate);
+        return list.errorOccurred()? null: list.value;
     }
 
     @Override
     public List<Integer> searchProductByCategory(int category) {
-        return null;
+        ATResponseObj<List<Integer>> list=market.searchProductByCategory(category);
+        return list.errorOccurred()? null: list.value;
     }
 
     @Override
     public List<Integer> searchProductByStoreRate(int rate) {
-        return null;
+        ATResponseObj<List<Integer>> list=market.searchProductByStoreRate(rate);
+        return list.errorOccurred()? null: list.value;
     }
 
     @Override
     public List<Integer> searchProductByRangePrices(int productId, int min, int max) {
-        return null;
+        ATResponseObj<List<Integer>> list=market.searchProductByRangePrices(productId,min,max);
+        return list.errorOccurred()? null: list.value;
     }
 
 
     @Override
     public boolean AddProductToShoppingBag(UUID userId,int storeId,int productId , int quantity) {
-        return market.AddProductToShoppingBag(userId,storeId,productId,quantity);
+        ATResponseObj<Boolean> b=market.AddProductToShoppingBag(userId,storeId,productId,quantity);
+        return !b.errorOccurred() && b.value;
     }
 
     @Override
@@ -110,7 +120,8 @@ public class Facade implements IMarket {
 
     @Override
     public boolean orderShoppingCart(UUID userId) {
-        return market.order(userId);
+        ATResponseObj<Boolean> b=market.order(userId);
+        return !b.errorOccurred() && b.value;
     }
 
     @Override
@@ -122,62 +133,74 @@ public class Facade implements IMarket {
 
     @Override
     public boolean OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        return market.OpenNewStore(userId,name,founder,discountPolicy,buyPolicy,buyStrategy);
+        ATResponseObj<Boolean> b=market.OpenNewStore(userId,name,founder,discountPolicy,buyPolicy,buyStrategy);
+        return !b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean AddNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
-      return market.addNewProductToStore(userId,storeId, productId,price, quantity);
+        ATResponseObj<Boolean> b=market.addNewProductToStore(userId,storeId, productId,price, quantity);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean DeleteProductFromStore(UUID userId, int storeId, int productId) {
-        return market.deleteProductFromStore(userId,storeId,productId);
+        ATResponseObj<Boolean> b=market.deleteProductFromStore(userId,storeId,productId);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
-        return market.setProductPriceInStore(userId,storeId,productId,price);
+        ATResponseObj<Boolean> b=market.setProductPriceInStore(userId,storeId,productId,price);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean setProductQuantityInStore(UUID userId, int storeId, int productId,  int quantity) {
-        return market.setProductQuantityInStore(userId,storeId,productId,quantity);
+        ATResponseObj<Boolean> b=market.setProductQuantityInStore(userId,storeId,productId,quantity);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean AddNewStoreOwner(UUID UserId, int StoreId, String OwnerEmail) {
-        return market.addNewStoreOwner(UserId, StoreId, OwnerEmail).value;
+        ATResponseObj<Boolean> b=market.addNewStoreOwner(UserId, StoreId, OwnerEmail);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean AddNewStoreManger(UUID UserId, int StoreId,  String mangerEmil) {
-        return market.addNewStoreManager(UserId, StoreId, mangerEmil).value;
+        ATResponseObj<Boolean> b=market.addNewStoreManager(UserId, StoreId, mangerEmil);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean SetMangerPermissions(UUID UserId, int StoreId, String mangerEmil, permissionType.permissionEnum per) {
-        return market.setManagerPermissions(UserId, StoreId, mangerEmil,per).value;
+        ATResponseObj<Boolean> b=market.setManagerPermissions(UserId, StoreId, mangerEmil,per);
+        return b.errorOccurred() && b.value;
     }
 
 
     @Override
     public boolean closeStore(UUID UserId, int StoreId) {
-        return market.closeStore(UserId, StoreId);
+        ATResponseObj<Boolean> b = market.closeStore(UserId, StoreId);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public boolean getStoreRoles(int UserId, int StoreId) {
-        return market.getStoreRoles(UserId,StoreId);
+        ATResponseObj<Boolean> b = market.getStoreRoles(UserId,StoreId);
+        return b.errorOccurred() && b.value;
     }
 
     @Override
     public List<History> getStoreOrderHistory(UUID UserId, int StoreId) {
-        return market.getStoreOrderHistory(UserId,StoreId);
+        ATResponseObj<List<History>> list = market.getStoreOrderHistory(UserId,StoreId);;
+        return list.errorOccurred()? null: list.value;
     }
     @Override
     public List<History> getUserHistoryInStore(String userID,int storeID){
-        return market.getUserHistoryInStore(userID,storeID);
+        ATResponseObj<List<History>> list= market.getUserHistoryInStore(userID,storeID);
+        return list.errorOccurred()? null: list.value;
 
     }
 }

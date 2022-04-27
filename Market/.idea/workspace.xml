@@ -3,14 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/ErrorCode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ErrorCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,30 +79,7 @@
       <recent name="C:\Users\lielk\Desktop\Market\src" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager" selected="JUnit.main.System.Server.Domain.StoreModel in Market">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="InventoryTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
@@ -192,7 +164,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -322,13 +294,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -358,7 +329,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>99</line>
+          <line>102</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
       </breakpoints>

@@ -133,21 +133,6 @@ class MarketTest {
     }
 
 
-    @DisplayName("getProductType  -  successful")
-    @ParameterizedTest
-    @ValueSource(ints = {0,2,4,6,8})
-    @Test
-    void getProductType(int i) {
-        assertEquals(i,market.getProductType(i).getRate());
-    }
-
-    @DisplayName("getProductType  -  failure")
-    @ParameterizedTest
-    @ValueSource(ints = {-2,25,44,600,48})
-    @Test
-    void getProductType2(int i) {
-        assertNull(market.getProductType(i));
-    }
 
     @DisplayName("searchProductByCategory  -  successful")
     @ParameterizedTest
