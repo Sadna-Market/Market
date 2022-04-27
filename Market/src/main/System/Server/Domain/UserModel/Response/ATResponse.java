@@ -15,4 +15,8 @@ public class ATResponse {
     public boolean errorOccurred() {
         return errorMsg != null;
     }
+
+    public void setErrorMsg(String s){
+        errorMsg=s;
+    }
 }

@@ -28,7 +28,6 @@ public class Market {
     if you want to use with ProductType, productCounter - acquire - lock_TP
      */
     private StampedLock lock_stores = new StampedLock(), lock_TP = new StampedLock();
-    private Store buyPolicy;
 
 
     public Market(UserManager userManager) {
@@ -37,33 +36,54 @@ public class Market {
 
 
     public ATResponseObj<String> getInfoProductInStore(int storeID, int productID) {
-        ProductType p = getProductType(productID);
-        if (p == null) {
-            String warning="productID is invalid in the system.";
-            logger.warn(warning);
-            return new ATResponseObj<>().errorMsg(warning);
+        ATResponseObj<ProductType> p = getProductType(productID);
+
+        if (p.errorOccurred()){
+            ATResponseObj<String> output=new ATResponseObj<>();
+            output.setErrorMsg(p.getErrorMsg());
+            return output;
         }
-        Store s = getStore(storeID);
-        return s.getProductInStoreInfo(productID);
+
+        ATResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()){
+            ATResponseObj<String> output=new ATResponseObj<>();
+            output.setErrorMsg(s.getErrorMsg());
+            return output;
+        }
+        return s.getValue().getProductInStoreInfo(productID);
     }
 
     public ATResponseObj<List<Integer>> searchProductByName(String name) {
+        if (name==null){
+            String warning="name arrived null";
+            logger.warn(warning);
+            ATResponseObj<List<Integer>> output=new ATResponseObj<>();
+            output.setErrorMsg(warning);
+            return output;
+        }
         long stamp = lock_TP.readLock();
-        logger.debug("searchProductByName() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
                 if (p.containName(name))
                     output.add(p.getProductID());
             }
-            return output;
+            return new ATResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
-            logger.debug("searchProductByName() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
     public ATResponseObj<List<Integer>> searchProductByDesc(String desc) {
+        if (desc==null){
+            String warning="description arrived null";
+            logger.warn(warning);
+            ATResponseObj<List<Integer>> output=new ATResponseObj<>();
+            output.setErrorMsg(warning);
+            return output;
+        }
         long stamp = lock_TP.readLock();
         logger.debug("ProductSearchByDesc() catch the ReadLock.");
         try {
@@ -72,7 +92,7 @@ public class Market {
                 if (p.containDesc(desc))
                     output.add(p.getProductID());
             }
-            return output;
+            return new ATResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("ProductSearchByDesc() released the ReadLock.");
@@ -81,28 +101,30 @@ public class Market {
 
     public ATResponseObj<List<Integer>> searchProductByRate(int minRate) {
         if (minRate < 0 || minRate > 10) {
-            logger.warn("args invalid");
-            return null;
+            String warning="args invalid";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
         }
         long stamp = lock_TP.readLock();
-        logger.debug("ProductSearchByRate() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
                 if (p.getRate() >= minRate)
                     output.add(p.getProductID());
             }
-            return output;
+            return new ATResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
-            logger.debug("ProductSearchByRate() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
     public ATResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
         if (rate < 0 || rate > 10) {
-            logger.warn("args is invalid");
-            return null;
+            String warning="args invalid";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
         }
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock.");
@@ -112,7 +134,7 @@ public class Market {
                 if (store.getRate() >= rate)
                     output.add(store.getStoreId());
             }
-            return output;
+            return new ATResponseObj<>(output);
         } finally {
             lock_stores.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -121,39 +143,51 @@ public class Market {
 
     public ATResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
         if (min > max) {
-            logger.warn("min bigger then max - invalid");
-            return null;
+            String warning="min bigger then max - invalid";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
+        }
+
+        ATResponseObj<ProductType> pt = getProductType(productID);
+        if (pt.errorOccurred()) {
+            return new ATResponseObj<>(pt.getErrorMsg());
         }
         List<Integer> output = new ArrayList<>();
-        ProductType pt = getProductType(productID);
-        if (pt == null) {
-            logger.warn("the productId is not exist in the system");
-            return null;
+        long stamp = lock_stores.readLock();
+        logger.debug("catch the ReadLock");
+        try {
+            for (Store s: stores.values()){
+                Double price = s.getProductPrice(productID);
+                if (price != null && (price <= (double) max & price >= (double) min))
+                    output.add(s.getStoreId());
+            }
+            return new ATResponseObj<>(output);
         }
-        List<Integer> pt_stores = pt.getStores();
-        for (Integer i : pt_stores) {
-            Store s = getStore(i);
-            Double price = s.getProductPrice(productID);
-            if (price != null && (price <= (double) max & price >= (double) min))
-                output.add(i);
+        finally {
+            lock_stores.unlockRead(stamp);
+            logger.debug("release the ReadLock");
         }
-        return output;
     }
 
     //post-cond: the return value is empty List and not null!
     public ATResponseObj<List<Integer>> searchProductByCategory(int category) {
+        if (category<0){
+            String warning = "categoryID illegal";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
+        }
         long stamp = lock_TP.readLock();
-        logger.debug("ProductSearchByCategory() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
                 if (p.getCategory() == category)
                     output.add(p.getProductID());
             }
-            return output;
+            return new ATResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
-            logger.debug("ProductSearchByRate() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
