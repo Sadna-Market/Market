@@ -66,7 +66,12 @@ public class Store {
 
     //requirement II.4.1 (only owners)
     public boolean addNewProduct(ProductType productType, int quantity, double price) {
-        return inventory.addNewProduct(productType, quantity, price);
+        if(productType == null) {
+            logger.warn("productType is null (store - addNewProduct");
+            return false;
+        }
+        else
+            return inventory.addNewProduct(productType, quantity, price);
     }
 
     //requirement II.4.1 (only owners)
@@ -121,11 +126,14 @@ public class Store {
             Integer productID = entry.getKey();
             Integer productQuantity = entry.getValue();
             ProductStore productStore = inventory.getProductStoreAfterBuy(productID, productQuantity);
-            if(productStore == null)
+            if(productStore == null) {
+                logger.warn("ProductId: " + productID + " not exist in inventory");
                 return false;
+            }
             productsBuy.add(productStore);
         }
         history.put(TID, new History(TID, finalPrice, productsBuy, user));
+        logger.info("new history added to storeId: "+ storeId + " ,TID: " + TID);
         return true;
     }
 
@@ -170,12 +178,23 @@ public class Store {
         boolean success = inventory.tellProductStoreIsClose();
         isOpen = false;
         //sends message to managers.
+        logger.info("storeId: "+ storeId + " closed");
+
         return success;
     }
 
-    public void newStoreRate(int rate){
+    public boolean newStoreRate(int rate){
+        if(rate < 0 | rate > 10){
+            logger.warn("store rate is not between 0-10");
+            return false;
+        }
         numOfRated++;
-        this.rate = ((this.rate*(numOfRated-1)) + rate) / numOfRated;
+        if (numOfRated == 1)
+            this.rate = rate;
+        else
+            this.rate = ((this.rate*(numOfRated-1)) + rate) / numOfRated;
+        logger.info("storeId: "+storeId+" rate update to: " + rate );
+        return true;
     }
 
 
@@ -274,6 +293,9 @@ public class Store {
         return history;
     }
 
+    public void openStoreAgain() {
+        isOpen = true;
+    }
 }
 
 
