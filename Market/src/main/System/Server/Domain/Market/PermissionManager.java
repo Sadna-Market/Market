@@ -127,7 +127,7 @@ public class PermissionManager {
     }
 
     //requirement II.4.7
-    public boolean addManagerPermissionType(permissionType.permissionEnum permissionType, User grantee, Store store, User grantor) {
+    public ATResponseObj<Boolean> addManagerPermissionType(permissionType.permissionEnum permissionType, User grantee, Store store, User grantor) {
 
 /*
      param:
@@ -149,17 +149,17 @@ public class PermissionManager {
 
 
         Permission ManagerPermission = getPermission(grantee, store, grantor);
-        if (ManagerPermission == null) return false;
+        if (ManagerPermission == null) return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
         //verify that the Grantee is manager and the Grantor is owner in the store.
         if (!verifyPermissionType(ManagerPermission, userTypes.manager, userTypes.owner))
-            return false;
+            return new ATResponseObj<>(false, "their is no manager - owner connection to the grantee and grantor in this store");
 
         ManagerPermission.addManagerPermission(permissionType);
-        return true;
+        return new ATResponseObj<>(true);
     }
 
     //requirement II.4.7
-    public boolean removeManagerPermissionType(permissionType.permissionEnum permissionType, User grantee, Store store, User grantor) {
+    public ATResponseObj<Boolean> removeManagerPermissionType(permissionType.permissionEnum permissionType, User grantee, Store store, User grantor) {
 /*
      param:
             permissionType - what manager permission type to remove
@@ -176,19 +176,18 @@ public class PermissionManager {
  */
 //      verify that there is a permission for this three (rantee, store, grantor)
         Permission ManagerPermission = getPermission(grantee, store, grantor);
-        if (ManagerPermission == null) return false;
-
+        if (ManagerPermission == null)
+        return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
         //verify that the Grantee is manager and the Grantor is owner in this store
         if (!verifyPermissionType(ManagerPermission, userTypes.manager, userTypes.owner))
-            return false;
+            return new ATResponseObj<>(false, "their is no manager - owner connection to the grantee and grantor in this store");
 
-        return ManagerPermission.removeManagerPermission(permissionType);
-
+        return new ATResponseObj<>(ManagerPermission.removeManagerPermission(permissionType));
     }
 
 
     //requirement II.4.8
-    public boolean removeManagerPermissionCompletely(User grantee, Store store, User grantor) {
+    public ATResponseObj<Boolean> removeManagerPermissionCompletely(User grantee, Store store, User grantor) {
 /*
      documentation:
      remove the manager permission that the grantor Appointed to the grantee in this store
@@ -196,17 +195,17 @@ public class PermissionManager {
 
  */
         Permission ManagerPermission = getPermission(grantee, store, grantor);
-        if (ManagerPermission == null) return false;
+        if (ManagerPermission == null)  return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
 
         if (!verifyPermissionType(ManagerPermission, userTypes.manager, userTypes.owner))
-            return false;
+            return new ATResponseObj<>(false, "their is no manager - owner connection to the grantee and grantor in this store");
 
         allDeletedPermissions.add(ManagerPermission);
         grantee.removeAccessPermission(ManagerPermission);
         grantor.removeGrantorPermission(ManagerPermission);
         store.removePermission(ManagerPermission);
 
-        return true;
+        return new ATResponseObj<>(true);
     }
 
     //requirement II.4.11 a
