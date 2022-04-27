@@ -383,8 +383,13 @@ public class Market {
         }
         return null;
     }
-    public List<History> getUserHistoryInStore(int userID,int storeID){
-      return  stores.get(storeID).getUserHistory("");
+    public List<History> getUserHistoryInStore(String userID,int storeID){
+        Store store=getStore(storeID);
+        if (store==null){
+            logger.warn("this storeID not exist in the system.");
+            return null;
+        }
+        return  stores.get(storeID).getUserHistory(userID);
     }
 
     /* forbidden to use with this function except Test*/
