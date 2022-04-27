@@ -18,7 +18,7 @@ class PermissionManagerTest {
     User manager;
     User manager2;
     User member;
-
+/*
     Store store1;
 
     @BeforeEach
@@ -146,4 +146,6 @@ class PermissionManagerTest {
 
 
     }
+
+ */
 }

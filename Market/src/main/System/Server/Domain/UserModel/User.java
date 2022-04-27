@@ -4,6 +4,7 @@ import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -82,7 +83,8 @@ public class User extends Guest{
 
     public boolean setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.addManagerPermissionType(perm,user,store,this));
+        ATResponseObj<Boolean> b=permissionManager.addManagerPermissionType(perm,user,store,this);
+        return !b.errorOccurred();
     }
 
     public boolean getRolesInStore(Store store){
