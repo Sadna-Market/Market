@@ -2,22 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/PermissionManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/PermissionManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Inventory.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Inventory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/ErrorCode.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/PermissionManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/PermissionManagerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +74,9 @@
       <recent name="main.System.Server.Domain.StoreModel" />
       <recent name="main.System.Server.Domain.Market" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="main" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
@@ -100,7 +96,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.main.System.Server.Domain.UserModel in Market">
+  <component name="RunManager" selected="JUnit.main.System.Server.Domain.StoreModel in Market">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -158,7 +154,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StoreTest.addNewProductS" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="main.System.Server.Domain.StoreModel in Market" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
@@ -167,9 +163,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.StoreModel" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.StoreModel.StoreTest" />
-      <option name="METHOD_NAME" value="addNewProductS" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -190,11 +184,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.main.System.Server.Domain.StoreModel in Market" />
         <item itemvalue="JUnit.main.System.Server.Domain.UserModel in Market" />
         <item itemvalue="JUnit.InventoryTest" />
         <item itemvalue="JUnit.InventoryTest.getProduct" />
         <item itemvalue="JUnit.StoreTest" />
-        <item itemvalue="JUnit.StoreTest.addNewProductS" />
       </list>
     </recent_temporary>
   </component>
