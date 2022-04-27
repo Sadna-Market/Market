@@ -191,37 +191,20 @@ public class Market {
         }
     }
 
-    public ATResponseObj<List<Integer>> addProductType(String name, String desc) {
-        if (name == null || desc == null) {
-            logger.warn("the args is null");
-            return false;
-        }
-        if (name == "") {
-            logger.warn("the name is empty");
-            return false;
-        }
-        long stamp = lock_TP.writeLock();
-        logger.debug("addProductType() catch the WriteLock.");
-        try {
-            int value = productCounter++;
-            productTypes.put(value, new ProductType(value, name, desc));
-            logger.info("new productType add to the market.");
-            return true;
-        } finally {
-            lock_TP.unlockWrite(stamp);
-            logger.debug("addProductType() release the WriteLock.");
-        }
-    }
-
 
     private ATResponseObj<ProductType> getProductType(int productID) {
+        if (productID<0){
+            String warning= "productID is illegal";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
+        }
         long stamp = lock_TP.readLock();
-        logger.debug("getProductType() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try {
-            return productTypes.get(productID);
+            return new ATResponseObj<>(productTypes.get(productID));
         } finally {
             lock_TP.unlockRead(stamp);
-            logger.debug("getProductType() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
