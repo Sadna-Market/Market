@@ -1,6 +1,7 @@
 package main.System.Server.Domain.Market;
 
 import main.System.Server.Domain.StoreModel.*;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import main.System.Server.Domain.UserModel.Response.StoreResponse;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
@@ -221,14 +222,14 @@ public class Market {
                 logger.warn("the userID is not exist in the system.");
                 return false;
             }
-            return userManager.getUserShoppingCart(userId).addNewProductToShoppingBag(ProductId, s, quantity);
+            return userManager.getUserShoppingCart(userId).value.addNewProductToShoppingBag(ProductId, s, quantity);
         }
         return false;
     }
 
     public boolean order(UUID userId){
         try {
-            ShoppingCart shoppingCart = userManager.getUserShoppingCart(userId);
+            ShoppingCart shoppingCart = userManager.getUserShoppingCart(userId).value;
             return purchase.order(shoppingCart);
         }
         catch (Exception e){
@@ -320,17 +321,17 @@ public class Market {
 
 
 
-    public boolean addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
+    public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
         Store store = getStore(storeId);
         return userManager.addNewStoreOwner(userId,store,newOnerEmail);
     }
 
-    public boolean addNewStoreManager(UUID userId, int storeId, String newMangermail) {
+    public ATResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
         Store store = getStore(storeId);
         return userManager.addNewStoreManager(userId,store,newMangermail);
     }
 
-    public boolean setManagerPermissions(UUID userId, int storeId, String mangerMail,permissionType.permissionEnum perm) {
+    public ATResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
         Store store = getStore(storeId);
         return userManager.setManagerPermissions(userId,store,mangerMail,perm);
     }
@@ -378,7 +379,7 @@ public class Market {
         return null;
     }
     public List<History> getUserHistoryInStore(int userID,int storeID){
-      return  stores.get(storeID).getUserHistory("");
+        return  stores.get(storeID).getUserHistory("");
     }
 
     /* forbidden to use with this function except Test*/

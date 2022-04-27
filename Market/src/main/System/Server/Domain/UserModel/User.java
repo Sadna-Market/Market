@@ -4,6 +4,7 @@ import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -67,20 +68,20 @@ public class User extends Guest{
         return granteeStores;
     }
 
-    public boolean addFounder(Store store) {
-        return PermissionManager.getInstance().createPermission(this,store,null,userTypes.owner,userTypes.system).value;
+    public ATResponseObj<Boolean> addFounder(Store store) {
+        return PermissionManager.getInstance().createPermission(this,store,null,userTypes.owner,userTypes.system);
     }
 
-    public boolean addNewStoreOwner(User user, Store store) {
+    public ATResponseObj<Boolean> addNewStoreOwner(User user, Store store) {
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.createPermission(user,store,this, userTypes.owner,userTypes.owner)).value;
+        return (permissionManager.createPermission(user,store,this, userTypes.owner,userTypes.owner));
     }
 
-    public boolean addNewStoreManager(User user, Store store) {
+    public ATResponseObj<Boolean> addNewStoreManager(User user, Store store) {
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.createPermission(user,store,this, userTypes.manager,userTypes.owner)).value;    }
+        return (permissionManager.createPermission(user,store,this, userTypes.manager,userTypes.owner));    }
 
-    public boolean setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
+    public ATResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
         PermissionManager permissionManager =PermissionManager.getInstance();
         return (permissionManager.addManagerPermissionType(perm,user,store,this));
     }
