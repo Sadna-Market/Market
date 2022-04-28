@@ -124,4 +124,77 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(market.removeProductFromStore(existing_storeID, null));
     }
 
+    /**
+     * Requirement: update product info of store  - #2.4.1.3
+     */
+    @Test
+    @DisplayName("req: #2.4.1.3 - success test")
+    void updateProductInStore_Success() {
+        ItemDetail existingProduct = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
+        ItemDetail updatedProduct = new ItemDetail("iphone6", 3000, 3, 150, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertTrue(market.updateProductInStore(existing_storeID, existingProduct, updatedProduct));
+
+        ATResponseObj<ItemDetail> response = market.getProduct(existing_storeID, updatedProduct.itemID);
+        assertFalse(response.errorOccurred());
+        assertEquals(150, updatedProduct.price);
+        assertEquals(3, updatedProduct.quantity);
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.3 - fail test [storeID doesnt exist]")
+    void updateProductInStore_Fail1() {
+        ItemDetail existingProduct = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
+        ItemDetail updatedProduct = new ItemDetail("iphone6", 3000, 3, 150, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertFalse(market.updateProductInStore(existing_storeID + 70, existingProduct, updatedProduct));
+
+        ATResponseObj<ItemDetail> response = market.getProduct(existing_storeID, updatedProduct.itemID);
+        assertFalse(response.errorOccurred());
+        assertEquals(60, updatedProduct.price);
+        assertEquals(1, updatedProduct.quantity);
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.3 - fail test [product doesnt exist in store]")
+    void updateProductInStore_Fail2() {
+        ItemDetail existingProduct = new ItemDetail("XXX", 5, 1, 60, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertFalse(market.updateProductInStore(existing_storeID, existingProduct, existingProduct));
+
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.3 - fail test [invalid price to update]")
+    void updateProductInStore_Fail3() {
+        ItemDetail existingProduct = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
+        ItemDetail updatedProduct = new ItemDetail("iphone6", 3000, 3, -150, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertFalse(market.updateProductInStore(existing_storeID, existingProduct, updatedProduct));
+
+        ATResponseObj<ItemDetail> response = market.getProduct(existing_storeID, updatedProduct.itemID);
+        assertFalse(response.errorOccurred());
+        assertEquals(60, updatedProduct.price);
+        assertEquals(1, updatedProduct.quantity);
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.3 - fail test [invalid input]]")
+    void updateProductInStore_Fail4() {
+        ItemDetail existingProduct = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertFalse(market.updateProductInStore(existing_storeID, existingProduct, null));
+        assertFalse(market.updateProductInStore(existing_storeID, null, null));
+    }
+
 }

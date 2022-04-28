@@ -251,4 +251,21 @@ public interface MarketBridge {
      * @return true if success, else false
      */
     boolean removeProductFromStore(int storeID, ItemDetail item);
+
+    /**
+     * update product details of a store
+     * @param storeID the store to update its product
+     * @param existingProduct the product to update
+     * @param updatedProduct the product details to update
+     * @return true if success, else false
+     */
+    boolean updateProductInStore(int storeID, ItemDetail existingProduct, ItemDetail updatedProduct);
+
+    /**
+     * query to get item info from store
+     * @param storeID id of the store
+     * @param itemID the id of the item
+     * @return item will detail
+     */
+    ATResponseObj<ItemDetail> getProduct(int storeID, int itemID);
 }

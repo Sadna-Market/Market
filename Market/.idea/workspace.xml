@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add new store - AT  req #2.3.2&#10;issue #55">
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" afterDir="false" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add a product to store - AT  req #2.4.1.1&#10;issue #56">
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +201,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="3253000" />
+      <workItem from="1651168023679" duration="3560000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -433,7 +434,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651171153400</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="add a product to store - AT  req #2.4.1.1&#10;issue #56">
+      <created>1651171468901</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171468901</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -453,7 +461,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="#64 history for owner" />
     <MESSAGE value="#65 history for system" />
     <MESSAGE value="#53 buy shopping bag from store" />
     <MESSAGE value="#62 close store" />
@@ -478,7 +485,8 @@
     <MESSAGE value="logout - AT  req #2.2.5&#10;issue #54" />
     <MESSAGE value="logout - AT  req #2.3.1&#10;issue #54" />
     <MESSAGE value="add new store - AT  req #2.3.2&#10;issue #55" />
-    <option name="LAST_COMMIT_MESSAGE" value="add new store - AT  req #2.3.2&#10;issue #55" />
+    <MESSAGE value="add a product to store - AT  req #2.4.1.1&#10;issue #56" />
+    <option name="LAST_COMMIT_MESSAGE" value="add a product to store - AT  req #2.4.1.1&#10;issue #56" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
