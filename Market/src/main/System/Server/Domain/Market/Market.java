@@ -263,12 +263,15 @@ public class Market {
 
 
     public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
+
         if (checkValid(userId, storeId, productId)) {
-            ProductType p = getProductType(productId);
-            Store s = getStore(storeId);
-            return s.addNewProduct(p, quantity, price);
+            ATResponseObj<ProductType> p = getProductType(productId);
+            if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+            ATResponseObj<Store> s = getStore(storeId);
+            if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+            return s.getValue().addNewProduct(p, quantity, price);
         }
-        return false;
+        return new ATResponseObj<>(false);
     }
 
     public ATResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
