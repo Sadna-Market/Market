@@ -235,4 +235,12 @@ public interface MarketBridge {
      * @return true is user is a contributor else false
      */
     boolean isContributor(int storeID, User user);
+
+    /**
+     * checks if store contains item in stock
+     * @param storeID id of store
+     * @param itemID id of item
+     * @return true if contains item, else false
+     */
+    boolean hasItem(int storeID, int itemID);
 }
