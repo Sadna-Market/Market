@@ -16,7 +16,7 @@ import java.util.List;
 //Api of all
 public interface IMarket {
     //1.1
-    public ATResponseObj<Boolean> initMarket(String uuid, String email, String Password, String phoneNumber, String CreditCared, String CreditDate);
+    public ATResponseObj<Boolean> initMarket(String email, String Password, String phoneNumber, String CreditCared, String CreditDate);
 
     //todo i just declare all the funcs, in the futer we will change the passing args and the return value acording to the drishot.
 

@@ -268,4 +268,10 @@ public class UserManager {
         return LoginUsers;
     }
 
+
+    //UUID
+    public User getOnlineUser(UUID uuid){
+        return LoginUsers.getOrDefault(uuid, null);
+    }
+
 }
