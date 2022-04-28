@@ -9,19 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-// לבדוק נלים בכל פונקציה?
-// מה קורה עם אקספשנים ו רסיפונסים וכ
-// TODO טסטים
-// נסגרת חנות : מה קורה עם ההרשאה ? כי ליוזר יש רשימה של הרשאות שיש לו ובה את ההרשאה בחנות שנסגרה, צריך למחוק אותה?מה קורה אן ירצו לשחזר-יעני פתיחת חנות מחדש כמו בדרישה?
-//תשובה - תבדקו לפני שהחנות פתוחה לפני שאתם בודקים הרשאות ושיט בכלל - ההרשאות לא ימחקו
 
-// מנהל מערכת ? מה איתו במחינת הרשאות ? יש לו הכל ? מי ממנה אותו ? רלוונטי בכלל להרשאות?
-
-
-//ביטול מנוי של מייסד חנות -> מה קורה עם החנות ? מי בעלים ? מי יוכל למחוק אותה אם ירצה? או שהחנות נסגרת ?
-// תשובה - מבטל את כל ההרשאות של כל מי שבחנו
 public class PermissionManager {
     private List<Permission> allDeletedPermissions;
+    private String systemManagerEmail;
 
     private static class PermissionManagerWrapper {
         static PermissionManager single_instance = new PermissionManager();
@@ -30,42 +21,50 @@ public class PermissionManager {
 
     private PermissionManager() {
         allDeletedPermissions = new ArrayList<>();
+        systemManagerEmail = null;
     }
 
     public static PermissionManager getInstance() {
         return PermissionManager.PermissionManagerWrapper.single_instance;
     }
 
+    public ATResponseObj<Boolean> setSystemManager(String systemManagerEmail) {
+        if (systemManagerEmail == null)
+            return new ATResponseObj<>(false, "Already have a manager system in this market");
+        this.systemManagerEmail = systemManagerEmail;
+        return new ATResponseObj<>(true);
+    }
 
     public ATResponseObj<Boolean> createPermission(User grantee, Store store, User grantor, userTypes granteeType, userTypes grantorType) {
-    /**
-        param:
-            grantee     - Who get the permissions.                                            | case 1,2,3: User
-            store       - The store to which grantee get the permissions.                     | case 1,2,3: Store
-            grantor     - Who gives the permissions.                                          | case 1: null , case 2,3 User
-            granteeType - what grantee permission type is needed : manager or owner.          | case 1: owner, case2: owner ,case3: manager
-            grantorType - what grantor permission type there is now in this store .           | case 1: system, case2: owner ,case3: owner
+        /**
+         param:
+         grantee     - Who get the permissions.                                            | case 1,2,3: User
+         store       - The store to which grantee get the permissions.                     | case 1,2,3: Store
+         grantor     - Who gives the permissions.                                          | case 1: null , case 2,3 User
+         granteeType - what grantee permission type is needed : manager or owner.          | case 1: owner, case2: owner ,case3: manager
+         grantorType - what grantor permission type there is now in this store .           | case 1: system, case2: owner ,case3: owner
 
-        documentation:
-           accept relationship  : {grantor-owner ,grantee-owner  | grantor-owner ,grantee-manager  | grantor-system ,grantee- owner (open store case) }
+         documentation:
+         accept relationship  : {grantor-owner ,grantee-owner  | grantor-owner ,grantee-manager  | grantor-system ,grantee- owner (open store case) }
 
-           case 1: requirement II.3.2
-           grantor-system -> grantee- owner (open store case) need to check before that :
-                                            1.grantee is member
-                                            2.the store accessPermission is empty (because it just open)
-                                            3.grantor Type is system and the user grantor is null
-            case 2: requirement II.4.4
-            grantor-owner -> grantee-owner   : need to check before that :
-                                            1. grantee is member
-                                            2. grantee is not already owner of this store(check in accessPermission store)
-                                            3. grantor is owner of this store (check in accessPermission store)
-            case 3: requirement II.4.6
-            grantor-owner -> grantee-manager :  need to check before that :
-                                            1. grantee is member
-                                            2. grantee is not already owner or manager of this store(check in accessPermission store)
-                                            3. grantor is owner of this store (check in accessPermission store)
+         case 1: requirement II.3.2
+         grantor-system -> grantee- owner (open store case) need to check before that :
+             1.grantee is member
+             2.the store accessPermission is empty (because it just open)
+             3.grantor Type is system and the user grantor is null
 
-     **/
+         case 2: requirement II.4.4
+         grantor-owner -> grantee-owner   : need to check before that :
+             1. grantee is member
+             2. grantee is not already owner of this store(check in accessPermission store)
+             3. grantor is owner of this store (check in accessPermission store)
+
+         case 3: requirement II.4.6
+         grantor-owner -> grantee-manager :  need to check before that :
+             1. grantee is member
+             2. grantee is not already owner or manager of this store(check in accessPermission store)
+             3. grantor is owner of this store (check in accessPermission store)
+         **/
 
         //for all cases:
         //  assumption: grantee and grantor must be member because user is always member;
@@ -149,7 +148,8 @@ public class PermissionManager {
 
 
         Permission ManagerPermission = getPermission(grantee, store, grantor);
-        if (ManagerPermission == null) return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
+        if (ManagerPermission == null)
+            return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
         //verify that the Grantee is manager and the Grantor is owner in the store.
         if (!verifyPermissionType(ManagerPermission, userTypes.manager, userTypes.owner))
             return new ATResponseObj<>(false, "their is no manager - owner connection to the grantee and grantor in this store");
@@ -177,7 +177,7 @@ public class PermissionManager {
 //      verify that there is a permission for this three (rantee, store, grantor)
         Permission ManagerPermission = getPermission(grantee, store, grantor);
         if (ManagerPermission == null)
-        return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
+            return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
         //verify that the Grantee is manager and the Grantor is owner in this store
         if (!verifyPermissionType(ManagerPermission, userTypes.manager, userTypes.owner))
             return new ATResponseObj<>(false, "their is no manager - owner connection to the grantee and grantor in this store");
@@ -195,7 +195,8 @@ public class PermissionManager {
 
  */
         Permission ManagerPermission = getPermission(grantee, store, grantor);
-        if (ManagerPermission == null)  return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
+        if (ManagerPermission == null)
+            return new ATResponseObj<>(false, "their is no permission That the Grantor gives to the Grantee in this store");
 
         if (!verifyPermissionType(ManagerPermission, userTypes.manager, userTypes.owner))
             return new ATResponseObj<>(false, "their is no manager - owner connection to the grantee and grantor in this store");
@@ -258,6 +259,9 @@ public class PermissionManager {
  */
         // for members (if memberPermissions not contains this pType, false will be returned because their is no permissions for members.)
         if (permissionType.memberPermissions.contains(pType)) return true;
+
+        if (permissionType.systemManagerPermissions.contains(pType) && grantee.getEmail().equals(systemManagerEmail))
+            return true;
 
         List<Permission> accessPermissionStore = store.getPermission();
         for (Permission p : accessPermissionStore) {
