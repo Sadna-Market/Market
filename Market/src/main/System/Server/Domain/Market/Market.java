@@ -210,28 +210,30 @@ public class Market {
 
     //todo maybe need to change the position of the func ?
     public ATResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        Store s = getStore(StoreId);
-        if (s == null) {
-            logger.warn("the storeID is not exist in the market");
-            return false;
+        if (!userManager.isOnline(userId)){
+            String warning= "the UID is illegal";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
         }
-        if (s.isProductExistInStock(ProductId, quantity)) {
-            if (!userManager.isOnline(userId)) {
-                logger.warn("the userID is not exist in the system.");
-                return false;
-            }
-            return userManager.getUserShoppingCart(userId).value.addNewProductToShoppingBag(ProductId, s, quantity);
+        ATResponseObj<Store> s = getStore(StoreId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+
+        if (s.value.isProductExistInStock(ProductId, quantity)) {
+            return new ATResponseObj<>(userManager.getUserShoppingCart(userId).value.addNewProductToShoppingBag(ProductId, s.value, quantity));
         }
-        return false;
+        return new ATResponseObj<>(false);
     }
 
     public ATResponseObj<Boolean> order(UUID userId) {
-        try {
-            ShoppingCart shoppingCart = userManager.getUserShoppingCart(userId).value;
-            return purchase.order(shoppingCart);
-        } catch (Exception e) {
-            return false;
+        if (!userManager.isOnline(userId)){
+            String warning= "The UID does not connect online";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
         }
+        ATResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
+        if (shoppingCart.errorOccurred()) return new ATResponseObj<>(shoppingCart.getErrorMsg());
+        return new ATResponseObj<>(purchase.order(shoppingCart.value));
+
 
     }
 
