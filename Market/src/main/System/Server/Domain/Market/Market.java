@@ -324,6 +324,9 @@ public class Market {
         return userManager.addNewStoreOwner(userId, store.getValue(), newOnerEmail);
     }
 
+    //2.4.6
+    //pre: the store exist in the system.
+    //post: other user became to be manager on this store.
     public ATResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
