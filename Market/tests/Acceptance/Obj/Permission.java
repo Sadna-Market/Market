@@ -1,4 +1,4 @@
-package Acceptance.Tests;
+package Acceptance.Obj;
 
 public class Permission {
     public Permission(){}
