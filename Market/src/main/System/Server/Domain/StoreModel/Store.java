@@ -1,5 +1,6 @@
 package main.System.Server.Domain.StoreModel;
 
+import main.ErrorCode;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 
@@ -82,7 +83,7 @@ public class Store {
     public ATResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
         if(productType == null) {
             logger.warn("productType is null (store - addNewProduct");
-            return new ATResponseObj<>(false);
+            return new ATResponseObj<>(false, ""+ErrorCode.PRODUCTNOTEXIST);
         }
         else
             return inventory.addNewProduct(productType, quantity, price);
