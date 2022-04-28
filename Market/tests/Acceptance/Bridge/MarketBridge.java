@@ -243,4 +243,12 @@ public interface MarketBridge {
      * @return true if contains item, else false
      */
     boolean hasItem(int storeID, int itemID);
+
+    /**
+     * removes a product from store
+     * @param storeID the store in which to remove the product from
+     * @param item the product to remove
+     * @return true if success, else false
+     */
+    boolean removeProductFromStore(int storeID, ItemDetail item);
 }

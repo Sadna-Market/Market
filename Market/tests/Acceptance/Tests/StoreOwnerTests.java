@@ -77,4 +77,51 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(market.hasItem(existing_storeID, item.itemID));
     }
 
+    /**
+     * Requirement: remove product from store  - #2.4.1.2
+     */
+    @Test
+    @DisplayName("req: #2.4.1.2 - success test")
+    void removeProduct_Success() {
+        ItemDetail item = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertTrue(market.removeProductFromStore(existing_storeID, item));
+
+        assertFalse(market.hasItem(existing_storeID, item.itemID));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.2 - fail test [storeID doesnt exist]")
+    void removeProduct_Fail1() {
+        ItemDetail item = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertFalse(market.removeProductFromStore(existing_storeID + 70, item));
+
+        assertTrue(market.hasItem(existing_storeID, item.itemID));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.2 - fail test [product doesnt exist in store]")
+    void removeProduct_Fail2() {
+        ItemDetail item = new ItemDetail("galaxyS10", 8888, 1, 10, List.of("phone"), "phone");
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+
+        assertFalse(market.removeProductFromStore(existing_storeID, item));
+
+        assertFalse(market.hasItem(existing_storeID, item.itemID));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.1.2 - fail test [invalid input]]")
+    void removeProduct_Fail3() {
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertFalse(market.removeProductFromStore(existing_storeID, null));
+    }
+
 }
