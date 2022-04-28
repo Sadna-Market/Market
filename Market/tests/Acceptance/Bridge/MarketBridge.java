@@ -70,4 +70,16 @@ public interface MarketBridge {
      * @return certificate for success supply
      */
     ATResponseObj<String> supply(List<ItemDetail> deliver, User user);
+
+    /**
+     * chechs if exists a cart after init system
+     * @return true is exists else false
+     */
+    boolean cartExists();
+
+    /**
+     * checks if system has guest "connected"
+     * @return true if yes else false
+     */
+    boolean guestOnline();
 }
