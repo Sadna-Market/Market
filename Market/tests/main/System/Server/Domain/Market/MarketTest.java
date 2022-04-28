@@ -38,8 +38,7 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,9})
     @Test
     void getStoreInfo(int i) {
-        market.addNewProductToStore(UUID.randomUUID(),i,1,0.5,100);
-        assertNotNull(market.getInfoProductInStore(i,1));
+        assertFalse(market.getInfoProductInStore(1,i).errorOccurred());
     }
 
     @DisplayName("getStore  -  successful")
@@ -47,15 +46,22 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,9})
     @Test
     void getStore(int i) {
-        assertEquals(i,market.getStore(i).getRate());
+        assertEquals(i,market.getStore(i).getValue().getRate());
+    }
+
+
+    @DisplayName("getStore  -  failure for 10")
+    @Test
+    void getStore3() {
+        assertFalse(market.getStore(10).errorOccurred());
     }
 
     @DisplayName("getStore  -  failure")
     @ParameterizedTest
-    @ValueSource(ints = {-1,10,15,100})
+    @ValueSource(ints = {-1,11,15,100})
     @Test
     void getStore2(int i) {
-        assertNull(market.getStore(i));
+        assertTrue(market.getStore(i).errorOccurred());
     }
 
     @DisplayName("searchProductByName  -  successful")
@@ -63,7 +69,7 @@ class MarketTest {
     @ValueSource(strings = {"1","2","3","4"})
     @Test
     void searchProductByName(String s) {
-        assertEquals(1,market.searchProductByName(s).size());
+        assertEquals(1,market.searchProductByName(s).value.size());
     }
 
     @DisplayName("searchProductByName  -  failure")
@@ -71,13 +77,13 @@ class MarketTest {
     @ValueSource(strings = {"yaki","10","store","  "})
     @Test
     void searchProductByName2(String s) {
-        assertEquals(0,market.searchProductByName(s).size());
+        assertEquals(0,market.searchProductByName(s).value.size());
     }
 
     @DisplayName("searchProductByDesc  -  successful")
     @Test
     void searchProductByDesc2() {
-        assertEquals(10,market.searchProductByDesc("hello").size());
+        assertEquals(10,market.searchProductByDesc("hello").value.size());
     }
 
     @DisplayName("searchProductByName  -  failure")
@@ -85,7 +91,7 @@ class MarketTest {
     @ValueSource(strings = {"Hello","H","hELLO","  "})
     @Test
     void searchProductByDesc(String s) {
-        assertEquals(0,market.searchProductByDesc(s).size());
+        assertEquals(0,market.searchProductByDesc(s).getValue().size());
     }
 
     @DisplayName("searchProductByRate  -  successful")
@@ -93,7 +99,7 @@ class MarketTest {
     @ValueSource(ints = {1,2,3,4,5,6,7,8,9,0})
     @Test
     void searchProductByRate(int i) {
-        assertEquals(10-i,market.searchProductByRate(i).size());
+        assertEquals(10-i,market.searchProductByRate(i).getValue().size());
     }
 
     @DisplayName("searchProductByRate  -  failure")
@@ -101,7 +107,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-3,-100,11,1000,15})
     @Test
     void searchProductByRate2(int i) {
-        assertNull(market.searchProductByRate(i));
+        assertTrue(market.searchProductByRate(i).errorOccurred());
     }
 
     @DisplayName("searchProductByStoreRate  -  successful")
@@ -109,7 +115,7 @@ class MarketTest {
     @ValueSource(ints = {1,2,3,4,5,6,7,8,9,0})
     @Test
     void searchProductByStoreRate(int i) {
-        assertEquals(10-i,market.searchProductByStoreRate(i).size());
+        assertEquals(10-i,market.searchProductByStoreRate(i).value.size());
     }
 
     @DisplayName("searchProductByStoreRate  -  failure")
@@ -117,7 +123,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-100,15,11})
     @Test
     void searchProductByStoreRate2(int i) {
-        assertNull(market.searchProductByStoreRate(i));
+        assertTrue(market.searchProductByStoreRate(i).errorOccurred());
     }
 
     @DisplayName("searchProductByStoreRate  -  successful")
@@ -133,35 +139,28 @@ class MarketTest {
     }
 
 
-    @DisplayName("getProductType  -  successful")
-    @ParameterizedTest
-    @ValueSource(ints = {0,2,4,6,8})
-    @Test
-    void getProductType(int i) {
-        assertEquals(i,market.getProductType(i).getRate());
-    }
-
-    @DisplayName("getProductType  -  failure")
-    @ParameterizedTest
-    @ValueSource(ints = {-2,25,44,600,48})
-    @Test
-    void getProductType2(int i) {
-        assertNull(market.getProductType(i));
-    }
 
     @DisplayName("searchProductByCategory  -  successful")
     @ParameterizedTest
     @ValueSource(ints = {1,2,0})
     @Test
     void searchProductByCategory(int i) {
-        assertEquals(i==0? 4:3,market.searchProductByCategory(i).size());
+        assertEquals(i==0? 4:3,market.searchProductByCategory(i).value.size());
     }
     @DisplayName("searchProductByCategory  -  failure")
     @ParameterizedTest
-    @ValueSource(ints = {4,5,6,-1})
+    @ValueSource(ints = {4,5,6})
     @Test
     void searchProductByCategory2(int i) {
-        assertEquals(0,market.searchProductByCategory(i).size());
+        assertEquals(0,market.searchProductByCategory(i).value.size());
+    }
+
+    @DisplayName("searchProductByCategory  -  failure negative numbers")
+    @ParameterizedTest
+    @ValueSource(ints = {-2,-202,-1})
+    @Test
+    void searchProductByCategory3(int i) {
+        assertTrue(market.searchProductByCategory(i).errorOccurred());
     }
 
     //this test is not for UnitTest -> the market here is gateway and just check valid
@@ -181,7 +180,7 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,0})
     @Test
     void setProductPriceInStore(int i) {
-        assertTrue(market.setProductPriceInStore(UUID.randomUUID(),i,1,15));
+        assertFalse(market.setProductPriceInStore(UUID.randomUUID(), i, 1, 15).errorOccurred());
     }
 
     @DisplayName("setProductPriceInStore  -  failure-productID")
@@ -189,7 +188,7 @@ class MarketTest {
     @ValueSource(ints = {200,-300,500,-800})
     @Test
     void setProductPriceInStore2(int i) {
-        assertFalse(market.setProductPriceInStore(UUID.randomUUID(),1,i,15));
+        assertTrue(market.setProductPriceInStore(UUID.randomUUID(),1,i,15).errorOccurred());
     }
 
     @DisplayName("setProductQuantityInStore  -  successful-storeID")
@@ -197,7 +196,7 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,0})
     @Test
     void setProductQuantityInStore(int i) {
-        assertTrue(market.setProductQuantityInStore(UUID.randomUUID(),i,1,15));
+        assertFalse(market.setProductQuantityInStore(UUID.randomUUID(),i,1,15).errorOccurred());
     }
 
     @DisplayName("setProductQuantityInStore  -  failure-productID")
@@ -205,7 +204,7 @@ class MarketTest {
     @ValueSource(ints = {200,-300,500,-800})
     @Test
     void setProductQuantityInStore2(int i) {
-        assertFalse(market.setProductQuantityInStore(UUID.randomUUID(),1,i,15));
+        assertTrue(market.setProductQuantityInStore(UUID.randomUUID(),1,i,15).errorOccurred());
     }
 
 
@@ -214,7 +213,7 @@ class MarketTest {
     @ValueSource(ints = {1,2,4,6})
     @Test
     void deleteStore2(int i) {
-        assertTrue(market.closeStore(UUID.randomUUID(),i));
+        assertFalse(market.closeStore(UUID.randomUUID(),i).errorOccurred());
     }
 
     @DisplayName("deleteStore3  - failure -StoreID")
@@ -222,7 +221,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-40,-66666,90})
     @Test
     void deleteStore3(int i) {
-        assertFalse(market.closeStore(UUID.randomUUID(),i));
+        assertTrue(market.closeStore(UUID.randomUUID(),i).errorOccurred());
     }
 
     @DisplayName("deleteStore3  - failure -UserID")
@@ -230,7 +229,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-40,-66666})
     @Test
     void deleteStore4(int i) {
-        assertFalse(market.closeStore(UUID.randomUUID(),i));
+        assertTrue(market.closeStore(UUID.randomUUID(),i).errorOccurred());
     }
 
     @DisplayName("getStoreOrderHistory  - successful -StoreID")
@@ -238,7 +237,7 @@ class MarketTest {
     @ValueSource(ints = {1,2,4,6})
     @Test
     void getStoreOrderHistory2(int i) {
-        assertEquals(0,market.getStoreOrderHistory(UUID.randomUUID(),i).size());
+        assertEquals(0,market.getStoreOrderHistory(UUID.randomUUID(),i).value.size());
     }
 
     @DisplayName("getUserHistoryInStore  - successful -StoreID")
@@ -246,7 +245,7 @@ class MarketTest {
     @ValueSource(ints = {0,1,3,4,1,9,9,5})
     @Test
     void getUserHistoryInStore(int i) {
-        assertEquals(new ArrayList<>(),market.getUserHistoryInStore("", i));
+        assertEquals(new ArrayList<>(),market.getUserHistoryInStore("", i).getValue());
     }
 
     @DisplayName("getUserHistoryInStore  - failure -StoreID")
@@ -254,7 +253,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-40,-66666,90})
     @Test
     void getUserHistoryInStore2(int i) {
-        assertNull(market.getUserHistoryInStore("", i));
+        assertTrue(market.getUserHistoryInStore("", i).errorOccurred());
     }
 
 

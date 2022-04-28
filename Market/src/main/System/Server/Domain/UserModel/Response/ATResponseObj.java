@@ -13,5 +13,11 @@ public class  ATResponseObj<T> extends ATResponse {
         super(msg);
         this.value = value;
     }
+    public ATResponseObj(){
+        super();
+    }
 
+    public T getValue() {
+        return value;
+    }
 }
