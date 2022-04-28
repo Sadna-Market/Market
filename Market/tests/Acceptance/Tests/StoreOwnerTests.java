@@ -197,4 +197,108 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(market.updateProductInStore(existing_storeID, null, null));
     }
 
+    /**
+     * //TODO: not in this version
+     * Requirement: policies of buying and discounts  - #2.4.2
+     */
+    @Test
+    @DisplayName("req: #2.4.2 - success test")
+    void policy_Success() {
+        //TODO: not in this version
+    }
+
+    @Test
+    @DisplayName("req: #2.4.2 - fail test [...]")
+    void policy_Fail1() {
+        //TODO: not in this version
+    }
+
+    @Test
+    @DisplayName("req: #2.4.2 - fail test [...]")
+    void policy_Fail2() {
+        //TODO: not in this version
+    }
+
+    @Test
+    @DisplayName("req: #2.4.2 - fail test [...]")
+    void policy_Fail3() {
+        //TODO: not in this version
+    }
+
+    /**
+     * Requirement: assign store owner - #2.4.4
+     */
+    @Test
+    @DisplayName("req: #2.4.4 - success test")
+    void assignStoreOwner_Success() {
+        User newOwner = generateUser();
+        assertTrue(market.register(newOwner.username, newOwner.password));
+        assertTrue(market.isMember(newOwner));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+
+        assertTrue(market.assignNewOwner(existing_storeID, member, newOwner));
+
+        assertTrue(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.4 - fail test [new owner is not a member]")
+    void assignStoreOwner_Fail1() {
+        User newOwner = generateUser();
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+
+        assertFalse(market.assignNewOwner(existing_storeID, member, newOwner));
+
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.4 - fail test [new owner already is owner of store]")
+    void assignStoreOwner_Fail2() {
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+
+
+        assertFalse(market.assignNewOwner(existing_storeID, member, member));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.4 - fail test [store id doesnt exist]")
+    void assignStoreOwner_Fail3() {
+        User newOwner = generateUser();
+        assertTrue(market.register(newOwner.username, newOwner.password));
+        assertTrue(market.isMember(newOwner));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+
+        assertFalse(market.assignNewOwner(existing_storeID + 50, member, newOwner));
+
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.4 - fail test [invalid input]")
+    void assignStoreOwner_Fail4() {
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+
+        assertFalse(market.assignNewOwner(existing_storeID, member, null));
+
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
 }

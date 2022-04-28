@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add a product to store - AT  req #2.4.1.1&#10;issue #56">
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="update a product to store - AT  req #2.4.1.3&#10;issue #58">
       <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" afterDir="false" />
     </list>
@@ -201,7 +201,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="3560000" />
+      <workItem from="1651168023679" duration="3947000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -441,7 +441,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651171468901</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="remove a product to store - AT  req #2.4.1.2&#10;issue #57">
+      <created>1651171631201</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171631201</updated>
+    </task>
+    <task id="LOCAL-00036" summary="update a product to store - AT  req #2.4.1.3&#10;issue #58">
+      <created>1651171833967</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171833967</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -461,8 +475,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="#65 history for system" />
-    <MESSAGE value="#53 buy shopping bag from store" />
     <MESSAGE value="#62 close store" />
     <MESSAGE value="add permissions &amp; getters and setters" />
     <MESSAGE value="finished basic functions" />
@@ -486,7 +498,9 @@
     <MESSAGE value="logout - AT  req #2.3.1&#10;issue #54" />
     <MESSAGE value="add new store - AT  req #2.3.2&#10;issue #55" />
     <MESSAGE value="add a product to store - AT  req #2.4.1.1&#10;issue #56" />
-    <option name="LAST_COMMIT_MESSAGE" value="add a product to store - AT  req #2.4.1.1&#10;issue #56" />
+    <MESSAGE value="remove a product to store - AT  req #2.4.1.2&#10;issue #57" />
+    <MESSAGE value="update a product to store - AT  req #2.4.1.3&#10;issue #58" />
+    <option name="LAST_COMMIT_MESSAGE" value="update a product to store - AT  req #2.4.1.3&#10;issue #58" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

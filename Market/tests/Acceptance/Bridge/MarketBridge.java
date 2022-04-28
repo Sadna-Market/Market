@@ -268,4 +268,21 @@ public interface MarketBridge {
      * @return item will detail
      */
     ATResponseObj<ItemDetail> getProduct(int storeID, int itemID);
+
+    /**
+     * check if user is owner of the store
+     * @param storeID id of the store
+     * @param user user info
+     * @return true if is owner, else false
+     */
+    boolean isOwner(int storeID, User user);
+
+    /**
+     * assigns a new user to be owner of the store
+     * @param storeID store id to add owner
+     * @param owner existing owner of the store
+     * @param newOwner new owner to add
+     * @return true if success, else false
+     */
+    boolean assignNewOwner(int storeID, User owner, User newOwner);
 }
