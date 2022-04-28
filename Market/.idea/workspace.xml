@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="delete store - AT  req #2.4.9&#10;issue #62" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="gets purchase history owner - AT  req #2.4.13&#10;issue #64">
+      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/SystemManagerTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,7 +202,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="4559000" />
+      <workItem from="1651168023679" duration="5176000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -487,7 +491,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651172616489</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="role info of user in store - AT  req #2.4.11&#10;issue #63">
+      <created>1651172806934</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172806934</updated>
+    </task>
+    <task id="LOCAL-00043" summary="gets purchase history owner - AT  req #2.4.13&#10;issue #64">
+      <created>1651172884150</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172884150</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -507,8 +525,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="init market AT req #1.1&#10;issue #40" />
-    <MESSAGE value="init market AT req #1.3&#10;also added template for re #1.2 to next version impl&#10;issue #41" />
     <MESSAGE value="in AT req #1.4&#10;also added template for re #1.2 to next version impl&#10;issue #41" />
     <MESSAGE value="payment service AT req #1.3&#10;also added template for re #1.2 to next version impl&#10;issue #41" />
     <MESSAGE value="supply service AT req #1.4&#10;also added template for re #1.5, #1.6 to next version impl&#10;issue #42" />
@@ -532,7 +548,9 @@
     <MESSAGE value="add manager to store - AT  req #2.4.6&#10;issue #60" />
     <MESSAGE value="change permission of manager - AT  req #2.4.7&#10;issue #61" />
     <MESSAGE value="delete store - AT  req #2.4.9&#10;issue #62" />
-    <option name="LAST_COMMIT_MESSAGE" value="delete store - AT  req #2.4.9&#10;issue #62" />
+    <MESSAGE value="role info of user in store - AT  req #2.4.11&#10;issue #63" />
+    <MESSAGE value="gets purchase history owner - AT  req #2.4.13&#10;issue #64" />
+    <option name="LAST_COMMIT_MESSAGE" value="gets purchase history owner - AT  req #2.4.13&#10;issue #64" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

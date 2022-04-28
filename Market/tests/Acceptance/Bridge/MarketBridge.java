@@ -334,4 +334,11 @@ public interface MarketBridge {
      * @return info of user's roles
      */
     ATResponseObj<String> getUserRoleInfo(int storeID, User user);
+
+    /**
+     * query to get info of any user member in the system
+     * @param user the user
+     * @return info of user
+     */
+    ATResponseObj<String> getBuyerInfo(User user);
 }
