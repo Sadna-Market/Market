@@ -239,20 +239,21 @@ public class Market {
 
     public ATResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         if (!userManager.isLogged(userId)) {
-            logger.warn("the userID does not connect");
-            return false;
+            String warning="the userID does not connect";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
         }
         Store store = new Store(name, discountPolicy, buyPolicy, founder);
         long stamp = lock_stores.writeLock();
-        logger.debug("OpenNewStore catch the WriteLock");
+        logger.debug("catch the WriteLock");
         try {
             stores.put(storeCounter++, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
-            return true;
+            return new ATResponseObj<>(true);
         } finally {
             lock_stores.unlockWrite(stamp);
-            logger.debug("OpenNewStore released the WriteLock");
+            logger.debug("released the WriteLock");
         }
     }
 
