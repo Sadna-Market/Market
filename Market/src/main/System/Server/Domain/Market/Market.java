@@ -58,6 +58,9 @@ public class Market {
         return s.getValue().getProductInStoreInfo(productID);
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their names
     public ATResponseObj<List<Integer>> searchProductByName(String name) {
         if (name==null){
             String warning="name arrived null";
