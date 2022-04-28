@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/SaleObj.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
@@ -12,8 +14,9 @@
       <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/StoreTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/StoreTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingBag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingBag.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" afterDir="false" />

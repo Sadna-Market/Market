@@ -63,4 +63,8 @@ public class ShoppingBag {
             return true;
         }
     }
+
+    public ConcurrentHashMap<Integer, Integer> getProductQuantity() {
+        return productQuantity;
+    }
 }
