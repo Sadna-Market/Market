@@ -302,4 +302,14 @@ public interface MarketBridge {
      * @return true if success, else false
      */
     boolean assignNewManager(int storeID, User user, User newManager);
+
+    /**
+     * update/change permission of manager in store
+     * @param permission the new permission
+     * @param onOf turn on or off
+     * @param manager the manager
+     * @param storeID store id
+     * @return true if success else false
+     */
+    boolean updatePermission(String permission, boolean onOf, User manager, int storeID);
 }

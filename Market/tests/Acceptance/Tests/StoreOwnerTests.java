@@ -395,4 +395,82 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(market.assignNewManager(existing_storeID, member, null));
     }
 
+
+    /**
+     * Requirement: change permission of manger - #2.4.7
+     */
+    @Test
+    @DisplayName("req: #2.4.7 - success test")
+    void managerPermissionChange_Success() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username,newManager.password));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member));
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        assertTrue(market.isManager(existing_storeID, newManager));
+
+        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(existing_storeID);
+        assertFalse(historyPurchase.errorOccurred());
+
+        assertTrue(market.updatePermission(Permission.GET_ORDER_HISTORY, false, newManager, existing_storeID));
+
+        assertTrue(market.logout());
+        assertTrue(market.login(newManager));
+        historyPurchase = market.getHistoryPurchase(existing_storeID);
+        assertTrue(historyPurchase.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.7 - fail test [invalid store id]")
+    void managerPermissionChange_Fail1() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username,newManager.password));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member));
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        assertTrue(market.isManager(existing_storeID, newManager));
+
+        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(existing_storeID);
+        assertFalse(historyPurchase.errorOccurred());
+
+        assertFalse(market.updatePermission(Permission.GET_ORDER_HISTORY, false, newManager, -1));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.7 - fail test [user is not owner of store]")
+    void managerPermissionChange_Fail2() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username,newManager.password));
+        assertFalse(market.updatePermission(Permission.GET_ORDER_HISTORY, false, newManager, existing_storeID));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.7 - fail test [invalid permissions]")
+    void managerPermissionChange_Fail3() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username,newManager.password));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member));
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        assertTrue(market.isManager(existing_storeID, newManager));
+
+        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(existing_storeID);
+        assertFalse(historyPurchase.errorOccurred());
+
+        assertFalse(market.updatePermission("killTheManager", false, newManager, existing_storeID));
+
+
+        assertTrue(market.logout());
+        assertTrue(market.login(newManager));
+        historyPurchase = market.getHistoryPurchase(existing_storeID);
+        assertTrue(historyPurchase.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.7 - fail test [invalid input]")
+    void managerPermissionChange_Fail4() {
+        assertFalse(market.updatePermission(null, false, member, existing_storeID));
+    }
+
+
 }
