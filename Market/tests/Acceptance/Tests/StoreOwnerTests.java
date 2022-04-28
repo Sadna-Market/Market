@@ -503,7 +503,6 @@ public class StoreOwnerTests extends MarketTests{
     }
 
     @Test
-
     @DisplayName("req: #2.4.9 - fail test [user doesnt have permission]")
     void closeStore_Fail3() {
         User newManager = generateUser();
