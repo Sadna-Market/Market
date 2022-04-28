@@ -366,13 +366,16 @@ public class Market {
         }
     }
 
-
+    //2.4.11
+    //pre: the store exist in the system.
+    //post: market ask UserManager about this user with this store.
     public ATResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
         return userManager.getRolesInStore(userId, store.getValue());
     }
 
+    
     public ATResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
