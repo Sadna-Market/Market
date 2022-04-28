@@ -522,4 +522,56 @@ public class StoreOwnerTests extends MarketTests{
     }
 
 
+
+    /**
+     * Requirement: get roles info of a store  - #2.4.11
+     */
+    @Test
+    @DisplayName("req: #2.4.11 - success test")
+    void getRoleInfo_Success() {
+        assertTrue(market.login(member));
+        ATResponseObj<String> res = market.getUserRoleInfo(existing_storeID, member);
+        assertFalse(res.errorOccurred());
+        assertNotNull(res.value);
+        assertNotEquals("", res.value);
+    }
+
+    @Test
+    @DisplayName("req: #2.4.11 - fail test [store doesnt exist]")
+    void getRoleInfo_Fail1() {
+        assertTrue(market.login(member));
+        ATResponseObj<String> res = market.getUserRoleInfo(existing_storeID + 50, member);
+        assertTrue(res.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.11 - fail test [invalid permission]")
+    void getRoleInfo_Fail2() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username,newManager.password));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member));//member is contributor
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        assertTrue(market.logout());
+        assertTrue(market.login(newManager));
+        ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
+        assertTrue(res.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.11 - fail test [user doesnt exist]")
+    void getRoleInfo_Fail3() {
+        ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
+        assertTrue(res.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.11 - fail test [invalid input]")
+    void getRoleInfo_Fail4() {
+        ATResponseObj<String> res = market.getStoreInfo(-1);
+        assertTrue(res.errorOccurred());
+    }
+
+
+
 }

@@ -322,8 +322,16 @@ public interface MarketBridge {
 
     /**
      * checks if store is closed
-     * @param storeID
+     * @param storeID id of store
      * @return true is store is closed, else false
      */
     boolean storeIsClosed(int storeID);
+
+    /**
+     * query to get role info of user in store
+     * @param storeID id of store
+     * @param user the user
+     * @return info of user's roles
+     */
+    ATResponseObj<String> getUserRoleInfo(int storeID, User user);
 }

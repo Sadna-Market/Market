@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add manager to store - AT  req #2.4.6&#10;issue #60">
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/Permission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreOwnerTests.java" afterDir="false" />
-    </list>
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="delete store - AT  req #2.4.9&#10;issue #62" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -201,7 +198,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="4246000" />
+      <workItem from="1651168023679" duration="4559000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -469,7 +466,28 @@
       <option name="project" value="LOCAL" />
       <updated>1651172226717</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="change permission of manager - AT  req #2.4.7&#10;issue #61">
+      <created>1651172458734</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172458734</updated>
+    </task>
+    <task id="LOCAL-00040" summary="delete store - AT  req #2.4.9&#10;issue #62">
+      <created>1651172600484</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172600484</updated>
+    </task>
+    <task id="LOCAL-00041" summary="delete store - AT  req #2.4.9&#10;issue #62">
+      <created>1651172616489</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172616489</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -489,8 +507,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="finished basic functions" />
-    <MESSAGE value="built bridge dp&#10;issue #10" />
     <MESSAGE value="init market AT req #1.1&#10;issue #40" />
     <MESSAGE value="init market AT req #1.3&#10;also added template for re #1.2 to next version impl&#10;issue #41" />
     <MESSAGE value="in AT req #1.4&#10;also added template for re #1.2 to next version impl&#10;issue #41" />
@@ -514,7 +530,9 @@
     <MESSAGE value="update a product to store - AT  req #2.4.1.3&#10;issue #58" />
     <MESSAGE value="add owner to store - AT  req #2.4.4&#10;also added skeleton for eq #2.4.2&#10;issue #59" />
     <MESSAGE value="add manager to store - AT  req #2.4.6&#10;issue #60" />
-    <option name="LAST_COMMIT_MESSAGE" value="add manager to store - AT  req #2.4.6&#10;issue #60" />
+    <MESSAGE value="change permission of manager - AT  req #2.4.7&#10;issue #61" />
+    <MESSAGE value="delete store - AT  req #2.4.9&#10;issue #62" />
+    <option name="LAST_COMMIT_MESSAGE" value="delete store - AT  req #2.4.9&#10;issue #62" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
