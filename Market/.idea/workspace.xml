@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
@@ -363,12 +364,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>377</line>
+          <line>384</line>
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>384</line>
+          <line>391</line>
           <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

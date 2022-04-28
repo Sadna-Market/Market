@@ -342,6 +342,9 @@ public class Market {
         return userManager.setManagerPermissions(userId, store.getValue(), mangerMail, perm);
     }
 
+    //2.4.9
+    //pre: the store exist in the system, the user is owner of this store.
+    //post: the market move this store to the closeStores, users can not see this store again(until she will be open).
     public ATResponseObj<Boolean> closeStore(UUID userId, int storeId) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
@@ -362,6 +365,7 @@ public class Market {
             logger.debug("released WriteLock");
         }
     }
+
 
     public ATResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
         ATResponseObj<Store> store = getStore(storeId);
