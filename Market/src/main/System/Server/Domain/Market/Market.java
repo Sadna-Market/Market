@@ -259,6 +259,9 @@ public class Market {
 
     }
 
+    //2.3.2
+    //pre: user is Member
+    //post: new Store add to the market
     public ATResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         ATResponseObj<Boolean> checkUM=userManager.isLogged(userId);
         if (checkUM.errorOccurred()) return checkUM;
