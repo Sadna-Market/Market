@@ -94,6 +94,13 @@ public class Store {
         return inventory.removeProduct(productId);
     }
 
+    //requirement II.2.5
+    // try to buy(set) the maximum quantity that exist
+    public Integer setProductQuantityForBuy(int productId, int quantity) {
+        return inventory.setProductQuantityForBuy(productId, quantity);
+    }
+
+
     //requirement II.4.1 & II.2.5 (only owners)
     //if change to quantity 0 not delete product (need to find the product price later)
     public ATResponseObj<Boolean> setProductQuantity(int productId, int quantity) {

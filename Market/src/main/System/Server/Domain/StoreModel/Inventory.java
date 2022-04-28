@@ -72,6 +72,30 @@ public class Inventory {
 
     }
 
+    public Integer setProductQuantityForBuy(int productId, int quantity) {
+        ProductStore productStore = products.get(productId);
+        if (productStore == null) {
+            logger.warn("try to set quantity for buy, productId:" + productId + " but inventory not contains this product");
+            return null;
+        } else {
+            long stamp = productStore.getProductLock().writeLock();
+            try {
+                int quantityInInventory = productStore.getQuantity();
+                if(quantityInInventory>=quantity) {
+                    productStore.setQuantity(quantityInInventory - quantity);
+                    logger.info("Inventory set quantity of productId:" + productId + "to " + (quantityInInventory-quantity));
+                    return quantity;
+                }else {
+                    productStore.setQuantity(0);
+                    logger.info("Inventory set quantity of productId:" + productId + "to " + 0);
+                    return quantityInInventory;
+                }
+            }finally {
+                productStore.getProductLock().unlockWrite(stamp);
+            }
+        }
+    }
+
     public ATResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
@@ -163,4 +187,6 @@ public class Inventory {
     public int getStoreId() {
         return storeId;
     }
+
+
 }
