@@ -126,4 +126,24 @@ public interface MarketBridge {
      * @return info of the store
      */
     ATResponseObj<String> getStoreInfo(int storeID);
+
+    /**
+     * given item details, search for this item or related by category and keywords
+     * @param itemName item to search for
+     * @param category category of the item
+     * @param keyWords words that can relate to the items specifications
+     * @return list of result items
+     */
+    ATResponseObj<List<ItemDetail>> searchItems(String itemName, String category, List<String> keyWords);
+
+    /**
+     * given a list of items, filter them by rank,price range, store rank, category.
+     * @param items list of items to filter
+     * @param productRank filter param
+     * @param priceRange filter param
+     * @param category filter param
+     * @param storeRank filter param
+     * @return filtered list
+     */
+    ATResponseObj<List<ItemDetail>> filterSearchResults(List<ItemDetail> items, int productRank, String priceRange, String category, int storeRank);
 }
