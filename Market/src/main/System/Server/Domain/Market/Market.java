@@ -83,7 +83,9 @@ public class Market {
             logger.debug("released the ReadLock.");
         }
     }
-
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their description
     public ATResponseObj<List<Integer>> searchProductByDesc(String desc) {
         if (desc==null){
             String warning="description arrived null";
@@ -107,6 +109,9 @@ public class Market {
         }
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the products that them rate higher or equal to the arg(arg>0)
     public ATResponseObj<List<Integer>> searchProductByRate(int minRate) {
         if (minRate < 0 || minRate > 10) {
             String warning="args invalid";
@@ -128,6 +133,9 @@ public class Market {
         }
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that their rate higher or equal to the arg(arg>0)
     public ATResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
         if (rate < 0 || rate > 10) {
             String warning="args invalid";
@@ -149,6 +157,9 @@ public class Market {
         }
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the products that them price is between min and max
     public ATResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
         if (min > max) {
             String warning="min bigger then max - invalid";
@@ -177,7 +188,9 @@ public class Market {
         }
     }
 
-    //post-cond: the return value is empty List and not null!
+    //2.2.2
+    //pre: -
+    //post: get all the products that them price is between min and max
     public ATResponseObj<List<Integer>> searchProductByCategory(int category) {
         if (category<0){
             String warning = "categoryID illegal";

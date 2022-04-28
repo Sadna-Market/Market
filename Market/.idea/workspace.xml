@@ -359,28 +359,33 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>305</line>
+          <line>318</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>289</line>
+          <line>302</line>
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>367</line>
+          <line>380</line>
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>374</line>
+          <line>387</line>
           <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
           <line>56</line>
           <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>159</line>
+          <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
