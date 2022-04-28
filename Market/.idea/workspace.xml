@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/Market.iml" afterDir="false" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="built bridge dp&#10;issue #10">
       <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/ProxyMarket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/RealMarket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/Address.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/ItemDetail.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/MarketTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/ATResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/ATResponseObj.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/CreditCard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/SystemTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +205,7 @@
       <workItem from="1650816966316" duration="7232000" />
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
-      <workItem from="1651121204606" duration="918000" />
+      <workItem from="1651121204606" duration="2177000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -308,7 +305,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650984753733</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="built bridge dp&#10;issue #10">
+      <created>1651122442412</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1651122442412</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -342,7 +346,8 @@
     <MESSAGE value="#62 close store" />
     <MESSAGE value="add permissions &amp; getters and setters" />
     <MESSAGE value="finished basic functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished basic functions" />
+    <MESSAGE value="built bridge dp&#10;issue #10" />
+    <option name="LAST_COMMIT_MESSAGE" value="built bridge dp&#10;issue #10" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
