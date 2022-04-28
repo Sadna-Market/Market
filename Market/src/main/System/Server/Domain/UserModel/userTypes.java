@@ -4,6 +4,5 @@ public enum userTypes {
     member,
     manager,
     owner,
-    systemManager,
     system,
 }
