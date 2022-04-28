@@ -312,4 +312,18 @@ public interface MarketBridge {
      * @return true if success else false
      */
     boolean updatePermission(String permission, boolean onOf, User manager, int storeID);
+
+    /**
+     * close the store
+     * @param storeID store id
+     * @return true if success, else false
+     */
+    boolean closeStore(int storeID);
+
+    /**
+     * checks if store is closed
+     * @param storeID
+     * @return true is store is closed, else false
+     */
+    boolean storeIsClosed(int storeID);
 }

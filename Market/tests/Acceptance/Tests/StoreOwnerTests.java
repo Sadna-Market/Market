@@ -473,4 +473,54 @@ public class StoreOwnerTests extends MarketTests{
     }
 
 
+    /**
+     * Requirement: close store  - #2.4.9
+     */
+    @Test
+    @DisplayName("req: #2.4.9 - success test")
+    void closeStore_Success() {
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.closeStore(existing_storeID));
+        assertTrue(market.storeIsClosed(existing_storeID));
+        assertFalse(market.addItemToStore(existing_storeID, new ItemDetail("iphoneZX", 1122, 1, 10, List.of("phone"), "phone")));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.9 - fail test [find product after closing]")
+    void closeStore_Fail1() {
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.closeStore(existing_storeID));
+        assertTrue(market.storeIsClosed(existing_storeID));
+        ATResponseObj<ItemDetail> res = market.getProduct(existing_storeID, 5000);
+        assertTrue(res.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.9 - fail test [invalid store ID]")
+    void closeStore_Fail2() {
+        assertTrue(market.login(member)); //member is contributor
+        assertFalse(market.closeStore(existing_storeID + 3));
+    }
+
+    @Test
+
+    @DisplayName("req: #2.4.9 - fail test [user doesnt have permission]")
+    void closeStore_Fail3() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username,newManager.password));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member));//member is contributor
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        assertTrue(market.logout());
+        assertTrue(market.login(newManager));
+        assertFalse(market.closeStore(existing_storeID));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.9 - fail test [invalid input]")
+    void closeStore_Fail4() {
+        assertFalse(market.closeStore(-1));
+    }
+
+
 }
