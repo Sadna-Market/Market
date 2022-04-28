@@ -247,9 +247,9 @@ public class Market {
 
     }
 
-    //2.2.3
+    //2.2.5
     //pre: user is online
-    //post: add <quantity> times this product from this store
+    //post: start process of sealing with the User
     public ATResponseObj<Boolean> order(UUID userId) {
         ATResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
