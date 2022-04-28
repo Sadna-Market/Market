@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="info of any buyer/store - AT  req #2.6.4&#10;issue #65">
-      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/StoreManagerTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Obj/Permission.java" afterDir="false" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="permissions of manager - AT  req #2.5">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/ProxyMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/ProxyMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/RealMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/RealMarket.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
       <recent name="C:\Users\lielk\Desktop\Market\src" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.MarketTest">
+  <component name="RunManager" selected="JUnit.Acceptance in Market">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -87,6 +88,28 @@
       <option name="TEST_OBJECT" value="CLASS" />
       <properties />
       <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Acceptance in Market" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Acceptance.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Acceptance" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in Market" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -102,38 +125,6 @@
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.getStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStore2(int)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.getStore3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStore3" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -172,11 +163,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.Acceptance in Market" />
+        <item itemvalue="JUnit.All in Market" />
         <item itemvalue="JUnit.MarketTest" />
         <item itemvalue="JUnit.MarketTest.getStoreInfo" />
         <item itemvalue="JUnit.MarketTest.searchProductByStoreRate2" />
-        <item itemvalue="JUnit.MarketTest.getStore3" />
-        <item itemvalue="JUnit.MarketTest.getStore2" />
       </list>
     </recent_temporary>
   </component>
@@ -201,7 +192,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="5478000" />
+      <workItem from="1651168023679" duration="5792000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -511,7 +502,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651173308017</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="permissions of manager - AT  req #2.5">
+      <created>1651173593434</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1651173593434</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -531,7 +529,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="payment service AT req #1.3&#10;also added template for re #1.2 to next version impl&#10;issue #41" />
     <MESSAGE value="supply service AT req #1.4&#10;also added template for re #1.5, #1.6 to next version impl&#10;issue #42" />
     <MESSAGE value="guest visit req #2.1.1&#10;issue #43" />
     <MESSAGE value="guest register req #2.1.3&#10;issue #45" />
@@ -556,7 +553,8 @@
     <MESSAGE value="role info of user in store - AT  req #2.4.11&#10;issue #63" />
     <MESSAGE value="gets purchase history owner - AT  req #2.4.13&#10;issue #64" />
     <MESSAGE value="info of any buyer/store - AT  req #2.6.4&#10;issue #65" />
-    <option name="LAST_COMMIT_MESSAGE" value="info of any buyer/store - AT  req #2.6.4&#10;issue #65" />
+    <MESSAGE value="permissions of manager - AT  req #2.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="permissions of manager - AT  req #2.5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
