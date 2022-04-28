@@ -572,6 +572,45 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(res.errorOccurred());
     }
 
+    /**
+     * Requirement: get purchase history of store  - #2.4.13
+     */
+    @Test
+    @DisplayName("req: #2.4.13 - success test")
+    void purchaseHistory_Success() {
+        assertTrue(market.login(member));
+        assertTrue(market.isOwner(existing_storeID,member));
+        ATResponseObj<List<String>> res = market.getHistoryPurchase(existing_storeID);
+        assertFalse(res.errorOccurred());
+        assertNotEquals(null,res.value);
+    }
+
+    @Test
+    @DisplayName("req: #2.4.13 - fail test [store doesnt exist]")
+    void purchaseHistory_Fail1() {
+        assertTrue(market.login(member));
+        assertTrue(market.isOwner(existing_storeID,member));
+        ATResponseObj<List<String>> res = market.getHistoryPurchase(existing_storeID+50);
+        assertTrue(res.errorOccurred());
+    }
+    @Test
+    @DisplayName("req: #2.4.13 - fail test [no permission]")
+    void purchaseHistory_Fail2() {
+        User user = generateUser();
+        assertTrue(market.register(user.username,user.password));
+        assertTrue(market.login(user));
+        ATResponseObj<List<String>> res = market.getHistoryPurchase(existing_storeID);
+        assertTrue(res.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #2.4.13 - fail test [...]")
+    void purchaseHistory_Fail3() {
+        assertTrue(market.login(member));
+        assertTrue(market.isOwner(existing_storeID,member));
+        ATResponseObj<List<String>> res = market.getHistoryPurchase(-1);
+        assertTrue(res.errorOccurred());
+    }
 
 
 }
