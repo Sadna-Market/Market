@@ -201,7 +201,13 @@ public class Market {
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
         try {
-            return new ATResponseObj<>(productTypes.get(productID));
+            ProductType p=productTypes.get(productID);
+            if (p==null){
+                String warning="the productID not exist in the system";
+                logger.warn(warning);
+                return new ATResponseObj<>(warning);
+            }
+            return new ATResponseObj<>(p);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -217,11 +223,8 @@ public class Market {
         }
         ATResponseObj<Store> s = getStore(StoreId);
         if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        return s.getValue().isProductExistInStock(ProductId, quantity);
 
-        if (s.value.isProductExistInStock(ProductId, quantity)) {
-            return new ATResponseObj<>(userManager.getUserShoppingCart(userId).value.addNewProductToShoppingBag(ProductId, s.value, quantity));
-        }
-        return new ATResponseObj<>(false);
     }
 
     public ATResponseObj<Boolean> order(UUID userId) {
@@ -238,11 +241,9 @@ public class Market {
     }
 
     public ATResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        if (!userManager.isLogged(userId)) {
-            String warning="the userID does not connect";
-            logger.warn(warning);
-            return new ATResponseObj<>(warning);
-        }
+        ATResponseObj<Boolean> checkUM=userManager.isLogged(userId);
+        if (checkUM.errorOccurred()) return checkUM;
+
         Store store = new Store(name, discountPolicy, buyPolicy, founder);
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");
@@ -283,15 +284,11 @@ public class Market {
     private ATResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
         ATResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-        if (userManager.isOwner(userid, s.getValue())) {
-            ATResponseObj<ProductType> p = getProductType(productId);
-            if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-            return new ATResponseObj<>(true);
-        } else {
-            String warning="userID is not owner of the Store.";
-            logger.warn(warning);
-            return new ATResponseObj<>(warning);
-        }
+        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userid, s.getValue());
+        if (checkOwner.errorOccurred()) return checkOwner;
+        ATResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+        return new ATResponseObj<>(true);
     }
 
     public ATResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
@@ -334,26 +331,22 @@ public class Market {
     public ATResponseObj<Boolean> closeStore(UUID userId, int storeId) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
-        if (userManager.isOwner(userId, store.getValue())) {
+        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
+        if (checkOwner.errorOccurred()) return checkOwner;
+        ATResponseObj<Boolean> checkCloseStore=store.getValue().closeStore();
+        if (checkCloseStore.errorOccurred()) return checkCloseStore;
 
-            if (store.getValue().closeStore()) {
-                long stamp = lock_stores.writeLock();
-                logger.debug("catch WriteLock");
-                try {
-                    stores.remove(store.getValue());
-                    closeStores.put(store.getValue().getStoreId(), store.getValue());
-                } finally {
-                    lock_stores.unlockWrite(stamp);
-                    logger.debug("released WriteLock");
-                }
-                logger.info("market update that Store #" + storeId + " close");
-                return new ATResponseObj<>(true);
-            }
-            logger.warn("market didnt close the store,closeStore() returned false");
-            return new ATResponseObj<>(false);
+        long stamp = lock_stores.writeLock();
+        logger.debug("catch WriteLock");
+        try {
+            stores.remove(store.getValue());
+            closeStores.put(store.getValue().getStoreId(), store.getValue());
+            logger.info("market update that Store #" + storeId + " close");
+            return new ATResponseObj<>(true);
+        } finally {
+            lock_stores.unlockWrite(stamp);
+            logger.debug("released WriteLock");
         }
-        logger.warn("market didnt close the store, the user is not owner.");
-        return new ATResponseObj<>(false);
     }
 
     public ATResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
@@ -363,54 +356,51 @@ public class Market {
     }
 
     public ATResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
-        Store store = getStore(storeId);
-        if (store == null) {
-            logger.warn("the storeId is invalid");
-            return null;
-        }
-
-        if (userManager.isOwner(userId, store)) {
-            return store.getStoreOrderHistory();
-        }
-        return null;
+        ATResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
+        if (checkOwner.errorOccurred()) return new ATResponseObj<>(checkOwner.getErrorMsg());
+        return store.getValue().getStoreOrderHistory();
     }
 
     public ATResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
-        Store store = getStore(storeID);
-        if (store == null) {
-            logger.warn("this storeID not exist in the system.");
-            return null;
-        }
-        return stores.get(storeID).getUserHistory(userID);
+        ATResponseObj<Store> store = getStore(storeID);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        return store.getValue().getUserHistory(userID);
 
-
-        /* forbidden to use with this function except Test*/
-        public void setForTesting () {
-            userManager = new UserManagerStab();
-            for (int i = 0; i < 10; i++) {
-                ProductType p = new ProductType(productCounter++, "product" + i, "hello");
-                p.setRate(i);
-                p.setCategory(i % 3);
-                productTypes.put(i, p);
-            }
-            for (int i = 0; i < 10; i++) {
-                Store s = new StoreStab();
-                s.addNewProduct(getProductType(1), 100, 0.5);
-                s.newStoreRate(i);
-                stores.put(i, s);
-            }
-        }
     }
 
     public ATResponseObj<Store> getStore(int storeID){
+        if (storeID<0 | storeID>=productCounter){
+            String warning="the StoreID is illegal";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
+        }
         long stamp= lock_stores.readLock();
         logger.debug("getStore() catch the ReadLock.");
         try{
-            return stores.get(storeID);
+            return new ATResponseObj<>(stores.get(storeID));
         }
         finally {
             lock_stores.unlockRead(stamp);
             logger.debug("getStore() released the ReadLock.");
+        }
+    }
+
+    /* forbidden to use with this function except Test*/
+    public void setForTesting(){
+        userManager = new UserManagerStab();
+        for (int i = 0; i < 10; i++) {
+            ProductType p = new ProductType(productCounter++, "product" + i, "hello");
+            p.setRate(i);
+            p.setCategory(i % 3);
+            productTypes.put(i, p);
+        }
+        for (int i = 0; i < 10; i++) {
+            Store s = new StoreStab();
+            s.addNewProduct(getProductType(1).getValue(), 100, 0.5);
+            s.newStoreRate(i);
+            stores.put(i, s);
         }
     }
 }

@@ -1,10 +1,9 @@
 package Stabs;
 
-import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
-import main.System.Server.Domain.Market.userTypes;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.*;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import org.apache.log4j.Logger;
 
 import java.util.UUID;
@@ -32,55 +31,56 @@ public class UserManagerStab extends UserManager {
 
 
 
-    public UUID GuestVisit() {return UUID.randomUUID();
+    public ATResponseObj<UUID> GuestVisit() {return new ATResponseObj<>(UUID.randomUUID());
 
     }
 
-    public boolean GuestLeave(UUID guestId) {
-        return true;
+    public ATResponseObj<Boolean> GuestLeave(UUID guestId) {
+        return new ATResponseObj<>(true);
     }
 
 
-
-    public  boolean Login(UUID userID,String email, String password) {
-        return true;
+    public ATResponseObj<Boolean> Login(UUID userID, String email, String password) {
+        
+        return new ATResponseObj<>(true);
     }
 
-    public boolean Logout(UUID userId) {
-        return true;
-    }
-
-
-    public boolean AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
-        return true;
+    public ATResponseObj<Boolean> Logout(UUID userId) {
+        
+        return new ATResponseObj<>(true);
     }
 
 
-
-    public boolean isOwner(UUID user, Store store) {
-        return true;
-    }
-
-    public boolean addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
-        return true;
-    }
-
-    public boolean addFounder(UUID userId, Store store) {
-        return true;
-    }
-    public boolean addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
-        return true;
+    public ATResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber, String CreditCared, String CreditDate) {
+        return new ATResponseObj<>(true);
     }
 
 
 
-    public boolean setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
-        return true;
+    public ATResponseObj<Boolean> isOwner(UUID user, Store store) {
+        return new ATResponseObj<>(true);
     }
 
-    public boolean getRolesInStore(int userId, Store store)
+    public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
+        return new ATResponseObj<>(true);
+    }
+
+    public ATResponseObj<Boolean> addFounder(UUID userId, Store store) {
+        return new ATResponseObj<>(true);
+    }
+    public ATResponseObj<Boolean> addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
+        return new ATResponseObj<>(true);
+    }
+
+
+
+    public ATResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
+        return new ATResponseObj<>(true);
+    }
+
+    public ATResponseObj<Boolean> getRolesInStore(int userId, Store store)
     {
-        return true;
+        return new ATResponseObj<>(true);
     }
 
 
@@ -89,13 +89,13 @@ public class UserManagerStab extends UserManager {
      * @param uuid
      * @return boolean
      */
-    public boolean isLogged(UUID uuid){
-        return true;
+    public ATResponseObj<Boolean> isLogged(UUID uuid){
+        return new ATResponseObj<>(true);
     }
 
-    public ShoppingCart getUserShoppingCart(UUID userId)
+    public ATResponseObj<ShoppingCart> getUserShoppingCart(UUID userId)
     {
-        return new ShoppingCart();
+        return new ATResponseObj<>(new ShoppingCart());
     }
 
     /** ch
