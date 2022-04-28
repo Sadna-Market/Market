@@ -1,9 +1,6 @@
 package Acceptance.Bridge;
 
-import Acceptance.Obj.ATResponseObj;
-import Acceptance.Obj.CreditCard;
-import Acceptance.Obj.ItemDetail;
-import Acceptance.Obj.User;
+import Acceptance.Obj.*;
 
 import java.util.List;
 
@@ -183,4 +180,51 @@ public interface MarketBridge {
      * @return true if success, else false
      */
     boolean updateProductQuantity(ItemDetail item, int newQuantity);
+
+    /**
+     * resets all memory from ram (cart,members,history purchases...)
+     */
+    void resetMemory();
+
+    /**
+     * adds a system manager to the system (the highest permission)
+     * @param sysManager manager to assign
+     */
+    void addSystemManager(User sysManager);
+
+    /**
+     * creates a new store with a owner
+     * @param owner owner of the store to be created
+     * @return Response- msg error if occurred else id of the store that was created
+     */
+    ATResponseObj<Integer> addStore(User owner);
+
+    /**
+     * adds the item to the store
+     * @param storeID the store that the item will be added to
+     * @param item the item to add
+     * @return  true if success else false
+     */
+    boolean addItemToStore(int storeID, ItemDetail item);
+
+    /**
+     * logout from connected user
+     * @return true if success else false
+     */
+    boolean logout();
+
+    /**
+     * purchase the current cart of the user
+     * @param creditCard credit card details to take the money for payment service
+     * @param address address to send the items for supply service
+     * @return certificated of payment and supply
+     */
+    ATResponseObj<String> purchaseCart(CreditCard creditCard, Address address);
+
+    /**
+     * query to get the history of all purchases of a store with storeID
+     * @param storeID the id of the store to get the history
+     * @return list of all purchases accepted certificates
+     */
+    ATResponseObj<List<String>> getHistoryPurchase(int storeID);
 }
