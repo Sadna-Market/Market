@@ -227,4 +227,12 @@ public interface MarketBridge {
      * @return list of all purchases accepted certificates
      */
     ATResponseObj<List<String>> getHistoryPurchase(int storeID);
+
+    /**
+     * chechs if user is a contributor of store
+     * @param storeID the store to check on
+     * @param user the user to check if is a contributor
+     * @return true is user is a contributor else false
+     */
+    boolean isContributor(int storeID, User user);
 }
