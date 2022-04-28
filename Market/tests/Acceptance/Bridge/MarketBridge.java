@@ -175,4 +175,12 @@ public interface MarketBridge {
      * @return true if success, else false
      */
     boolean removeProductFromCart(ItemDetail item);
+
+    /**
+     * update the item of current user's cart to new quantity
+     * @param item the item to update
+     * @param newQuantity new quantity
+     * @return true if success, else false
+     */
+    boolean updateProductQuantity(ItemDetail item, int newQuantity);
 }

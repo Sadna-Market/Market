@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="remove product from cart - AT  req #2.2.4.2&#10;issue #51">
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestBuyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestBuyTests.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,7 +201,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="1431000" />
+      <workItem from="1651168023679" duration="1808000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -375,7 +378,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651169465817</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="get cart details AT  req #2.2.4.1&#10;issue #50">
+      <created>1651169633650</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169633650</updated>
+    </task>
+    <task id="LOCAL-00027" summary="remove product from cart - AT  req #2.2.4.2&#10;issue #51">
+      <created>1651169745134</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169745134</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -395,8 +412,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="#48 product search" />
-    <MESSAGE value="#56 check if product in stock" />
     <MESSAGE value="#56 add new product to store" />
     <MESSAGE value="#57 remove product to store" />
     <MESSAGE value="#58 set quantity in store" />
@@ -420,7 +435,9 @@
     <MESSAGE value="get store info AT  req #2.2.1&#10;issue #47" />
     <MESSAGE value="search and filter products AT  req #2.2.2&#10;issue #48" />
     <MESSAGE value="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
-    <option name="LAST_COMMIT_MESSAGE" value="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
+    <MESSAGE value="get cart details AT  req #2.2.4.1&#10;issue #50" />
+    <MESSAGE value="remove product from cart - AT  req #2.2.4.2&#10;issue #51" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove product from cart - AT  req #2.2.4.2&#10;issue #51" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
