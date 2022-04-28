@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 
 public class Market {
+    /*************************************************fields************************************************************/
     static Logger logger = Logger.getLogger(Market.class);
     Purchase purchase;
     UserManager userManager;
@@ -30,11 +31,11 @@ public class Market {
      */
     private StampedLock lock_stores = new StampedLock(), lock_TP = new StampedLock();
 
-
+    /*************************************************constructors******************************************************/
     public Market(UserManager userManager) {
         this.userManager = userManager;
     }
-
+    /*************************************************Functions*********************************************************/
     //2.2.1
     //pre: -
     //post: get info from valid store and product.
@@ -213,28 +214,6 @@ public class Market {
     }
 
 
-    private ATResponseObj<ProductType> getProductType(int productID) {
-        if (productID<0){
-            String warning= "productID is illegal";
-            logger.warn(warning);
-            return new ATResponseObj<>(warning);
-        }
-        long stamp = lock_TP.readLock();
-        logger.debug("catch the ReadLock.");
-        try {
-            ProductType p=productTypes.get(productID);
-            if (p==null){
-                String warning="the productID not exist in the system";
-                logger.warn(warning);
-                return new ATResponseObj<>(warning);
-            }
-            return new ATResponseObj<>(p);
-        } finally {
-            lock_TP.unlockRead(stamp);
-            logger.debug("released the ReadLock.");
-        }
-    }
-
     //2.2.3
     //pre: user is online
     //post: add <quantity> times this product from this store
@@ -281,7 +260,7 @@ public class Market {
     }
 
     //2.4.1.1
-    //pre: user is Member
+    //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
     public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
         ATResponseObj<Boolean> logIN=userManager.isLogged(userId);
@@ -297,10 +276,11 @@ public class Market {
 
 
     //2.4.1.2
-    //pre: user is Member
+    //pre: user is Owner
     //post: product that his ProductType  exist in the market, not exist anymore in this store.
     public ATResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
         ATResponseObj<Boolean> logIN=userManager.isLogged(userId);
+        if (logIN.errorOccurred()) return logIN;
         ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
         ATResponseObj<ProductType> p = getProductType(productId);
@@ -310,16 +290,10 @@ public class Market {
         return s.getValue().removeProduct(p.getValue().getProductID());
     }
 
-    private ATResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
-        ATResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userid, s.getValue());
-        if (checkOwner.errorOccurred()) return checkOwner;
-        ATResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-        return new ATResponseObj<>(true);
-    }
 
+    //2.4.1.3
+    //pre: user is Owner of the store
+    //post: the price of this product in this store changed.
     public ATResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
         ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
@@ -329,6 +303,9 @@ public class Market {
         return s.getValue().setProductPrice(productId, price);
     }
 
+    //2.4.1.3
+    //pre: user is Owner of the store
+    //post: the quantity of this product in this store changed.
     public ATResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
 
         ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
@@ -415,6 +392,42 @@ public class Market {
             logger.debug("getStore() released the ReadLock.");
         }
     }
+
+    /*************************************************private methods*********************************************************/
+
+    private ATResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
+        ATResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userid, s.getValue());
+        if (checkOwner.errorOccurred()) return checkOwner;
+        ATResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+        return new ATResponseObj<>(true);
+    }
+
+    private ATResponseObj<ProductType> getProductType(int productID) {
+        if (productID<0){
+            String warning= "productID is illegal";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
+        }
+        long stamp = lock_TP.readLock();
+        logger.debug("catch the ReadLock.");
+        try {
+            ProductType p=productTypes.get(productID);
+            if (p==null){
+                String warning="the productID not exist in the system";
+                logger.warn(warning);
+                return new ATResponseObj<>(warning);
+            }
+            return new ATResponseObj<>(p);
+        } finally {
+            lock_TP.unlockRead(stamp);
+            logger.debug("released the ReadLock.");
+        }
+    }
+
+    /*************************************************for testing*********************************************************/
 
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
