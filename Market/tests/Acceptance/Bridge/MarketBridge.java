@@ -2,6 +2,10 @@ package Acceptance.Bridge;
 
 import Acceptance.Obj.ATResponseObj;
 import Acceptance.Obj.CreditCard;
+import Acceptance.Obj.ItemDetail;
+import Acceptance.Obj.User;
+
+import java.util.List;
 
 public interface MarketBridge {
     /**
@@ -58,4 +62,12 @@ public interface MarketBridge {
      * @return response object with the recipe certification
      */
     ATResponseObj<String> pay(CreditCard creditCard, int dollars);
+
+    /**
+     * contacts the Supply service to supply derliver items to user
+     * @param deliver the list of items to deliver
+     * @param user the use to deliver
+     * @return certificate for success supply
+     */
+    ATResponseObj<String> supply(List<ItemDetail> deliver, User user);
 }

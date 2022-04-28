@@ -110,5 +110,81 @@ public class SystemTests extends MarketTests{
         assertTrue(response.errorOccurred());
     }
 
+    /**
+     * Requirement: supply items with external service - #1.4
+     */
+    @Test
+    @DisplayName("req: #1.4 - success test")
+    void SupplyService_Success() {
+        User user = generateUser();
+        List<ItemDetail> deliver = List.of(new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone"));
+        ATResponseObj<String> response = market.supply(deliver, user);
+
+        assertFalse(response.errorOccurred());
+        assertNotSame("", response.value);
+    }
+
+
+    @Test
+    @DisplayName("req: #1.4 - fail test [item doesnt exist in market]")
+    void SupplyService_Fail1() {
+        User user = generateUser();
+        List<ItemDetail> deliver = List.of(new ItemDetail("iphoneXZ", 8887, 1, 10, List.of("phone"), "phone"));
+        ATResponseObj<String> response = market.supply(deliver, user);
+        assertTrue(response.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: #1.4 - fail test [invalid input]")
+    void SupplyService_Fail2() {
+        ATResponseObj<String> response = market.supply(null, member);
+        assertTrue(response.errorOccurred());
+    }
+
+
+    /**
+     * Requirement: alert realtime (connected user) - #1.5
+     */
+    @Test
+    @DisplayName("req: #1.5 - success test")
+    void RealAlert_Success() {
+        //TODO: req: #1.5 - success test (next version)
+    }
+
+    @Test
+    @DisplayName("req: #1.5 - fail test [...]")
+    void RealAlert_Fail1() {
+        //TODO: req: #1.5 - fail test (next version)
+    }
+
+    @Test
+    @DisplayName("req: #1.5 - fail test [invalid input]")
+    void RealAlert_Fail2() {
+        //TODO: req: #1.5 - fail test (next version)
+    }
+
+
+    /**
+     * Requirement: alert - #1.6
+     */
+    @Test
+    @DisplayName("req: #1.6 - success test")
+    void Alert_Success() {
+        //TODO: req: #1.6 - success test (next version)
+    }
+
+    @Test
+    @DisplayName("req: #1.6 - fail test [...]")
+    void Alert_Fail1() {
+        //TODO: req: #1.6 - fail test (next version)
+    }
+
+    @Test
+    @DisplayName("req: #1.6 - fail test [invalid input]")
+    void Alert_Fail2() {
+        //TODO: req: #1.6 - fail test (next version)
+    }
+
+
 
 }
