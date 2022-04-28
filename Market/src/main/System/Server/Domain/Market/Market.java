@@ -257,10 +257,6 @@ public class Market {
         }
     }
 
-    public UserManager getUserManager() {
-        return userManager;
-    }
-
 
     public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
 
@@ -269,18 +265,20 @@ public class Market {
             if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
             ATResponseObj<Store> s = getStore(storeId);
             if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-            return s.getValue().addNewProduct(p, quantity, price);
+            return s.getValue().addNewProduct(p.value, quantity, price);
         }
         return new ATResponseObj<>(false);
     }
 
     public ATResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
         if (checkValid(userId, storeId, productId)) {
-            ProductType p = getProductType(productId);
-            Store s = getStore(storeId);
-            return s.removeProduct(p.getProductID());
+            ATResponseObj<ProductType> p = getProductType(productId);
+            if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+            ATResponseObj<Store> s = getStore(storeId);
+            if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+            return s.getValue().removeProduct(p.getValue().getProductID());
         }
-        return false;
+        return new ATResponseObj<>(false);
     }
 
     private boolean checkValid(UUID userid, int storeId, int productId) {
