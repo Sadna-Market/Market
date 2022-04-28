@@ -375,7 +375,9 @@ public class Market {
         return userManager.getRolesInStore(userId, store.getValue());
     }
 
-    
+    //2.4.13
+    //pre: the store exist in the system. the user is owner of this store.
+    //post: market ask the store about that.
     public ATResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
