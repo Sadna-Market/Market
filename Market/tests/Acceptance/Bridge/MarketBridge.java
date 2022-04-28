@@ -285,4 +285,21 @@ public interface MarketBridge {
      * @return true if success, else false
      */
     boolean assignNewOwner(int storeID, User owner, User newOwner);
+
+    /**
+     * checks if user is manager in store
+     * @param storeID id of store
+     * @param user user to check if manager
+     * @return true if user is manager else false
+     */
+    boolean isManager(int storeID, User user);
+
+    /**
+     * assigns a new user to be manager of the store
+     * @param storeID store id to add owner
+     * @param user existing owner/manager of the store
+     * @param newManager new manager to add
+     * @return true if success, else false
+     */
+    boolean assignNewManager(int storeID, User user, User newManager);
 }

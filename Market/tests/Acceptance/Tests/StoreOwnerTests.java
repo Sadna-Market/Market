@@ -301,4 +301,98 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(market.isOwner(existing_storeID, member));
     }
 
+    /**
+     * Requirement: assign store manager - #2.4.6
+     */
+    @Test
+    @DisplayName("req: #2.4.6 - success test")
+    void assignStoreManager_Success() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username, newManager.password));
+        assertTrue(market.isMember(newManager));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+        assertFalse(market.isManager(existing_storeID, newManager));
+
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+
+        assertTrue(market.isManager(existing_storeID, newManager));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.6 - fail test [new manager is not a member]")
+    void assignStoreManager_Fail1() {
+        User newManager = generateUser();
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+        assertFalse(market.isManager(existing_storeID, newManager));
+
+        assertFalse(market.assignNewManager(existing_storeID, member, newManager));
+
+        assertFalse(market.isManager(existing_storeID, newManager));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.6 - fail test [new manager already is owner of store]")
+    void assignStoreManager_Fail2() {
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+
+        assertFalse(market.assignNewManager(existing_storeID, member, member));
+
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.6 - fail test [new manager already is manager of store]")
+    void assignStoreManager_Fail3() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username, newManager.password));
+        assertTrue(market.isMember(newManager));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+        assertFalse(market.isManager(existing_storeID, newManager));
+
+        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        assertFalse(market.assignNewManager(existing_storeID, member, newManager));
+
+        assertTrue(market.isManager(existing_storeID, newManager));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.6 - fail test [store id doesnt exist]")
+    void assignStoreManager_Fail4() {
+        User newManager = generateUser();
+        assertTrue(market.register(newManager.username, newManager.password));
+        assertTrue(market.isMember(newManager));
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+        assertFalse(market.isManager(existing_storeID, newManager));
+
+        assertTrue(market.assignNewManager(existing_storeID + 60, member, newManager));
+
+        assertFalse(market.isManager(existing_storeID, newManager));
+        assertFalse(market.isOwner(existing_storeID, newManager));
+    }
+
+    @Test
+    @DisplayName("req: #2.4.6 - fail test [invalid input]")
+    void assignStoreManager_Fail5() {
+        assertTrue(market.isMember(member));
+        assertTrue(market.login(member)); //member is contributor
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.assignNewManager(existing_storeID, member, null));
+    }
+
 }
