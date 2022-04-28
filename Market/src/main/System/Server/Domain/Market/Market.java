@@ -332,36 +332,34 @@ public class Market {
     }
 
     public ATResponseObj<Boolean> closeStore(UUID userId, int storeId) {
-        Store s = getStore(storeId);
-        if (s == null) {
-            logger.warn("this store not open.");
-            return false;
-        }
-        if (userManager.isOwner(userId, s)) {
+        ATResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        if (userManager.isOwner(userId, store.getValue())) {
 
-            if (s.closeStore()) {
+            if (store.getValue().closeStore()) {
                 long stamp = lock_stores.writeLock();
                 logger.debug("catch WriteLock");
                 try {
-                    stores.remove(s);
-                    closeStores.put(s.getStoreId(), s);
+                    stores.remove(store.getValue());
+                    closeStores.put(store.getValue().getStoreId(), store.getValue());
                 } finally {
                     lock_stores.unlockWrite(stamp);
                     logger.debug("released WriteLock");
                 }
                 logger.info("market update that Store #" + storeId + " close");
-                return true;
+                return new ATResponseObj<>(true);
             }
             logger.warn("market didnt close the store,closeStore() returned false");
-            return false;
+            return new ATResponseObj<>(false);
         }
         logger.warn("market didnt close the store, the user is not owner.");
-        return false;
+        return new ATResponseObj<>(false);
     }
 
     public ATResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
-        Store store = getStore(storeId);
-        return userManager.getRolesInStore(userId, store);
+        ATResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        return userManager.getRolesInStore(userId, store.getValue());
     }
 
     public ATResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
