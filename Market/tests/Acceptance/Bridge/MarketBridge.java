@@ -168,4 +168,11 @@ public interface MarketBridge {
      * @return quantity of the item in the store
      */
     int getAmountOfProductInStore(int storeID, ItemDetail item);
+
+    /**
+     * removes the item from the cart of current user's cart
+     * @param item item to remove
+     * @return true if success, else false
+     */
+    boolean removeProductFromCart(ItemDetail item);
 }

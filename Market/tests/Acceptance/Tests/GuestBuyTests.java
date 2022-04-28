@@ -219,4 +219,47 @@ public class GuestBuyTests extends MarketTests{
         List<List<ItemDetail>> cart = response.value;
         assertTrue(cart.isEmpty());
     }
+
+    /**
+     * Requirement: remove product from cart - #2.2.4.2
+     */
+    @Test
+    @DisplayName("req: #2.2.4.2 - success test")
+    void removeProductFromCart_Success() {
+        assertTrue(market.cartExists());
+        ItemDetail item1 = new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone");
+        assertTrue(market.addToCart(existing_storeID, item1));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(response.errorOccurred());
+        List<List<ItemDetail>> cart = response.value;
+        assertFalse(cart.isEmpty());
+
+        assertTrue(market.removeProductFromCart(item1));
+        response = market.getCart();
+        assertFalse(response.errorOccurred());
+        cart = response.value;
+        assertTrue(cart.isEmpty());
+    }
+
+    @Test
+    @DisplayName("req: #2.2.4.2 - fail test [product not exits in cart]")
+    void removeProductFromCart_Fail1() {
+        ItemDetail item = new ItemDetail("xxx", 1111, 1, 10, List.of("bla"), "bb");
+        assertFalse(market.removeProductFromCart(item));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(response.errorOccurred());
+        List<List<ItemDetail>> cart = response.value;
+        assertTrue(cart.isEmpty());
+
+    }
+
+    @Test
+    @DisplayName("req: #2.2.4.2 - fail test [invalid input]")
+    void removeProductFromCart_Fail2() {
+        assertFalse(market.removeProductFromCart(null));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(response.errorOccurred());
+        List<List<ItemDetail>> cart = response.value;
+        assertTrue(cart.isEmpty());
+    }
 }
