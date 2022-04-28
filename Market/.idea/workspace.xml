@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add sync in store and inventory + response">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
     </list>
