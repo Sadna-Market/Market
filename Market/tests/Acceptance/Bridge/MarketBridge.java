@@ -146,4 +146,26 @@ public interface MarketBridge {
      * @return filtered list
      */
     ATResponseObj<List<ItemDetail>> filterSearchResults(List<ItemDetail> items, int productRank, String priceRange, String category, int storeRank);
+
+    /**
+     * add to cart the item that is in storeID
+     * @param storeID the store that the item is related to
+     * @param item the item to add to the cart
+     * @return true if success, else false
+     */
+    boolean addToCart(int storeID, ItemDetail item);
+
+    /**
+     * gets the cart of the current user
+     * @return list of list of items - Cart that has shopping bags related to different stores
+     */
+    ATResponseObj<List<List<ItemDetail>>> getCart();
+
+    /**
+     * query to verify quantity of item in storeID
+     * @param storeID store that has the item
+     * @param item item to find out the quantity
+     * @return quantity of the item in the store
+     */
+    int getAmountOfProductInStore(int storeID, ItemDetail item);
 }
