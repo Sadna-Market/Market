@@ -259,63 +259,57 @@ public class Market {
 
 
     public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
+        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        if (check.errorOccurred()) return check;
 
-        if (checkValid(userId, storeId, productId)) {
-            ATResponseObj<ProductType> p = getProductType(productId);
-            if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-            ATResponseObj<Store> s = getStore(storeId);
-            if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-            return s.getValue().addNewProduct(p.value, quantity, price);
-        }
-        return new ATResponseObj<>(false);
+        ATResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+        ATResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        return s.getValue().addNewProduct(p.value, quantity, price);
     }
 
     public ATResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
-        if (checkValid(userId, storeId, productId)) {
-            ATResponseObj<ProductType> p = getProductType(productId);
-            if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-            ATResponseObj<Store> s = getStore(storeId);
-            if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-            return s.getValue().removeProduct(p.getValue().getProductID());
-        }
-        return new ATResponseObj<>(false);
+        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        if (check.errorOccurred()) return check;
+
+        ATResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+        ATResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        return s.getValue().removeProduct(p.getValue().getProductID());
     }
 
-    private boolean checkValid(UUID userid, int storeId, int productId) {
-        Store s = getStore(storeId);
-
-        if (s == null) {
-            logger.warn("the StoreID is invalid.");
-            return false;
-        }
-        if (userManager.isOwner(userid, s)) {
-            ProductType p = getProductType(productId);
-            if (p == null) {
-                logger.warn("the storeID is invalid.");
-                return false;
-            }
-
-            return true;
+    private ATResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
+        ATResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        if (userManager.isOwner(userid, s.getValue())) {
+            ATResponseObj<ProductType> p = getProductType(productId);
+            if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
+            return new ATResponseObj<>(true);
         } else {
-            logger.warn("userID is not owner of the Store.");
-            return false;
+            String warning="userID is not owner of the Store.";
+            logger.warn(warning);
+            return new ATResponseObj<>(warning);
         }
     }
 
     public ATResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
-        if (checkValid(userId, storeId, productId)) {
-            Store s = getStore(storeId);
-            return s.setProductPrice(productId, price);
-        }
-        return false;
+        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        if (check.errorOccurred()) return check;
+
+        ATResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        return s.getValue().setProductPrice(productId, price);
     }
 
     public ATResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
-        if (checkValid(userId, storeId, productId)) {
-            Store s = getStore(storeId);
-            return s.setProductQuantity(productId, quantity);
-        }
-        return false;
+
+        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        if (check.errorOccurred()) return check;
+        ATResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        return s.getValue().setProductQuantity(productId, quantity);
     }
 
 
