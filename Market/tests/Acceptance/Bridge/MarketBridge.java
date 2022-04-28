@@ -82,4 +82,19 @@ public interface MarketBridge {
      * @return true if yes else false
      */
     boolean guestOnline();
+
+    /**
+     * register a new user to the system
+     * @param username username - email
+     * @param password password
+     * @return true if success else false
+     */
+    boolean register(String username, String password);
+
+    /**
+     * checks if newUser is registered
+     * @param newUser new user to check
+     * @return true if registered else false
+     */
+    boolean isMember(User newUser);
 }

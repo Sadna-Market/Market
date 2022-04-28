@@ -41,4 +41,46 @@ public class GuestGeneralTests extends MarketTests{
         assertFalse(market.guestOnline());
     }
 
+
+    /**
+     * Requirement: registration system  - #2.1.3
+     */
+    @Test
+    @DisplayName("req: #2.1.3 - success test")
+    void registration_Success(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        User newUser = generateUser();
+        assertTrue(market.register(newUser.username,newUser.password));
+        assertTrue(market.isMember(newUser));
+    }
+    @Test
+    @DisplayName("req: #2.1.3 - fail test [invalid password]")
+    void registration_Fail1(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        User newUser = generateUser();
+        assertFalse(market.register(newUser.username,""));
+        assertFalse(market.isMember(newUser));
+    }
+
+    @Test
+    @DisplayName("req: #2.1.3 - fail test [user already exists]")
+    void registration_Fail2(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        User newUser = generateUser();
+        assertTrue(market.register(newUser.username,newUser.password));
+        assertTrue(market.isMember(newUser));
+        assertFalse(market.register(newUser.username,newUser.password));
+    }
+    @Test
+    @DisplayName("req: #2.1.3 - fail test [invalid inputs]")
+    void registration_Fail3(){
+        User newUser = generateUser();
+        assertFalse(market.register(null,newUser.password));
+        assertFalse(market.register(newUser.username,null));
+    }
+
+
 }
