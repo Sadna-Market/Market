@@ -8,4 +8,13 @@ public class ErrorCode {
    public static int NOTSTRING = 14;
    public static int NEGATIVENUMBER = 15;
 
+   public static int NOTUSER = 16;
+   public static int GRANTEANDGRANTORSAMEUSER = 17;
+   public static int ALLREADYOWNER = 18;
+   public static int NOTOWNER = 19;
+   public static int ALLREADYMANAGER = 20;
+   public static int NOPERMISSION = 21;
+   public static int MISTAKEPERMISSIONTYPE = 22;
+   public static int ALLREADYHAVESYSTEMMANAGER = 23;
+
 }

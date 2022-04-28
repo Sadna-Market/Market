@@ -81,6 +81,7 @@ public class Facade implements IMarket {
         /**
          * @requirement: II. 1 . 1
          *
+         *
          * @return ATResponseObj
          *        {
          *        "errorOccurred(): boolean
