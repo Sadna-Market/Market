@@ -280,7 +280,9 @@ public class Market {
         }
     }
 
-
+    //2.4.1.1
+    //pre: user is Member
+    //post: product that his ProductType exist in the market, exist in this store.
     public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
         ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
