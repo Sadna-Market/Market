@@ -333,6 +333,9 @@ public class Market {
         return userManager.addNewStoreManager(userId, store.getValue(), newMangermail);
     }
 
+    //2.4.7
+    //pre: the store exist in the system.
+    //post: other user that already manager became to be manager on this store with other permissions.
     public ATResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
