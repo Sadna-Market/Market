@@ -314,18 +314,21 @@ public class Market {
 
 
     public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
-        Store store = getStore(storeId);
-        return userManager.addNewStoreOwner(userId, store, newOnerEmail);
+        ATResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        return userManager.addNewStoreOwner(userId, store.getValue(), newOnerEmail);
     }
 
     public ATResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
-        Store store = getStore(storeId);
-        return userManager.addNewStoreManager(userId, store, newMangermail);
+        ATResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        return userManager.addNewStoreManager(userId, store.getValue(), newMangermail);
     }
 
     public ATResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
-        Store store = getStore(storeId);
-        return userManager.setManagerPermissions(userId, store, mangerMail, perm);
+        ATResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+        return userManager.setManagerPermissions(userId, store.getValue(), mangerMail, perm);
     }
 
     public ATResponseObj<Boolean> closeStore(UUID userId, int storeId) {
