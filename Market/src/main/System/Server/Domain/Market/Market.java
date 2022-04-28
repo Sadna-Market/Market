@@ -5,6 +5,7 @@ import Stabs.UserManagerStab;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingCart;
+import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
 import org.apache.log4j.Logger;
 
@@ -34,8 +35,11 @@ public class Market {
         this.userManager = userManager;
     }
 
-
+    //2.2.1
+    //pre: -
+    //post: get info from valid store and product.
     public ATResponseObj<String> getInfoProductInStore(int storeID, int productID) {
+
         ATResponseObj<ProductType> p = getProductType(productID);
 
         if (p.errorOccurred()){
@@ -50,6 +54,7 @@ public class Market {
             output.setErrorMsg(s.getErrorMsg());
             return output;
         }
+        ATResponseObj<String> b=s.getValue().getProductInStoreInfo(productID);
         return s.getValue().getProductInStoreInfo(productID);
     }
 
@@ -216,11 +221,8 @@ public class Market {
 
     //todo maybe need to change the position of the func ?
     public ATResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        if (!userManager.isOnline(userId)){
-            String warning= "the UID is illegal";
-            logger.warn(warning);
-            return new ATResponseObj<>(warning);
-        }
+        ATResponseObj<Boolean> online=userManager.isOnline(userId);
+        if (online.errorOccurred()) return online;
         ATResponseObj<Store> s = getStore(StoreId);
         if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
         return s.getValue().isProductExistInStock(ProductId, quantity);
@@ -228,15 +230,11 @@ public class Market {
     }
 
     public ATResponseObj<Boolean> order(UUID userId) {
-        if (!userManager.isOnline(userId)){
-            String warning= "The UID does not connect online";
-            logger.warn(warning);
-            return new ATResponseObj<>(warning);
-        }
+        ATResponseObj<Boolean> online=userManager.isOnline(userId);
+        if (online.errorOccurred()) return online;
         ATResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new ATResponseObj<>(shoppingCart.getErrorMsg());
         return new ATResponseObj<>(purchase.order(shoppingCart.value));
-
 
     }
 

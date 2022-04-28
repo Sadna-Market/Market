@@ -26,7 +26,9 @@ public class StoreStab extends Store {
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
     public ATResponseObj<String> getProductInStoreInfo(int productId){
-        return new ATResponseObj<>("hello");
+        ATResponseObj<String> output=new ATResponseObj<>();
+        output.value="yaki";
+        return output;
     }
 
     //requirement II.2.1

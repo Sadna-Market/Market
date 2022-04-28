@@ -3,14 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/Service/IMarket.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/Service/IMarket.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/Stabs/StoreStab.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/Stabs/StoreStab.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/Stabs/UserManagerStab.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/Stabs/UserManagerStab.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ATResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ATResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ATResponseObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ATResponseObj.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/userTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/userTypes.class" afterDir="false" />
@@ -129,22 +127,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketTest.getStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStore(int)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MarketTest.getStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
@@ -177,6 +159,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MarketTest.getStoreInfo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="getStoreInfo(int)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MarketTest.searchProductByStoreRate2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
@@ -196,10 +194,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.MarketTest" />
+        <item itemvalue="JUnit.MarketTest.getStoreInfo" />
         <item itemvalue="JUnit.MarketTest.searchProductByStoreRate2" />
         <item itemvalue="JUnit.MarketTest.getStore3" />
         <item itemvalue="JUnit.MarketTest.getStore2" />
-        <item itemvalue="JUnit.MarketTest.getStore" />
       </list>
     </recent_temporary>
   </component>
@@ -363,32 +361,37 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
-          <line>71</line>
+          <line>70</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>304</line>
+          <line>302</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>288</line>
+          <line>286</line>
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>366</line>
+          <line>364</line>
           <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>373</line>
+          <line>371</line>
           <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
-          <line>55</line>
+          <line>54</line>
           <properties class="main.System.Server.Domain.Market.MarketTest" method="getStore3">
             <option name="EMULATED" value="true" />
           </properties>

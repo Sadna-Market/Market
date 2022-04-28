@@ -38,8 +38,7 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,9})
     @Test
     void getStoreInfo(int i) {
-        market.addNewProductToStore(UUID.randomUUID(),i,1,0.5,100);
-        assertNotNull(market.getInfoProductInStore(i,1));
+        assertFalse(market.getInfoProductInStore(1,i).errorOccurred());
     }
 
     @DisplayName("getStore  -  successful")

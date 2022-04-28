@@ -104,8 +104,8 @@ public class UserManagerStab extends UserManager {
      * @param uuid
      * @return boolean
      */
-    public boolean isOnline(UUID uuid){
-        return true;
+    public ATResponseObj<Boolean> isOnline(UUID uuid){
+        return new ATResponseObj<>(true);
     }
 
 
