@@ -119,4 +119,11 @@ public interface MarketBridge {
      * @return true if success else false
      */
     boolean changePassword(User member, String newPass);
+
+    /**
+     * get information of a store and its products
+     * @param storeID the store we want to know about
+     * @return info of the store
+     */
+    ATResponseObj<String> getStoreInfo(int storeID);
 }

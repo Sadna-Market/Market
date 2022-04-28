@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="guest register req #2.1.3&#10;issue #45">
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46">
       <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestBuyTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestGeneralTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestGeneralTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +202,8 @@
       <workItem from="1650816966316" duration="7232000" />
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
-      <workItem from="1651121204606" duration="3293000" />
+      <workItem from="1651121204606" duration="3368000" />
+      <workItem from="1651168023679" duration="512000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -350,7 +352,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651124354558</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46">
+      <created>1651124583521</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1651124583521</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -392,7 +401,8 @@
     <MESSAGE value="supply service AT req #1.4&#10;also added template for re #1.5, #1.6 to next version impl&#10;issue #42" />
     <MESSAGE value="guest visit req #2.1.1&#10;issue #43" />
     <MESSAGE value="guest register req #2.1.3&#10;issue #45" />
-    <option name="LAST_COMMIT_MESSAGE" value="guest register req #2.1.3&#10;issue #45" />
+    <MESSAGE value="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46" />
+    <option name="LAST_COMMIT_MESSAGE" value="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
