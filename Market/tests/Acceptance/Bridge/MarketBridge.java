@@ -97,4 +97,26 @@ public interface MarketBridge {
      * @return true if registered else false
      */
     boolean isMember(User newUser);
+
+    /**
+     * logs in the user to the system
+     * @param member the user to login
+     * @return true if sucess else false
+     */
+    boolean login(User member);
+
+    /**
+     * check if the user is logged in to the system
+     * @param member the user to check
+     * @return true if success else false
+     */
+    boolean isLoggedIn(User member);
+
+    /**
+     * change the password of a user in the system
+     * @param member the member to change the password
+     * @param newPass the new password
+     * @return true if success else false
+     */
+    boolean changePassword(User member, String newPass);
 }

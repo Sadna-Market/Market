@@ -81,6 +81,90 @@ public class GuestGeneralTests extends MarketTests{
         assertFalse(market.register(null,newUser.password));
         assertFalse(market.register(newUser.username,null));
     }
+    /**
+     * Requirement: login system  - #2.1.4.1
+     */
+    @Test
+    @DisplayName("req: #2.1.4.1 - success test")
+    void login_Success(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        assertTrue(market.login(member));
+        assertTrue(market.isLoggedIn(member));
+    }
+    @Test
+    @DisplayName("req: #2.1.4.1 - fail test [invalid username]")
+    void login_Fail1(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        assertFalse(market.login(generateUser()));
+    }
+
+    @Test
+    @DisplayName("req: #2.1.4.1 - fail test [invalid password]")
+    void login_Fail2(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        String oldpass = member.password;
+        member.password = "xxxxx";
+        assertFalse(market.login(member));
+        assertFalse(market.isLoggedIn(member));
+        member.password = oldpass;
+    }
+    @Test
+    @DisplayName("req: #2.1.4.1 - fail test [invalid inputs]")
+    void login_Fail3(){
+        assertTrue(market.cartExists());
+        assertTrue(market.guestOnline());
+        String oldpass = member.password;
+        member.password = null;
+        assertFalse(market.login(member));
+        member.password = oldpass;
+        String username = member.username;
+        member.username = null;
+        assertFalse(market.login(member));
+        member.username = username;
+    }
+
+    /**
+     * Requirement: change password - #2.1.4.2
+     */
+    @Test
+    @DisplayName("req: #2.1.4.2 - success test")
+    void changePass_Success(){
+        String oldpass = member.password;
+        String newPass = PasswordGenerator.generateStrongPassword();
+        assertTrue(market.changePassword(member,newPass));
+        assertEquals(member.password,newPass);
+        assertTrue(market.changePassword(member,oldpass));
+        assertEquals(member.password,oldpass);
+    }
+    @Test
+    @DisplayName("req: #2.1.4.2 - fail test [user is not a member]")
+    void changePass_Fail1(){
+        User user = generateUser();
+        String newPass = PasswordGenerator.generateStrongPassword();
+        assertFalse(market.changePassword(user,newPass));
+    }
+
+    @Test
+    @DisplayName("req: #2.1.4.2 - fail test [invalid  new password]")
+    void changePass_Fail2(){
+        String oldpass = member.password;
+        String newPass = "123";
+        assertFalse(market.changePassword(member,newPass));
+        assertNotEquals(member.password,newPass);
+        assertEquals(member.password,oldpass);
+    }
+    @Test
+    @DisplayName("req: #2.1.4.2 - fail test [invalid inputs]")
+    void changePass_Fail3(){
+        String oldpass = member.password;
+        assertFalse(market.changePassword(member,null));
+        assertNotEquals(member.password,null);
+        assertEquals(member.password,oldpass);
+    }
+
 
 
 }
