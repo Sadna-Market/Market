@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/SaleObj.java" afterDir="false" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="finished basic functions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/userTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/userTypes.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/StoreTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/StoreTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Facade.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/DataResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Market.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/PermissionManager$PermissionManagerWrapper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/PermissionManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Purchase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Response.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/userTypes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Discount.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Guest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ATResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ATResponseObj.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ProductResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/StoreResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/ShoppingBag.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/ShoppingCart.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/UserManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Validator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/userTypes.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingBag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingBag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +98,7 @@
       <recent name="C:\Users\lielk\Desktop\Market\src" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.MarketTest">
+  <component name="RunManager" selected="JUnit.StoreTest">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -119,22 +123,6 @@
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.getStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStore2(int)" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -187,17 +175,32 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="StoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.StoreModel.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.StoreModel" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.StoreModel.StoreTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.MarketTest" />
-        <item itemvalue="JUnit.MarketTest.getStoreInfo" />
+        <item itemvalue="JUnit.StoreTest" />
         <item itemvalue="JUnit.MarketTest.searchProductByStoreRate2" />
+        <item itemvalue="JUnit.MarketTest.getStoreInfo" />
         <item itemvalue="JUnit.MarketTest.getStore3" />
-        <item itemvalue="JUnit.MarketTest.getStore2" />
+        <item itemvalue="JUnit.MarketTest" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -217,6 +220,7 @@
       <workItem from="1650816966316" duration="7232000" />
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
+      <workItem from="1651125274738" duration="7643000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>

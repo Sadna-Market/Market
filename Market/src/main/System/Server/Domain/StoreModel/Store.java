@@ -3,6 +3,7 @@ package main.System.Server.Domain.StoreModel;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +28,7 @@ public class Store {
 
 
     private static AtomicInteger nextStoreId = new AtomicInteger();
+    private final StampedLock historyLock = new StampedLock();
     static Logger logger=Logger.getLogger(Store.class);
 
     /////////////////////////////////////////////// Constructors ///////////////////////////////////////////////////
@@ -58,35 +60,47 @@ public class Store {
         return new ArrayList<>(inventory.getProducts().values());
     }
 
+    //requirement II.2.1
+    public String getStoreInfo(){
+        return "Store{" +
+                "storeId=" + storeId +
+                ", name='" + name + '\'' +
+                ", founder='" + founder + '\'' +
+                ", isOpen=" + isOpen +
+                ", rate=" + rate +
+                ", numOfRated=" + numOfRated +
+                '}';
+    }
+
     //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
-    public boolean isProductExistInStock(int productId, int quantity){
+    public ATResponseObj<Boolean> isProductExistInStock(int productId, int quantity){
         return inventory.isProductExistInStock(productId ,quantity);
     }
 
 
     //requirement II.4.1 (only owners)
-    public boolean addNewProduct(ProductType productType, int quantity, double price) {
+    public ATResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
         if(productType == null) {
             logger.warn("productType is null (store - addNewProduct");
-            return false;
+            return new ATResponseObj<>(false);
         }
         else
             return inventory.addNewProduct(productType, quantity, price);
     }
 
     //requirement II.4.1 (only owners)
-    public boolean removeProduct(int productId) {
+    public ATResponseObj<Boolean> removeProduct(int productId) {
         return inventory.removeProduct(productId);
     }
 
     //requirement II.4.1 & II.2.5 (only owners)
     //if change to quantity 0 not delete product (need to find the product price later)
-    public boolean setProductQuantity(int productId, int quantity) {
+    public ATResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
         return inventory.setProductQuantity(productId, quantity);
     }
 
     //requirement II.4.1  (only owners)
-    public boolean setProductPrice(int productId, double price) {
+    public ATResponseObj<Boolean> setProductPrice(int productId, double price) {
         return inventory.setProductPrice(productId, price);
     }
 
@@ -96,27 +110,39 @@ public class Store {
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
-    public List<History> getStoreOrderHistory() {
-        return new ArrayList<>(history.values());
+    public ATResponseObj<List<History>> getStoreOrderHistory() {
+        return new ATResponseObj<>(new ArrayList<>(history.values()));
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
-    public List<History> getUserHistory(String user) {
+    public ATResponseObj<List<History>> getUserHistory(String user) {
         List<History> userHistory = new ArrayList<>();
-        for (Map.Entry<Integer, History> entry : history.entrySet()) {
-            if(entry.getValue().getUser().equals(user))
-                userHistory.add(entry.getValue());
+        long stamp = historyLock.readLock();
+        try {
+            for (Map.Entry<Integer, History> entry : history.entrySet()) {
+                if(entry.getValue().getUser().equals(user))
+                    userHistory.add(entry.getValue());
+            }
+            return new ATResponseObj<>(userHistory);
+        }finally {
+            historyLock.unlockRead(stamp);
         }
-        return userHistory;
+
     }
 
     //niv tests
     public List<Integer> getTIDHistory(){
         List<Integer> TIDHistory = new ArrayList<>();
-        for (History h: getStoreOrderHistory()) {
-            TIDHistory.add(h.getTID());
+        long stamp = historyLock.readLock();
+        try{
+            for (History h: getStoreOrderHistory().value) {
+                TIDHistory.add(h.getTID());
+            }
+            return TIDHistory;
+        }finally {
+            historyLock.unlockRead(stamp);
         }
-        return TIDHistory;
+
     }
 
     //requirement II.2.5
@@ -167,20 +193,14 @@ public class Store {
         return bagPrice;
     }
 
-    //requirement II.2.5
-    //return null if products not exist
-    public StampedLock getProductLock(int productID){
-        return inventory.getProductLock(productID);
-    }
 
     //requirement II.4.9  (only owners)
-    public boolean closeStore() {
+    public ATResponseObj<Boolean> closeStore() {
         boolean success = inventory.tellProductStoreIsClose();
         isOpen = false;
         //sends message to managers.
         logger.info("storeId: "+ storeId + " closed");
-
-        return success;
+        return new ATResponseObj<>(success);
     }
 
     public boolean newStoreRate(int rate){
