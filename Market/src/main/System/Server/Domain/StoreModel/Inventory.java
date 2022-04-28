@@ -1,5 +1,6 @@
 package main.System.Server.Domain.StoreModel;
 
+import main.ErrorCode;
 import main.System.Server.Domain.Market.ProductType;
 import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import org.apache.log4j.Logger;
@@ -48,7 +49,7 @@ public class Inventory {
     public ATResponseObj<Boolean> addNewProduct(ProductType newProduct, int quantity, double price) {
         if (products.containsKey(newProduct.getProductID())) {
             logger.warn("try to add productId:" + newProduct.getProductID() + " but inventory contains this product");
-            return new ATResponseObj<>(false);
+            return new ATResponseObj<>(false,""+ ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
             products.put(newProduct.getProductID(), toAdd);
@@ -61,7 +62,7 @@ public class Inventory {
         ProductStore removed = products.remove(productId);
         if (removed == null) {
             logger.warn("try to remove productId:" + productId + " but inventory not contains this product");
-            return new ATResponseObj<>(false);
+            return new ATResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
             ATResponseObj<Boolean> success = removed.getProductType().removeStore(getStoreId());
             if(success.getValue())
@@ -75,7 +76,7 @@ public class Inventory {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set quantity productId:" + productId + " but inventory not contains this product");
-            return new ATResponseObj<>(false);
+            return new ATResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
             long stamp = productStore.getProductLock().writeLock();
             try {
@@ -92,7 +93,7 @@ public class Inventory {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set price productId:" + productId + " but inventory not contains this product");
-            return new ATResponseObj<>(false);
+            return new ATResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
         }
         else {
             long stamp = productStore.getProductLock().writeLock();
