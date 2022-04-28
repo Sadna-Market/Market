@@ -53,7 +53,7 @@ public class MemberBuyTests extends MarketTests{
         assertTrue(market.register(user.username,user.password));
         assertTrue(market.isMember(user));
         assertTrue(market.login(user));
-        //TODO: this doesnt check with params of discount policy/but type at this point of version.
+        //TODO: this doesnt check with params of discount policy/but type at this point of version..
         ATResponseObj<Integer> response = market.addStore(user);
         assertFalse(response.errorOccurred());
         int storeID = response.value;
