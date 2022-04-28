@@ -315,7 +315,9 @@ public class Market {
         return s.getValue().setProductQuantity(productId, quantity);
     }
 
-
+    //2.4.4
+    //pre: the store exist in the system.
+    //post: other user became to be owner on this store.
     public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
         ATResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
