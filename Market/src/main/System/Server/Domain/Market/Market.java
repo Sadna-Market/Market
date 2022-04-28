@@ -235,7 +235,9 @@ public class Market {
         }
     }
 
-    //todo maybe need to change the position of the func ?
+    //2.2.3
+    //pre: user is online
+    //post: add <quantity> times this product from this store
     public ATResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
         ATResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
@@ -245,6 +247,9 @@ public class Market {
 
     }
 
+    //2.2.3
+    //pre: user is online
+    //post: add <quantity> times this product from this store
     public ATResponseObj<Boolean> order(UUID userId) {
         ATResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
