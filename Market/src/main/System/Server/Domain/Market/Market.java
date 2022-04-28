@@ -284,9 +284,10 @@ public class Market {
     //pre: user is Member
     //post: product that his ProductType exist in the market, exist in this store.
     public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
+        ATResponseObj<Boolean> logIN=userManager.isLogged(userId);
+        if (logIN.errorOccurred()) return logIN;
         ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
-
         ATResponseObj<ProductType> p = getProductType(productId);
         if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
         ATResponseObj<Store> s = getStore(storeId);
@@ -294,10 +295,14 @@ public class Market {
         return s.getValue().addNewProduct(p.value, quantity, price);
     }
 
+
+    //2.4.1.2
+    //pre: user is Member
+    //post: product that his ProductType  exist in the market, not exist anymore in this store.
     public ATResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
+        ATResponseObj<Boolean> logIN=userManager.isLogged(userId);
         ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
-
         ATResponseObj<ProductType> p = getProductType(productId);
         if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
         ATResponseObj<Store> s = getStore(storeId);
