@@ -386,6 +386,10 @@ public class Market {
         return store.getValue().getStoreOrderHistory();
     }
 
+
+    //?.?.????
+    //pre: this store exist in the system.
+    //post: market ask the store about that with USerEmail.
     public ATResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
         ATResponseObj<Store> store = getStore(storeID);
         if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
@@ -393,6 +397,10 @@ public class Market {
 
     }
 
+
+    //2.2.1
+    //pre: the store exist in the system.
+    //post: market receive this store to the user.
     public ATResponseObj<Store> getStore(int storeID){
         if (storeID<0 | storeID>=productCounter){
             String warning="the StoreID is illegal";
