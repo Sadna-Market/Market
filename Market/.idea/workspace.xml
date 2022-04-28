@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="get store info AT  req #2.2.1&#10;issue #47">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Bridge/MarketBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestBuyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Acceptance/Tests/GuestBuyTests.java" afterDir="false" />
-    </list>
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -202,7 +198,7 @@
       <workItem from="1650868319024" duration="12213000" />
       <workItem from="1650955112853" duration="21238000" />
       <workItem from="1651121204606" duration="3368000" />
-      <workItem from="1651168023679" duration="1130000" />
+      <workItem from="1651168023679" duration="1431000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -365,7 +361,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651168856300</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="search and filter products AT  req #2.2.2&#10;issue #48">
+      <created>1651169179800</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169179800</updated>
+    </task>
+    <task id="LOCAL-00025" summary="add products to shopping bag AT  req #2.2.3&#10;issue #49">
+      <created>1651169465817</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169465817</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -385,7 +395,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="#47 get store products" />
     <MESSAGE value="#48 product search" />
     <MESSAGE value="#56 check if product in stock" />
     <MESSAGE value="#56 add new product to store" />
@@ -409,7 +418,9 @@
     <MESSAGE value="guest register req #2.1.3&#10;issue #45" />
     <MESSAGE value="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46" />
     <MESSAGE value="get store info AT  req #2.2.1&#10;issue #47" />
-    <option name="LAST_COMMIT_MESSAGE" value="get store info AT  req #2.2.1&#10;issue #47" />
+    <MESSAGE value="search and filter products AT  req #2.2.2&#10;issue #48" />
+    <MESSAGE value="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
+    <option name="LAST_COMMIT_MESSAGE" value="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

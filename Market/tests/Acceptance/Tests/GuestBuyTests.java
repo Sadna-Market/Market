@@ -192,4 +192,31 @@ public class GuestBuyTests extends MarketTests{
         assertEquals(0, bag.size());
     }
 
+    /**
+     * Requirement: get cart details  - #2.2.4.1
+     */
+    @Test
+    @DisplayName("req: #2.2.4.1 - success test")
+    void getCartDetails_Success() {
+        assertTrue(market.cartExists());
+        ItemDetail item1 = new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone");
+        assertTrue(market.addToCart(existing_storeID, item1));
+
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(response.errorOccurred());
+        List<List<ItemDetail>> cart = response.value;
+        assertFalse(cart.isEmpty());
+        assertFalse(cart.get(0).isEmpty());
+        assertEquals("iphone5", cart.get(0).get(0).name);
+
+    }
+
+    @Test
+    @DisplayName("req: #2.2.4.1 - fail test [empty cart]")
+    void getCartDetails_Fail1() {
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(response.errorOccurred());
+        List<List<ItemDetail>> cart = response.value;
+        assertTrue(cart.isEmpty());
+    }
 }
