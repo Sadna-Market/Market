@@ -5,7 +5,7 @@ import main.System.Server.Domain.Response.DResponseObj;
 public class SLResponsOBJ<T> extends SLRespons {
     public T value;
 
-    public SLResponsOBJ(String msg) {
+    public SLResponsOBJ(int msg) {
         super(msg);
     }
 
@@ -14,7 +14,7 @@ public class SLResponsOBJ<T> extends SLRespons {
         this.value = value;
     }
 
-    public SLResponsOBJ(T value, String msg) {
+    public SLResponsOBJ(T value, int msg) {
         super(msg);
         this.value = value;
     }
