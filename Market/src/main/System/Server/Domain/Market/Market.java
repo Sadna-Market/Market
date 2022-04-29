@@ -237,22 +237,21 @@ public class Market {
     //pre: user is online
     //post: add <quantity> times this product from this store
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        DResponseObj<Boolean> online=userManager.isOnline(userId);
-        if (online.errorOccurred()) return online;
-        if (!online.getValue()){
-            logger.warn("the user not online");
-            return new DResponseObj<>(ErrorCode.NOTONLINE);
-        }
+        DResponseObj<Boolean> isOnline = isOnline(userId);
+        if (isOnline.errorOccurred() || !isOnline.getValue()) return isOnline;
         DResponseObj<Store> s = getStore(StoreId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().isProductExistInStock(ProductId, quantity);
 
     }
 
+
+
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
     public DResponseObj<Boolean> order(UUID userId) {
+        //////////////////////////////////////
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
@@ -266,7 +265,7 @@ public class Market {
     //post: new Store add to the market
     public DResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         DResponseObj<Boolean> checkUM=userManager.isLogged(userId);
-        if (checkUM.errorOccurred()) return checkUM;
+        if (checkUM.errorOccurred() || !checkUM.getValue()) return checkUM;
 
         Store store = new Store(name, discountPolicy, buyPolicy, founder);
         long stamp = lock_stores.writeLock();
@@ -491,6 +490,16 @@ public class Market {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");
         }
+    }
+
+    private DResponseObj<Boolean> isOnline(UUID userId){
+        DResponseObj<Boolean> online=userManager.isOnline(userId);
+        if (online.errorOccurred()) return online;
+        if (!online.getValue()){
+            logger.warn("the user not online");
+            return new DResponseObj<>(ErrorCode.NOTONLINE);
+        }
+        return new DResponseObj<>(true);
     }
 
     class Tuple<E,T>{
