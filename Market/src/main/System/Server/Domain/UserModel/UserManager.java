@@ -61,7 +61,7 @@ public class UserManager {
         logger.debug("UserManager GuestLeave");
         if (!GuestVisitors.containsKey(guestId)) {
             DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-            a.errorMsg = ""+ ErrorCode.NOTONLINE;
+            a.errorMsg = ErrorCode.NOTONLINE;
             return a;
         } else {
             GuestVisitors.remove(guestId);
@@ -75,7 +75,7 @@ public class UserManager {
 
     public DResponseObj<Boolean> Login(UUID userID, String email, String password) {
         logger.debug("UserManager Login");
-        if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password)) {
+        if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password).value) {
             User LogUser = members.get(email);
             LoginUsers.put(userID, LogUser);
             GuestVisitors.remove(userID);
@@ -103,21 +103,21 @@ public class UserManager {
 
         long stamp= LockUsers.writeLock();
         try {
-            if (!isOnline(uuid)) {
+            if (!isOnline(uuid).value) {
                 DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-                a.errorMsg = ""+notLoged;
+                a.errorMsg = ErrorCode.NOTONLINE;
                 return a;
             }
             if (members.containsKey(email)) {
 
                 DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-                a.errorMsg = ""+notMember;
+                a.errorMsg = ErrorCode.NOTMEMBER;
                 return a;            }
             if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)||
                     !Validator.isValidCreditCard(CreditCared)||!Validator.isValidCreditDate(CreditDate)){
 
                 DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-                a.errorMsg = ""+notvalidInput;
+                a.errorMsg = ErrorCode.NOTVALIDINPUT;
                 return a;
             }
             User user = new User(email, Password,phoneNumber,CreditCared,CreditDate);
@@ -131,54 +131,54 @@ public class UserManager {
 
 
 
-    public boolean isOwner(UUID user,Store store) {
-        if(!isLogged(user)){
-
-            return false;
+    public DResponseObj<Boolean> isOwner(UUID user,Store store) {
+        if(!isLogged(user).value){
+            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
+            return a;
         }
         User u = LoginUsers.get(user);
         logger.debug("UserManager isOwner");
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return permissionManager.getGranteeUserType(u,store).equals(userTypes.owner);
+        return new DResponseObj<>( permissionManager.getGranteeUserType(u,store).equals(userTypes.owner));
 
     }
 
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
         logger.debug("UserManager addNewStoreOwner");
-        if(isLogged(userId) ) {
+        if(isLogged(userId).value ) {
             User loggedUser = LoginUsers.get(userId);
-            if (isOwner(userId,store)) {
+            if (isOwner(userId,store).value) {
                 User newOwner = members.get(newOwnerEmail);
                 return loggedUser.addNewStoreOwner(newOwner,store);
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-        a.errorMsg = ""+notLoged;
+        a.errorMsg = ErrorCode.NOTLOGGED;
         return a;
     }
 
     public DResponseObj<Boolean> addFounder(UUID userId, Store store) {
         logger.debug("UserManager addFounder");
 
-        if(isLogged(userId)) {
+        if(isLogged(userId).value) {
             User user = LoginUsers.get(userId);
             return user.addFounder(store);
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-        a.errorMsg = ""+notLoged;
+        a.errorMsg = ErrorCode.NOTLOGGED;
         return a;
     }
     public DResponseObj<Boolean> addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
         logger.debug("UserManager addNewStoreManager");
 
-        if(isLogged(uuid) ) {
+        if(isLogged(uuid).value) {
             User loggedUser = LoginUsers.get(uuid);
-            if (isOwner(uuid,store)) {
+            if (isOwner(uuid,store).value) {
                 User newManager = members.get(newMangerEmail);
                 return loggedUser.addNewStoreManager(newManager,store);
             }}
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-        a.errorMsg = ""+notLoged;
+        a.errorMsg = ErrorCode.NOTLOGGED;
         return a;
     }
 
@@ -186,23 +186,18 @@ public class UserManager {
 
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
         logger.debug("UserManager setManagerPermissions");
-        if(isLogged(userId) ) {
+        if(isLogged(userId).value ) {
             User loggedUser = LoginUsers.get(userId);
-            if (isOwner(userId,store)) {
+            if (isOwner(userId,store).value) {
                 User Manager = members.get(email);
                 return loggedUser.setManagerPermissions(Manager,store,perm);
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-        a.errorMsg = ""+notLoged;
+        a.errorMsg = ErrorCode.NOTLOGGED;
         return a;
     }
 
-    public boolean getRolesInStore(int userId, Store store)
-    {
-        logger.debug("UserManager getRolesInStore");
-        return members.get(userId).getRolesInStore(store);
-    }
 
 
     /**return true if existing member is logged in the system
@@ -210,13 +205,13 @@ public class UserManager {
      * @param uuid
      * @return boolean
      */
-    public boolean isLogged(UUID uuid){
+    public DResponseObj<Boolean> isLogged(UUID uuid){
         logger.debug("UserManager isLogged");
         if(LoginUsers.containsKey(uuid)){
-            return true;
+            return new DResponseObj<>(true);
         }
         else {
-            return false;
+            return new DResponseObj<>( false);
         }
     }
 
@@ -225,12 +220,14 @@ public class UserManager {
         logger.debug("UserManager getUserShoppingCart");
 
         if(GuestVisitors.containsKey(userId)){
-            return new DResponseObj<>( GuestVisitors.get(userId).getShoppingCart());
+            return new DResponseObj<ShoppingCart>( GuestVisitors.get(userId).GetSShoppingCart().value);
         }
         else if(members.containsKey(userId)){
-            return new DResponseObj<>( members.get(userId).getShoppingCart());
+            return new DResponseObj<ShoppingCart>( members.get(userId).GetSShoppingCart().value);
         }
-        else return null;
+        DResponseObj<ShoppingCart> a = new DResponseObj<>();
+        a.errorMsg = ErrorCode.NOTONLINE;
+        return a;
     }
 
     /** ch
@@ -239,39 +236,38 @@ public class UserManager {
      * @param uuid
      * @return boolean
      */
-    public boolean isOnline(UUID uuid){
+    public DResponseObj<Boolean>  isOnline(UUID uuid){
         logger.debug("UserManager isOnline");
         if (LoginUsers.containsKey(uuid) || GuestVisitors.containsKey(uuid)) {
-            return true;
+            return new DResponseObj<>(true);
         } else {
-            return false;
+            return new DResponseObj<>( false);
         }
 
     }
 
 
-    public ConcurrentHashMap<String, User> getMembers() {
+    public DResponseObj< ConcurrentHashMap<String, User>> getMembers() {
         logger.debug("UserManager getMembers");
-
-        return members;
+        return new DResponseObj<>( members);
     }
 
 
-    public ConcurrentHashMap<UUID, Guest> getGuestVisitors() {
+    public DResponseObj< ConcurrentHashMap<UUID, Guest>> getGuestVisitors() {
         logger.debug("UserManager getGuestVisitors");
-        return GuestVisitors;
+        return new DResponseObj<>( GuestVisitors);
     }
 
 
-    public ConcurrentHashMap<UUID, User> getLoginUsers() {
+    public DResponseObj<ConcurrentHashMap<UUID, User>> getLoginUsers() {
         logger.debug("UserManager getLoginUsers");
-        return LoginUsers;
+        return new DResponseObj<>( LoginUsers);
     }
 
 
     //UUID
-    public User getOnlineUser(UUID uuid){
-        return LoginUsers.getOrDefault(uuid, null);
+    public DResponseObj< User> getOnlineUser(UUID uuid){
+        return new DResponseObj<>( LoginUsers.getOrDefault(uuid, null));
     }
 
 }

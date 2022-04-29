@@ -22,12 +22,12 @@ public class Purchase {
     }
 
     public DResponseObj<Boolean> order(User user){
-         ConcurrentHashMap<Integer,ShoppingBag> bags =user.getShoppingCart().getHashShoppingCart();
+         ConcurrentHashMap<Integer,ShoppingBag> bags =user.GetSShoppingCart().value.getHashShoppingCart().value;
          for (Integer i: bags.keySet()){
              ShoppingBag bag=bags.get(i);
-             Store store=bag.getStore();
+             Store store=bag.getStore().value;
 
-             for (Integer j: bag.getProductQuantity().keySet()){
+             for (Integer j: bag.getProductQuantity().value.keySet()){
 
              }
          }

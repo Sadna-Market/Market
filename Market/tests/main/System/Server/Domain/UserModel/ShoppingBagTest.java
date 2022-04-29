@@ -21,7 +21,7 @@ class ShoppingBagTest {
     @Test
     void addProduct() {
         shoppingBag.addProduct(2,30);
-        Assertions.assertTrue(shoppingBag.isContainProduct(2)); //add product ok
+        Assertions.assertTrue(shoppingBag.isContainProduct(2).value); //add product ok
     }
 
     @Test
@@ -29,13 +29,13 @@ class ShoppingBagTest {
         shoppingBag.addProduct(1,20);
         shoppingBag.setProductQuantity(1,30);
         Assertions.assertEquals(shoppingBag.getProductQuantity(1),30);
-        Assertions.assertFalse(shoppingBag.setProductQuantity(2,20));
+        Assertions.assertFalse(shoppingBag.setProductQuantity(2,20).value);
     }
 
     @Test
     void removeProductFromShoppingBag() {
-        Assertions.assertFalse(shoppingBag.removeProductFromShoppingBag(4)); //remove not exisisting product
+        Assertions.assertFalse(shoppingBag.removeProductFromShoppingBag(4).value); //remove not exisisting product
         shoppingBag.removeProductFromShoppingBag(1);
-        Assertions.assertFalse(shoppingBag.isContainProduct(1));
+        Assertions.assertFalse(shoppingBag.isContainProduct(1).value);
     }
 }
