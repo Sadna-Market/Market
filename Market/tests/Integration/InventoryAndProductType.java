@@ -1,7 +1,9 @@
-package main.System.Server.Domain.StoreModel;
+package Integration;
 
 import Stabs.ProductTypeStab;
 import main.System.Server.Domain.Market.ProductType;
+import main.System.Server.Domain.StoreModel.Inventory;
+import main.System.Server.Domain.StoreModel.Store;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,24 +11,24 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InventoryTest {
+public class InventoryAndProductType {
+
 
     Inventory i = new Inventory(1);
-    ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
-    ProductType productType2 = new ProductTypeStab(2, "table", "good table");
+    ProductType productType1 = new ProductType(1, "milk", "good milk");
+    ProductType productType2 = new ProductType(2, "table", "good table");
 
     @BeforeEach
     void setUp() {
         i = new Inventory(1);
-        productType1 = new ProductTypeStab(1, "milk", "good milk");
-        productType2 = new ProductTypeStab(2, "table", "good table");
+        productType1 = new ProductType(1, "milk", "good milk");
+        productType2 = new ProductType(2, "table", "good table");
         i.addNewProduct(productType1,6,5.3);
     }
 
     @AfterEach
     void tearDown() {
     }
-
 
     @Test
     @DisplayName("addNewProduct  -  successful")
