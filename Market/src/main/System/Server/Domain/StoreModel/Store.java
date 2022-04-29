@@ -4,6 +4,7 @@ import main.ErrorCode;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 
+import main.System.Server.Domain.Market.userTypes;
 import main.System.Server.Domain.Response.DResponse;
 import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
@@ -245,25 +246,26 @@ public class Store {
     }
 
 
-/*    //requirement II.4.11  (only owners)
-    public List<String> getStoreManagers(){
+    //requirement II.4.11  (only owners)
+    public DResponseObj<HashMap<String,List<String>>> getStoreRoles(){
         List<String> managers = new ArrayList<>();
-        for(Permission p: getSafePermission()){
-            if(p.getGranteeType() == userTypes.manager)
-                managers.add(p.getGrantee().getEmail());
+        List<String> owners = new ArrayList<>();
+        List<String> founder = new ArrayList<>();
+        founder.add(this.founder);
+        for(Permission p: getSafePermission().getValue()){
+            DResponseObj<userTypes> type = p.getGranteeType();
+            if(type.errorOccurred())
+                return new DResponseObj<>(null,type.getErrorMsg());
+            if(type.getValue().equals(userTypes.manager))
+                managers.add(p.getGrantee().getValue().getEmail());
+            else if(type.getValue().equals(userTypes.owner))
+                owners.add(p.getGrantee().getValue().getEmail());
         }
-        return managers;
+        HashMap<String,List<String>> roles = new HashMap<>();
+        roles.put("manager",managers); roles.put("owner",owners); roles.put("founder",founder);
+        return new DResponseObj<>(roles);
     }
 
-    //requirement II.4.11  (only owners)
-    public List<String> getStoreOwners(){
-        List<String> owners = new ArrayList<>();
-        for(Permission p: getSafePermission()){
-            if(p.getGranteeType() == userTypes.owner)
-                owners.add(p.getGrantee().getEmail());
-        }
-        return owners;
-    }*/
 
     //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
     public void addPermission(Permission p){

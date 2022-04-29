@@ -1,33 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add sync in store and inventory + response">
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="#38 add integrations tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/ErrorCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/ErrorCode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Permission.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/Permission.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType$permissionEnum.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/Market/permissionType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Inventory.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Inventory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/ProductStore.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/ProductStore.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/StoreModel/Store.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Market/main/System/Server/Domain/UserModel/Response/ShoppingCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/Market/PermissionManagerTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/InventoryTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/InventoryTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/StoreTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/StoreModel/StoreTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/ShoppingCartTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/ShoppingCartTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/Market/main/System/Server/Domain/UserModel/UserManagerTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Service/ServiceStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingCart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/ShoppingCart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/InventoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/InventoryTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/ShoppingCartTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/ShoppingCartTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -545,7 +521,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651173593434</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="#38 add responses and ProductTypeStab">
+      <created>1651241162222</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1651241162222</updated>
+    </task>
+    <task id="LOCAL-00047" summary="#38 add integrations tests">
+      <created>1651243457256</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1651243457256</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -565,7 +555,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="guest visit req #2.1.1&#10;issue #43" />
     <MESSAGE value="guest register req #2.1.3&#10;issue #45" />
     <MESSAGE value="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46" />
     <MESSAGE value="get store info AT  req #2.2.1&#10;issue #47" />
@@ -590,7 +579,8 @@
     <MESSAGE value="info of any buyer/store - AT  req #2.6.4&#10;issue #65" />
     <MESSAGE value="permissions of manager - AT  req #2.5" />
     <MESSAGE value="#38 add responses and ProductTypeStab" />
-    <option name="LAST_COMMIT_MESSAGE" value="#38 add responses and ProductTypeStab" />
+    <MESSAGE value="#38 add integrations tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="#38 add integrations tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

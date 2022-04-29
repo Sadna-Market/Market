@@ -1,9 +1,9 @@
-package main.System.Server.Domain.StoreModel;
+package Integration;
 
 import Stabs.ProductTypeStab;
-import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
-import main.System.Server.Domain.UserModel.User;
+import main.System.Server.Domain.StoreModel.History;
+import main.System.Server.Domain.StoreModel.Store;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,18 +14,20 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class StoreTest {
+public class StoreAndProductType {
 
     Store store = new Store("Best Store", null, null, "dor@gmail.com");
-    ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
-    ProductType productType2 = new ProductTypeStab(2, "table", "good table");
+    ProductType productType1 = new ProductType(1, "milk", "good milk");
+    ProductType productType2 = new ProductType(2, "table", "good table");
     String user = "dor@gmail.com";
+
     @BeforeEach
     void setUp() {
         store = new Store("Best Store", null, null, "dor@gmail.com");
-        productType1 = new ProductTypeStab(1, "milk", "good milk");
-        productType2 = new ProductTypeStab(2, "table", "good table");
+        productType1 = new ProductType(1, "milk", "good milk");
+        productType2 = new ProductType(2, "table", "good table");
     }
 
     @AfterEach
@@ -173,7 +175,7 @@ class StoreTest {
     void getStoreOrderHistory() {
         addHistoryS1();
         List<History> h = store.getStoreOrderHistory().getValue();
-        assertEquals(1,h.size());
+        assertEquals(1, h.size());
         assertEquals(user, h.get(0).getUser());
     }
 
@@ -181,7 +183,7 @@ class StoreTest {
     @Test
     void getStoreOrderHistory2() {
         List<History> h = store.getStoreOrderHistory().getValue();
-        assertEquals(0,h.size());
+        assertEquals(0, h.size());
     }
 
 
@@ -213,7 +215,7 @@ class StoreTest {
         addHistoryS1();
         List<Integer> h = store.getTIDHistory().getValue();
         assertEquals(1, h.size());
-        assertEquals(1,  h.get(0));
+        assertEquals(1, h.get(0));
     }
 
     @DisplayName("addHistory  -  success")
@@ -221,20 +223,20 @@ class StoreTest {
     void addHistoryS1() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertTrue(store.addNewProduct(productType2, 8, 5.3).getValue());
-        HashMap<Integer,Integer> h = new HashMap<>();
-        h.put(productType1.getProductID(),4);
-        h.put(productType2.getProductID(),4);
-        assertTrue(store.addHistory(1,user,h,333.5).getValue());
+        HashMap<Integer, Integer> h = new HashMap<>();
+        h.put(productType1.getProductID(), 4);
+        h.put(productType2.getProductID(), 4);
+        assertTrue(store.addHistory(1, user, h, 333.5).getValue());
     }
 
     @DisplayName("addHistory  -  failure")
     @Test
     void addHistoryF() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
-        HashMap<Integer,Integer> h = new HashMap<>();
-        h.put(productType1.getProductID(),4);
-        h.put(productType2.getProductID(),4);
-        assertFalse(store.addHistory(1,"dor@gmail.com",h,333.5).getValue());
+        HashMap<Integer, Integer> h = new HashMap<>();
+        h.put(productType1.getProductID(), 4);
+        h.put(productType2.getProductID(), 4);
+        assertFalse(store.addHistory(1, "dor@gmail.com", h, 333.5).getValue());
     }
 
     @DisplayName("checkBuyPolicy  -  success")
@@ -253,11 +255,11 @@ class StoreTest {
     void calculateBagPrice() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertTrue(store.addNewProduct(productType2, 8, 5.3).getValue());
-        ConcurrentHashMap<Integer,Integer> b = new ConcurrentHashMap<>();
-        b.put(1,4);
-        b.put(2,3);
-        double finalPrice = (store.getProductPrice(1).getValue()*4) + (store.getProductPrice(2).getValue()*3);
-        assertEquals(finalPrice,store.calculateBagPrice(b).getValue());
+        ConcurrentHashMap<Integer, Integer> b = new ConcurrentHashMap<>();
+        b.put(1, 4);
+        b.put(2, 3);
+        double finalPrice = (store.getProductPrice(1).getValue() * 4) + (store.getProductPrice(2).getValue() * 3);
+        assertEquals(finalPrice, store.calculateBagPrice(b).getValue());
     }
 
     @DisplayName("closeStore  -  success")
@@ -291,6 +293,4 @@ class StoreTest {
     }
 
 }
-
-
 
