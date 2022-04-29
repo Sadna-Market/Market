@@ -109,21 +109,21 @@ public class UserManagerStab extends UserManager {
     }
 
 
-    public ConcurrentHashMap<String, User> getMembers() {
+    public DResponseObj<ConcurrentHashMap<String, User>> getMembers() {
         logger.debug("UserManager getMembers");
 
-        return members;
+        return new DResponseObj<>(members);
     }
 
 
-    public ConcurrentHashMap<UUID, Guest> getGuestVisitors() {
+    public DResponseObj<ConcurrentHashMap<UUID, Guest>> getGuestVisitors() {
         logger.debug("UserManager getGuestVisitors");
-        return GuestVisitors;
+        return new DResponseObj<>(GuestVisitors);
     }
 
 
-    public ConcurrentHashMap<UUID, User> getLoginUsers() {
+    public DResponseObj<ConcurrentHashMap<UUID, User>> getLoginUsers() {
         logger.debug("UserManager getLoginUsers");
-        return LoginUsers;
+        return new DResponseObj<>(LoginUsers);
     }
 }

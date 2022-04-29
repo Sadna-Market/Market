@@ -22,16 +22,16 @@ public class Purchase {
     }
 
     public DResponseObj<Boolean> order(User user){
-         ConcurrentHashMap<Integer,ShoppingBag> bags =user.getShoppingCart().getHashShoppingCart();
-         for (Integer i: bags.keySet()){
-             ShoppingBag bag=bags.get(i);
-             Store store=bag.getStore();
-
-             for (Integer j: bag.getProductQuantity().keySet()){
-
-             }
-         }
-;
+        // ConcurrentHashMap<Integer,ShoppingBag> bags =user.getShoppingCart().getHashShoppingCart();
+//         for (Integer i: bags.keySet()){
+//             ShoppingBag bag=bags.get(i);
+//             Store store=bag.getStore();
+//
+//             for (Integer j: bag.getProductQuantity().keySet()){
+//
+//             }
+//         }
+//;
         //catch
         //supply
         //payment
