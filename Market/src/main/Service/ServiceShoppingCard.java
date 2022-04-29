@@ -1,4 +1,4 @@
-package main.System.Server.Domain;
+package main.Service;
 
 import main.System.Server.Domain.UserModel.ShoppingBag;
 import main.System.Server.Domain.UserModel.ShoppingCart;

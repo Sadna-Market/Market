@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add sync in store and inventory + response" />
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add sync in store and inventory + response">
+      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/DResponseObj.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Stabs/StoreStab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stabs/StoreStab.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Stabs/UserManagerStab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stabs/UserManagerStab.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Service/IMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/IMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/Facade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/DataResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ServiceHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ServiceShoppingCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceShoppingCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ServiceStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/ProductStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/ProductStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ATResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/DResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ATResponseObj.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/ProductResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ShoppingCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/ShoppingCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/StoreResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/StoreResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,18 +85,19 @@
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateTestDialog.RecentsKey">
-      <recent name="main.System.Server.Domain.StoreModel" />
-      <recent name="main.System.Server.Domain.Market" />
-    </key>
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="main" />
-    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\lielk\Desktop\Market\src" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="main.System.Server.Domain" />
+      <recent name="main" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="main.System.Server.Domain.StoreModel" />
+      <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
   <component name="RunManager" selected="JUnit.StoreTest">
@@ -93,12 +119,12 @@
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="PATTERN" value="Unit.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="PACKAGE_NAME" value="Unit.Market" />
+      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
       <option name="METHOD_NAME" value="getStore3" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
@@ -109,12 +135,12 @@
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="PATTERN" value="Unit.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="PACKAGE_NAME" value="Unit.Market" />
+      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
       <option name="METHOD_NAME" value="getStoreInfo(int)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
@@ -125,12 +151,12 @@
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="PATTERN" value="Unit.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="PACKAGE_NAME" value="Unit.Market" />
+      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
       <option name="METHOD_NAME" value="searchProductByStoreRate2(int)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
@@ -141,12 +167,12 @@
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.StoreModel.*" />
+          <option name="PATTERN" value="Unit.StoreModel.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.StoreModel" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.StoreModel.StoreTest" />
+      <option name="PACKAGE_NAME" value="Unit.StoreModel" />
+      <option name="MAIN_CLASS_NAME" value="Unit.StoreModel.StoreTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -186,6 +212,7 @@
       <workItem from="1651144511577" duration="614000" />
       <workItem from="1651163170554" duration="1689000" />
       <workItem from="1651220034658" duration="9000" />
+      <workItem from="1651220258898" duration="3914000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -557,30 +584,10 @@
           <line>70</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>310</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>393</line>
-          <option name="timeStamp" value="40" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>404</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
-          <line>160</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
           <line>54</line>
-          <properties class="main.System.Server.Domain.Market.MarketTest" method="getStore3">
+          <properties class="Unit.Market.MarketTest" method="getStore2">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="42" />

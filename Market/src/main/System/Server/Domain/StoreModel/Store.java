@@ -4,7 +4,7 @@ import main.ErrorCode;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 
-import main.System.Server.Domain.UserModel.Response.ATResponseObj;
+import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +55,10 @@ public class Store {
     public ProductStore getProductInStoreInfo(int productId){
         return inventory.getProduct(productId);
     }
+    //TODO: change to this
+    public DResponseObj<String> getProductInStoreInfo2(int productId){
+        return new DResponseObj<>(inventory.getProduct(productId).toString());
+    }
 
     //requirement II.2.1
     public List<ProductStore> GetStoreProducts() {
@@ -74,23 +78,23 @@ public class Store {
     }
 
     //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
-    public ATResponseObj<Boolean> isProductExistInStock(int productId, int quantity){
+    public DResponseObj<Boolean> isProductExistInStock(int productId, int quantity){
         return inventory.isProductExistInStock(productId ,quantity);
     }
 
 
     //requirement II.4.1 (only owners)
-    public ATResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
+    public DResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
         if(productType == null) {
             logger.warn("productType is null (store - addNewProduct");
-            return new ATResponseObj<>(false, ""+ErrorCode.PRODUCTNOTEXIST);
+            return new DResponseObj<>(false, ""+ErrorCode.PRODUCTNOTEXIST);
         }
         else
             return inventory.addNewProduct(productType, quantity, price);
     }
 
     //requirement II.4.1 (only owners)
-    public ATResponseObj<Boolean> removeProduct(int productId) {
+    public DResponseObj<Boolean> removeProduct(int productId) {
         return inventory.removeProduct(productId);
     }
 
@@ -103,12 +107,12 @@ public class Store {
 
     //requirement II.4.1 & II.2.5 (only owners)
     //if change to quantity 0 not delete product (need to find the product price later)
-    public ATResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
+    public DResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
         return inventory.setProductQuantity(productId, quantity);
     }
 
     //requirement II.4.1  (only owners)
-    public ATResponseObj<Boolean> setProductPrice(int productId, double price) {
+    public DResponseObj<Boolean> setProductPrice(int productId, double price) {
         return inventory.setProductPrice(productId, price);
     }
 
@@ -118,12 +122,12 @@ public class Store {
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
-    public ATResponseObj<List<History>> getStoreOrderHistory() {
-        return new ATResponseObj<>(new ArrayList<>(history.values()));
+    public DResponseObj<List<History>> getStoreOrderHistory() {
+        return new DResponseObj<>(new ArrayList<>(history.values()));
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
-    public ATResponseObj<List<History>> getUserHistory(String user) {
+    public DResponseObj<List<History>> getUserHistory(String user) {
         List<History> userHistory = new ArrayList<>();
         long stamp = historyLock.readLock();
         try {
@@ -131,7 +135,7 @@ public class Store {
                 if(entry.getValue().getUser().equals(user))
                     userHistory.add(entry.getValue());
             }
-            return new ATResponseObj<>(userHistory);
+            return new DResponseObj<>(userHistory);
         }finally {
             historyLock.unlockRead(stamp);
         }
@@ -203,12 +207,12 @@ public class Store {
 
 
     //requirement II.4.9  (only owners)
-    public ATResponseObj<Boolean> closeStore() {
+    public DResponseObj<Boolean> closeStore() {
         boolean success = inventory.tellProductStoreIsClose();
         isOpen = false;
         //sends message to managers.
         logger.info("storeId: "+ storeId + " closed");
-        return new ATResponseObj<>(success);
+        return new DResponseObj<>(success);
     }
 
     public boolean newStoreRate(int rate){
