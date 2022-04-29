@@ -2,6 +2,7 @@ package main.System.Server.Domain.Market;
 
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
+import main.ErrorCode;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -67,7 +68,7 @@ public class Market {
             String warning="the name is null";
             logger.warn(warning);
             DResponseObj<List<Integer>> output=new DResponseObj<>();
-            output.setErrorMsg(warning);
+            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
         long stamp = lock_TP.readLock();
