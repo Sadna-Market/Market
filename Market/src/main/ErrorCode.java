@@ -21,4 +21,6 @@ public class ErrorCode {
    public static int PRODUCTALLREADYINSTORE = 31;
    public static int PRODUCTNOTEXISTINSTORE = 32;
 
+
+   public static int STORENOTINTHEPRODUCTTYPE = 40;
 }

@@ -1,5 +1,6 @@
 package main.System.Server.Domain.Market;
 
+import main.ErrorCode;
 import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 
@@ -36,13 +37,15 @@ public class ProductType {
 
     public DResponseObj<Integer> getRate() {
         long stamp = rateLock.readLock();
-        logger.debug("getRate catch the ReadLock");
+        logger.debug("catch the ReadLock");
         try{
-            return new DResponseObj<>(rate);
+            DResponseObj<Integer> output=new DResponseObj<>();
+            output.value=rate;
+            return output;
         }
         finally {
             rateLock.unlockRead(stamp);
-            logger.debug("getRate released the ReadLock");
+            logger.debug("released the ReadLock");
         }
     }
 
@@ -50,7 +53,7 @@ public class ProductType {
         if (r<0 || r>10) {
             String warning = "the Rate in not between 1-10";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = rateLock.writeLock();
         logger.debug("getRate catch the WriteLock");
@@ -70,7 +73,7 @@ public class ProductType {
         if (storeID<0){
             String warning = "storeID #"+storeID+ " is not valid.";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp= lock_stores.readLock();
         logger.debug("catch the ReadLock.");
@@ -124,10 +127,10 @@ public class ProductType {
         if (checkExist.getValue()){
             String warning = "storeID #" + storeID + " is exist in the system, you can not use that";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.STORENOTINTHEPRODUCTTYPE);
         }
         long stamp= lock_stores.writeLock();
-        logger.debug("addStore() catch the WriteLock.");
+        logger.debug("catch the WriteLock.");
         try{
             stores.add(storeID);
             logger.info("this storeID: "+storeID+" add this ProductType to the stores.");
@@ -135,7 +138,7 @@ public class ProductType {
         }
         finally {
             lock_stores.unlockWrite(stamp);
-            logger.debug("addStore() released the WriteLock.");
+            logger.debug("released the WriteLock.");
         }
     }
 
@@ -148,7 +151,9 @@ public class ProductType {
     }
 
     public DResponseObj<Integer> getProductID() {
-        return new DResponseObj<>(productID);
+        DResponseObj<Integer> output=new DResponseObj<>();
+        output.value=productID;
+        return output;
     }
 
     public DResponseObj<String> getProductName() {
@@ -160,7 +165,9 @@ public class ProductType {
     }
 
     public DResponseObj<Integer> getCategory() {
-        return new DResponseObj<>(category);
+        DResponseObj<Integer> output=new DResponseObj<>();
+        output.value=category;
+        return output;
     }
 
     public DResponseObj<Boolean> containName(String name){
