@@ -1,8 +1,9 @@
 package main.System.Server.Domain.Market;
 
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.User;
-import main.System.Server.Domain.UserModel.userTypes;
+//import main.System.Server.Domain.UserModel.userTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,38 +51,39 @@ public class Permission {
         }
     }
 
-    boolean hasPermission(permissionType.permissionEnum permissionType) {
-        return granteePermissionTypes.contains(permissionType);
+    DResponseObj<Boolean> hasPermission(permissionType.permissionEnum permissionType) {
+        return new DResponseObj<>(granteePermissionTypes.contains(permissionType));
     }
 
     public void addManagerPermission(permissionType.permissionEnum permissionType) {
         granteePermissionTypes.add(permissionType);
     }
 
-    public boolean removeManagerPermission(permissionType.permissionEnum permissionType) {
-        return granteePermissionTypes.remove(permissionType);
+    public DResponseObj<Boolean> removeManagerPermission(permissionType.permissionEnum permissionType) {
+        return new DResponseObj<>(granteePermissionTypes.remove(permissionType));
     }
 
-    public Store getStore() {
-        return store;
+    public DResponseObj<Store> getStore() {
+        return new DResponseObj<>(store);
     }
 
-    public User getGrantee() {
-        return grantee;
+    public DResponseObj<User> getGrantee() {
+        return new DResponseObj<>(grantee);
     }
 
-    public User getGrantor() {
-        return grantor;
+    public DResponseObj<User> getGrantor() {
+        return new DResponseObj<>(grantor);
     }
 
-    public userTypes getGranteeType() {
-        return granteeType;
+    public DResponseObj<userTypes> getGranteeType() {
+        return new DResponseObj<>(granteeType);
     }
 
-    public userTypes getGrantorType() {
-        return grantorType;
+    public DResponseObj<userTypes> getGrantorType() {
+        return new DResponseObj<>(grantorType);
     }
-    public List<permissionType.permissionEnum> getgranteePermissionTypes() {
-        return granteePermissionTypes;
+
+    public DResponseObj<List<permissionType.permissionEnum>> getgranteePermissionTypes() {
+        return new DResponseObj<>(granteePermissionTypes);
     }
 }

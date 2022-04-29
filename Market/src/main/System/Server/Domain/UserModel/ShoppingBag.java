@@ -1,5 +1,6 @@
 package main.System.Server.Domain.UserModel;
 
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
 
@@ -18,53 +19,53 @@ public class ShoppingBag {
         this.store = store;
     }
 
-    public boolean isContainProduct(int pid){
-        return productQuantity.containsKey(pid);
+    public DResponseObj<Boolean> isContainProduct(int pid){
+        return new DResponseObj<>( productQuantity.containsKey(pid));
     }
 
-    public int getProductQuantity(int pid){
-        return productQuantity.get(pid);
+    public DResponseObj<Integer> getProductQuantity(int pid){
+        return new DResponseObj<>( productQuantity.get(pid));
     }
 
-    public Store getStore() {
+    public DResponseObj< Store> getStore() {
         logger.debug("ShoppingBag getStore");
-        return store;
+        return new DResponseObj<>( store);
     }
 
 
-    public boolean addProduct(int productId , int quantity){
+    public DResponseObj<Boolean>  addProduct(int productId , int quantity){
         logger.debug(" ShoppingBag addProduct");
-        if(productQuantity.containsKey(productId)){return false;}
+        if(productQuantity.containsKey(productId)){return new DResponseObj<>( false);}
         else {
             productQuantity.put(productId,quantity);
-            return true;
+            return new DResponseObj<>( true);
         }
     }
 
-    public boolean setProductQuantity(int productId, int quantity)
+    public DResponseObj<Boolean>  setProductQuantity(int productId, int quantity)
     {
         logger.debug("ShoppingBag setProductQuantity");
         if(!productQuantity.containsKey(productId)){
-            return false;
+            return new DResponseObj<>( false);
         }
         else {
             productQuantity.replace(productId,quantity);
-            return true;
+            return new DResponseObj<>( true);
         }
     }
 
-    public boolean removeProductFromShoppingBag(int productId){
+    public DResponseObj<Boolean>  removeProductFromShoppingBag(int productId){
         logger.debug("ShoppingBag removeProductFromShoppingBag");
         if(!productQuantity.containsKey(productId)){
-            return false;
+            return new DResponseObj<>( false);
         }
         else {
             productQuantity.remove(productId);
-            return true;
+            return new DResponseObj<>( true);
         }
     }
 
-    public ConcurrentHashMap<Integer, Integer> getProductQuantity() {
-        return productQuantity;
+    public DResponseObj< ConcurrentHashMap<Integer, Integer>> getProductQuantity() {
+        return new DResponseObj<>( productQuantity);
     }
 }

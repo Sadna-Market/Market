@@ -1,9 +1,9 @@
-package main.System.Server.Domain.StoreModel;
+package Integration;
 
 import Stabs.ProductTypeStab;
-import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
-import main.System.Server.Domain.UserModel.User;
+import main.System.Server.Domain.StoreModel.History;
+import main.System.Server.Domain.StoreModel.Store;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,18 +14,20 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class StoreTest {
+public class StoreAndProductType {
 
     Store store = new Store("Best Store", null, null, "dor@gmail.com");
-    ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
-    ProductType productType2 = new ProductTypeStab(2, "table", "good table");
+    ProductType productType1 = new ProductType(1, "milk", "good milk");
+    ProductType productType2 = new ProductType(2, "table", "good table");
     String user = "dor@gmail.com";
+
     @BeforeEach
     void setUp() {
         store = new Store("Best Store", null, null, "dor@gmail.com");
-        productType1 = new ProductTypeStab(1, "milk", "good milk");
-        productType2 = new ProductTypeStab(2, "table", "good table");
+        productType1 = new ProductType(1, "milk", "good milk");
+        productType2 = new ProductType(2, "table", "good table");
     }
 
     @AfterEach
@@ -33,6 +35,7 @@ class StoreTest {
 
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Test
@@ -291,6 +294,4 @@ class StoreTest {
     }
 
 }
-
-
 
