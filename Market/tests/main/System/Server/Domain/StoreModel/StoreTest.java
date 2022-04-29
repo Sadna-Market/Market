@@ -1,5 +1,6 @@
 package main.System.Server.Domain.StoreModel;
 
+import Stabs.ProductTypeStab;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 import main.System.Server.Domain.UserModel.User;
@@ -17,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class StoreTest {
 
     Store store = new Store("Best Store", null, null, "dor@gmail.com");
-    ProductType productType1 = new ProductType(1, "milk", "good milk");
-    ProductType productType2 = new ProductType(2, "table", "good table");
+    ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
+    ProductType productType2 = new ProductTypeStab(2, "table", "good table");
     String user = "dor@gmail.com";
     @BeforeEach
     void setUp() {
@@ -27,8 +28,8 @@ class StoreTest {
     @AfterEach
     void tearDown() {
         Store store = new Store("Best Store", null, null, "dor@gmail.com");
-        ProductType productType1 = new ProductType(1, "milk", "good milk");
-        ProductType productType2 = new ProductType(2, "table", "good table");
+        ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
+        ProductType productType2 = new ProductTypeStab(2, "table", "good table");
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,22 +102,13 @@ class StoreTest {
         assertFalse(store.removeProduct(productType1.getProductID() + 1).getValue());
     }
 
-    @DisplayName("getInfoProductInStore  -  successful")
-    @Test
-    void getProductInStoreInfo() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
-        ProductStore ps = store.getProductInStoreInfo(productType1.getProductID());
-        assertSame(ps.getProductType(), productType1);
-        assertEquals(5.3, ps.getPrice());
-        assertEquals(6, ps.getQuantity());
-    }
 
     @DisplayName("setProductPrice  -  successful")
     @Test
     void setProductPriceS() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertTrue(store.setProductPrice(productType1.getProductID(), 155.3).getValue());
-        assertEquals(155.3, store.getProductPrice(productType1.getProductID()));
+        assertEquals(155.3, store.getProductPrice(productType1.getProductID()).getValue());
     }
 
     @DisplayName("setProductPrice  -  failure")
@@ -124,7 +116,7 @@ class StoreTest {
     void setProductPriceF() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertFalse(store.setProductPrice(productType1.getProductID() + 1, 155.3).getValue());
-        assertEquals(5.3, store.getProductPrice(productType1.getProductID()));
+        assertEquals(5.3, store.getProductPrice(productType1.getProductID()).getValue());
     }
 
     @DisplayName("setProductQuantity  -  successful")
@@ -132,8 +124,7 @@ class StoreTest {
     void setProductQuantityS() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertTrue(store.setProductQuantity(productType1.getProductID(), 33).getValue());
-        ProductStore ps = store.getProductInStoreInfo(productType1.getProductID());
-        assertEquals(33, ps.getQuantity());
+        assertEquals(33, store.getProductQuantity(productType1.getProductID()).getValue());
     }
 
     @DisplayName("setProductQuantity  -  failure")
@@ -141,33 +132,32 @@ class StoreTest {
     void setProductQuantityF() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertFalse(store.setProductQuantity(productType1.getProductID() + 1, 33).getValue());
-        ProductStore ps = store.getProductInStoreInfo(productType1.getProductID());
-        assertEquals(6, ps.getQuantity());
+        assertEquals(6, store.getProductQuantity(productType1.getProductID()).getValue());
     }
 
 
     @DisplayName("getStoreProducts  -  success")
     @Test
     void getStoreProductsS() {
-        assertEquals(0, store.GetStoreProducts().size());
+        assertEquals(0, store.GetStoreProducts().getValue().size());
     }
 
     @DisplayName("getStoreProducts  -  success")
     @Test
     void getStoreProductsS2() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
-        assertEquals(1, store.GetStoreProducts().size());
+        assertEquals(1, store.GetStoreProducts().getValue().size());
         assertTrue(store.addNewProduct(productType2, 7, 511.3).getValue());
-        assertEquals(2, store.GetStoreProducts().size());
+        assertEquals(2, store.GetStoreProducts().getValue().size());
         assertTrue(store.removeProduct(productType1.getProductID()).getValue());
-        assertEquals(1, store.GetStoreProducts().size());
+        assertEquals(1, store.GetStoreProducts().getValue().size());
     }
 
     @DisplayName("getProductPrice  -  success")
     @Test
     void getProductPrice() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
-        assertEquals(5.3, store.getProductPrice(productType1.getProductID()));
+        assertEquals(5.3, store.getProductPrice(productType1.getProductID()).getValue());
     }
 
     @DisplayName("getProductPrice  -  failure")
@@ -220,7 +210,7 @@ class StoreTest {
     @Test
     void getTIDHistoryS() {
         addHistoryS1();
-        List<Integer> h = store.getTIDHistory();
+        List<Integer> h = store.getTIDHistory().getValue();
         assertEquals(1, h.size());
         assertEquals(1,  h.get(0));
     }
@@ -233,7 +223,7 @@ class StoreTest {
         HashMap<Integer,Integer> h = new HashMap<>();
         h.put(productType1.getProductID(),4);
         h.put(productType2.getProductID(),4);
-        assertTrue(store.addHistory(1,user,h,333.5));
+        assertTrue(store.addHistory(1,user,h,333.5).getValue());
     }
 
     @DisplayName("addHistory  -  failure")
@@ -243,7 +233,7 @@ class StoreTest {
         HashMap<Integer,Integer> h = new HashMap<>();
         h.put(productType1.getProductID(),4);
         h.put(productType2.getProductID(),4);
-        assertFalse(store.addHistory(1,"dor@gmail.com",h,333.5));
+        assertFalse(store.addHistory(1,"dor@gmail.com",h,333.5).getValue());
     }
 
     @DisplayName("checkBuyPolicy  -  success")
@@ -265,38 +255,38 @@ class StoreTest {
         ConcurrentHashMap<Integer,Integer> b = new ConcurrentHashMap<>();
         b.put(1,4);
         b.put(2,3);
-        double finalPrice = (store.getProductPrice(1)*4) + (store.getProductPrice(2)*3);
-        assertEquals(finalPrice,store.calculateBagPrice(b));
+        double finalPrice = (store.getProductPrice(1).getValue()*4) + (store.getProductPrice(2).getValue()*3);
+        assertEquals(finalPrice,store.calculateBagPrice(b).getValue());
     }
 
     @DisplayName("closeStore  -  success")
     @Test
     void closeStore() {
-        assertTrue(store.isOpen());
+        assertTrue(store.isOpen().getValue());
         assertTrue(store.closeStore().getValue());
-        assertFalse(store.isOpen());
+        assertFalse(store.isOpen().getValue());
     }
 
     @DisplayName("newStoreRate  -  success")
     @Test
     void newStoreRate() {
-        assertEquals(5, store.getRate());
-        assertTrue(store.newStoreRate(10));
-        assertEquals(10, store.getRate());
-        assertTrue(store.newStoreRate(6));
-        assertEquals(8, store.getRate());
+        assertEquals(5, store.getRate().getValue());
+        assertTrue(store.newStoreRate(10).getValue());
+        assertEquals(10, store.getRate().getValue());
+        assertTrue(store.newStoreRate(6).getValue());
+        assertEquals(8, store.getRate().getValue());
     }
 
     @DisplayName("newStoreRate  -  failure")
     @Test
     void newStoreRate2() {
-        assertEquals(5, store.getRate());
+        assertEquals(5, store.getRate().getValue());
         store.newStoreRate(10);
-        assertEquals(10, store.getRate());
+        assertEquals(10, store.getRate().getValue());
         store.newStoreRate(-1);
-        assertEquals(10, store.getRate());
+        assertEquals(10, store.getRate().getValue());
         store.newStoreRate(0);
-        assertEquals(5, store.getRate());
+        assertEquals(5, store.getRate().getValue());
     }
 
 }

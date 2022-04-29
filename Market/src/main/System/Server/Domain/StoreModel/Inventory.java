@@ -3,8 +3,10 @@ package main.System.Server.Domain.StoreModel;
 import main.ErrorCode;
 import main.System.Server.Domain.Market.ProductType;
 import main.System.Server.Domain.Response.DResponseObj;
+import main.System.Server.Domain.Response.ProductResponse;
 import org.apache.log4j.Logger;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,11 +32,11 @@ public class Inventory {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.info("productId:" + productId + " not exist in stock");
-            return new DResponseObj<>(false);
+            return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         }
         long stamp = productStore.getProductLock().readLock();
         try {
-            if (productStore.getQuantity() >= quantity) {
+            if (productStore.getQuantity().getValue() >= quantity) {
                 logger.info("productId:" + productId + " exist in stock");
                 return new DResponseObj<>(true);
             }
@@ -48,12 +50,12 @@ public class Inventory {
     public DResponseObj<Boolean> addNewProduct(ProductType newProduct, int quantity, double price) {
         if (products.containsKey(newProduct.getProductID())) {
             logger.warn("try to add productId:" + newProduct.getProductID() + " but inventory contains this product");
-            return new DResponseObj<>(false,""+ ErrorCode.PRODUCTALLREADYINSTORE);
+            return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
             products.put(newProduct.getProductID(), toAdd);
             logger.info("Inventory added productId:" + newProduct.getProductID());
-            return newProduct.addStore(getStoreId());
+            return newProduct.addStore(storeId);
         }
     }
 
@@ -61,9 +63,9 @@ public class Inventory {
         ProductStore removed = products.remove(productId);
         if (removed == null) {
             logger.warn("try to remove productId:" + productId + " but inventory not contains this product");
-            return new DResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
+            return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
-            DResponseObj<Boolean> success = removed.getProductType().removeStore(getStoreId());
+            DResponseObj<Boolean> success = removed.getProductType().removeStore(storeId);
             if(success.getValue())
                 logger.info("Inventory remove productId:" + productId);
             return success;
@@ -71,23 +73,23 @@ public class Inventory {
 
     }
 
-    public Integer setProductQuantityForBuy(int productId, int quantity) {
+    public DResponseObj<Integer> setProductQuantityForBuy(int productId, int quantity) {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set quantity for buy, productId:" + productId + " but inventory not contains this product");
-            return null;
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
             long stamp = productStore.getProductLock().writeLock();
             try {
-                int quantityInInventory = productStore.getQuantity();
+                int quantityInInventory = productStore.getQuantity().getValue();
                 if(quantityInInventory>=quantity) {
                     productStore.setQuantity(quantityInInventory - quantity);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + (quantityInInventory-quantity));
-                    return quantity;
+                    return new DResponseObj<>(quantity);
                 }else {
                     productStore.setQuantity(0);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + 0);
-                    return quantityInInventory;
+                    return new DResponseObj<>(quantityInInventory);
                 }
             }finally {
                 productStore.getProductLock().unlockWrite(stamp);
@@ -99,7 +101,7 @@ public class Inventory {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set quantity productId:" + productId + " but inventory not contains this product");
-            return new DResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
+            return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
             long stamp = productStore.getProductLock().writeLock();
             try {
@@ -116,7 +118,7 @@ public class Inventory {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set price productId:" + productId + " but inventory not contains this product");
-            return new DResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
+            return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         }
         else {
             long stamp = productStore.getProductLock().writeLock();
@@ -130,27 +132,30 @@ public class Inventory {
         }
     }
 
-    public boolean tellProductStoreIsClose() {
-        for (Map.Entry<Integer, ProductStore> entry : getProducts().entrySet()) {
-            boolean success = entry.getValue().getProductType().removeStore(getStoreId());
-            if (!success) {
+    public DResponseObj<Boolean> tellProductStoreIsClose() {
+        for (Map.Entry<Integer, ProductStore> entry : products.entrySet()) {
+            DResponseObj<Boolean> success = entry.getValue().getProductType().removeStore(storeId);
+            if (success.errorOccurred()) {
                 logger.warn("not success to remove storeID from productTypeID: " + entry.getValue().getProductType().getProductID());
-                return false;
+                return success;
             }
         }
-        return true;
+        return new DResponseObj<>(true);
     }
 
-    public ProductStore getProductStoreAfterBuy(Integer productID, Integer productQuantity) {
-        ProductStore productStore = getProducts().get(productID);
+    public DResponseObj<ProductStore> getProductStoreAfterBuy(Integer productID, Integer productQuantity) {
+        ProductStore productStore = products.get(productID);
         if (productStore == null)
-            return null;
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
         else{
             long stamp = productStore.getProductLock().readLock();
             try {
                 ProductType pt = productStore.getProductType();
-                double price = productStore.getPrice();
-                return new ProductStore(pt, productQuantity, price);
+                DResponseObj<Double> price = productStore.getPrice();
+                if(price.errorOccurred())
+                    return new DResponseObj<>(productStore,price.getErrorMsg());
+                ProductStore copy = new ProductStore(pt, productQuantity, price.getValue());
+                return new DResponseObj<>(copy);
             }finally {
                 productStore.getProductLock().unlockRead(stamp);
             }
@@ -158,10 +163,12 @@ public class Inventory {
 
     }
 
-    public Double getPrice(Integer productID) {
+    public DResponseObj<Double> getPrice(Integer productID) {
         ProductStore productStore = products.get(productID);
-        if (productStore == null)
-            return null;
+        if (productStore == null){
+            logger.warn("try to get price of productId:" + productID + " but inventory not contains this product");
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
+        }
         else{
             long stamp = productStore.getProductLock().readLock();
             try{
@@ -172,20 +179,43 @@ public class Inventory {
         }
     }
 
-    public ProductStore getProduct(int productId) {
-        return products.get(productId);
+
+
+    public DResponseObj<Integer> getQuantity(int productId) {
+        ProductStore productStore = products.get(productId);
+        if (productStore == null){
+            logger.warn("try to get quantity of productId:" + productId + " but inventory not contains this product");
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
+        }
+        else{
+            long stamp = productStore.getProductLock().readLock();
+            try{
+                return productStore.getQuantity();
+            }finally {
+                productStore.getProductLock().unlockRead(stamp);
+            }
+        }
     }
+
+    public DResponseObj<String> getProductInfo(int productId) {
+        ProductStore productStore = products.get(productId);
+        if (productStore == null){
+            logger.warn("productId:" + productId + " but inventory not contains this product");
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
+        }
+            return new DResponseObj<>(productStore.toString());
+    }
+
+
 
 
     ////////////////////////////////////////// Getters and Setters //////////////////////////////////////////////////
 
-    public ConcurrentHashMap<Integer, ProductStore> getProducts() {
-        return products;
+    public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> getProducts() {
+        return new DResponseObj<>(products);
     }
 
-    public int getStoreId() {
-        return storeId;
-    }
+
 
 
 }
