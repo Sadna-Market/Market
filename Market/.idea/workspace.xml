@@ -98,7 +98,7 @@
       <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ProductTypeTest">
+  <component name="RunManager" selected="JUnit.MarketTest (1)">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -190,11 +190,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MarketTest (1)" />
         <item itemvalue="JUnit.ProductTypeTest" />
         <item itemvalue="JUnit.ProductTypeTest.storeExist3" />
         <item itemvalue="JUnit.ProductTypeTest.addStore2" />
         <item itemvalue="JUnit.ProductTypeTest.addStore" />
-        <item itemvalue="JUnit.MarketTest (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -223,7 +223,7 @@
       <workItem from="1651163170554" duration="1689000" />
       <workItem from="1651220034658" duration="9000" />
       <workItem from="1651220258898" duration="3914000" />
-      <workItem from="1651231696937" duration="7969000" />
+      <workItem from="1651231696937" duration="8508000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>

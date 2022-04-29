@@ -294,14 +294,22 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType  exist in the market, not exist anymore in this store.
     public DResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
-        DResponseObj<Boolean> logIN=userManager.isLogged(userId);
-        if (logIN.errorOccurred()) return logIN;
-        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
-        if (check.errorOccurred()) return check;
-        DResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
+        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        PermissionManager permissionManager= PermissionManager.getInstance();
+        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionType.permissionEnum.deleteProductFromStore,logIN.getValue(),s.getValue());
+        if (hasPer.errorOccurred()) return hasPer;
+        if (!hasPer.getValue()) {
+            String warning = "this user does not have permission to add new Product to the store #"+storeId;
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
+        }
+        DResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
+
         DResponseObj<Integer> getPID = p.getValue().getProductID();
         if (getPID.errorOccurred()) return new DResponseObj<>(getPID.getErrorMsg());
         return s.getValue().removeProduct(getPID.getValue());
@@ -437,7 +445,7 @@ public class Market {
 
     /*************************************************private methods*********************************************************/
 
-    private DResponseObj<Boolean> checkValid(int storeId, int productId) {
+    private DResponseObj<Boolean> checkValid(UUID id, int storeId, int productId) {
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         DResponseObj<ProductType> p = getProductType(productId);
