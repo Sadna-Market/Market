@@ -96,11 +96,11 @@ public class Market {
             String warning="description arrived null";
             logger.warn(warning);
             DResponseObj<List<Integer>> output=new DResponseObj<>();
-            output.setErrorMsg(warning);
+            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
         long stamp = lock_TP.readLock();
-        logger.debug("ProductSearchByDesc() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
@@ -113,7 +113,7 @@ public class Market {
             return new DResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
-            logger.debug("ProductSearchByDesc() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
@@ -124,7 +124,7 @@ public class Market {
         if (minRate < 0 || minRate > 10) {
             String warning="args invalid";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
@@ -151,7 +151,7 @@ public class Market {
         if (rate < 0 || rate > 10) {
             String warning="args invalid";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock.");
@@ -178,7 +178,7 @@ public class Market {
         if (min > max) {
             String warning="min bigger then max - invalid";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
         DResponseObj<ProductType> pt = getProductType(productID);
@@ -190,10 +190,13 @@ public class Market {
         logger.debug("catch the ReadLock");
         try {
             for (Store store: stores.values()){
-                Double price = store.getProductPrice(productID);
-                if (price != null && (price <= (double) max & price >= (double) min)){
-                    DResponseObj<Integer> getStoreID=store.getStoreId();
-                    if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+                DResponseObj<Double> getPrice = store.getProductPrice(productID);
+                if (!getPrice.errorOccurred()) {
+                    Double price=getPrice.getValue();
+                    if (price != null && (price <= (double) max & price >= (double) min)) {
+                        DResponseObj<Integer> getStoreID = store.getStoreId();
+                        if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+                    }
                 }
             }
             return new DResponseObj<>(output);
@@ -211,7 +214,7 @@ public class Market {
         if (category<0){
             String warning = "categoryID illegal";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
