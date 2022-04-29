@@ -3,7 +3,8 @@ package main.System.Server.Domain.Market;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
 import main.System.Server.Domain.StoreModel.*;
-import main.System.Server.Domain.UserModel.Response.ATResponseObj;
+import main.System.Server.Domain.Response.DResponseObj;
+
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
@@ -39,34 +40,33 @@ public class Market {
     //2.2.1
     //pre: -
     //post: get info from valid store and product.
-    public ATResponseObj<String> getInfoProductInStore(int storeID, int productID) {
+    public DResponseObj<String> getInfoProductInStore(int storeID, int productID) {
 
-        ATResponseObj<ProductType> p = getProductType(productID);
+        DResponseObj<ProductType> p = getProductType(productID);
 
         if (p.errorOccurred()){
-            ATResponseObj<String> output=new ATResponseObj<>();
+            DResponseObj<String> output=new DResponseObj<>();
             output.setErrorMsg(p.getErrorMsg());
             return output;
         }
 
-        ATResponseObj<Store> s = getStore(storeID);
+        DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()){
-            ATResponseObj<String> output=new ATResponseObj<>();
+            DResponseObj<String> output=new DResponseObj<>();
             output.setErrorMsg(s.getErrorMsg());
             return output;
         }
-        ATResponseObj<String> b=s.getValue().getProductInStoreInfo(productID);
-        return s.getValue().getProductInStoreInfo(productID);
+        return s.getValue().getProductInStoreInfo2(productID);
     }
 
     //2.2.2
     //pre: -
     //post: get all the open stores that the arg is apart of their names
-    public ATResponseObj<List<Integer>> searchProductByName(String name) {
+    public DResponseObj<List<Integer>> searchProductByName(String name) {
         if (name==null){
             String warning="name arrived null";
             logger.warn(warning);
-            ATResponseObj<List<Integer>> output=new ATResponseObj<>();
+            DResponseObj<List<Integer>> output=new DResponseObj<>();
             output.setErrorMsg(warning);
             return output;
         }
@@ -75,10 +75,13 @@ public class Market {
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
-                if (p.containName(name))
-                    output.add(p.getProductID());
+                DResponseObj<Boolean> checkIfExist=p.containName(name);
+                if (!checkIfExist.errorOccurred() && checkIfExist.value) {
+                    DResponseObj<Integer> pID= p.getProductID();
+                    if (!pID.errorOccurred())  output.add(p.getProductID().value);
+                }
             }
-            return new ATResponseObj<>(output);
+            return new DResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -87,11 +90,11 @@ public class Market {
     //2.2.2
     //pre: -
     //post: get all the open stores that the arg is apart of their description
-    public ATResponseObj<List<Integer>> searchProductByDesc(String desc) {
+    public DResponseObj<List<Integer>> searchProductByDesc(String desc) {
         if (desc==null){
             String warning="description arrived null";
             logger.warn(warning);
-            ATResponseObj<List<Integer>> output=new ATResponseObj<>();
+            DResponseObj<List<Integer>> output=new DResponseObj<>();
             output.setErrorMsg(warning);
             return output;
         }
@@ -100,10 +103,13 @@ public class Market {
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
-                if (p.containDesc(desc))
-                    output.add(p.getProductID());
+                DResponseObj<Boolean> existInP=p.containDesc(desc);
+                if (!existInP.errorOccurred() && existInP.value) {
+                    DResponseObj<Integer> val= p.getProductID();
+                    if (!val.errorOccurred()) output.add(val.getValue());
+                }
             }
-            return new ATResponseObj<>(output);
+            return new DResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("ProductSearchByDesc() released the ReadLock.");
@@ -113,21 +119,24 @@ public class Market {
     //2.2.2
     //pre: -
     //post: get all the products that them rate higher or equal to the arg(arg>0)
-    public ATResponseObj<List<Integer>> searchProductByRate(int minRate) {
+    public DResponseObj<List<Integer>> searchProductByRate(int minRate) {
         if (minRate < 0 || minRate > 10) {
             String warning="args invalid";
             logger.warn(warning);
-            return new ATResponseObj<>(warning);
+            return new DResponseObj<>(warning);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
-                if (p.getRate() >= minRate)
-                    output.add(p.getProductID());
+                DResponseObj<Integer> checkRate=p.getRate();
+                if (!checkRate.errorOccurred() && checkRate.getValue() >= minRate) {
+                    DResponseObj<Integer> getID=p.getProductID();
+                    if (!getID.errorOccurred()) output.add(getID.getValue());
+                }
             }
-            return new ATResponseObj<>(output);
+            return new DResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -137,11 +146,11 @@ public class Market {
     //2.2.2
     //pre: -
     //post: get all the open stores that their rate higher or equal to the arg(arg>0)
-    public ATResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
+    public DResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
         if (rate < 0 || rate > 10) {
             String warning="args invalid";
             logger.warn(warning);
-            return new ATResponseObj<>(warning);
+            return new DResponseObj<>(warning);
         }
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock.");
@@ -151,7 +160,7 @@ public class Market {
                 if (store.getRate() >= rate)
                     output.add(store.getStoreId());
             }
-            return new ATResponseObj<>(output);
+            return new DResponseObj<>(output);
         } finally {
             lock_stores.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -161,16 +170,16 @@ public class Market {
     //2.2.2
     //pre: -
     //post: get all the products that them price is between min and max
-    public ATResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
+    public DResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
         if (min > max) {
             String warning="min bigger then max - invalid";
             logger.warn(warning);
-            return new ATResponseObj<>(warning);
+            return new DResponseObj<>(warning);
         }
 
-        ATResponseObj<ProductType> pt = getProductType(productID);
+        DResponseObj<ProductType> pt = getProductType(productID);
         if (pt.errorOccurred()) {
-            return new ATResponseObj<>(pt.getErrorMsg());
+            return new DResponseObj<>(pt.getErrorMsg());
         }
         List<Integer> output = new ArrayList<>();
         long stamp = lock_stores.readLock();
@@ -181,7 +190,7 @@ public class Market {
                 if (price != null && (price <= (double) max & price >= (double) min))
                     output.add(s.getStoreId());
             }
-            return new ATResponseObj<>(output);
+            return new DResponseObj<>(output);
         }
         finally {
             lock_stores.unlockRead(stamp);
@@ -192,21 +201,22 @@ public class Market {
     //2.2.2
     //pre: -
     //post: get all the products that them price is between min and max
-    public ATResponseObj<List<Integer>> searchProductByCategory(int category) {
+    public DResponseObj<List<Integer>> searchProductByCategory(int category) {
         if (category<0){
             String warning = "categoryID illegal";
             logger.warn(warning);
-            return new ATResponseObj<>(warning);
+            return new DResponseObj<>(warning);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
-                if (p.getCategory() == category)
-                    output.add(p.getProductID());
+                DResponseObj<Integer> cat = p.getCategory();
+                DResponseObj<Integer> pID = p.getProductID();
+                if (!cat.errorOccurred() && !pID.errorOccurred() && category==cat.getValue()) output.add(pID.getValue());
             }
-            return new ATResponseObj<>(output);
+            return new DResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -217,11 +227,11 @@ public class Market {
     //2.2.3
     //pre: user is online
     //post: add <quantity> times this product from this store
-    public ATResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        ATResponseObj<Boolean> online=userManager.isOnline(userId);
+    public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
+        DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
-        ATResponseObj<Store> s = getStore(StoreId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        DResponseObj<Store> s = getStore(StoreId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().isProductExistInStock(ProductId, quantity);
 
     }
@@ -229,20 +239,20 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public ATResponseObj<Boolean> order(UUID userId) {
-        ATResponseObj<Boolean> online=userManager.isOnline(userId);
+    public DResponseObj<Boolean> order(UUID userId) {
+        DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
-        ATResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
-        if (shoppingCart.errorOccurred()) return new ATResponseObj<>(shoppingCart.getErrorMsg());
-        return new ATResponseObj<>(purchase.order(shoppingCart.value));
+        DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
+        if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
+        return new DResponseObj<>(purchase.order(shoppingCart.value));
 
     }
 
     //2.3.2
     //pre: user is Member
     //post: new Store add to the market
-    public ATResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
-        ATResponseObj<Boolean> checkUM=userManager.isLogged(userId);
+    public DResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+        DResponseObj<Boolean> checkUM=userManager.isLogged(userId);
         if (checkUM.errorOccurred()) return checkUM;
 
         Store store = new Store(name, discountPolicy, buyPolicy, founder);
@@ -252,7 +262,7 @@ public class Market {
             stores.put(storeCounter++, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
-            return new ATResponseObj<>(true);
+            return new DResponseObj<>(true);
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock");
@@ -262,15 +272,15 @@ public class Market {
     //2.4.1.1
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
-    public ATResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
-        ATResponseObj<Boolean> logIN=userManager.isLogged(userId);
+    public DResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
+        DResponseObj<Boolean> logIN=userManager.isLogged(userId);
         if (logIN.errorOccurred()) return logIN;
-        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
-        ATResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-        ATResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        DResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().addNewProduct(p.value, quantity, price);
     }
 
@@ -278,79 +288,81 @@ public class Market {
     //2.4.1.2
     //pre: user is Owner
     //post: product that his ProductType  exist in the market, not exist anymore in this store.
-    public ATResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
-        ATResponseObj<Boolean> logIN=userManager.isLogged(userId);
+    public DResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
+        DResponseObj<Boolean> logIN=userManager.isLogged(userId);
         if (logIN.errorOccurred()) return logIN;
-        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
-        ATResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-        ATResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-        return s.getValue().removeProduct(p.getValue().getProductID());
+        DResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        DResponseObj<Integer> getPID = p.getValue().getProductID();
+        if (getPID.errorOccurred()) return new DResponseObj<>(getPID.getErrorMsg());
+        return s.getValue().removeProduct(getPID.getValue());
     }
 
 
     //2.4.1.3
     //pre: user is Owner of the store
     //post: the price of this product in this store changed.
-    public ATResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
-        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+    public DResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
+        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
 
-        ATResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().setProductPrice(productId, price);
     }
 
     //2.4.1.3
     //pre: user is Owner of the store
     //post: the quantity of this product in this store changed.
-    public ATResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
+    public DResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
 
-        ATResponseObj<Boolean> check=checkValid(userId, storeId, productId);
+        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
         if (check.errorOccurred()) return check;
-        ATResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().setProductQuantity(productId, quantity);
     }
 
     //2.4.4
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
-    public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
-        ATResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+    public DResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
+        DResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
         return userManager.addNewStoreOwner(userId, store.getValue(), newOnerEmail);
     }
 
     //2.4.6
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
-    public ATResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
-        ATResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+    public DResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
+        DResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
         return userManager.addNewStoreManager(userId, store.getValue(), newMangermail);
     }
 
     //2.4.7
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
-    public ATResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
-        ATResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+    public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
+        DResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
         return userManager.setManagerPermissions(userId, store.getValue(), mangerMail, perm);
     }
 
     //2.4.9
     //pre: the store exist in the system, the user is owner of this store.
     //post: the market move this store to the closeStores, users can not see this store again(until she will be open).
-    public ATResponseObj<Boolean> closeStore(UUID userId, int storeId) {
-        ATResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
-        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
+    public DResponseObj<Boolean> closeStore(UUID userId, int storeId) {
+        DResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
+        DResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
         if (checkOwner.errorOccurred()) return checkOwner;
-        ATResponseObj<Boolean> checkCloseStore=store.getValue().closeStore();
+        DResponseObj<Boolean> checkCloseStore=store.getValue().closeStore();
         if (checkCloseStore.errorOccurred()) return checkCloseStore;
 
         long stamp = lock_stores.writeLock();
@@ -359,7 +371,7 @@ public class Market {
             stores.remove(store.getValue());
             closeStores.put(store.getValue().getStoreId(), store.getValue());
             logger.info("market update that Store #" + storeId + " close");
-            return new ATResponseObj<>(true);
+            return new DResponseObj<>(true);
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released WriteLock");
@@ -369,20 +381,20 @@ public class Market {
     //2.4.11
     //pre: the store exist in the system.
     //post: market ask UserManager about this user with this store.
-    public ATResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
-        ATResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+    public DResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
+        DResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
         return userManager.getRolesInStore(userId, store.getValue());
     }
 
     //2.4.13
     //pre: the store exist in the system. the user is owner of this store.
     //post: market ask the store about that.
-    public ATResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
-        ATResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
-        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
-        if (checkOwner.errorOccurred()) return new ATResponseObj<>(checkOwner.getErrorMsg());
+    public DResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
+        DResponseObj<Store> store = getStore(storeId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
+        DResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
+        if (checkOwner.errorOccurred()) return new DResponseObj<>(checkOwner.getErrorMsg());
         return store.getValue().getStoreOrderHistory();
     }
 
@@ -390,9 +402,9 @@ public class Market {
     //?.?.????
     //pre: this store exist in the system.
     //post: market ask the store about that with USerEmail.
-    public ATResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
-        ATResponseObj<Store> store = getStore(storeID);
-        if (store.errorOccurred()) return new ATResponseObj<>(store.getErrorMsg());
+    public DResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
+        DResponseObj<Store> store = getStore(storeID);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
         return store.getValue().getUserHistory(userID);
 
     }
@@ -401,16 +413,16 @@ public class Market {
     //2.2.1
     //pre: the store exist in the system.
     //post: market receive this store to the user.
-    public ATResponseObj<Store> getStore(int storeID){
+    public DResponseObj<Store> getStore(int storeID){
         if (storeID<0 | storeID>=productCounter){
             String warning="the StoreID is illegal";
             logger.warn(warning);
-            return new ATResponseObj<>(warning);
+            return new DResponseObj<>(warning);
         }
         long stamp= lock_stores.readLock();
         logger.debug("getStore() catch the ReadLock.");
         try{
-            return new ATResponseObj<>(stores.get(storeID));
+            return new DResponseObj<>(stores.get(storeID));
         }
         finally {
             lock_stores.unlockRead(stamp);
@@ -420,21 +432,21 @@ public class Market {
 
     /*************************************************private methods*********************************************************/
 
-    private ATResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
-        ATResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new ATResponseObj<>(s.getErrorMsg());
-        ATResponseObj<Boolean> checkOwner=userManager.isOwner(userid, s.getValue());
+    private DResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        DResponseObj<Boolean> checkOwner=userManager.isOwner(userid, s.getValue());
         if (checkOwner.errorOccurred()) return checkOwner;
-        ATResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new ATResponseObj<>(p.getErrorMsg());
-        return new ATResponseObj<>(true);
+        DResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
+        return new DResponseObj<>(true);
     }
 
-    private ATResponseObj<ProductType> getProductType(int productID) {
+    private DResponseObj<ProductType> getProductType(int productID) {
         if (productID<0){
             String warning= "productID is illegal";
             logger.warn(warning);
-            return new ATResponseObj<>(warning);
+            return new DResponseObj<>(warning);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
@@ -443,9 +455,9 @@ public class Market {
             if (p==null){
                 String warning="the productID not exist in the system";
                 logger.warn(warning);
-                return new ATResponseObj<>(warning);
+                return new DResponseObj<>(warning);
             }
-            return new ATResponseObj<>(p);
+            return new DResponseObj<>(p);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");

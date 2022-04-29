@@ -2,30 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="add sync in store and inventory + response">
-      <change afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/DResponseObj.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/ErrorCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/ErrorCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Market/main/Service/IMarket.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Market/main/Service/IMarket.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Stabs/StoreStab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stabs/StoreStab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Stabs/UserManagerStab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stabs/UserManagerStab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Service/IMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/IMarket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/DataResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Service/ServiceStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Purchase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Response.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ServiceHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ServiceShoppingCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceShoppingCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/ServiceStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Service/ServiceStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/Permission.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/ProductType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Inventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/ProductStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/ProductStore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ATResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/DResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ATResponseObj.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/ProductResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/ShoppingCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/ShoppingCartResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/Response/StoreResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Response/StoreResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/UserModel/UserManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/Market/ProductTypeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/InventoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/InventoryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/StoreModel/StoreTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,91 +92,103 @@
       <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.StoreTest">
-    <configuration name="MarketTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Acceptance.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Acceptance" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.getStore3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Unit.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Unit.Market" />
-      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStore3" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.getStoreInfo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Unit.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Unit.Market" />
-      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStoreInfo(int)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketTest.searchProductByStoreRate2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Unit.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Unit.Market" />
-      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
-      <option name="METHOD_NAME" value="searchProductByStoreRate2(int)" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="StoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Unit.StoreModel.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Unit.StoreModel" />
-      <option name="MAIN_CLASS_NAME" value="Unit.StoreModel.StoreTest" />
+  <component name="RunManager" selected="JUnit.ProductTypeTest">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MarketTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductTypeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductTypeTest.addStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
+      <option name="METHOD_NAME" value="addStore(int)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductTypeTest.addStore2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
+      <option name="METHOD_NAME" value="addStore2(int)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProductTypeTest.storeExist3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
+      <option name="METHOD_NAME" value="storeExist3(int)" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.StoreTest" />
-        <item itemvalue="JUnit.MarketTest.searchProductByStoreRate2" />
-        <item itemvalue="JUnit.MarketTest.getStoreInfo" />
-        <item itemvalue="JUnit.MarketTest.getStore3" />
-        <item itemvalue="JUnit.MarketTest" />
+        <item itemvalue="JUnit.ProductTypeTest" />
+        <item itemvalue="JUnit.ProductTypeTest.storeExist3" />
+        <item itemvalue="JUnit.ProductTypeTest.addStore2" />
+        <item itemvalue="JUnit.ProductTypeTest.addStore" />
+        <item itemvalue="JUnit.MarketTest (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -213,6 +217,7 @@
       <workItem from="1651163170554" duration="1689000" />
       <workItem from="1651220034658" duration="9000" />
       <workItem from="1651220258898" duration="3914000" />
+      <workItem from="1651231696937" duration="6682000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -584,10 +589,15 @@
           <line>70</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>204</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
           <line>54</line>
-          <properties class="Unit.Market.MarketTest" method="getStore2">
+          <properties class="main.System.Server.Domain.Market.MarketTest" method="getStore3">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="42" />
