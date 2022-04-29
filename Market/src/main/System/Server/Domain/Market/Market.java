@@ -322,9 +322,11 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
-        DResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        return userManager.addNewStoreOwner(userId, store.getValue(), newOnerEmail);
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.AddNewStoreOwner,null);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
+
+        return userManager.addNewStoreOwner(userId, store, newOnerEmail);
     }
 
     //2.4.6
@@ -424,7 +426,7 @@ public class Market {
 
     /*************************************************private methods*****************************************************/
 
-    private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, int productId) {
+    private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, Integer productId) {
         DResponseObj<User> logIN=userManager.getOnlineUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
@@ -437,6 +439,8 @@ public class Market {
             logger.warn(warning);
             return new DResponseObj<>(warning);
         }
+        if (productId==null) return new DResponseObj<>(new Tuple(s.getValue(),null));
+
         DResponseObj<ProductType> p = getProductType(productId);
         if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
 
