@@ -1,5 +1,6 @@
 package main.System.Server.Domain.StoreModel;
 
+import Stabs.ProductTypeStab;
 import main.System.Server.Domain.Market.ProductType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,14 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class InventoryTest {
 
     Inventory i = new Inventory(1);
-    ProductType productType1 = new ProductType(1, "milk", "good milk");
-    ProductType productType2 = new ProductType(2, "table", "good table");
+    ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
+    ProductType productType2 = new ProductTypeStab(2, "table", "good table");
 
     @BeforeEach
     void setUp() {
         Store store = new Store("Best Store", null, null, "dor@gmail.com");
-        ProductType productType1 = new ProductType(1, "milk", "good milk");
-        ProductType productType2 = new ProductType(2, "table", "good table");
+        ProductType productType1 = new ProductTypeStab(1, "milk", "good milk");
+        ProductType productType2 = new ProductTypeStab(2, "table", "good table");
         i.addNewProduct(productType1,6,5.3);
     }
 
@@ -90,36 +91,30 @@ class InventoryTest {
     @Test
     void setProductQuantityS() {
         assertTrue(i.setProductQuantity(productType1.getProductID(), 33).getValue());
-        ProductStore ps = i.getProduct(productType1.getProductID());
-        assertEquals(33, ps.getQuantity());
+        int ps = i.getQuantity(productType1.getProductID()).getValue();
+        assertEquals(33, ps);
     }
 
     @DisplayName("setProductQuantity  -  failure")
     @Test
     void setProductQuantityF() {
         assertFalse(i.setProductQuantity(productType1.getProductID() + 1, 33).getValue());
-        ProductStore ps = i.getProduct(productType1.getProductID());
-        assertEquals(6, ps.getQuantity());
+        int ps = i.getQuantity(productType1.getProductID()).getValue();
+        assertEquals(6, ps);
     }
 
     @DisplayName("setProductPrice  -  successful")
     @Test
     void setProductPriceS() {
         assertTrue(i.setProductPrice(productType1.getProductID(), 155.3).getValue());
-        assertEquals(155.3, i.getPrice(productType1.getProductID()));
+        assertEquals(155.3, i.getPrice(productType1.getProductID()).getValue());
     }
 
     @DisplayName("setProductPrice  -  failure")
     @Test
     void setProductPriceF() {
         assertFalse(i.setProductPrice(productType1.getProductID() + 1, 155.3).getValue());
-        assertEquals(5.3, i.getPrice(productType1.getProductID()));
+        assertEquals(5.3, i.getPrice(productType1.getProductID()).getValue());
     }
 
-
-    @Test
-    void getProduct() {
-        assertSame(null , i.getProduct(productType2.getProductID()));
-        assertSame(productType1.getProductName() , i.getProduct(productType1.getProductID()).getProductType().getProductName());
-    }
 }
