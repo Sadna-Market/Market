@@ -4,6 +4,7 @@ import main.ErrorCode;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 
+import main.System.Server.Domain.Response.DResponse;
 import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 import java.util.*;
@@ -52,32 +53,34 @@ public class Store {
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
-    public ProductStore getProductInStoreInfo(int productId){
-        return inventory.getProduct(productId);
-    }
-    //TODO: change to this
-    public DResponseObj<String> getProductInStoreInfo2(int productId){
-        return new DResponseObj<>(inventory.getProduct(productId).toString());
+
+    //requirement II.2.1
+    public DResponseObj<String> getProductInStoreInfo(int productId){
+        return inventory.getProductInfo(productId);
     }
 
     //requirement II.2.1
-    public List<ProductStore> GetStoreProducts() {
-        return new ArrayList<>(inventory.getProducts().values());
+    public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> GetStoreProducts() {
+        DResponseObj<ConcurrentHashMap<Integer,ProductStore>> products = inventory.getProducts();
+        if(products.errorOccurred())
+            return products;
+        return new DResponseObj<>(products.getValue());
     }
 
     //requirement II.2.1
-    public String getStoreInfo(){
-        return "Store{" +
+    public DResponseObj<String> getStoreInfo(){
+        return new DResponseObj<>("Store{" +
                 "storeId=" + storeId +
                 ", name='" + name + '\'' +
                 ", founder='" + founder + '\'' +
                 ", isOpen=" + isOpen +
                 ", rate=" + rate +
                 ", numOfRated=" + numOfRated +
-                '}';
+                '}');
     }
 
-    //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
+
+    //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity)
     public DResponseObj<Boolean> isProductExistInStock(int productId, int quantity){
         return inventory.isProductExistInStock(productId ,quantity);
     }
@@ -87,7 +90,7 @@ public class Store {
     public DResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
         if(productType == null) {
             logger.warn("productType is null (store - addNewProduct");
-            return new DResponseObj<>(false, ""+ErrorCode.PRODUCTNOTEXIST);
+            return new DResponseObj<>(false, ErrorCode.PRODUCTNOTEXIST);
         }
         else
             return inventory.addNewProduct(productType, quantity, price);
@@ -100,7 +103,7 @@ public class Store {
 
     //requirement II.2.5
     // try to buy(set) the maximum quantity that exist
-    public Integer setProductQuantityForBuy(int productId, int quantity) {
+    public DResponseObj<Integer> setProductQuantityForBuy(int productId, int quantity) {
         return inventory.setProductQuantityForBuy(productId, quantity);
     }
 
@@ -117,9 +120,14 @@ public class Store {
     }
 
     //requirement II.2.2
-    public Double getProductPrice(int productId) {
+    public DResponseObj<Double> getProductPrice(int productId) {
         return inventory.getPrice(productId);
     }
+
+    public DResponseObj<Integer> getProductQuantity(int productId) {
+        return inventory.getQuantity(productId);
+    }
+
 
     //requirement II.4.13 & II.6.4 (only system manager)
     public DResponseObj<List<History>> getStoreOrderHistory() {
@@ -143,82 +151,89 @@ public class Store {
     }
 
     //niv tests
-    public List<Integer> getTIDHistory(){
+    public DResponseObj<List<Integer>> getTIDHistory(){
         List<Integer> TIDHistory = new ArrayList<>();
         long stamp = historyLock.readLock();
         try{
             for (History h: getStoreOrderHistory().value) {
                 TIDHistory.add(h.getTID());
             }
-            return TIDHistory;
+            return new DResponseObj<>(TIDHistory);
         }finally {
             historyLock.unlockRead(stamp);
         }
-
     }
 
     //requirement II.2.5
-    public boolean addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
+    public DResponseObj<Boolean> addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
         List<ProductStore> productsBuy = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
             Integer productID = entry.getKey();
             Integer productQuantity = entry.getValue();
-            ProductStore productStore = inventory.getProductStoreAfterBuy(productID, productQuantity);
-            if(productStore == null) {
+            DResponseObj<ProductStore> productStore = inventory.getProductStoreAfterBuy(productID, productQuantity);
+            if(productStore.errorOccurred()) {
                 logger.warn("ProductId: " + productID + " not exist in inventory");
-                return false;
+                return new DResponseObj<>(false,productStore.getErrorMsg());
             }
-            productsBuy.add(productStore);
+            productsBuy.add(productStore.getValue());
         }
         history.put(TID, new History(TID, finalPrice, productsBuy, user));
         logger.info("new history added to storeId: "+ storeId + " ,TID: " + TID);
-        return true;
+        return new DResponseObj<>(true);
     }
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public ConcurrentHashMap<Integer, Integer> checkBuyPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+    public DResponseObj<ConcurrentHashMap<Integer, Integer>> checkBuyPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
         if(buyPolicy == null)
-            return productsInBag;
+            return new DResponseObj<>(productsInBag);
         else
             return buyPolicy.checkShoppingBag(user,productsInBag);
     }
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public double checkDiscountPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+    public DResponseObj<Double> checkDiscountPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
         if(discountPolicy == null)
-            return 0.0;
+            return new DResponseObj<>(0.0);
         else
             return discountPolicy.checkShoppingBag(user,productsInBag);
     }
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public double calculateBagPrice(ConcurrentHashMap<Integer, Integer> productsInBag){
+    public DResponseObj<Double> calculateBagPrice(ConcurrentHashMap<Integer, Integer> productsInBag){
         double bagPrice = 0.0;
         for (Map.Entry<Integer, Integer> entry : productsInBag.entrySet()) {
             Integer productID = entry.getKey();
             Integer productQuantity = entry.getValue();
-            bagPrice += (inventory.getPrice(productID))*productQuantity;
+            DResponseObj<Double> price = (inventory.getPrice(productID));
+            if(price.errorOccurred())
+                return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
+            else
+                bagPrice += (price.getValue()*productQuantity);
         }
-        return bagPrice;
+        return new DResponseObj<>(bagPrice);
     }
 
 
     //requirement II.4.9  (only owners)
     public DResponseObj<Boolean> closeStore() {
-        boolean success = inventory.tellProductStoreIsClose();
-        isOpen = false;
-        //sends message to managers.
-        logger.info("storeId: "+ storeId + " closed");
-        return new DResponseObj<>(success);
+        DResponseObj<Boolean> success = inventory.tellProductStoreIsClose();
+        if (success.errorOccurred())
+            return success;
+        else {
+            isOpen = false;
+            //sends message to managers.
+            logger.info("storeId: " + storeId + " closed");
+            return new DResponseObj<>(success.getValue());
+        }
     }
 
-    public boolean newStoreRate(int rate){
+    public DResponseObj<Boolean> newStoreRate(int rate){
         if(rate < 0 | rate > 10){
             logger.warn("store rate is not between 0-10");
-            return false;
+            return new DResponseObj<>(false,ErrorCode.NOTVALIDINPUT);
         }
         numOfRated++;
         if (numOfRated == 1)
@@ -226,7 +241,7 @@ public class Store {
         else
             this.rate = ((this.rate*(numOfRated-1)) + rate) / numOfRated;
         logger.info("storeId: "+storeId+" rate update to: " + rate );
-        return true;
+        return new DResponseObj<>(true);
     }
 
 
@@ -259,48 +274,35 @@ public class Store {
     public void removePermission(Permission p){
         safePermission.remove(p);
     }
-    public List<Permission> getPermission(){
-        return safePermission;
+    public DResponseObj<List<Permission>> getPermission(){
+        return new DResponseObj<>(safePermission);
     }
 
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
-    public int getStoreId(){
-        return storeId;
+    public DResponseObj<Integer> getStoreId(){
+        return new DResponseObj<>(storeId);
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public DResponseObj<String> getName() {
+        return new DResponseObj<>(name);
     }
 
-    public String getName() {
-        return name;
+    public DResponseObj<Boolean> isOpen() {
+        return new DResponseObj<>(isOpen);
     }
 
-    public boolean isOpen() {
-        return isOpen;
+    public DResponseObj<Integer> getRate() {
+        return new DResponseObj<>(rate);
     }
 
-    public int getRate() {
-        return rate;
+    public DResponseObj<String> getFounder() {
+        return new DResponseObj<>(founder);
     }
 
-    public DiscountPolicy getDiscountPolicy() {
-        return discountPolicy;
-
-    }
-
-    public BuyPolicy getBuyPolicy() {
-        return buyPolicy;
-    }
-
-    public String getFounder() {
-        return founder;
-    }
-
-    public List<Permission> getSafePermission() {
-        return safePermission;
+    public DResponseObj<List<Permission>> getSafePermission() {
+        return new DResponseObj<>(safePermission);
     }
 
     public void setHistory(ConcurrentHashMap<Integer,History> history) {
@@ -321,8 +323,8 @@ public class Store {
         this.founder = founder;
     }
 
-    public ConcurrentHashMap<Integer, History> getHistory() {
-        return history;
+    public DResponseObj<ConcurrentHashMap<Integer, History>> getHistory() {
+        return new DResponseObj<>(history);
     }
 
     public void openStoreAgain() {
