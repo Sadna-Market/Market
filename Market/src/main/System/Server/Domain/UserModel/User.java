@@ -36,42 +36,46 @@ public class User extends Guest {
 
     }
 
-    public void addAccessPermission(Permission p) {
+    public DResponseObj<Boolean> addAccessPermission(Permission p) {
         accessPermission.add(p);
+        return new DResponseObj<>(true);
     }
 
-    public void addGrantorPermission(Permission p) {
+    public DResponseObj<Boolean> addGrantorPermission(Permission p) {
         grantorPermission.add(p);
+        return new DResponseObj<>(true);
     }
 
-    public void removeAccessPermission(Permission p) {
+    public DResponseObj<Boolean> removeAccessPermission(Permission p) {
         accessPermission.remove(p);
+        return new DResponseObj<>(true);
     }
 
-    public void removeGrantorPermission(Permission p) {
+    public DResponseObj<Boolean> removeGrantorPermission(Permission p) {
         grantorPermission.remove(p);
+        return new DResponseObj<>(true);
     }
 
-    public String getEmail() {
-        return email;
+    public DResponseObj<String> getEmail() {
+        return new DResponseObj<>( email);
     }
 
-    public List<Permission> getAccessPermission() {
-        return accessPermission;
+    public DResponseObj<List<Permission>> getAccessPermission() {
+        return new DResponseObj<>( accessPermission);
     }
 
-    public List<Permission> getGrantorPermission() {
-        return grantorPermission;
+    public DResponseObj<List<Permission>> getGrantorPermission() {
+        return new DResponseObj<>( grantorPermission);
     }
 
 
     //all the store that i have a permission
-    List<Store> granteeStores() {
+    public DResponseObj< List<Store>> granteeStores() {
         List<Store> granteeStores = new LinkedList<>();
         for (Permission permission : accessPermission) {
-            granteeStores.add(permission.getStore());
+            granteeStores.add(permission.getStore().value);
         }
-        return granteeStores;
+        return new DResponseObj<>( granteeStores);
     }
 
     public DResponseObj<Boolean> addFounder(Store store) {
@@ -94,15 +98,12 @@ public class User extends Guest {
         return b;
     }
 
-    public boolean getRolesInStore(Store store) {
-        return false;
+
+    public DResponseObj< Boolean > isPasswordEquals(String password) {
+        return new DResponseObj<>( this.Password.equals(password));
     }
 
-    public boolean isPasswordEquals(String password) {
-        return this.Password.equals(password);
-    }
-
-    public ShoppingCart getShoppingCart() {
-        return this.shoppingCart;
+    public DResponseObj<ShoppingCart> GetSShoppingCart() {
+        return new DResponseObj<>( this.shoppingCart);
     }
 }

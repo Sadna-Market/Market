@@ -1,5 +1,7 @@
 package main.System.Server.Domain.UserModel;
 
+import main.System.Server.Domain.Response.DResponseObj;
+
 import java.util.UUID;
 
 public class Guest {
@@ -9,10 +11,8 @@ public class Guest {
     }
 
 
-    public synchronized ShoppingCart getShoppingCart()
-    {
-
-        return shoppingCart;
+    public DResponseObj<ShoppingCart> GetSShoppingCart() {
+        return new DResponseObj<>( this.shoppingCart);
     }
 
 

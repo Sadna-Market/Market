@@ -1,5 +1,6 @@
 package main.System.Server.Domain.UserModel;
 
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
 
@@ -13,54 +14,57 @@ public class ShoppingCart {
         shoppingBagHash=new ConcurrentHashMap<>();
     }
 
-    public boolean addNewProductToShoppingBag(int ProductId, Store Store, int quantity){
+    public DResponseObj<Boolean> addNewProductToShoppingBag(int ProductId, Store Store, int quantity){
         logger.debug("ShoppingCart addNewProductToShoppingBag");
         if(!shoppingBagHash.containsKey(Store.getStoreId())){
-            shoppingBagHash.put(Store.getStoreId(),new ShoppingBag(Store));
+            shoppingBagHash.put(Store.getStoreId().value,new ShoppingBag(Store));
         }
         ShoppingBag shoppingBag = shoppingBagHash.get(Store.getStoreId());
-        return shoppingBag.addProduct(ProductId,quantity);
+        return new DResponseObj<Boolean>( shoppingBag.addProduct(ProductId,quantity).value);
     }
 
-    public boolean isCartExist(int storeId){
-        return shoppingBagHash.containsKey(storeId);
+
+    public DResponseObj<Boolean>  isCartExist(int storeId){
+        return new DResponseObj<>( shoppingBagHash.containsKey(storeId));
 
     }
 
-    public boolean setProductQuantity(int storeId,int productId, int quantity)
+    public DResponseObj<Boolean>  setProductQuantity(int storeId,int productId, int quantity)
     {
         logger.debug("ShoppingCart setProductQuantity");
         if(shoppingBagHash.containsKey(storeId)){
-            return shoppingBagHash.get(storeId).setProductQuantity(productId,quantity);
+            return new DResponseObj<Boolean>( shoppingBagHash.get(storeId).setProductQuantity(productId,quantity).value);
         }
         else {
-            return false;
+            return new DResponseObj<>( false);
         }
     }
 
-    public  boolean removeProductFromShoppingBag(int storeId,int productId){
+
+
+    public  DResponseObj<Boolean>  removeProductFromShoppingBag(int storeId,int productId){
         logger.debug("ShoppingCart removeProductFromShoppingBag");
         if(shoppingBagHash.containsKey(storeId)) {
-            return shoppingBagHash.get(storeId).removeProductFromShoppingBag(productId);
+            return new DResponseObj<Boolean>( shoppingBagHash.get(storeId).removeProductFromShoppingBag(productId).value);
         }
         else {
-            return false;
+            return new DResponseObj<>( false);
         }
     }
 
-    public ConcurrentHashMap<Integer, ShoppingBag> getHashShoppingCart(){
-        return shoppingBagHash;
+    public DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> getHashShoppingCart(){
+        return new DResponseObj<>( shoppingBagHash);
     }
 
 
-    public boolean removeShoppingCart(int StoreID)
+    public DResponseObj<Boolean>  removeShoppingCart(int StoreID)
     {
         if(shoppingBagHash.containsKey(StoreID)){
             shoppingBagHash.remove(StoreID);
-            return true;
+            return new DResponseObj<>( true);
         }
         else {
-            return false;
+            return new DResponseObj<>( false);
 
 
 
