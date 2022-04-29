@@ -397,11 +397,11 @@ public class Market {
     //pre: the store exist in the system. the user is owner of this store.
     //post: market ask the store about that.
     public DResponseObj<List<History>> getStoreOrderHistory(UUID userId, int storeId) {
-        DResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        DResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
-        if (checkOwner.errorOccurred()) return new DResponseObj<>(checkOwner.getErrorMsg());
-        return store.getValue().getStoreOrderHistory();
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.getStoreRoles,null);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
+
+        return store.getStoreOrderHistory();
     }
 
 
@@ -409,10 +409,12 @@ public class Market {
     //pre: this store exist in the system.
     //post: market ask the store about that with USerEmail.
     public DResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
+        DResponseObj<Boolean> isOnline = userManager.isOnline(UUID.fromString(userID));
+        if (isOnline.errorOccurred()) return new DResponseObj<>(isOnline.getErrorMsg());
         DResponseObj<Store> store = getStore(storeID);
         if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        return store.getValue().getUserHistory(userID);
 
+        return store.getValue().getUserHistory(userID);
     }
 
 
