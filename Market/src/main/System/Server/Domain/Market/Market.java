@@ -41,7 +41,6 @@ public class Market {
     //pre: -
     //post: get info from valid store and product.
     public DResponseObj<String> getInfoProductInStore(int storeID, int productID) {
-
         DResponseObj<ProductType> p = getProductType(productID);
 
         if (p.errorOccurred()){
@@ -64,7 +63,7 @@ public class Market {
     //post: get all the open stores that the arg is apart of their names
     public DResponseObj<List<Integer>> searchProductByName(String name) {
         if (name==null){
-            String warning="name arrived null";
+            String warning="the name is null";
             logger.warn(warning);
             DResponseObj<List<Integer>> output=new DResponseObj<>();
             output.setErrorMsg(warning);
@@ -273,14 +272,20 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
     public DResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
-        DResponseObj<Boolean> logIN=userManager.isLogged(userId);
-        if (logIN.errorOccurred()) return logIN;
-        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
-        if (check.errorOccurred()) return check;
-        DResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
+        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        PermissionManager permissionManager= PermissionManager.getInstance();
+        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionType.permissionEnum.addNewProductToStore,logIN.getValue(),s.getValue());
+        if (hasPer.errorOccurred()) return hasPer;
+        if (!hasPer.getValue()) {
+            String warning = "this user does not have permission to add new Product to the store #"+storeId;
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
+        }
+        DResponseObj<ProductType> p = getProductType(productId);
+        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
         return s.getValue().addNewProduct(p.value, quantity, price);
     }
 
@@ -432,11 +437,9 @@ public class Market {
 
     /*************************************************private methods*********************************************************/
 
-    private DResponseObj<Boolean> checkValid(UUID userid, int storeId, int productId) {
+    private DResponseObj<Boolean> checkValid(int storeId, int productId) {
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        DResponseObj<Boolean> checkOwner=userManager.isOwner(userid, s.getValue());
-        if (checkOwner.errorOccurred()) return checkOwner;
         DResponseObj<ProductType> p = getProductType(productId);
         if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
         return new DResponseObj<>(true);
