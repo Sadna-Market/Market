@@ -3,6 +3,7 @@ package main.Service;
 
 import main.System.Server.Domain.StoreModel.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 //Api of all
@@ -96,7 +97,8 @@ public interface IMarket {
 
 
     //2.4.11
-    public SLResponsOBJ<Boolean> getStoreRoles(String UserId, int StoreId);
+    public SLResponsOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
+
 
 
     //2.6.5 && //2.4.13
