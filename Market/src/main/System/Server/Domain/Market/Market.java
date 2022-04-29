@@ -272,21 +272,12 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
     public DResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
-        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
-        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
-        DResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        PermissionManager permissionManager= PermissionManager.getInstance();
-        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionType.permissionEnum.addNewProductToStore,logIN.getValue(),s.getValue());
-        if (hasPer.errorOccurred()) return hasPer;
-        if (!hasPer.getValue()) {
-            String warning = "this user does not have permission to add new Product to the store #"+storeId;
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
-        }
-        DResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
-        return s.getValue().addNewProduct(p.value, quantity, price);
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.addNewProductToStore,productId);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue().item1;
+        ProductType productType= result.getValue().item2;
+
+        return store.addNewProduct(productType, quantity, price);
     }
 
 
@@ -294,25 +285,14 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType  exist in the market, not exist anymore in this store.
     public DResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
-        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
-        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.deleteProductFromStore,productId);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
+        ProductType productType= result.getValue().item2;
 
-        DResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        PermissionManager permissionManager= PermissionManager.getInstance();
-        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionType.permissionEnum.deleteProductFromStore,logIN.getValue(),s.getValue());
-        if (hasPer.errorOccurred()) return hasPer;
-        if (!hasPer.getValue()) {
-            String warning = "this user does not have permission to add new Product to the store #"+storeId;
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
-        }
-        DResponseObj<ProductType> p = getProductType(productId);
-        if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
-
-        DResponseObj<Integer> getPID = p.getValue().getProductID();
+        DResponseObj<Integer> getPID = productType.getProductID();
         if (getPID.errorOccurred()) return new DResponseObj<>(getPID.getErrorMsg());
-        return s.getValue().removeProduct(getPID.getValue());
+        return store.removeProduct(getPID.getValue());
     }
 
 
@@ -320,24 +300,22 @@ public class Market {
     //pre: user is Owner of the store
     //post: the price of this product in this store changed.
     public DResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
-        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
-        if (check.errorOccurred()) return check;
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.setProductPriceInStore,productId);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
 
-        DResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        return s.getValue().setProductPrice(productId, price);
+        return store.setProductPrice(productId, price);
     }
 
     //2.4.1.3
     //pre: user is Owner of the store
     //post: the quantity of this product in this store changed.
     public DResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.setProductPriceInStore,productId);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
 
-        DResponseObj<Boolean> check=checkValid(userId, storeId, productId);
-        if (check.errorOccurred()) return check;
-        DResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        return s.getValue().setProductQuantity(productId, quantity);
+        return store.setProductQuantity(productId, quantity);
     }
 
     //2.4.4
@@ -395,6 +373,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: market ask UserManager about this user with this store.
     public DResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
+        /////////////////
         DResponseObj<Store> store = getStore(storeId);
         if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
         return userManager.getRolesInStore(userId, store.getValue());
@@ -443,14 +422,25 @@ public class Market {
         }
     }
 
-    /*************************************************private methods*********************************************************/
+    /*************************************************private methods*****************************************************/
 
-    private DResponseObj<Boolean> checkValid(UUID id, int storeId, int productId) {
+    private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, int productId) {
+        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        PermissionManager permissionManager= PermissionManager.getInstance();
+        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionEnum,logIN.getValue(),s.getValue());
+        if (hasPer.errorOccurred()) return new DResponseObj<>(hasPer.getErrorMsg());
+        if (!hasPer.getValue()) {
+            String warning = "this user does not have permission to "+permissionEnum.name()+"in the store #"+storeId;
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
+        }
         DResponseObj<ProductType> p = getProductType(productId);
         if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
-        return new DResponseObj<>(true);
+
+        return new DResponseObj<>(new Tuple(s.getValue(),p.getValue()));
     }
 
     private DResponseObj<ProductType> getProductType(int productID) {
@@ -475,6 +465,16 @@ public class Market {
         }
     }
 
+    class Tuple<E,T>{
+        E item1;
+        T item2;
+
+        public Tuple(E item1, T item2) {
+            this.item1 = item1;
+            this.item2 = item2;
+        }
+    }
+
     /*************************************************for testing*********************************************************/
 
     /* forbidden to use with this function except Test*/
@@ -493,4 +493,6 @@ public class Market {
             stores.put(i, s);
         }
     }
+
+
 }

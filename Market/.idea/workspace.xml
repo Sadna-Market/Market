@@ -125,6 +125,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="MarketTest.setProductPriceInStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Market" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="setProductPriceInStore(int)" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProductTypeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
@@ -136,22 +152,6 @@
       <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
       <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ProductTypeTest.addStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Market" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
-      <option name="METHOD_NAME" value="addStore(int)" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -191,10 +191,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.MarketTest (1)" />
+        <item itemvalue="JUnit.MarketTest.setProductPriceInStore" />
         <item itemvalue="JUnit.ProductTypeTest" />
         <item itemvalue="JUnit.ProductTypeTest.storeExist3" />
         <item itemvalue="JUnit.ProductTypeTest.addStore2" />
-        <item itemvalue="JUnit.ProductTypeTest.addStore" />
       </list>
     </recent_temporary>
   </component>
@@ -223,7 +223,7 @@
       <workItem from="1651163170554" duration="1689000" />
       <workItem from="1651220034658" duration="9000" />
       <workItem from="1651220258898" duration="3914000" />
-      <workItem from="1651231696937" duration="8508000" />
+      <workItem from="1651231696937" duration="10831000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -599,6 +599,16 @@
           <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
           <line>203</line>
           <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>302</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>429</line>
+          <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
