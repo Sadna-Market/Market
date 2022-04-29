@@ -53,7 +53,7 @@ public class Inventory {
             return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
-            products.put(newProduct.getProductID(), toAdd);
+            products.put(newProduct.getProductID().value, toAdd);
             logger.info("Inventory added productId:" + newProduct.getProductID());
             return newProduct.addStore(storeId);
         }

@@ -1,5 +1,6 @@
 package main.System.Server.Domain.Market;
 
+import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -33,11 +34,11 @@ public class ProductType {
         logger.debug("the productID: "+productID+" received successfully");
     }
 
-    public int getRate() {
+    public DResponseObj<Integer> getRate() {
         long stamp = rateLock.readLock();
         logger.debug("getRate catch the ReadLock");
         try{
-            return rate;
+            return new DResponseObj<>(rate);
         }
         finally {
             rateLock.unlockRead(stamp);
@@ -45,15 +46,18 @@ public class ProductType {
         }
     }
 
-    public boolean setRate(int r) {
-        if (r<0 || r>10)
-            return false;
+    public DResponseObj<Boolean> setRate(int r) {
+        if (r<0 || r>10) {
+            String warning = "the Rate in not between 1-10";
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
+        }
         long stamp = rateLock.writeLock();
         logger.debug("getRate catch the WriteLock");
         try{
             rate = ((rate*counter_rates)+r)/(counter_rates+1);
             counter_rates++;
-            return true;
+            return new DResponseObj<>(true);
         }
         finally {
             rateLock.unlockWrite(stamp);
@@ -62,11 +66,18 @@ public class ProductType {
 
     }
 
-    public boolean storeExist(int storeID){
+    public DResponseObj<Boolean> storeExist(int storeID){
+        if (storeID<0){
+            String warning = "storeID #"+storeID+ " is not valid.";
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
+        }
         long stamp= lock_stores.readLock();
         logger.debug("catch the ReadLock.");
         try{
-            return stores.contains(storeID);
+            if (stores.contains(storeID))
+                return new DResponseObj<>(true);
+            return new DResponseObj<>(false);
         }
         finally {
             lock_stores.unlockRead(stamp);
@@ -74,15 +85,17 @@ public class ProductType {
         }
     }
 
-    public boolean removeStore(int storeID){
-        if (!storeExist(storeID)){
-            logger.warn("the store in not in the list of this product.");
-            return false;
-        }
+    public DResponseObj<Boolean> removeStore(int storeID){
+        DResponseObj<Boolean> existInStore=storeExist(storeID);
+        if(existInStore.errorOccurred()) return existInStore;
         long stamp= lock_stores.writeLock();
         logger.debug("catch the WriteLock.");
         try{
-            return stores.remove(Integer.valueOf(storeID));
+            if (stores.remove(Integer.valueOf(storeID)))
+                return new DResponseObj<>(true);
+            String warning = "the product typre can not remove this store from his list";
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
         }
         finally {
             lock_stores.unlockWrite(stamp);
@@ -90,34 +103,35 @@ public class ProductType {
         }
     }
 
-    public List<Integer> getStores() {
+    public DResponseObj<List<Integer>> getStores() {
         long stamp = lock_stores.readLock();
-        logger.debug("getStores() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try{
             List<Integer> output=new ArrayList<>();
             for (Integer storeID : stores) output.add(storeID);
-            return output;
+            return new DResponseObj<>(output);
         }
         finally {
             lock_stores.unlockRead(stamp);
-            logger.debug("getStores() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
 
     }
 
-    public boolean addStore(int storeID){
+    public DResponseObj<Boolean> addStore(int storeID){
+        DResponseObj<Boolean> checkExist=storeExist(storeID);
+        if (checkExist.errorOccurred()) return checkExist;
+        if (checkExist.getValue()){
+            String warning = "storeID #" + storeID + " is exist in the system, you can not use that";
+            logger.warn(warning);
+            return new DResponseObj<>(warning);
+        }
         long stamp= lock_stores.writeLock();
         logger.debug("addStore() catch the WriteLock.");
         try{
-            if (stores.contains(storeID)){
-                logger.debug("this storeID: "+storeID+" exists in this ProductType");
-                return false;
-            }
-            else{
-                logger.info("this storeID: "+storeID+" add this ProductType to the stores.");
-                stores.add(storeID);
-                return true;
-            }
+            stores.add(storeID);
+            logger.info("this storeID: "+storeID+" add this ProductType to the stores.");
+            return new DResponseObj<>(true);
         }
         finally {
             lock_stores.unlockWrite(stamp);
@@ -133,27 +147,27 @@ public class ProductType {
         this.category = category;
     }
 
-    public int getProductID() {
-        return productID;
+    public DResponseObj<Integer> getProductID() {
+        return new DResponseObj<>(productID);
     }
 
-    public String getProductName() {
-        return productName;
+    public DResponseObj<String> getProductName() {
+        return new DResponseObj<>(productName);
     }
 
-    public String getDescription() {
-        return description;
+    public DResponseObj<String> getDescription() {
+        return new DResponseObj<>(description);
     }
 
-    public int getCategory() {
-        return category;
+    public DResponseObj<Integer> getCategory() {
+        return new DResponseObj<>(category);
     }
 
-    public boolean containName(String name){
-        return productName.contains(name);
+    public DResponseObj<Boolean> containName(String name){
+        return new DResponseObj<>(productName.contains(name));
     }
-    public boolean containDesc(String desc){
-        return description.contains(desc);
+    public DResponseObj<Boolean> containDesc(String desc){
+        return new DResponseObj<>(description.contains(desc));
     }
 
 }

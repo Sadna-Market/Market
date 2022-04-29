@@ -23,10 +23,7 @@ import java.util.concurrent.locks.StampedLock;
 
 
 public class UserManager {
-    int notLoged = 10;
-    int notonline = 11;
-    int notvalidInput =12;
-    int notMember =13;
+
 
 
     private StampedLock LockUsers= new StampedLock();

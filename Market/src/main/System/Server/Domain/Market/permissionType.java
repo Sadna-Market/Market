@@ -17,8 +17,8 @@ public class permissionType {
 
     static public List<permissionEnum> ownerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory,permissionEnum.addNewProductToStore,permissionEnum.deleteProductFromStore,
-                    permissionEnum.setProductPriceInStore,permissionEnum.setProductPriceInStore,permissionEnum.setProductQuantityInStore,permissionEnum.AddNewStoreOwner,
-                    permissionEnum.AddNewStoreManger,permissionEnum.addNewStoreOwner,permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles));
+                    permissionEnum.setProductPriceInStore,permissionEnum.setProductQuantityInStore, permissionEnum.addNewStoreOwner,
+                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles));
 
     static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
             (Arrays.asList(permissionType.permissionEnum.getStoreOrderHistory));

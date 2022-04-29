@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="#38 add responses and ProductTypeStab">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/Market/PermissionManager.java" afterDir="false" />
@@ -14,6 +15,11 @@
       <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/ShoppingCartTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/ShoppingCartTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserManagerTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tests/main/System/Server/Domain/UserModel/UserTest.java" afterDir="false" />
+=======
+    <list default="true" id="95b8cbc7-b7f0-47b5-b69e-18d6741a88e0" name="Default Changelist" comment="#38 add integrations tests">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/System/Server/Domain/StoreModel/Store.java" afterDir="false" />
+>>>>>>> bd7f87bc72bd871a57968581c046752584b4142d
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -69,6 +75,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15136719" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -89,6 +96,7 @@
       <recent name="main.System.Server.Domain.Market" />
     </key>
   </component>
+<<<<<<< HEAD
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -102,6 +110,9 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.StoreTest">
+=======
+  <component name="RunManager" selected="JUnit.MarketTest (1)">
+>>>>>>> bd7f87bc72bd871a57968581c046752584b4142d
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -113,78 +124,79 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Acceptance.*" />
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="Acceptance" />
-      <option name="TEST_OBJECT" value="package" />
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketTest.getStore3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketTest.getStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Unit.Market.*" />
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="Unit.Market" />
-      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStore3" />
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="getStore(int)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketTest.getStoreInfo" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketTest.searchProductByStoreRate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Unit.Market.*" />
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="Unit.Market" />
-      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
-      <option name="METHOD_NAME" value="getStoreInfo(int)" />
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="searchProductByStoreRate(int)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketTest.searchProductByStoreRate2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketTest.setProductPriceInStore" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Unit.Market.*" />
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="Unit.Market" />
-      <option name="MAIN_CLASS_NAME" value="Unit.Market.MarketTest" />
-      <option name="METHOD_NAME" value="searchProductByStoreRate2(int)" />
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
+      <option name="METHOD_NAME" value="setProductPriceInStore(int)" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProductTypeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Unit.StoreModel.*" />
+          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="Unit.StoreModel" />
-      <option name="MAIN_CLASS_NAME" value="Unit.StoreModel.StoreTest" />
+      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
+      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.ProductTypeTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -192,11 +204,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.StoreTest" />
-        <item itemvalue="JUnit.MarketTest.searchProductByStoreRate2" />
-        <item itemvalue="JUnit.MarketTest.getStoreInfo" />
-        <item itemvalue="JUnit.MarketTest.getStore3" />
-        <item itemvalue="JUnit.MarketTest" />
+        <item itemvalue="JUnit.MarketTest (1)" />
+        <item itemvalue="JUnit.MarketTest.getStore" />
+        <item itemvalue="JUnit.MarketTest.searchProductByStoreRate" />
+        <item itemvalue="JUnit.MarketTest.setProductPriceInStore" />
+        <item itemvalue="JUnit.ProductTypeTest" />
       </list>
     </recent_temporary>
   </component>
@@ -225,6 +237,7 @@
       <workItem from="1651163170554" duration="1689000" />
       <workItem from="1651220034658" duration="9000" />
       <workItem from="1651220258898" duration="3914000" />
+      <workItem from="1651231696937" duration="14567000" />
     </task>
     <task id="LOCAL-00001" summary="#47 get store products">
       <created>1650983334479</created>
@@ -541,7 +554,21 @@
       <option name="project" value="LOCAL" />
       <updated>1651173593434</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="#38 add responses and ProductTypeStab">
+      <created>1651241162222</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1651241162222</updated>
+    </task>
+    <task id="LOCAL-00047" summary="#38 add integrations tests">
+      <created>1651243457256</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1651243457256</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,7 +589,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="guest visit req #2.1.1&#10;issue #43" />
     <MESSAGE value="guest register req #2.1.3&#10;issue #45" />
     <MESSAGE value="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46" />
     <MESSAGE value="get store info AT  req #2.2.1&#10;issue #47" />
@@ -587,19 +613,40 @@
     <MESSAGE value="info of any buyer/store - AT  req #2.6.4&#10;issue #65" />
     <MESSAGE value="permissions of manager - AT  req #2.5" />
     <MESSAGE value="#38 add responses and ProductTypeStab" />
-    <option name="LAST_COMMIT_MESSAGE" value="#38 add responses and ProductTypeStab" />
+    <MESSAGE value="#38 add integrations tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="#38 add integrations tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
-          <line>70</line>
+          <line>73</line>
           <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>209</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>445</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>149</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/System/Server/Domain/Market/Market.java</url>
+          <line>424</line>
+          <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/tests/main/System/Server/Domain/Market/MarketTest.java</url>
-          <line>54</line>
+          <line>57</line>
           <properties class="main.System.Server.Domain.Market.MarketTest" method="getStore3">
             <option name="EMULATED" value="true" />
           </properties>
@@ -607,5 +654,10 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Stabs.StoreStab" memberName="rate" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>
