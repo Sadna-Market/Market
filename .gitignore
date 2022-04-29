@@ -5,24 +5,31 @@
 .idea/**/dictionaries
 .idea/**/shelf
 
+Market/.idea/**/workspace.xml
+Market/.idea/**/tasks.xml
+Market/.idea/**/usage.statistics.xml
+Market/.idea/**/dictionaries
+Market/.idea/**/shelf
+Market/.idea/**/uiDesigner.xml
+
 # AWS User-specific
-.idea/**/aws.xml
+Market/.idea/**/aws.xml
 
 # Generated files
-.idea/**/contentModel.xml
+Market/.idea/**/contentModel.xml
 
 # Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
+Market/.idea/**/dataSources/
+Market/.idea/**/dataSources.ids
+Market/.idea/**/dataSources.local.xml
+Market/.idea/**/sqlDataSources.xml
+Market/.idea/**/dynamic.xml
+Market/.idea/**/uiDesigner.xml
+Market/.idea/**/dbnavigator.xml
 
 # Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
+Market/.idea/**/gradle.xml
+Market/.idea/**/libraries
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -41,25 +48,25 @@
 cmake-build-*/
 
 # Mongo Explorer plugin
-.idea/**/mongoSettings.xml
+Market/.idea/**/mongoSettings.xml
 
 # File-based project format
 *.iws
 
 # IntelliJ
-out/
+Market/out/
 
 # mpeltonen/sbt-idea plugin
-.idea_modules/
+Market/.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
 
 # Cursive Clojure plugin
-.idea/replstate.xml
+Market/.idea/replstate.xml
 
 # SonarLint plugin
-.idea/sonarlint/
+Market/.idea/sonarlint/
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
@@ -68,10 +75,10 @@ crashlytics-build.properties
 fabric.properties
 
 # Editor-based Rest Client
-.idea/httpRequests
+Market/.idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
-.idea/caches/build_file_checksums.ser
+Market/.idea/caches/build_file_checksums.ser
 
 
 # Packages #
