@@ -1,22 +1,24 @@
 package main.System.Server.Domain.Response;
 
+
 public class DResponse {
-    public String errorMsg;
-    private boolean errorOccurred;
-    public DResponse(){}
-    public DResponse(String msg){
-        errorMsg = msg;
+    public int errorMsg = -1;
+    public DResponse() {
     }
 
-    public String getErrorMsg() {
+    public DResponse(int errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
+    public int getErrorMsg() {
         return errorMsg;
     }
 
     public boolean errorOccurred() {
-        return errorMsg != null;
+        return errorMsg != -1;
     }
 
-    public void setErrorMsg(String s){
-        errorMsg=s;
+    public void setErrorMsg(int s) {
+        errorMsg = s;
     }
 }

@@ -2,14 +2,14 @@ package main.System.Server.Domain.Response;
 
 public class DResponseObj<T> extends DResponse {
     public T value;
-    public DResponseObj(String msg){
+    public DResponseObj(int msg){
         super(msg);
     }
     public DResponseObj(T value){
         super();
         this.value = value;
     }
-    public DResponseObj(T value, String msg){
+    public DResponseObj(T value, int msg){
         super(msg);
         this.value = value;
     }
