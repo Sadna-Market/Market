@@ -374,6 +374,10 @@ public class Market {
 
         DResponseObj<Boolean> checkCloseStore=store.closeStore();
         if (checkCloseStore.errorOccurred()) return checkCloseStore;
+        if (!checkCloseStore.getValue()){
+            logger.warn("Store return that can not close this store");
+            return new DResponseObj<>(ErrorCode.CANNOTCLOSESTORE);
+        }
         DResponseObj<Integer> getStoreID = store.getStoreId();
         if (getStoreID.errorOccurred()) return new DResponseObj<>(getStoreID.getErrorMsg());
         long stamp = lock_stores.writeLock();

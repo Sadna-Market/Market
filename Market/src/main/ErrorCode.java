@@ -24,4 +24,5 @@ public class ErrorCode {
 
    public static int STORENOTINTHEPRODUCTTYPE = 40;
    public static int STORESTAYINTHEPRODUCTTYPE = 41;
+   public static int CANNOTCLOSESTORE = 42;
 }
