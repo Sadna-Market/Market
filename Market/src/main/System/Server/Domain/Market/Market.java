@@ -401,7 +401,7 @@ public class Market {
         if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
         Store store=result.getValue().item1;
 
-        return store.getStoreRules();
+        return store.getStoreRoles();
     }
 
     //2.4.13

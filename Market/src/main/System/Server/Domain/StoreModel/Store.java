@@ -332,6 +332,7 @@ public class Store {
     public void openStoreAgain() {
         isOpen = true;
     }
+
 }
 
 
