@@ -27,9 +27,9 @@ class UserManagerTest {
     void loginExistMember() {
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0],CreditCard[0],CreditDate[0]);
-        Assertions.assertTrue(userManager.getMembers().containsKey(emails[0]));
+        Assertions.assertTrue(userManager.getMembers().value.containsKey(emails[0]));
         userManager.Login(uuid,emails[0],passwords[0]);
-        Assertions.assertTrue(userManager.getLoginUsers().containsKey(uuid));
+        Assertions.assertTrue(userManager.getLoginUsers().value.containsKey(uuid));
     }
     @Test
     void loginWithLoggedUser() {
@@ -68,7 +68,7 @@ class UserManagerTest {
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0],CreditCard[0],CreditDate[0]);
         userManager.Login(uuid,emails[0],passwords[0]);
         Assertions.assertTrue(userManager.Logout(uuid).value);
-        Assertions.assertFalse(userManager.getLoginUsers().containsKey(uuid));
+        Assertions.assertFalse(userManager.getLoginUsers().value.containsKey(uuid));
     }
 
     @Test
@@ -82,7 +82,7 @@ class UserManagerTest {
     @Test
     void guestVisit() { //check if after the user enter to the system , the obj added guest hash
         UUID uuid = userManager.GuestVisit().value;
-        Assertions.assertTrue(userManager.getGuestVisitors().containsKey(uuid));
+        Assertions.assertTrue(userManager.getGuestVisitors().value.containsKey(uuid));
     }
 
     @Test
@@ -102,33 +102,33 @@ class UserManagerTest {
         //add new member
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0],CreditCard[0],CreditDate[0]);
-        Assertions.assertTrue(userManager.getMembers().containsKey(emails[0]));
+        Assertions.assertTrue(userManager.getMembers().value.containsKey(emails[0]));
 
         //add member with user id that does not exist
         uuid = UUID.randomUUID();
         userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1],CreditCard[1],CreditDate[1]);
-        Assertions.assertFalse(userManager.getMembers().containsKey(emails[1]));
+        Assertions.assertFalse(userManager.getMembers().value.containsKey(emails[1]));
 
         //add member with incorrect password
         uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[1],passwords[3],PhoneNum[1],CreditCard[1],CreditDate[1]);
-        Assertions.assertFalse(userManager.getMembers().containsKey(emails[1]));
+        Assertions.assertFalse(userManager.getMembers().value.containsKey(emails[1]));
 
 
         //add member with incorrect email
         uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[3],passwords[1],PhoneNum[1],CreditCard[1],CreditDate[1]);
-        Assertions.assertFalse(userManager.getMembers().containsKey(emails[3]));
+        Assertions.assertFalse(userManager.getMembers().value.containsKey(emails[3]));
     }
 
 
     @Test
     void isLogin() {
-        Assertions.assertFalse(userManager.isLogged(UUID.randomUUID()));
+        Assertions.assertFalse(userManager.isLogged(UUID.randomUUID()).value);
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0],CreditCard[0],CreditDate[0]);
         System.out.println(userManager.Login(uuid,emails[0],passwords[0]));
-        Assertions.assertTrue(userManager.isLogged(uuid));
+        Assertions.assertTrue(userManager.isLogged(uuid).value);
 
     }
 
@@ -159,8 +159,8 @@ class UserManagerTest {
     @Test
     void isOnline() {
         UUID uuid = userManager.GuestVisit().value;
-        Assertions.assertTrue(userManager.isOnline(uuid));
-        Assertions.assertFalse(userManager.isOnline(UUID.randomUUID()));
+        Assertions.assertTrue(userManager.isOnline(uuid).value);
+        Assertions.assertFalse(userManager.isOnline(UUID.randomUUID()).value);
 
     }
 }
