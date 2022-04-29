@@ -98,19 +98,19 @@ public class PermissionManager {
 
             for (Permission p : accessPermissionStore) {
                 //check if grantee is already owner or manager in this store
-                if (p.getGrantee().getEmail().equals(grantee.getEmail())) {
-                    if (p.getGranteeType() == userTypes.owner) {
+                if (p.getGrantee().value.getEmail().equals(grantee.getEmail())) {
+                    if (p.getGranteeType().value == userTypes.owner) {
                         logger.warn("Grantee already owner in this store!\n");
                         //if grantee already owner in both cases (2 & 3) the permission is prohibited.
                         return new DResponseObj<>(false, "ALLREADYOWNER");
                     }
-                    if (p.getGranteeType() == userTypes.manager) {
+                    if (p.getGranteeType().value == userTypes.manager) {
                         //if already manager: case 3 the permission is prohibited, case 2: need to delete the manager permission
                         alreadyManagerPermission = p;
                     }
                 }
                 //check grantor is owner in this store
-                if (p.getGrantee().getEmail().equals(grantor.getEmail()) && p.getGranteeType() == userTypes.owner)
+                if (p.getGrantee().value.getEmail().equals(grantor.getEmail()) && p.getGranteeType().value == userTypes.owner)
                     grantorIsOwner = true;
             }
 
@@ -203,7 +203,7 @@ public class PermissionManager {
             return new DResponseObj<>(false, "MISTAKEPERMISSIONTYPE");
         }
         logger.info("Manager permission type removed successfully\n");
-        return new DResponseObj<>(ManagerPermission.removeManagerPermission(permissionType));
+        return new DResponseObj<>(ManagerPermission.removeManagerPermission(permissionType).value);
     }
 
 
@@ -233,7 +233,7 @@ public class PermissionManager {
     }
 
     //requirement II.4.11 a
-    public List<User> getOwnerAndManagerUsersInStore(User grantor, Store store) {
+    public DResponseObj<List<User>> getOwnerAndManagerUsersInStore(User grantor, Store store) {
     /**
      documentation:
      this method return a list of all the users that are manager or owner in the store that the grantor is owner of.
@@ -244,15 +244,15 @@ public class PermissionManager {
         List<User> OwnerAndManagerUsersInStore = new ArrayList<>();
         List<Permission> accessPermissionStore = grantor.getGrantorPermission();
         for (Permission p : accessPermissionStore) {
-            if (store.getStoreId() == p.getStore().getStoreId()) {
-                OwnerAndManagerUsersInStore.add(p.getGrantee());
+            if (store.getStoreId() == p.getStore().value.getStoreId()) {
+                OwnerAndManagerUsersInStore.add(p.getGrantee().value);
             }
         }
-        return OwnerAndManagerUsersInStore;
+        return new DResponseObj<>(OwnerAndManagerUsersInStore);
     }
     //requirement II.4.11 b
 
-    public HashMap<String, List<permissionType.permissionEnum>> getStoreManagersPermissionsTypes(User grantor, Store store) {
+    public DResponseObj<HashMap<String, List<permissionType.permissionEnum>>> getStoreManagersPermissionsTypes(User grantor, Store store) {
         /**
          documentation:
          this method return a HashMap consist of manager mail(managers that grantor Appointed)and all permission type that he have in the store.
@@ -263,15 +263,15 @@ public class PermissionManager {
         HashMap<String, List<permissionType.permissionEnum>> StoreManagersPermissionsPerEmail = new HashMap<>();
         List<Permission> grantorPermissionStore = grantor.getGrantorPermission();
         for (Permission p : grantorPermissionStore) {
-            if (store.getStoreId() == p.getStore().getStoreId() && p.getGranteeType() == userTypes.manager) {
+            if (store.getStoreId() == p.getStore().value.getStoreId() && p.getGranteeType().value == userTypes.manager) {
 //                StoreManagersPermissions.add(p.getgranteePermissionTypes());
-                StoreManagersPermissionsPerEmail.put(p.getGrantee().getEmail(), p.getgranteePermissionTypes());
+                StoreManagersPermissionsPerEmail.put(p.getGrantee().value.getEmail(), p.getgranteePermissionTypes().value);
             }
         }
-        return StoreManagersPermissionsPerEmail;
+        return new DResponseObj<>(StoreManagersPermissionsPerEmail);
     }
 
-    public boolean hasPermission(permissionType.permissionEnum pType, User grantee, Store store) {
+    public DResponseObj<Boolean> hasPermission(permissionType.permissionEnum pType, User grantee, Store store) {
         /**
          documentation:
          pType:  permissionType such as: OpenNewStore,addNewProductToStore..
@@ -281,22 +281,22 @@ public class PermissionManager {
 
          */
         // for members (if memberPermissions not contains this pType, false will be returned because their is no permissions for members.)
-        if (permissionType.memberPermissions.contains(pType)) return true;
+        if (permissionType.memberPermissions.contains(pType)) return new DResponseObj<>(true);
 
         if (permissionType.systemManagerPermissions.contains(pType) && grantee.getEmail().equals(systemManagerEmail))
-            return true;
+            return new DResponseObj<>(true);
 
         List<Permission> accessPermissionStore = store.getPermission();
         for (Permission p : accessPermissionStore) {
-            if (p.getGrantee().getEmail().equals(grantee.getEmail())) {
-                return p.hasPermission(pType);
+            if (p.getGrantee().value.getEmail().equals(grantee.getEmail())) {
+                return new DResponseObj<>(p.hasPermission(pType).value);
             }
         }
-        return false;
+        return new DResponseObj<>(false);
 
     }
 
-    public userTypes getGranteeUserType(User grantee, Store store) {
+    public DResponseObj<userTypes> getGranteeUserType(User grantee, Store store) {
         /**
          Assumption: a User is always a members
          documentation:
@@ -306,11 +306,11 @@ public class PermissionManager {
         //systemManager
         List<Permission> accessPermissionStore = grantee.getAccessPermission();
         for (Permission p : accessPermissionStore) {
-            if (store.getStoreId() == p.getStore().getStoreId()) {
-                return p.getGranteeType();
+            if (store.getStoreId() == (p.getStore()).value.getStoreId()) {
+                return new DResponseObj<>(p.getGranteeType().value);
             }
         }
-        return userTypes.member;
+        return new DResponseObj<>(userTypes.member);
     }
 
 
@@ -321,7 +321,7 @@ public class PermissionManager {
         if (alreadyManagerPermission != null) {
             store.removePermission(alreadyManagerPermission);
             grantee.removeAccessPermission(alreadyManagerPermission);
-            User Grantor = alreadyManagerPermission.getGrantor();
+            User Grantor = alreadyManagerPermission.getGrantor().value;
             if (Grantor != null) // necessary? can be manager without grantor?
                 Grantor.removeGrantorPermission(alreadyManagerPermission);
         }
@@ -348,14 +348,14 @@ public class PermissionManager {
     }
 
     private boolean verifyPermissionType(Permission permission, userTypes granteeType, userTypes grantorType) {
-        return permission.getGranteeType() == granteeType && permission.getGrantorType() == grantorType;
+        return permission.getGranteeType().value == granteeType && permission.getGrantorType().value == grantorType;
     }
 
     private Permission getPermission(User grantee, Store store, User grantor) {
         //find the permission - can be only one in the triple: grantee store and grantor.
         List<Permission> accessPermissionStore = store.getPermission();
         for (Permission p : accessPermissionStore) {
-            if (p.getGrantee().getEmail().equals(grantee.getEmail()) && p.getGrantor().getEmail().equals(grantor.getEmail())) {
+            if (p.getGrantee().value.getEmail().equals(grantee.getEmail()) && p.getGrantor().value.getEmail().equals(grantor.getEmail())) {
                 return p;
             }
         }
