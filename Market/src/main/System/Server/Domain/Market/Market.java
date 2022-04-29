@@ -156,8 +156,11 @@ public class Market {
         try {
             List<Integer> output = new ArrayList<>();
             for (Store store : stores.values()) {
-                if (store.getRate() >= rate)
-                    output.add(store.getStoreId());
+                DResponseObj<Integer> getRate=store.getRate();
+                if (!getRate.errorOccurred() && getRate.getValue() >= rate){
+                    DResponseObj<Integer> getStoreID=store.getStoreId();
+                    if (!getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+                }
             }
             return new DResponseObj<>(output);
         } finally {
@@ -184,10 +187,12 @@ public class Market {
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock");
         try {
-            for (Store s: stores.values()){
-                Double price = s.getProductPrice(productID);
-                if (price != null && (price <= (double) max & price >= (double) min))
-                    output.add(s.getStoreId());
+            for (Store store: stores.values()){
+                Double price = store.getProductPrice(productID);
+                if (price != null && (price <= (double) max & price >= (double) min)){
+                    DResponseObj<Integer> getStoreID=store.getStoreId();
+                    if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+                }
             }
             return new DResponseObj<>(output);
         }
@@ -355,18 +360,19 @@ public class Market {
     //pre: the store exist in the system, the user is owner of this store.
     //post: the market move this store to the closeStores, users can not see this store again(until she will be open).
     public DResponseObj<Boolean> closeStore(UUID userId, int storeId) {
-        DResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        DResponseObj<Boolean> checkOwner=userManager.isOwner(userId, store.getValue());
-        if (checkOwner.errorOccurred()) return checkOwner;
-        DResponseObj<Boolean> checkCloseStore=store.getValue().closeStore();
-        if (checkCloseStore.errorOccurred()) return checkCloseStore;
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.closeStore,null);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
 
+        DResponseObj<Boolean> checkCloseStore=store.closeStore();
+        if (checkCloseStore.errorOccurred()) return checkCloseStore;
+        DResponseObj<Integer> getStoreID = store.getStoreId();
+        if (getStoreID.errorOccurred()) return new DResponseObj<>(getStoreID.getErrorMsg());
         long stamp = lock_stores.writeLock();
         logger.debug("catch WriteLock");
         try {
-            stores.remove(store.getValue());
-            closeStores.put(store.getValue().getStoreId(), store.getValue());
+            stores.remove(store);
+            closeStores.put(getStoreID.getValue(), store);
             logger.info("market update that Store #" + storeId + " close");
             return new DResponseObj<>(true);
         } finally {

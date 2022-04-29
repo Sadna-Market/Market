@@ -1,5 +1,6 @@
 package main.System.Server.Domain.Market;
 
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.DiscountPolicy;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.UserManager;
@@ -46,7 +47,9 @@ class MarketTest {
     @ValueSource(ints = {1,3,5,7,9})
     @Test
     void getStore(int i) {
-        assertEquals(i,market.getStore(i).getValue().getRate());
+        DResponseObj<Store> store=market.getStore(i);
+        int rate=store.getValue().getRate().getValue();
+        assertEquals(i,rate);
     }
 
 
