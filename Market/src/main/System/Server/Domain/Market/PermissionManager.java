@@ -94,7 +94,7 @@ public class PermissionManager {
             }
 
             boolean grantorIsOwner = false;      // need to be true
-            List<Permission> accessPermissionStore = store.getPermission();
+            List<Permission> accessPermissionStore = store.getPermission().value;
             Permission alreadyManagerPermission = null;
 
             for (Permission p : accessPermissionStore) {
@@ -243,7 +243,7 @@ public class PermissionManager {
      after calling this method, you will need to get the information about this users. (user class responsibility)
      */
         List<User> OwnerAndManagerUsersInStore = new ArrayList<>();
-        List<Permission> accessPermissionStore = grantor.getGrantorPermission();
+        List<Permission> accessPermissionStore = grantor.getGrantorPermission().value;
         for (Permission p : accessPermissionStore) {
             if (store.getStoreId() == p.getStore().value.getStoreId()) {
                 OwnerAndManagerUsersInStore.add(p.getGrantee().value);
@@ -262,11 +262,11 @@ public class PermissionManager {
          */
 //        List<List<permissionType.permissionEnum>> StoreManagersPermissions = new ArrayList<>();
         HashMap<String, List<permissionType.permissionEnum>> StoreManagersPermissionsPerEmail = new HashMap<>();
-        List<Permission> grantorPermissionStore = grantor.getGrantorPermission();
+        List<Permission> grantorPermissionStore = grantor.getGrantorPermission().value;
         for (Permission p : grantorPermissionStore) {
             if (store.getStoreId() == p.getStore().value.getStoreId() && p.getGranteeType().value == userTypes.manager) {
 //                StoreManagersPermissions.add(p.getgranteePermissionTypes());
-                StoreManagersPermissionsPerEmail.put(p.getGrantee().value.getEmail(), p.getgranteePermissionTypes().value);
+                StoreManagersPermissionsPerEmail.put(p.getGrantee().value.getEmail().value, p.getgranteePermissionTypes().value);
             }
         }
         return new DResponseObj<>(StoreManagersPermissionsPerEmail);
@@ -287,7 +287,7 @@ public class PermissionManager {
         if (permissionType.systemManagerPermissions.contains(pType) && grantee.getEmail().equals(systemManagerEmail))
             return new DResponseObj<>(true);
 
-        List<Permission> accessPermissionStore = store.getPermission();
+        List<Permission> accessPermissionStore = store.getPermission().value;
         for (Permission p : accessPermissionStore) {
             if (p.getGrantee().value.getEmail().equals(grantee.getEmail())) {
                 return new DResponseObj<>(p.hasPermission(pType).value);
@@ -305,7 +305,7 @@ public class PermissionManager {
 
          */
         //systemManager
-        List<Permission> accessPermissionStore = grantee.getAccessPermission();
+        List<Permission> accessPermissionStore = grantee.getAccessPermission().value;
         for (Permission p : accessPermissionStore) {
             if (store.getStoreId() == (p.getStore()).value.getStoreId()) {
                 return new DResponseObj<>(p.getGranteeType().value);
@@ -329,7 +329,7 @@ public class PermissionManager {
     }
 
     private boolean addOwnerPermissionToNewStore(User grantee, Store store, userTypes granteeType, userTypes grantorType) {
-        if (!store.getPermission().isEmpty())
+        if (!store.getPermission().value.isEmpty())
             return false;
         else {
             Permission per = new Permission(grantee, store, null);
@@ -354,7 +354,7 @@ public class PermissionManager {
 
     private Permission getPermission(User grantee, Store store, User grantor) {
         //find the permission - can be only one in the triple: grantee store and grantor.
-        List<Permission> accessPermissionStore = store.getPermission();
+        List<Permission> accessPermissionStore = store.getPermission().value;
         for (Permission p : accessPermissionStore) {
             if (p.getGrantee().value.getEmail().equals(grantee.getEmail()) && p.getGrantor().value.getEmail().equals(grantor.getEmail())) {
                 return p;
