@@ -11,6 +11,7 @@ import main.System.Server.Domain.UserModel.UserManager;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -384,11 +385,12 @@ public class Market {
     //2.4.11
     //pre: the store exist in the system.
     //post: market ask UserManager about this user with this store.
-    public DResponseObj<Boolean> getStoreRoles(int userId, int storeId) {
-        /////////////////
-        DResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        return userManager.getRolesInStore(userId, store.getValue());
+    public DResponseObj<HashMap<String,List<String>>> getStoreRoles(UUID userId, int storeId) {
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.getStoreRoles,null);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
+
+        return store.getStoreRules();
     }
 
     //2.4.13
@@ -403,7 +405,7 @@ public class Market {
     }
 
 
-    //?.?.????
+    //2.4.13 & 2.6.4 (only system manager)
     //pre: this store exist in the system.
     //post: market ask the store about that with USerEmail.
     public DResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
@@ -456,6 +458,8 @@ public class Market {
 
         return new DResponseObj<>(new Tuple(s.getValue(),p.getValue()));
     }
+
+
 
     private DResponseObj<ProductType> getProductType(int productID) {
         if (productID<0){

@@ -10,6 +10,7 @@ import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.UserManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -856,7 +857,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public DResponseObj<Boolean> getStoreRoles(String userId, int storeId) {
+    public DResponseObj<HashMap<String,List<String>>> getStoreRoles(String userId, int storeId) {
 
         /**
          * @requirement II. 4.11
@@ -875,12 +876,12 @@ public class Facade implements IMarket {
          * @documentation: Request for information about positions in the store: A store owner can request and receive
          * information about the function holders In the store he owns and about permissions managers .
          */
-        if (userId == null || userId.equals(""))
-            return new DResponseObj<>("NOTSTRING");
-        if (storeId < 0)
-            return new DResponseObj<>("NEGATIVENUMBER");
+//        if (userId == null || userId.equals(""))
+//            return new DResponseObj<>("NOTSTRING");
+//        if (storeId < 0)
+//            return new DResponseObj<>("NEGATIVENUMBER");
         //need to chang -1 to UUID.fromString(userId)  after yaki fix his code
-        return market.getStoreRoles(-1, storeId);
+        return market.getStoreRoles(UUID.fromString(userId), storeId);
         //TODO yaki need to chang from int to UUID
     }
 
