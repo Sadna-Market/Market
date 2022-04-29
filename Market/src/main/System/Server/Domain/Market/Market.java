@@ -56,7 +56,7 @@ public class Market {
             output.setErrorMsg(s.getErrorMsg());
             return output;
         }
-        return s.getValue().getProductInStoreInfo2(productID);
+        return s.getValue().getProductInStoreInfo(productID);
     }
 
     //2.2.2
