@@ -36,75 +36,75 @@ class StoreTest {
     @Test
     @DisplayName("addNewProduct  -  successful")
     void addNewProductS() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
     }
 
     @Test
     @DisplayName("addNewProduct  -  failure")
     void addNewProductF1() {
-        assertFalse(store.addNewProduct(null, 6, 5.3));
+        assertFalse(store.addNewProduct(null, 6, 5.3).getValue());
     }
 
     @Test
     @DisplayName("addNewProduct  -  failure")
     void addNewProductF2() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertFalse(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertFalse(store.addNewProduct(productType1, 6, 5.3).getValue());
     }
 
     @Test
     @DisplayName("isProductExistInStock  -  success")
     void isProductExistInStockS() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertTrue(store.isProductExistInStock(productType1.getProductID(), 0));
-        assertTrue(store.isProductExistInStock(productType1.getProductID(), 2));
-        assertTrue(store.isProductExistInStock(productType1.getProductID(), 6));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertTrue(store.isProductExistInStock(productType1.getProductID(), 0).getValue());
+        assertTrue(store.isProductExistInStock(productType1.getProductID(), 2).getValue());
+        assertTrue(store.isProductExistInStock(productType1.getProductID(), 6).getValue());
     }
 
 
     @Test
     @DisplayName("isProductExistInStock  -  failure")
     void isProductExistInStockF() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertFalse(store.isProductExistInStock(productType1.getProductID(), 7));
-        assertFalse(store.isProductExistInStock(productType1.getProductID(), 100));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertFalse(store.isProductExistInStock(productType1.getProductID(), 7).getValue());
+        assertFalse(store.isProductExistInStock(productType1.getProductID(), 100).getValue());
     }
 
     @Test
     @DisplayName("isProductExistInStock  -  failure")
     void isProductExistInStockF2() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertFalse(store.isProductExistInStock(-1, 6));
-        assertFalse(store.isProductExistInStock(23, 6));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertFalse(store.isProductExistInStock(-1, 6).getValue());
+        assertFalse(store.isProductExistInStock(23, 6).getValue());
     }
 
 
     @Test
     @DisplayName("removeProduct  -  success")
     void removeProduct() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertTrue(store.removeProduct(productType1.getProductID()));
-        assertFalse(store.isProductExistInStock(productType1.getProductID(), 0));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertTrue(store.removeProduct(productType1.getProductID()).getValue());
+        assertFalse(store.isProductExistInStock(productType1.getProductID(), 0).getValue());
     }
 
 
     @Test
     @DisplayName("removeProduct  -  failure")
     void removeProduct1() {
-        assertFalse(store.removeProduct(productType1.getProductID()));
+        assertFalse(store.removeProduct(productType1.getProductID()).getValue());
     }
 
     @Test
     @DisplayName("removeProduct  -  failure")
     void removeProduct2() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertFalse(store.removeProduct(productType1.getProductID() + 1));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertFalse(store.removeProduct(productType1.getProductID() + 1).getValue());
     }
 
     @DisplayName("getInfoProductInStore  -  successful")
     @Test
     void getProductInStoreInfo() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         ProductStore ps = store.getProductInStoreInfo(productType1.getProductID());
         assertSame(ps.getProductType(), productType1);
         assertEquals(5.3, ps.getPrice());
@@ -114,24 +114,24 @@ class StoreTest {
     @DisplayName("setProductPrice  -  successful")
     @Test
     void setProductPriceS() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertTrue(store.setProductPrice(productType1.getProductID(), 155.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertTrue(store.setProductPrice(productType1.getProductID(), 155.3).getValue());
         assertEquals(155.3, store.getProductPrice(productType1.getProductID()));
     }
 
     @DisplayName("setProductPrice  -  failure")
     @Test
     void setProductPriceF() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertFalse(store.setProductPrice(productType1.getProductID() + 1, 155.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertFalse(store.setProductPrice(productType1.getProductID() + 1, 155.3).getValue());
         assertEquals(5.3, store.getProductPrice(productType1.getProductID()));
     }
 
     @DisplayName("setProductQuantity  -  successful")
     @Test
     void setProductQuantityS() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertTrue(store.setProductQuantity(productType1.getProductID(), 33));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertTrue(store.setProductQuantity(productType1.getProductID(), 33).getValue());
         ProductStore ps = store.getProductInStoreInfo(productType1.getProductID());
         assertEquals(33, ps.getQuantity());
     }
@@ -139,8 +139,8 @@ class StoreTest {
     @DisplayName("setProductQuantity  -  failure")
     @Test
     void setProductQuantityF() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertFalse(store.setProductQuantity(productType1.getProductID() + 1, 33));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertFalse(store.setProductQuantity(productType1.getProductID() + 1, 33).getValue());
         ProductStore ps = store.getProductInStoreInfo(productType1.getProductID());
         assertEquals(6, ps.getQuantity());
     }
@@ -155,25 +155,25 @@ class StoreTest {
     @DisplayName("getStoreProducts  -  success")
     @Test
     void getStoreProductsS2() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertEquals(1, store.GetStoreProducts().size());
-        assertTrue(store.addNewProduct(productType2, 7, 511.3));
+        assertTrue(store.addNewProduct(productType2, 7, 511.3).getValue());
         assertEquals(2, store.GetStoreProducts().size());
-        assertTrue(store.removeProduct(productType1.getProductID()));
+        assertTrue(store.removeProduct(productType1.getProductID()).getValue());
         assertEquals(1, store.GetStoreProducts().size());
     }
 
     @DisplayName("getProductPrice  -  success")
     @Test
     void getProductPrice() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertEquals(5.3, store.getProductPrice(productType1.getProductID()));
     }
 
     @DisplayName("getProductPrice  -  failure")
     @Test
     void getProductPriceF() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertNull(store.getProductPrice(productType1.getProductID() - 1));
     }
 
@@ -181,7 +181,7 @@ class StoreTest {
     @Test
     void getStoreOrderHistory() {
         addHistoryS1();
-        List<History> h = store.getStoreOrderHistory();
+        List<History> h = store.getStoreOrderHistory().getValue();
         assertEquals(1,h.size());
         assertEquals(user, h.get(0).getUser());
     }
@@ -189,7 +189,7 @@ class StoreTest {
     @DisplayName("getStoreOrderHistory  -  success")
     @Test
     void getStoreOrderHistory2() {
-        List<History> h = store.getStoreOrderHistory();
+        List<History> h = store.getStoreOrderHistory().getValue();
         assertEquals(0,h.size());
     }
 
@@ -198,7 +198,7 @@ class StoreTest {
     @Test
     void getUserHistory() {
         addHistoryS1();
-        List<History> h = store.getUserHistory(user);
+        List<History> h = store.getUserHistory(user).getValue();
         assertEquals(1, h.size());
         History hu = h.get(0);
         assertEquals(hu.getUser(), user);
@@ -211,7 +211,7 @@ class StoreTest {
     @Test
     void getUserHistoryS() {
         addHistoryS1();
-        List<History> h = store.getUserHistory("d");
+        List<History> h = store.getUserHistory("d").getValue();
         assertEquals(0, h.size());
 
     }
@@ -228,8 +228,8 @@ class StoreTest {
     @DisplayName("addHistory  -  success")
     @Test
     void addHistoryS1() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertTrue(store.addNewProduct(productType2, 8, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertTrue(store.addNewProduct(productType2, 8, 5.3).getValue());
         HashMap<Integer,Integer> h = new HashMap<>();
         h.put(productType1.getProductID(),4);
         h.put(productType2.getProductID(),4);
@@ -239,7 +239,7 @@ class StoreTest {
     @DisplayName("addHistory  -  failure")
     @Test
     void addHistoryF() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         HashMap<Integer,Integer> h = new HashMap<>();
         h.put(productType1.getProductID(),4);
         h.put(productType2.getProductID(),4);
@@ -260,8 +260,8 @@ class StoreTest {
     @DisplayName("calculateBagPrice  -  success")
     @Test
     void calculateBagPrice() {
-        assertTrue(store.addNewProduct(productType1, 6, 5.3));
-        assertTrue(store.addNewProduct(productType2, 8, 5.3));
+        assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
+        assertTrue(store.addNewProduct(productType2, 8, 5.3).getValue());
         ConcurrentHashMap<Integer,Integer> b = new ConcurrentHashMap<>();
         b.put(1,4);
         b.put(2,3);
@@ -273,7 +273,7 @@ class StoreTest {
     @Test
     void closeStore() {
         assertTrue(store.isOpen());
-        assertTrue(store.closeStore());
+        assertTrue(store.closeStore().getValue());
         assertFalse(store.isOpen());
     }
 

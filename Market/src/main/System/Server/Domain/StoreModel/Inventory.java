@@ -1,6 +1,8 @@
 package main.System.Server.Domain.StoreModel;
 
+import main.ErrorCode;
 import main.System.Server.Domain.Market.ProductType;
+import main.System.Server.Domain.UserModel.Response.ATResponseObj;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -25,23 +27,29 @@ public class Inventory {
 
     /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
 
-    public boolean isProductExistInStock(int productId, int quantity) {
+    public ATResponseObj<Boolean> isProductExistInStock(int productId, int quantity) {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.info("productId:" + productId + " not exist in stock");
-            return false;
-        } else if (productStore.getQuantity() >= quantity) {
-            logger.info("productId:" + productId + " exist in stock");
-            return true;
+            return new ATResponseObj<>(false);
         }
-        logger.info("productId:" + productId + " exist in stock but not enough quantity");
-        return false;
+        long stamp = productStore.getProductLock().readLock();
+        try {
+            if (productStore.getQuantity() >= quantity) {
+                logger.info("productId:" + productId + " exist in stock");
+                return new ATResponseObj<>(true);
+            }
+            logger.info("productId:" + productId + " exist in stock but not enough quantity");
+            return new ATResponseObj<>(false);
+        }finally {
+            productStore.getProductLock().unlockRead(stamp);
+        }
     }
 
-    public boolean addNewProduct(ProductType newProduct, int quantity, double price) {
+    public ATResponseObj<Boolean> addNewProduct(ProductType newProduct, int quantity, double price) {
         if (products.containsKey(newProduct.getProductID())) {
             logger.warn("try to add productId:" + newProduct.getProductID() + " but inventory contains this product");
-            return false;
+            return new ATResponseObj<>(false,""+ ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
             products.put(newProduct.getProductID(), toAdd);
@@ -50,41 +58,76 @@ public class Inventory {
         }
     }
 
-    public boolean removeProduct(int productId) {
+    public ATResponseObj<Boolean> removeProduct(int productId) {
         ProductStore removed = products.remove(productId);
         if (removed == null) {
             logger.warn("try to remove productId:" + productId + " but inventory not contains this product");
-            return false;
+            return new ATResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
-            removed.getProductType().removeStore(getStoreId());
-            logger.info("Inventory remove productId:" + productId);
-            return true;
+            ATResponseObj<Boolean> success = removed.getProductType().removeStore(getStoreId());
+            if(success.getValue())
+                logger.info("Inventory remove productId:" + productId);
+            return success;
         }
 
     }
 
-    public boolean setProductQuantity(int productId, int quantity) {
+    public Integer setProductQuantityForBuy(int productId, int quantity) {
+        ProductStore productStore = products.get(productId);
+        if (productStore == null) {
+            logger.warn("try to set quantity for buy, productId:" + productId + " but inventory not contains this product");
+            return null;
+        } else {
+            long stamp = productStore.getProductLock().writeLock();
+            try {
+                int quantityInInventory = productStore.getQuantity();
+                if(quantityInInventory>=quantity) {
+                    productStore.setQuantity(quantityInInventory - quantity);
+                    logger.info("Inventory set quantity of productId:" + productId + "to " + (quantityInInventory-quantity));
+                    return quantity;
+                }else {
+                    productStore.setQuantity(0);
+                    logger.info("Inventory set quantity of productId:" + productId + "to " + 0);
+                    return quantityInInventory;
+                }
+            }finally {
+                productStore.getProductLock().unlockWrite(stamp);
+            }
+        }
+    }
+
+    public ATResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set quantity productId:" + productId + " but inventory not contains this product");
-            return false;
+            return new ATResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
-            productStore.setQuantity(quantity);
-            logger.info("Inventory set quantity of productId:" + productId + "to " + quantity);
-            return true;
+            long stamp = productStore.getProductLock().writeLock();
+            try {
+                productStore.setQuantity(quantity);
+                logger.info("Inventory set quantity of productId:" + productId + "to " + quantity);
+                return new ATResponseObj<>(true);
+            }finally {
+                productStore.getProductLock().unlockWrite(stamp);
+            }
         }
     }
 
-    public boolean setProductPrice(int productId, double price) {
+    public ATResponseObj<Boolean> setProductPrice(int productId, double price) {
         ProductStore productStore = products.get(productId);
         if (productStore == null) {
             logger.warn("try to set price productId:" + productId + " but inventory not contains this product");
-            return false;
+            return new ATResponseObj<>(false,""+ErrorCode.PRODUCTNOTEXISTINSTORE);
         }
         else {
-            productStore.setPrice(price);
-            logger.info("Inventory set price of productId:" + productId + "to " + price);
-            return true;
+            long stamp = productStore.getProductLock().writeLock();
+            try{
+                productStore.setPrice(price);
+                logger.info("Inventory set price of productId:" + productId + "to " + price);
+                return new ATResponseObj<>(true);
+            }finally {
+                productStore.getProductLock().unlockWrite(stamp);
+            }
         }
     }
 
@@ -101,18 +144,33 @@ public class Inventory {
 
     public ProductStore getProductStoreAfterBuy(Integer productID, Integer productQuantity) {
         ProductStore productStore = getProducts().get(productID);
-        return (productStore == null) ? null : new ProductStore(productStore.getProductType(), productQuantity, productStore.getPrice());
+        if (productStore == null)
+            return null;
+        else{
+            long stamp = productStore.getProductLock().readLock();
+            try {
+                ProductType pt = productStore.getProductType();
+                double price = productStore.getPrice();
+                return new ProductStore(pt, productQuantity, price);
+            }finally {
+                productStore.getProductLock().unlockRead(stamp);
+            }
+        }
 
-    }
-
-    public StampedLock getProductLock(int productID) {
-        ProductStore productStore = products.get(productID);
-        return productStore == null ? null : productStore.getProductLock();
     }
 
     public Double getPrice(Integer productID) {
         ProductStore productStore = products.get(productID);
-        return productStore == null ? null : productStore.getPrice();
+        if (productStore == null)
+            return null;
+        else{
+            long stamp = productStore.getProductLock().readLock();
+            try{
+               return productStore.getPrice();
+            }finally {
+                productStore.getProductLock().unlockRead(stamp);
+            }
+        }
     }
 
     public ProductStore getProduct(int productId) {
@@ -129,4 +187,6 @@ public class Inventory {
     public int getStoreId() {
         return storeId;
     }
+
+
 }

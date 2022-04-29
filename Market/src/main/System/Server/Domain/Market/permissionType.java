@@ -2,47 +2,57 @@ package main.System.Server.Domain.Market;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 public class permissionType {
     static public List<permissionEnum> memberPermissions=new ArrayList<>
-            (Arrays.asList(permissionEnum.Login,permissionEnum.GetStoreInfo,permissionEnum.ProductSearch,
-                    permissionEnum.AddProductToShoppingBag,permissionEnum.order,permissionEnum.Logout,permissionEnum.OpenNewStore));
+            (Arrays.asList(permissionEnum.login,permissionEnum.getStoreInfo,permissionEnum.getInfoProductInStore,
+                    permissionEnum.productSearch,permissionEnum.searchProductByName,permissionEnum.searchProductByDesc,
+                    permissionEnum.searchProductByRate,permissionEnum.searchProductByCategory,permissionEnum.searchProductByRangePrices,
+                    permissionEnum.addProductToShoppingBag,permissionEnum.GetShoppingCart,permissionEnum.RemoveProductFromShoppingBag,permissionEnum.setProductQuantityShoppingBag,
+                    permissionEnum.orderShoppingCart, permissionEnum.logout, permissionEnum.openNewStore));
 
     static public List<permissionEnum> managerPermissions=new ArrayList<>
-            (Arrays.asList(permissionEnum.Login,permissionEnum.GetStoreInfo,permissionEnum.ProductSearch,
-                    permissionEnum.AddProductToShoppingBag,permissionEnum.order,permissionEnum.Logout,permissionEnum.OpenNewStore,permissionEnum.getStoreOrderHistory));
+            (Arrays.asList(permissionEnum.getStoreOrderHistory));
 
     static public List<permissionEnum> ownerPermissions=new ArrayList<>
-            (Arrays.asList(permissionEnum.Login,permissionEnum.GetStoreInfo,permissionEnum.ProductSearch,
-                    permissionEnum.AddProductToShoppingBag,permissionEnum.order,permissionEnum.Logout,permissionEnum.OpenNewStore,permissionEnum.getStoreOrderHistory,
-                    permissionEnum.addNewProductToStore,permissionEnum.deleteProductFromStore,permissionEnum.setProductInStore, permissionEnum.addNewStoreOwner,
-                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.deleteStore,permissionEnum.getStoreRoles));
+            (Arrays.asList(permissionEnum.getStoreOrderHistory,permissionEnum.addNewProductToStore,permissionEnum.deleteProductFromStore,
+                    permissionEnum.setProductPriceInStore,permissionEnum.setProductPriceInStore,permissionEnum.setProductQuantityInStore,permissionEnum.AddNewStoreOwner,
+                    permissionEnum.AddNewStoreManger,permissionEnum.addNewStoreOwner,permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles));
 
-   // static public List<permissionEnum> systemManagerPermissions=new ArrayList<>()
-
+    static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
+            (Arrays.asList(permissionType.permissionEnum.getStoreOrderHistory));
 
     public enum permissionEnum {
 
-        //guest  מבקר-אורח
+// ------------------------------1 .פעולות כלליות של מבקר-אורח:-----------------------------------
+        guestVisit,//// 1 .כניסה:
+        guestLeave,//// 2 .יציאה:
+        addNewMember,// 3 .רישום למערכת המסחר:
+        login, // 4. כניסה מזוהה
 
-        //// 1 .כניסה:
-        //// 2 .יציאה:
-        //TODO 3 .רישום למערכת המסחר:
-        Login, //4
+// ------------------------------2 .פעולות קנייה של מבקר-אורח:----------------------------------
 
-        GetStoreInfo,  //1 .קבלת מידע על חנויות בשוק ועל המוצרים בחנויות.
-        ProductSearch,  //2 .חיפוש מוצרים
-        AddProductToShoppingBag, //3 .שמירת מוצרים
-        //TODO 4 .בדיקת תכולת עגלת הקניות וביצוע שינויים
-        order,//5 .רכישת עגלת הקניות,
+        getStoreInfo,  //1 .קבלת מידע על חנויות בשוק ועל המוצרים בחנויות. //TODO דור אמור להוסיף , לבדוק שזה אותו שם ושזיש את זה גם בפסייד
+        getInfoProductInStore,
+        productSearch,  //2 .חיפוש מוצרים
+        searchProductByName,
+        searchProductByDesc,
+        searchProductByRate,
+        searchProductByCategory,
+        searchProductByRangePrices,
+
+        addProductToShoppingBag, //3 .שמירת מוצרים
+        GetShoppingCart,// 4 .בדיקת תכולת עגלת הקניות וביצוע שינויים
+        RemoveProductFromShoppingBag,
+        setProductQuantityShoppingBag,
+        orderShoppingCart,//5 .רכישת עגלת הקניות,
+
+// -----------------------------3 .פעולות קנייה של מבקר-מנוי:----------------------------------
 
 
-
-        //member  //3 .פעולות קנייה של מבקר-מנוי:
-        Logout,  //1 .ביטול זיהוי )logout :
-        OpenNewStore,  //2 .פתיחת חנות:
+        logout,  //1 .ביטול זיהוי )logout :
+        openNewStore,  //2 .פתיחת חנות:
 
         //next versions //
         //3 .כתיבת ביקורת
@@ -53,17 +63,20 @@ public class permissionType {
         //8 .קבלת מידע ושינוי פרטים מזהים.
         //9 .אבטחת רישום למערכת המסחר:
 
-        // store manager
+
         //12 .קבלת מידע ומתן תגובה//next versions
         getStoreOrderHistory, //13 .קבלת מידע על היסטוריית רכישות בחנות.
-        // , בהתאם להרשאות
+        // + בהתאם להרשאות
 
-        // owner    //4 .פעולות של מבקר-מנוי בתפקידו כבעל חנות
+// -----------------------------4 .פעולות של מבקר-מנוי בתפקידו כבעל חנות:----------------------------------
 
-        // .ניהול מלאי:
+        // 1.ניהול מלאי:
         addNewProductToStore,
         deleteProductFromStore,
-        setProductInStore,
+        setProductPriceInStore,
+        setProductQuantityInStore,
+        AddNewStoreOwner,
+        AddNewStoreManger,
 
         //TODO 2.שינוי סוגי וכללי )מדיניות( קניה והנחה של חנות
         //3 .קביעת אילוצי עקיבות עבור חנות://next versions
@@ -73,12 +86,11 @@ public class permissionType {
         addNewStoreManager, //6 .מינוי מנהל-חנות:
         setManagerPermissions, //7 .שינוי הרשאות של מנהל-חנות:
         //8 .הסרת מינוי של מנהל-חנות//next versions
-        deleteStore,//check founder or system manager //9 .סגירת חנות:
+        closeStore, //9 .סגירת חנות:
         //10 .פתיחת חנות שנסגרה//next versions
         getStoreRoles, //11 .בקשה למידע על תפקידים בחנות:
 
 
-        addFounder,
         // system manager
         //1 .סגירת חנות לצמיתות://next versions:
         //2 .ביטול )הסרת( מנוי של השוק://next versions
