@@ -48,12 +48,16 @@ public class Inventory {
     }
 
     public DResponseObj<Boolean> addNewProduct(ProductType newProduct, int quantity, double price) {
-        if (products.containsKey(newProduct.getProductID())) {
+        DResponseObj<Integer> productStore = newProduct.getProductID();
+        if (productStore.errorOccurred()) return new DResponseObj<>(false,productStore.getErrorMsg());
+        else if (products.containsKey(productStore.getValue())) {
             logger.warn("try to add productId:" + newProduct.getProductID() + " but inventory contains this product");
             return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
-            products.put(newProduct.getProductID(), toAdd);
+            DResponseObj<Integer> productID = newProduct.getProductID();
+            if (productID.errorOccurred()) return new DResponseObj<>(false,productID.getErrorMsg());
+            products.put(productID.getValue(), toAdd);
             logger.info("Inventory added productId:" + newProduct.getProductID());
             return newProduct.addStore(storeId);
         }

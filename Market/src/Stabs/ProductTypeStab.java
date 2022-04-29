@@ -1,6 +1,8 @@
 package Stabs;
 
 import main.System.Server.Domain.Market.ProductType;
+import main.System.Server.Domain.Response.DResponse;
+import main.System.Server.Domain.Response.DResponseObj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,29 +17,34 @@ public class ProductTypeStab extends ProductType {
     int category;
     List<Integer> stores=new ArrayList<>();
 
-    public ProductTypeStab(int productID, String productName,String description) {
+
+    public ProductTypeStab(int productID, String productName, String description) {
         super(productID, productName, description);
     }
 
-
-    public int getRate() {
-        return 1;
+    public DResponseObj<Integer> getRate() {
+            return new DResponseObj<>(1,1);
     }
 
-    public boolean setRate(int r) {
-        return true;
+    public DResponseObj<Boolean> setRate(int r) {
+        return new DResponseObj<>(true,1);
     }
 
-    public boolean storeExist(int storeID){
-       return true;
+    public DResponseObj<Boolean> storeExist(int storeID){
+        return new DResponseObj<>(true,1);
     }
 
-    public boolean removeStore(int storeID){
-        return true;
+    public DResponseObj<Boolean> removeStore(int storeID){
+        return new DResponseObj<>(true,1);
     }
 
-    public boolean addStore(int storeID){
-        return true;
+    public DResponseObj<List<Integer>> getStores() {
+        return new DResponseObj<>(null,1);
+    }
+
+    public DResponseObj<Boolean> addStore(int storeID){
+        return new DResponseObj<>(true,1);
+
     }
 
     public void setDescription(String description) {
@@ -48,28 +55,27 @@ public class ProductTypeStab extends ProductType {
         this.category = category;
     }
 
-    public int getProductID() {
-        return productID;
+    public DResponseObj<Integer> getProductID() {
+        return new DResponseObj<>(productID);
     }
 
-    public String getProductName() {
-        return productName;
+    public DResponseObj<String> getProductName() {
+        return new DResponseObj<>(productName);
     }
 
-    public String getDescription() {
-        return description;
+    public DResponseObj<String> getDescription() {
+        return new DResponseObj<>(description);
     }
 
-    public int getCategory() {
-        return category;
+    public DResponseObj<Integer> getCategory() {
+        return new DResponseObj<>(category);
     }
 
-    public boolean containName(String name){
-        return productName.contains(name);
+    public DResponseObj<Boolean> containName(String name){
+        return new DResponseObj<>(productName.contains(name));
     }
-    public boolean containDesc(String desc){
-        return description.contains(desc);
+    public DResponseObj<Boolean> containDesc(String desc){
+        return new DResponseObj<>(description.contains(desc));
     }
-
 
 }
