@@ -25,7 +25,7 @@ public class StoreStab extends Store {
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
-    public DResponseObj<String> getProductInStoreInfo(int productId){
+    public DResponseObj<String> getProductInStoreInfo2(int productId){
         DResponseObj<String> output=new DResponseObj<>();
         output.value="yaki";
         return output;
@@ -118,7 +118,6 @@ public class StoreStab extends Store {
     }
 
     public DResponseObj<Boolean> newStoreRate(int rate){
-
         this.rate=rate;
         return new DResponseObj<>(true);
     }
@@ -159,8 +158,8 @@ public class StoreStab extends Store {
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
-    public int getStoreId(){
-        return 8;
+    public DResponseObj<Integer> getStoreId(){
+        return new DResponseObj<>(8);
     }
 
     public Inventory getInventory() {
@@ -175,8 +174,8 @@ public class StoreStab extends Store {
         return new DResponseObj<>(true);
     }
 
-    public int getRate() {
-        return rate;
+    public DResponseObj<Integer> getRate() {
+        return new DResponseObj<>(rate);
     }
 
     public DiscountPolicy getDiscountPolicy() {
