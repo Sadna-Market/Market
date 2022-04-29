@@ -333,18 +333,22 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
     public DResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
-        DResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        return userManager.addNewStoreManager(userId, store.getValue(), newMangermail);
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.AddNewStoreManger,null);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
+
+        return userManager.addNewStoreManager(userId, store, newMangermail);
     }
 
     //2.4.7
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
-        DResponseObj<Store> store = getStore(storeId);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        return userManager.setManagerPermissions(userId, store.getValue(), mangerMail, perm);
+        DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.setManagerPermissions,null);
+        if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
+        Store store=result.getValue().item1;
+
+        return userManager.setManagerPermissions(userId, store, mangerMail, perm);
     }
 
     //2.4.9
