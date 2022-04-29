@@ -91,6 +91,10 @@ public class ProductType {
     public DResponseObj<Boolean> removeStore(int storeID){
         DResponseObj<Boolean> existInStore=storeExist(storeID);
         if(existInStore.errorOccurred()) return existInStore;
+        if (!existInStore.getValue()){
+            logger.warn("this store number not exist in the product type list");
+            return new DResponseObj<>(ErrorCode.STORENOTINTHEPRODUCTTYPE);
+        }
         long stamp= lock_stores.writeLock();
         logger.debug("catch the WriteLock.");
         try{
@@ -98,7 +102,7 @@ public class ProductType {
                 return new DResponseObj<>(true);
             String warning = "the product typre can not remove this store from his list";
             logger.warn(warning);
-            return new DResponseObj<>(warning);
+            return new DResponseObj<>(ErrorCode.STORESTAYINTHEPRODUCTTYPE);
         }
         finally {
             lock_stores.unlockWrite(stamp);

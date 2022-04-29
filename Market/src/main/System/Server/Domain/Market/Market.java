@@ -239,6 +239,10 @@ public class Market {
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return online;
+        if (!online.getValue()){
+            logger.warn("the user not online");
+            return new DResponseObj<>(ErrorCode.NOTONLINE);
+        }
         DResponseObj<Store> s = getStore(StoreId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().isProductExistInStock(ProductId, quantity);
