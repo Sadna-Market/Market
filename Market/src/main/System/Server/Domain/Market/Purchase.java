@@ -1,13 +1,12 @@
 package main.System.Server.Domain.Market;
 
 import main.System.Server.Domain.StoreModel.Store;
-import main.System.Server.Domain.UserModel.Response.ATResponseObj;
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingBag;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.StampedLock;
 
 public class Purchase {
 
@@ -22,7 +21,7 @@ public class Purchase {
             return false;
     }
 
-    public ATResponseObj<Boolean> order(User user){
+    public DResponseObj<Boolean> order(User user){
          ConcurrentHashMap<Integer,ShoppingBag> bags =user.getShoppingCart().getHashShoppingCart();
          for (Integer i: bags.keySet()){
              ShoppingBag bag=bags.get(i);

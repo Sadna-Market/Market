@@ -3,15 +3,15 @@ package main.System.Server.Domain.UserModel;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
+import main.System.Server.Domain.Market.userTypes;
 import main.System.Server.Domain.StoreModel.Store;
-import main.System.Server.Domain.UserModel.Response.ATResponseObj;
+import main.System.Server.Domain.Response.DResponseObj;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
-public class User extends Guest{
+public class User extends Guest {
     ShoppingCart shoppingCart;
     String Password;
     String email;
@@ -19,83 +19,90 @@ public class User extends Guest{
     String CreditCard;
     String CreditDate;
 
-    private List<Permission> accessPermission= new LinkedList<>();; // all the permission is my
-    private List<Permission> grantorPermission= new LinkedList<>();;//all the permission that this user gave
+    private List<Permission> accessPermission = new LinkedList<>();
+    ; // all the permission is my
+    private List<Permission> grantorPermission = new LinkedList<>();
+    ;//all the permission that this user gave
     private List<Permission> safeAccessPermission = Collections.synchronizedList(accessPermission);
     private List<Permission> safeGrantorPermission = Collections.synchronizedList(grantorPermission);
 
-    public User(String email,String password ,String phoneNumber,String CreditCared,String CreditDate) {
-        shoppingCart=new ShoppingCart();
-        this.email=email;
-        this.Password=password;
+    public User(String email, String password, String phoneNumber, String CreditCared, String CreditDate) {
+        shoppingCart = new ShoppingCart();
+        this.email = email;
+        this.Password = password;
         this.phoneNumber = phoneNumber;
         this.CreditCard = CreditCared;
-        this.CreditDate= CreditDate;
+        this.CreditDate = CreditDate;
 
     }
 
-    public void addAccessPermission(Permission p){
+    public void addAccessPermission(Permission p) {
         accessPermission.add(p);
     }
-    public void addGrantorPermission(Permission p){
+
+    public void addGrantorPermission(Permission p) {
         grantorPermission.add(p);
     }
-    public void removeAccessPermission(Permission p){
+
+    public void removeAccessPermission(Permission p) {
         accessPermission.remove(p);
     }
-    public void removeGrantorPermission(Permission p){
+
+    public void removeGrantorPermission(Permission p) {
         grantorPermission.remove(p);
     }
-    public String getEmail(){
+
+    public String getEmail() {
         return email;
     }
 
-    public List<Permission> getAccessPermission(){
+    public List<Permission> getAccessPermission() {
         return accessPermission;
     }
-    public List<Permission> getGrantorPermission(){
+
+    public List<Permission> getGrantorPermission() {
         return grantorPermission;
     }
 
 
     //all the store that i have a permission
     List<Store> granteeStores() {
-        List<Store> granteeStores=new LinkedList<>();
-        for (Permission permission  : accessPermission)
-        {
+        List<Store> granteeStores = new LinkedList<>();
+        for (Permission permission : accessPermission) {
             granteeStores.add(permission.getStore());
         }
         return granteeStores;
     }
 
-    public ATResponseObj<Boolean> addFounder(Store store) {
-        return PermissionManager.getInstance().createPermission(this,store,null,userTypes.owner,userTypes.system);
+    public DResponseObj<Boolean> addFounder(Store store) {
+        return PermissionManager.getInstance().createPermission(this, store, null, userTypes.owner, userTypes.system);
     }
 
-    public ATResponseObj<Boolean> addNewStoreOwner(User user, Store store) {
-        PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.createPermission(user,store,this, userTypes.owner,userTypes.owner));
+    public DResponseObj<Boolean> addNewStoreOwner(User user, Store store) {
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        return (permissionManager.createPermission(user, store, this, userTypes.owner, userTypes.owner));
     }
 
-    public ATResponseObj<Boolean> addNewStoreManager(User user, Store store) {
-        PermissionManager permissionManager =PermissionManager.getInstance();
-        return (permissionManager.createPermission(user,store,this, userTypes.manager,userTypes.owner));    }
-
-    public ATResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
-        PermissionManager permissionManager =PermissionManager.getInstance();
-        ATResponseObj<Boolean> b=permissionManager.addManagerPermissionType(perm,user,store,this);
-        return !b.errorOccurred();
+    public DResponseObj<Boolean> addNewStoreManager(User user, Store store) {
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        return (permissionManager.createPermission(user, store, this, userTypes.manager, userTypes.owner));
     }
 
-    public boolean getRolesInStore(Store store){
+    public DResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        DResponseObj<Boolean> b = permissionManager.addManagerPermissionType(perm, user, store, this);
+        return b;
+    }
+
+    public boolean getRolesInStore(Store store) {
         return false;
     }
 
-    public  boolean isPasswordEquals(String password){
-        return this.Password.equals( password);
+    public boolean isPasswordEquals(String password) {
+        return this.Password.equals(password);
     }
 
-    public ShoppingCart getShoppingCart(){
+    public ShoppingCart getShoppingCart() {
         return this.shoppingCart;
     }
 }

@@ -3,7 +3,7 @@ package Stabs;
 import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.ProductType;
 import main.System.Server.Domain.StoreModel.*;
-import main.System.Server.Domain.UserModel.Response.ATResponseObj;
+import main.System.Server.Domain.Response.DResponseObj;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +25,8 @@ public class StoreStab extends Store {
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
-    public ATResponseObj<String> getProductInStoreInfo(int productId){
-        ATResponseObj<String> output=new ATResponseObj<>();
+    public DResponseObj<String> getProductInStoreInfo(int productId){
+        DResponseObj<String> output=new DResponseObj<>();
         output.value="yaki";
         return output;
     }
@@ -37,30 +37,30 @@ public class StoreStab extends Store {
     }
 
     //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
-    public ATResponseObj<Boolean> isProductExistInStock(int productId, int quantity){
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> isProductExistInStock(int productId, int quantity){
+        return new DResponseObj<>(true);
     }
 
 
     //requirement II.4.1 (only owners)
-    public ATResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> addNewProduct(ProductType productType, int quantity, double price) {
+        return new DResponseObj<>(true);
     }
 
     //requirement II.4.1 (only owners)
-    public ATResponseObj<Boolean> removeProduct(int productId) {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> removeProduct(int productId) {
+        return new DResponseObj<>(true);
     }
 
     //requirement II.4.1 & II.2.5 (only owners)
     //if change to quantity 0 not delete product (need to find the product price later)
-    public ATResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
+        return new DResponseObj<>(true);
     }
 
     //requirement II.4.1  (only owners)
-    public ATResponseObj<Boolean> setProductPrice(int productId, double price) {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> setProductPrice(int productId, double price) {
+        return new DResponseObj<>(true);
     }
 
     //requirement II.2.2
@@ -69,13 +69,13 @@ public class StoreStab extends Store {
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
-    public ATResponseObj<List<History>> getStoreOrderHistory() {
-        return new ATResponseObj<>(new ArrayList<>());
+    public DResponseObj<List<History>> getStoreOrderHistory() {
+        return new DResponseObj<>(new ArrayList<>());
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
-    public ATResponseObj<List<History>> getUserHistory(String user) {
-        return new ATResponseObj<>(new ArrayList<>());
+    public DResponseObj<List<History>> getUserHistory(String user) {
+        return new DResponseObj<>(new ArrayList<>());
     }
 
     //niv tests
@@ -84,8 +84,8 @@ public class StoreStab extends Store {
     }
 
     //requirement II.2.5
-    public ATResponseObj<Boolean> addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
+        return new DResponseObj<>(true);
     }
 
     //requirement II.2.5
@@ -113,14 +113,14 @@ public class StoreStab extends Store {
     }
 
     //requirement II.4.9  (only owners)
-    public ATResponseObj<Boolean> closeStore() {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> closeStore() {
+        return new DResponseObj<>(true);
     }
 
-    public ATResponseObj<Boolean> newStoreRate(int rate){
+    public DResponseObj<Boolean> newStoreRate(int rate){
 
         this.rate=rate;
-        return new ATResponseObj<>(true);
+        return new DResponseObj<>(true);
     }
 
 
@@ -171,8 +171,8 @@ public class StoreStab extends Store {
         return "yaki";
     }
 
-    public ATResponseObj<Boolean> isOpen() {
-        return new ATResponseObj<>(true);
+    public DResponseObj<Boolean> isOpen() {
+        return new DResponseObj<>(true);
     }
 
     public int getRate() {

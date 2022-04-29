@@ -5,7 +5,7 @@ import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.Market.userTypes;
 import main.System.Server.Domain.StoreModel.Store;
-import main.System.Server.Domain.UserModel.Response.ATResponseObj;
+import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 
 import java.util.UUID;
@@ -48,24 +48,24 @@ public class UserManager {
 
 
 
-    public ATResponseObj<UUID> GuestVisit(){
+    public DResponseObj<UUID> GuestVisit(){
         logger.debug("UserManager GuestVisit");
         UUID newid = UUID.randomUUID();
         Guest guest = new Guest();
         GuestVisitors.put(newid, guest);
-        return new ATResponseObj<>(newid);
+        return new DResponseObj<>(newid);
 
     }
 
-    public ATResponseObj<Boolean> GuestLeave(UUID guestId) {
+    public DResponseObj<Boolean> GuestLeave(UUID guestId) {
         logger.debug("UserManager GuestLeave");
         if (!GuestVisitors.containsKey(guestId)) {
-            ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
             a.errorMsg = ""+ ErrorCode.NOTONLINE;
             return a;
         } else {
             GuestVisitors.remove(guestId);
-            ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (true);
+            DResponseObj<Boolean> a = new DResponseObj<Boolean>(true);
 
             return a;
         }
@@ -73,56 +73,56 @@ public class UserManager {
 
 
 
-    public ATResponseObj<Boolean> Login(UUID userID,String email, String password) {
+    public DResponseObj<Boolean> Login(UUID userID, String email, String password) {
         logger.debug("UserManager Login");
         if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password)) {
             User LogUser = members.get(email);
             LoginUsers.put(userID, LogUser);
             GuestVisitors.remove(userID);
-            return new ATResponseObj<>(true);
+            return new DResponseObj<>(true);
         } else {
-            ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
             return a;
         }
 
     }
 
-    public ATResponseObj<Boolean> Logout(UUID userId) {
+    public DResponseObj<Boolean> Logout(UUID userId) {
         if (LoginUsers.containsKey(userId)) {
             LoginUsers.remove(userId);
             Guest guest = new Guest();
             GuestVisitors.put(userId, guest);
-            return new ATResponseObj<>(true);
+            return new DResponseObj<>(true);
         }
-        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         return a;
     }
 
 
-    public ATResponseObj<Boolean> AddNewMember(UUID uuid,String email, String Password,String phoneNumber,String CreditCared,String CreditDate) {
+    public DResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber, String CreditCared, String CreditDate) {
 
         long stamp= LockUsers.writeLock();
         try {
             if (!isOnline(uuid)) {
-                ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+                DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
                 a.errorMsg = ""+notLoged;
                 return a;
             }
             if (members.containsKey(email)) {
 
-                ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+                DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
                 a.errorMsg = ""+notMember;
                 return a;            }
             if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)||
                     !Validator.isValidCreditCard(CreditCared)||!Validator.isValidCreditDate(CreditDate)){
 
-                ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+                DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
                 a.errorMsg = ""+notvalidInput;
                 return a;
             }
             User user = new User(email, Password,phoneNumber,CreditCared,CreditDate);
             members.put(email, user);
-            return new ATResponseObj<>(true);
+            return new DResponseObj<>(true);
         }finally {
             LockUsers.unlockWrite(stamp);
         }
@@ -143,7 +143,7 @@ public class UserManager {
 
     }
 
-    public ATResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
+    public DResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
         logger.debug("UserManager addNewStoreOwner");
         if(isLogged(userId) ) {
             User loggedUser = LoginUsers.get(userId);
@@ -152,23 +152,23 @@ public class UserManager {
                 return loggedUser.addNewStoreOwner(newOwner,store);
             }
         }
-        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         a.errorMsg = ""+notLoged;
         return a;
     }
 
-    public ATResponseObj<Boolean> addFounder(UUID userId, Store store) {
+    public DResponseObj<Boolean> addFounder(UUID userId, Store store) {
         logger.debug("UserManager addFounder");
 
         if(isLogged(userId)) {
             User user = LoginUsers.get(userId);
             return user.addFounder(store);
         }
-        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         a.errorMsg = ""+notLoged;
         return a;
     }
-    public ATResponseObj<Boolean> addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
+    public DResponseObj<Boolean> addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
         logger.debug("UserManager addNewStoreManager");
 
         if(isLogged(uuid) ) {
@@ -177,14 +177,14 @@ public class UserManager {
                 User newManager = members.get(newMangerEmail);
                 return loggedUser.addNewStoreManager(newManager,store);
             }}
-        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         a.errorMsg = ""+notLoged;
         return a;
     }
 
 
 
-    public ATResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
+    public DResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
         logger.debug("UserManager setManagerPermissions");
         if(isLogged(userId) ) {
             User loggedUser = LoginUsers.get(userId);
@@ -193,7 +193,7 @@ public class UserManager {
                 return loggedUser.setManagerPermissions(Manager,store,perm);
             }
         }
-        ATResponseObj<Boolean> a = new ATResponseObj<Boolean> (false);
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         a.errorMsg = ""+notLoged;
         return a;
     }
@@ -220,15 +220,15 @@ public class UserManager {
         }
     }
 
-    public ATResponseObj<ShoppingCart> getUserShoppingCart(UUID userId)
+    public DResponseObj<ShoppingCart> getUserShoppingCart(UUID userId)
     {
         logger.debug("UserManager getUserShoppingCart");
 
         if(GuestVisitors.containsKey(userId)){
-            return new ATResponseObj<>( GuestVisitors.get(userId).getShoppingCart());
+            return new DResponseObj<>( GuestVisitors.get(userId).getShoppingCart());
         }
         else if(members.containsKey(userId)){
-            return new ATResponseObj<>( members.get(userId).getShoppingCart());
+            return new DResponseObj<>( members.get(userId).getShoppingCart());
         }
         else return null;
     }

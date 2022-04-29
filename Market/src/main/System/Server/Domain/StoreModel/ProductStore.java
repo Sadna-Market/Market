@@ -45,4 +45,16 @@ public class ProductStore {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    //TODO:
+
+    @Override
+    public String toString() {
+        return "ProductStore{" +
+                "productLock=" + productLock +
+                ", productType=" + productType +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 }

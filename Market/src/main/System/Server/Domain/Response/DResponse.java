@@ -1,10 +1,10 @@
-package main.System.Server.Domain.UserModel.Response;
+package main.System.Server.Domain.Response;
 
-public class ATResponse {
+public class DResponse {
     public String errorMsg;
     private boolean errorOccurred;
-    public ATResponse(){}
-    public ATResponse(String msg){
+    public DResponse(){}
+    public DResponse(String msg){
         errorMsg = msg;
     }
 
