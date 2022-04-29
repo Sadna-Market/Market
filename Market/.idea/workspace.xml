@@ -14,9 +14,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JUnit5 Test Class" />
+        <option value="JUnit5 Test Class" />
         <option value="Interface" />
-        <option value="JUnit5 Test Class" />
-        <option value="JUnit5 Test Class" />
         <option value="Class" />
       </list>
     </option>
@@ -58,7 +58,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/javax.mail-1.6.2.jar!/" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15136719" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -83,13 +83,12 @@
       <module name="Market" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.System.Server.Domain.Market.*" />
+          <option name="PATTERN" value="Acceptance.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="main.System.Server.Domain.Market" />
-      <option name="MAIN_CLASS_NAME" value="main.System.Server.Domain.Market.MarketTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="Acceptance" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -289,7 +288,224 @@
       <option name="project" value="LOCAL" />
       <updated>1650984753733</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="built bridge dp&#10;issue #10">
+      <created>1651122442412</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1651122442412</updated>
+    </task>
+    <task id="LOCAL-00016" summary="init market AT req #1.1&#10;issue #40">
+      <created>1651123457526</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1651123457526</updated>
+    </task>
+    <task id="LOCAL-00017" summary="init market AT req #1.3&#10;also added template for re #1.2 to next version impl&#10;issue #41">
+      <created>1651123675345</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1651123675345</updated>
+    </task>
+    <task id="LOCAL-00018" summary="payment service AT req #1.3&#10;also added template for re #1.2 to next version impl&#10;issue #41">
+      <created>1651123880572</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1651123880572</updated>
+    </task>
+    <task id="LOCAL-00019" summary="supply service AT req #1.4&#10;also added template for re #1.5, #1.6 to next version impl&#10;issue #42">
+      <created>1651123921381</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1651123921381</updated>
+    </task>
+    <task id="LOCAL-00020" summary="guest visit req #2.1.1&#10;issue #43">
+      <created>1651124196833</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1651124196833</updated>
+    </task>
+    <task id="LOCAL-00021" summary="guest register req #2.1.3&#10;issue #45">
+      <created>1651124354558</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1651124354558</updated>
+    </task>
+    <task id="LOCAL-00022" summary="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46">
+      <created>1651124583521</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1651124583521</updated>
+    </task>
+    <task id="LOCAL-00023" summary="get store info AT  req #2.2.1&#10;issue #47">
+      <created>1651168856300</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1651168856300</updated>
+    </task>
+    <task id="LOCAL-00024" summary="search and filter products AT  req #2.2.2&#10;issue #48">
+      <created>1651169179800</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169179800</updated>
+    </task>
+    <task id="LOCAL-00025" summary="add products to shopping bag AT  req #2.2.3&#10;issue #49">
+      <created>1651169465817</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169465817</updated>
+    </task>
+    <task id="LOCAL-00026" summary="get cart details AT  req #2.2.4.1&#10;issue #50">
+      <created>1651169633650</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169633650</updated>
+    </task>
+    <task id="LOCAL-00027" summary="remove product from cart - AT  req #2.2.4.2&#10;issue #51">
+      <created>1651169745134</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169745134</updated>
+    </task>
+    <task id="LOCAL-00028" summary="update product's quantity from cart - AT  req #2.2.4.3&#10;issue #52">
+      <created>1651169882251</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1651169882251</updated>
+    </task>
+    <task id="LOCAL-00029" summary="purchase cart - AT  req #2.2.5&#10;issue #53">
+      <created>1651170695600</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1651170695600</updated>
+    </task>
+    <task id="LOCAL-00030" summary="logout - AT  req #2.2.5&#10;issue #54">
+      <created>1651170832484</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1651170832484</updated>
+    </task>
+    <task id="LOCAL-00031" summary="logout - AT  req #2.2.5&#10;issue #54">
+      <created>1651171054751</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171054751</updated>
+    </task>
+    <task id="LOCAL-00032" summary="logout - AT  req #2.3.1&#10;issue #54">
+      <created>1651171098667</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171098667</updated>
+    </task>
+    <task id="LOCAL-00033" summary="add new store - AT  req #2.3.2&#10;issue #55">
+      <created>1651171153400</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171153400</updated>
+    </task>
+    <task id="LOCAL-00034" summary="add a product to store - AT  req #2.4.1.1&#10;issue #56">
+      <created>1651171468901</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171468901</updated>
+    </task>
+    <task id="LOCAL-00035" summary="remove a product to store - AT  req #2.4.1.2&#10;issue #57">
+      <created>1651171631201</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171631201</updated>
+    </task>
+    <task id="LOCAL-00036" summary="update a product to store - AT  req #2.4.1.3&#10;issue #58">
+      <created>1651171833967</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1651171833967</updated>
+    </task>
+    <task id="LOCAL-00037" summary="add owner to store - AT  req #2.4.4&#10;also added skeleton for eq #2.4.2&#10;issue #59">
+      <created>1651172076617</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172076617</updated>
+    </task>
+    <task id="LOCAL-00038" summary="add manager to store - AT  req #2.4.6&#10;issue #60">
+      <created>1651172226717</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172226717</updated>
+    </task>
+    <task id="LOCAL-00039" summary="change permission of manager - AT  req #2.4.7&#10;issue #61">
+      <created>1651172458734</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172458734</updated>
+    </task>
+    <task id="LOCAL-00040" summary="delete store - AT  req #2.4.9&#10;issue #62">
+      <created>1651172600484</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172600484</updated>
+    </task>
+    <task id="LOCAL-00041" summary="delete store - AT  req #2.4.9&#10;issue #62">
+      <created>1651172616489</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172616489</updated>
+    </task>
+    <task id="LOCAL-00042" summary="role info of user in store - AT  req #2.4.11&#10;issue #63">
+      <created>1651172806934</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172806934</updated>
+    </task>
+    <task id="LOCAL-00043" summary="gets purchase history owner - AT  req #2.4.13&#10;issue #64">
+      <created>1651172884150</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1651172884150</updated>
+    </task>
+    <task id="LOCAL-00044" summary="info of any buyer/store - AT  req #2.6.4&#10;issue #65">
+      <created>1651173308017</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1651173308017</updated>
+    </task>
+    <task id="LOCAL-00045" summary="permissions of manager - AT  req #2.5">
+      <created>1651173593434</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1651173593434</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -309,21 +525,32 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="#47 get store products" />
-    <MESSAGE value="#48 product search" />
-    <MESSAGE value="#56 check if product in stock" />
-    <MESSAGE value="#56 add new product to store" />
-    <MESSAGE value="#57 remove product to store" />
-    <MESSAGE value="#58 set quantity in store" />
-    <MESSAGE value="#58 set product price in store" />
-    <MESSAGE value="#48 get price of product" />
-    <MESSAGE value="#64 history for owner" />
-    <MESSAGE value="#65 history for system" />
-    <MESSAGE value="#53 buy shopping bag from store" />
-    <MESSAGE value="#62 close store" />
-    <MESSAGE value="add permissions &amp; getters and setters" />
-    <MESSAGE value="finished basic functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished basic functions" />
+    <MESSAGE value="supply service AT req #1.4&#10;also added template for re #1.5, #1.6 to next version impl&#10;issue #42" />
+    <MESSAGE value="guest visit req #2.1.1&#10;issue #43" />
+    <MESSAGE value="guest register req #2.1.3&#10;issue #45" />
+    <MESSAGE value="user login req #2.1.4&#10;also tests for change password req #2.1.4.2&#10;issue #46" />
+    <MESSAGE value="get store info AT  req #2.2.1&#10;issue #47" />
+    <MESSAGE value="search and filter products AT  req #2.2.2&#10;issue #48" />
+    <MESSAGE value="add products to shopping bag AT  req #2.2.3&#10;issue #49" />
+    <MESSAGE value="get cart details AT  req #2.2.4.1&#10;issue #50" />
+    <MESSAGE value="remove product from cart - AT  req #2.2.4.2&#10;issue #51" />
+    <MESSAGE value="update product's quantity from cart - AT  req #2.2.4.3&#10;issue #52" />
+    <MESSAGE value="purchase cart - AT  req #2.2.5&#10;issue #53" />
+    <MESSAGE value="logout - AT  req #2.2.5&#10;issue #54" />
+    <MESSAGE value="logout - AT  req #2.3.1&#10;issue #54" />
+    <MESSAGE value="add new store - AT  req #2.3.2&#10;issue #55" />
+    <MESSAGE value="add a product to store - AT  req #2.4.1.1&#10;issue #56" />
+    <MESSAGE value="remove a product to store - AT  req #2.4.1.2&#10;issue #57" />
+    <MESSAGE value="update a product to store - AT  req #2.4.1.3&#10;issue #58" />
+    <MESSAGE value="add owner to store - AT  req #2.4.4&#10;also added skeleton for eq #2.4.2&#10;issue #59" />
+    <MESSAGE value="add manager to store - AT  req #2.4.6&#10;issue #60" />
+    <MESSAGE value="change permission of manager - AT  req #2.4.7&#10;issue #61" />
+    <MESSAGE value="delete store - AT  req #2.4.9&#10;issue #62" />
+    <MESSAGE value="role info of user in store - AT  req #2.4.11&#10;issue #63" />
+    <MESSAGE value="gets purchase history owner - AT  req #2.4.13&#10;issue #64" />
+    <MESSAGE value="info of any buyer/store - AT  req #2.6.4&#10;issue #65" />
+    <MESSAGE value="permissions of manager - AT  req #2.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="permissions of manager - AT  req #2.5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
