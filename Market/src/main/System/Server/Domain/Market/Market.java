@@ -287,7 +287,7 @@ public class Market {
             stores.put(store.getStoreId().value, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
-            return new DResponseObj<>(storeCounter);
+            return new DResponseObj<>(storeCounter,-1);
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock");
@@ -323,9 +323,9 @@ public class Market {
             }
             ProductType p = new ProductType(productCounter++,name,description,category);
             productTypes.put(p.productID,p);
-            return new DResponseObj<>( p.productID);
+            return new DResponseObj<>( p.productID,-1);
         }finally {
-            lock_stores.unlockWrite(stamp);
+            lock_TP.unlockWrite(stamp);
             logger.debug("released the WriteLock");
         }
     }
