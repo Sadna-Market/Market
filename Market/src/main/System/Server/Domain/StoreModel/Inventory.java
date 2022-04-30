@@ -49,15 +49,12 @@ public class Inventory {
 
     public DResponseObj<Boolean> addNewProduct(ProductType newProduct, int quantity, double price) {
         DResponseObj<Integer> productStore = newProduct.getProductID();
-        if (productStore.errorOccurred()) return new DResponseObj<>(false,productStore.getErrorMsg());
-        else if (products.containsKey(productStore.getValue())) {
+        if (products.containsKey(productStore.getValue())) {
             logger.warn("try to add productId:" + newProduct.getProductID() + " but inventory contains this product");
             return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
-            DResponseObj<Integer> productID = newProduct.getProductID();
-            if (productID.errorOccurred()) return new DResponseObj<>(false,productID.getErrorMsg());
-            products.put(productID.getValue(), toAdd);
+            products.put(productStore.getValue(), toAdd);
             logger.info("Inventory added productId:" + newProduct.getProductID());
             return newProduct.addStore(storeId);
         }
@@ -89,11 +86,11 @@ public class Inventory {
                 if(quantityInInventory>=quantity) {
                     productStore.setQuantity(quantityInInventory - quantity);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + (quantityInInventory-quantity));
-                    return new DResponseObj<>(quantity);
+                    return new DResponseObj<>(quantity,-1);
                 }else {
                     productStore.setQuantity(0);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + 0);
-                    return new DResponseObj<>(quantityInInventory);
+                    return new DResponseObj<>(quantityInInventory,-1);
                 }
             }finally {
                 productStore.getProductLock().unlockWrite(stamp);
@@ -210,7 +207,21 @@ public class Inventory {
             return new DResponseObj<>(productStore.toString());
     }
 
-
+    public DResponseObj<Boolean> addQuantity(int productID, int quantityToAdd) {
+        ProductStore productStore = products.get(productID);
+        if (productStore == null){
+            logger.warn("try to get price of productId:" + productID + " but inventory not contains this product");
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
+        }
+        else{
+            long stamp = productStore.getProductLock().readLock();
+            try{
+                    return productStore.addQuantity(quantityToAdd);
+            }finally {
+                productStore.getProductLock().unlockRead(stamp);
+            }
+        }
+    }
 
 
     ////////////////////////////////////////// Getters and Setters //////////////////////////////////////////////////
@@ -218,8 +229,6 @@ public class Inventory {
     public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> getProducts() {
         return new DResponseObj<>(products);
     }
-
-
 
 
 }

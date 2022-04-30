@@ -166,7 +166,7 @@ public class Store {
     }
 
     //requirement II.2.5
-    public DResponseObj<Boolean> addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
+    public DResponseObj<Boolean> addHistory(int TID, String user, ConcurrentHashMap<Integer,Integer> products, double finalPrice) {
         List<ProductStore> productsBuy = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
             Integer productID = entry.getKey();
@@ -218,6 +218,18 @@ public class Store {
     }
 
 
+    //requirement II.2.5
+    //productsInBag <productID,quantity>
+    public DResponseObj<Boolean> rollbackProductQuantity(ConcurrentHashMap<Integer,Integer> productsInBag){
+        for (Map.Entry<Integer, Integer> entry : productsInBag.entrySet()) {
+            int productID = entry.getKey();
+            int quantityToAdd = entry.getValue();
+            DResponseObj<Boolean> add = inventory.addQuantity(productID,quantityToAdd);
+            if(add.errorOccurred()) return add;
+        }
+        return new DResponseObj<>(true);
+    }
+
     //requirement II.4.9  (only owners)
     public DResponseObj<Boolean> closeStore() {
         DResponseObj<Boolean> success = inventory.tellProductStoreIsClose();
@@ -248,7 +260,23 @@ public class Store {
 
     //requirement II.4.11  (only owners)
     public DResponseObj<HashMap<String,List<String>>> getStoreRoles(){
-        return new DResponseObj<>(new HashMap<>());
+
+        List<String> managers = new ArrayList<>();
+        List<String> owners = new ArrayList<>();
+        List<String> founder = new ArrayList<>();
+        founder.add(this.founder);
+        for(Permission p: getSafePermission().getValue()){
+            DResponseObj<userTypes> type = p.getGranteeType();
+            if(type.errorOccurred())
+                return new DResponseObj<>(null,type.getErrorMsg());
+            if(type.getValue().equals(userTypes.manager))
+                managers.add(p.getGrantee().getValue().getEmail().getValue());
+            else if(type.getValue().equals(userTypes.owner))
+                owners.add(p.getGrantee().getValue().getEmail().getValue());
+        }
+        HashMap<String,List<String>> roles = new HashMap<>();
+        roles.put("manager",managers); roles.put("owner",owners); roles.put("founder",founder);
+        return new DResponseObj<>(roles);
     }
 
 
@@ -269,7 +297,7 @@ public class Store {
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
     public DResponseObj<Integer> getStoreId(){
-        return new DResponseObj<>(storeId);
+        return new DResponseObj<>(storeId,-1);
     }
 
     public DResponseObj<String> getName() {
@@ -281,7 +309,7 @@ public class Store {
     }
 
     public DResponseObj<Integer> getRate() {
-        return new DResponseObj<>(rate);
+        return new DResponseObj<>(rate,-1);
     }
 
     public DResponseObj<String> getFounder() {
