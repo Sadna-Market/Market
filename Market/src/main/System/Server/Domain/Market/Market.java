@@ -225,7 +225,6 @@ public class Market {
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
-
         List<ProductType> searchOn = getProductTypes();
         List<Integer> output = new ArrayList<>();
         for (ProductType p : searchOn) {
