@@ -85,6 +85,15 @@ public class Market {
     //pre: -
     //post: get all the open stores that the arg is apart of their names
     public DResponseObj<List<Integer>> searchProductByName(String name) {
+
+        List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
+        return searchProductByName(pIDs,name);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their names
+    public DResponseObj<List<Integer>> searchProductByName(List<Integer> list,String name) {
         if (name==null){
             logger.warn("the name is null");
             DResponseObj<List<Integer>> output=new DResponseObj<>();
@@ -93,16 +102,24 @@ public class Market {
         }
 
         List<ProductType> searchOn = getProductTypes();
+
         List<Integer> output = new ArrayList<>();
-        for (ProductType productType: searchOn){
-            DResponseObj<Boolean> checkIfExist=productType.containName(name);
-            if (!checkIfExist.errorOccurred() && checkIfExist.value) {
-                DResponseObj<Integer> pID= productType.getProductID();
-                if (!pID.errorOccurred())  output.add(productType.getProductID().value);
+        for (Integer i: list){
+            DResponseObj<ProductType> productTypeDR = getProductType(i);
+            if (!productTypeDR.errorOccurred()){
+                ProductType productType = productTypeDR.getValue();
+                DResponseObj<Boolean> checkIfExist=productType.containName(name);
+                if (!checkIfExist.errorOccurred() && checkIfExist.value) {
+                    DResponseObj<Integer> pID= productType.getProductID();
+                    if (!pID.errorOccurred())  output.add(productType.getProductID().value);
+                }
             }
+
         }
         return new DResponseObj<>(output);
     }
+
+
 
 
     //2.2.2
@@ -512,6 +529,24 @@ public class Market {
             lock_stores.unlockRead(stamp);
             logger.debug("release the radLock");
         }
+    }
+    private List<Integer> getStoresIDs(List<Store> searchOn){
+        List<Integer> pIDs= new ArrayList<>();
+        for (Store p: searchOn){
+            DResponseObj<Integer> pID= p.getStoreId();
+            if (!pID.errorOccurred()) pIDs.add(pID.getValue());
+        }
+        return pIDs;
+    }
+
+    private List<Integer> getProductTYpeIDs(List<ProductType> searchOn){
+        List<Integer> pIDs= new ArrayList<>();
+        for (ProductType p: searchOn){
+            DResponseObj<Integer> pID= p.getProductID();
+            if (!pID.errorOccurred()) pIDs.add(pID.getValue());
+        }
+        return pIDs;
+
     }
 
     class Tuple<E,T>{
