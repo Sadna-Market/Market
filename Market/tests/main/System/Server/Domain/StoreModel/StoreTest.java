@@ -165,7 +165,7 @@ class StoreTest {
     @Test
     void getProductPriceF() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
-        assertNull(store.getProductPrice(productType1.getProductID().getValue() - 1));
+        assertNull(store.getProductPrice(productType1.getProductID().getValue() - 1).getValue());
     }
 
     @DisplayName("getStoreOrderHistory  -  success")
