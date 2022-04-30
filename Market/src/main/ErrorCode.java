@@ -26,4 +26,7 @@ public class ErrorCode {
    public static int STORESTAYINTHEPRODUCTTYPE = 41;
    public static int CANNOTCLOSESTORE = 42;
    public static int ROLLBACK =43;
+
+   public static int SERVICEALREADYCONNECT = 50;
+   public static int SERVICEALREADYDISCONNECT = 50;
 }

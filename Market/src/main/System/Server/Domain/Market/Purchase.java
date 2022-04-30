@@ -46,6 +46,7 @@ public class Purchase {
                  DResponseObj<Double> price = getStore.value.calculateBagPrice(crrAmount);
                  if (price.errorOccurred()) rollBack(getStore.getValue(),crrAmount);
                  else{
+                     //supply
                      PaymentService p=PaymentService.getInstance();
                      DResponseObj<Integer> TIP=p.pay(user.getCard(),price.getValue()-discount);
                      if (TIP.errorOccurred()) rollBack(getStore.getValue(),crrAmount);

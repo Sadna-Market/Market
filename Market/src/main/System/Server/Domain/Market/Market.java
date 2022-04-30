@@ -245,13 +245,15 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<Boolean> order(UUID userId) {
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId) {
         //////////////////////////////////////
         DResponseObj<Boolean> online=userManager.isOnline(userId);
-        if (online.errorOccurred()) return online;
+        if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
-        return new DResponseObj<>(purchase.order(shoppingCart.value));
+        DResponseObj<User> user=userManager.getOnlineUser(userId);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+        return new DResponseObj(purchase.order(user.getValue()));
 
     }
 

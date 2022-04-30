@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StoreAndProductType {
-
+/*
     Store store = new Store("Best Store", null, null, "dor@gmail.com");
     ProductType productType1 = new ProductType(1, "milk", "good milk");
     ProductType productType2 = new ProductType(2, "table", "good table");
@@ -292,6 +292,8 @@ public class StoreAndProductType {
         store.newStoreRate(0);
         assertEquals(5, store.getRate().getValue());
     }
+
+ */
 
 }
 
