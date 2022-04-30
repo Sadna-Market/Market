@@ -3,6 +3,7 @@ package main.System.Server.Domain.Market;
 import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
+import main.ExternalService.SupplyService;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingBag;
@@ -10,6 +11,7 @@ import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
 import org.apache.log4j.Logger;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +20,16 @@ public class Purchase {
     static Logger logger=Logger.getLogger(Purchase.class);
 
 
+<<<<<<< HEAD
     public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user , CreditCard card){
+=======
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user, CreditCard c){
+        //check card
+        //DResponseObj<Boolean> creditcard=checkCard(c);
+        //if (creditcard.errorOccurred()) return new DResponseObj<>(creditcard.getErrorMsg());
+
+
+>>>>>>> 03d32c93ca4fe54c5bb6af5c1e546986b16da976
         //init
         DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> bagsRes=getBags(user);
         if (bagsRes.errorOccurred()) return new DResponseObj<>(bagsRes.getErrorMsg());
@@ -47,6 +58,7 @@ public class Purchase {
                  DResponseObj<Double> price = getStore.value.calculateBagPrice(crrAmount);
                  if (price.errorOccurred()) rollBack(getStore.getValue(),crrAmount);
                  else{
+<<<<<<< HEAD
                      //supply
                      PaymentService p=PaymentService.getInstance();
                      DResponseObj<Integer> TIP=p.pay(card,price.getValue()-discount);
@@ -55,11 +67,33 @@ public class Purchase {
                          getStore.getValue().addHistory(TIP.getValue(),email,crrAmount,price.getValue()-discount);
                          output.put(i,crrAmount);
                          logger.info("this order success");
+=======
+                     DResponseObj<Boolean> supply = createSupply(user,getStore.getValue(),crrAmount);
+                     if (!supply.errorOccurred()) {
+                         //supply
+                         PaymentService p = PaymentService.getInstance();
+                         DResponseObj<Integer> TIP = p.pay(c, price.getValue() - discount);
+                         if (TIP.errorOccurred()) rollBack(getStore.getValue(), crrAmount);
+                         else {
+                             getStore.getValue().addHistory(TIP.getValue(), email, crrAmount, price.getValue() - discount);
+                             output.put(i, crrAmount);
+                             logger.info("this order success");
+                         }
+                     }else{
+                         rollBack(getStore.getValue(), crrAmount);
+                         logger.warn("supply didnt work");
+>>>>>>> 03d32c93ca4fe54c5bb6af5c1e546986b16da976
                      }
                  }
              }
          }
         return new DResponseObj<>(output);
+    }
+
+    private DResponseObj<Boolean> createSupply(User user, Store value, ConcurrentHashMap<Integer, Integer> crrAmount) {
+        SupplyService s=SupplyService.getInstance();
+        DResponseObj<Date> d= s.supply(user,value,crrAmount);
+        return d.errorOccurred()? new DResponseObj<>(d.getErrorMsg()) : new DResponseObj<>(true);
     }
 
     //goal: to get storeID and Shopping bag of this store.
@@ -86,6 +120,13 @@ public class Purchase {
         logger.warn("rool back");
         DResponseObj<Boolean> ans=store.rollbackProductQuantity(hashMap);
         return new DResponseObj<>(ErrorCode.ROLLBACK);
+    }
+
+    private DResponseObj<Boolean> checkCard(CreditCard c){
+        if (!c.getCreditCard().matches("^[0-9]+$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        //if (!c.getCreditDate().matches("^[0-1][0-9]$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        if (!c.getPin().matches("^[1-9]&&[0-9]&&[0-9]]")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        return new DResponseObj<>(true);
     }
 
 

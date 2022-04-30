@@ -6,6 +6,7 @@ import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
+import main.Service.SLResponsOBJ;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -15,12 +16,10 @@ import main.System.Server.Domain.UserModel.UserManager;
 import main.System.Server.Domain.UserModel.Validator;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
+import java.util.stream.Collectors;
 
 public class Market {
     /*************************************************fields************************************************************/
@@ -43,14 +42,21 @@ public class Market {
         this.userManager = userManager;
     }
     /*************************************************Functions*********************************************************/
+    //1.1
+    //pre: -
+    //post: the external Services connect
     public DResponseObj<Boolean> init(){
         PaymentService p = PaymentService.getInstance();
         DResponseObj<String> check = p.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        p.connect();
 
         SupplyService supplyService = SupplyService.getInstance();
         check = supplyService.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        supplyService.connect();
+
+
         return new DResponseObj<>(true);
     }
 
@@ -66,6 +72,7 @@ public class Market {
             return output;
         }
 
+
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()){
             DResponseObj<String> output=new DResponseObj<>();
@@ -80,29 +87,43 @@ public class Market {
     //pre: -
     //post: get all the open stores that the arg is apart of their names
     public DResponseObj<List<Integer>> searchProductByName(String name) {
+
+        List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
+        return searchProductByName(pIDs,name);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their names
+    public DResponseObj<List<Integer>> searchProductByName(List<Integer> list,String name) {
         if (name==null){
             logger.warn("the name is null");
             DResponseObj<List<Integer>> output=new DResponseObj<>();
             output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
-        long stamp = lock_TP.readLock();
-        logger.debug("catch the ReadLock.");
-        try {
-            List<Integer> output = new ArrayList<>();
-            for (ProductType p : productTypes.values()) {
-                DResponseObj<Boolean> checkIfExist=p.containName(name);
+
+        List<ProductType> searchOn = getProductTypes();
+
+        List<Integer> output = new ArrayList<>();
+        for (Integer i: list){
+            DResponseObj<ProductType> productTypeDR = getProductType(i);
+            if (!productTypeDR.errorOccurred()){
+                ProductType productType = productTypeDR.getValue();
+                DResponseObj<Boolean> checkIfExist=productType.containName(name);
                 if (!checkIfExist.errorOccurred() && checkIfExist.value) {
-                    DResponseObj<Integer> pID= p.getProductID();
-                    if (!pID.errorOccurred())  output.add(p.getProductID().value);
+                    DResponseObj<Integer> pID= productType.getProductID();
+                    if (!pID.errorOccurred())  output.add(productType.getProductID().value);
                 }
             }
-            return new DResponseObj<>(output);
-        } finally {
-            lock_TP.unlockRead(stamp);
-            logger.debug("released the ReadLock.");
+
         }
+        return new DResponseObj<>(output);
     }
+
+
+
+
     //2.2.2
     //pre: -
     //post: get all the open stores that the arg is apart of their description
@@ -113,22 +134,17 @@ public class Market {
             output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
-        long stamp = lock_TP.readLock();
-        logger.debug("catch the ReadLock.");
-        try {
-            List<Integer> output = new ArrayList<>();
-            for (ProductType p : productTypes.values()) {
-                DResponseObj<Boolean> existInP=p.containDesc(desc);
-                if (!existInP.errorOccurred() && existInP.value) {
-                    DResponseObj<Integer> val= p.getProductID();
-                    if (!val.errorOccurred()) output.add(val.getValue());
-                }
+
+        List<ProductType> searchOn = getProductTypes();
+        List<Integer> output = new ArrayList<>();
+        for (ProductType p : searchOn) {
+            DResponseObj<Boolean> existInP=p.containDesc(desc);
+            if (!existInP.errorOccurred() && existInP.value) {
+                DResponseObj<Integer> val= p.getProductID();
+                if (!val.errorOccurred()) output.add(val.getValue());
             }
-            return new DResponseObj<>(output);
-        } finally {
-            lock_TP.unlockRead(stamp);
-            logger.debug("released the ReadLock.");
         }
+        return new DResponseObj<>(output);
     }
 
     //2.2.2
@@ -139,22 +155,17 @@ public class Market {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        long stamp = lock_TP.readLock();
-        logger.debug("catch the ReadLock.");
-        try {
-            List<Integer> output = new ArrayList<>();
-            for (ProductType p : productTypes.values()) {
-                DResponseObj<Integer> checkRate=p.getRate();
-                if (!checkRate.errorOccurred() && checkRate.getValue() >= minRate) {
-                    DResponseObj<Integer> getID=p.getProductID();
-                    if (!getID.errorOccurred()) output.add(getID.getValue());
-                }
+
+        List<ProductType> searchOn = getProductTypes();
+        List<Integer> output = new ArrayList<>();
+        for (ProductType p : searchOn) {
+            DResponseObj<Integer> checkRate = p.getRate();
+            if (!checkRate.errorOccurred() && checkRate.getValue() >= minRate) {
+                DResponseObj<Integer> getID = p.getProductID();
+                if (!getID.errorOccurred()) output.add(getID.getValue());
             }
-            return new DResponseObj<>(output);
-        } finally {
-            lock_TP.unlockRead(stamp);
-            logger.debug("released the ReadLock.");
         }
+        return new DResponseObj<>(output);
     }
 
     //2.2.2
@@ -165,22 +176,17 @@ public class Market {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        long stamp = lock_stores.readLock();
-        logger.debug("catch the ReadLock.");
-        try {
-            List<Integer> output = new ArrayList<>();
-            for (Store store : stores.values()) {
-                DResponseObj<Integer> getRate=store.getRate();
-                if (!getRate.errorOccurred() && getRate.getValue() >= rate){
-                    DResponseObj<Integer> getStoreID=store.getStoreId();
-                    if (!getStoreID.errorOccurred()) output.add(getStoreID.getValue());
-                }
+
+        List<Store> searchOn = getStores();
+        List<Integer> output = new ArrayList<>();
+        for (Store store : searchOn) {
+            DResponseObj<Integer> getRate = store.getRate();
+            if (!getRate.errorOccurred() && getRate.getValue() >= rate) {
+                DResponseObj<Integer> getStoreID = store.getStoreId();
+                if (!getStoreID.errorOccurred()) output.add(getStoreID.getValue());
             }
-            return new DResponseObj<>(output);
-        } finally {
-            lock_stores.unlockRead(stamp);
-            logger.debug("released the ReadLock.");
         }
+        return new DResponseObj<>(output);
     }
 
     //2.2.2
@@ -192,30 +198,19 @@ public class Market {
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
-        DResponseObj<ProductType> pt = getProductType(productID);
-        if (pt.errorOccurred()) {
-            return new DResponseObj<>(pt.getErrorMsg());
-        }
+        List<Store> searchOn = getStores();
         List<Integer> output = new ArrayList<>();
-        long stamp = lock_stores.readLock();
-        logger.debug("catch the ReadLock");
-        try {
-            for (Store store: stores.values()){
-                DResponseObj<Double> getPrice = store.getProductPrice(productID);
-                if (!getPrice.errorOccurred()) {
-                    Double price=getPrice.getValue();
-                    if (price != null && (price <= (double) max & price >= (double) min)) {
-                        DResponseObj<Integer> getStoreID = store.getStoreId();
-                        if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
-                    }
+        for (Store store: searchOn){
+            DResponseObj<Double> getPrice = store.getProductPrice(productID);
+            if (!getPrice.errorOccurred()) {
+                Double price=getPrice.getValue();
+                if (price != null && (price <= (double) max & price >= (double) min)) {
+                    DResponseObj<Integer> getStoreID = store.getStoreId();
+                    if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
                 }
             }
-            return new DResponseObj<>(output);
         }
-        finally {
-            lock_stores.unlockRead(stamp);
-            logger.debug("release the ReadLock");
-        }
+        return new DResponseObj<>(output);
     }
 
     //2.2.2
@@ -226,20 +221,16 @@ public class Market {
             logger.warn("new categoryID is illegal");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        long stamp = lock_TP.readLock();
-        logger.debug("catch the ReadLock.");
-        try {
-            List<Integer> output = new ArrayList<>();
-            for (ProductType p : productTypes.values()) {
-                DResponseObj<Integer> cat = p.getCategory();
-                DResponseObj<Integer> pID = p.getProductID();
-                if (!cat.errorOccurred() && !pID.errorOccurred() && category==cat.getValue()) output.add(pID.getValue());
-            }
-            return new DResponseObj<>(output);
-        } finally {
-            lock_TP.unlockRead(stamp);
-            logger.debug("released the ReadLock.");
+
+
+        List<ProductType> searchOn = getProductTypes();
+        List<Integer> output = new ArrayList<>();
+        for (ProductType p : searchOn) {
+            DResponseObj<Integer> cat = p.getCategory();
+            DResponseObj<Integer> pID = p.getProductID();
+            if (!cat.errorOccurred() && !pID.errorOccurred() && category==cat.getValue()) output.add(pID.getValue());
         }
+        return new DResponseObj<>(output);
     }
 
 
@@ -260,18 +251,30 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
+<<<<<<< HEAD
     public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String CreditCard , String CardDate , String pin) {
         if(!Validator.isValidCreditCard(CreditCard)||!Validator.isValidCreditDate(CardDate)||
                 !Validator.isValidPin(pin)){
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
+=======
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, CreditCard c) {
+>>>>>>> 03d32c93ca4fe54c5bb6af5c1e546986b16da976
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
+
+        DResponseObj<Boolean> checkInit = init();
+        if (checkInit.errorOccurred()) return new DResponseObj<>(checkInit.getErrorMsg());
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
         DResponseObj<User> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+<<<<<<< HEAD
         return new DResponseObj(purchase.order(user.getValue(), new CreditCard(CreditCard,CardDate , pin)));
+=======
+        return new DResponseObj(purchase.order(user.getValue(),c));
+
+>>>>>>> 03d32c93ca4fe54c5bb6af5c1e546986b16da976
     }
 
     //2.3.2
@@ -514,6 +517,52 @@ public class Market {
             return new DResponseObj<>(ErrorCode.NOTONLINE);
         }
         return new DResponseObj<>(true);
+    }
+
+    private List<ProductType> getProductTypes(){
+        List<ProductType> output=new ArrayList<>();
+        long stamp = lock_TP.readLock();
+        logger.debug("catch the readLock");
+        try{
+            output.addAll(productTypes.values());
+            return output;
+        }
+        finally {
+            lock_TP.unlockRead(stamp);
+            logger.debug("release the radLock");
+        }
+    }
+
+    private List<Store> getStores(){
+        List<Store> output=new ArrayList<>();
+        long stamp = lock_stores.readLock();
+        logger.debug("catch the readLock");
+        try{
+            output.addAll(stores.values());
+            return output;
+        }
+        finally {
+            lock_stores.unlockRead(stamp);
+            logger.debug("release the radLock");
+        }
+    }
+    private List<Integer> getStoresIDs(List<Store> searchOn){
+        List<Integer> pIDs= new ArrayList<>();
+        for (Store p: searchOn){
+            DResponseObj<Integer> pID= p.getStoreId();
+            if (!pID.errorOccurred()) pIDs.add(pID.getValue());
+        }
+        return pIDs;
+    }
+
+    private List<Integer> getProductTYpeIDs(List<ProductType> searchOn){
+        List<Integer> pIDs= new ArrayList<>();
+        for (ProductType p: searchOn){
+            DResponseObj<Integer> pID= p.getProductID();
+            if (!pID.errorOccurred()) pIDs.add(pID.getValue());
+        }
+        return pIDs;
+
     }
 
     class Tuple<E,T>{
