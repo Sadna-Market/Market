@@ -293,7 +293,6 @@ public class Market {
             logger.debug("released the WriteLock");
         }
     }
-//todo yo donot generate new product id!!!!!!!!! , need too put to hash of all products!!!!!!!!!//
     //2.4.1.1
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
