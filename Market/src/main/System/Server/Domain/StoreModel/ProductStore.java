@@ -1,6 +1,7 @@
 package main.System.Server.Domain.StoreModel;
 
 import main.System.Server.Domain.Market.ProductType;
+import main.System.Server.Domain.Response.DResponse;
 import main.System.Server.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 import java.util.concurrent.locks.StampedLock;
@@ -32,11 +33,17 @@ public class ProductStore {
     }
 
     public DResponseObj<Integer> getQuantity() {
-        return new DResponseObj<>(quantity);
+        return new DResponseObj<>(quantity,-1);
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public DResponseObj<Boolean> addQuantity(int toAdd){
+        this.quantity += toAdd;
+        return new DResponseObj<>(true);
+
     }
 
     public DResponseObj<Double> getPrice() {

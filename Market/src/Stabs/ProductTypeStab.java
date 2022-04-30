@@ -56,7 +56,7 @@ public class ProductTypeStab extends ProductType {
     }
 
     public DResponseObj<Integer> getProductID() {
-        return new DResponseObj<>(productID);
+        return new DResponseObj<>(super.getProductID().getValue(),-1);
     }
 
     public DResponseObj<String> getProductName() {
