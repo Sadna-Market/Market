@@ -3,6 +3,7 @@ package main.Service;
 
 import main.System.Server.Domain.StoreModel.*;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.UUID;
 //Api of all
 public interface IMarket {
     //1.1
-    public SLResponsOBJ<Boolean> initMarket(String email, String Password, String phoneNumber);
+    public SLResponsOBJ<String> initMarket(String email, String Password, String phoneNumber);
 
 
 
@@ -28,7 +29,7 @@ public interface IMarket {
     public SLResponsOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber) ;
 
     //2.1.4
-    public SLResponsOBJ<Boolean> login(String userid, String email, String password);
+    public SLResponsOBJ<String> login(String userid, String email, String password);
 
     //2.2.1
     public SLResponsOBJ<ServiceStore> getStore(int StoreID);
@@ -48,7 +49,7 @@ public interface IMarket {
 
     public SLResponsOBJ<List<Integer>> searchProductByRangePrices(int productId, int min, int max);
 
-    public SLResponsOBJ<Integer> addNewProductType(UUID uuid, String name , String description, int category);
+    public SLResponsOBJ<Integer> addNewProductType(String uuid, String name , String description, int category);
 
     //2.2.3
     public SLResponsOBJ<Boolean> addProductToShoppingBag(String userId, int storeId, int productId, int quantity);
@@ -65,10 +66,13 @@ public interface IMarket {
     public SLResponsOBJ<Boolean> setProductQuantityShoppingBag(String userId, int productId, int storeId, int quantity);
 
     //2.2.5
-    public SLResponsOBJ<Boolean> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) ;
+    public SLResponsOBJ<String> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) ;
 
     //2.3.1
-    public SLResponsOBJ<Boolean> logout(String userId);
+    public SLResponsOBJ<String> logout(String userId);
+
+    //TODO: next versions
+    public SLResponsOBJ<BitSet> changePassword(String email);
 
 
     //2.3.2
@@ -111,6 +115,7 @@ public interface IMarket {
     public SLResponsOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
 
     public SLResponsOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email);
+
 
 
     //todo 2.5 use case

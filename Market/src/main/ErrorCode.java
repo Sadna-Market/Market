@@ -33,4 +33,6 @@ public class ErrorCode {
    public static int NOTEXISTEXTERNALSERVICEWITHTHISNAME =52;
 
    public static int ILLEGALCARD = 53;
+
+   public static int EXTERNAL_SERVICE_ERROR =54;
 }

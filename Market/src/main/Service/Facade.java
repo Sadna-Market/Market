@@ -11,6 +11,7 @@ import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.UserManager;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Facade implements IMarket {
     UserManager userManager;
@@ -22,7 +23,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<Boolean> initMarket(String email, String Password, String phoneNumber) {
+    public SLResponsOBJ<String> initMarket(String email, String Password, String phoneNumber) {
         /**
          * @requirement II. 1
          *
@@ -44,18 +45,18 @@ public class Facade implements IMarket {
          * It will create system manager user and start connections with services (Payment and delivery).
          */
         SLResponsOBJ<String> RguestVisit = guestVisit();
-        if (RguestVisit.errorOccurred()) return new SLResponsOBJ<>(false, RguestVisit.getErrorMsg());
+        if (RguestVisit.errorOccurred()) return new SLResponsOBJ<>(RguestVisit.errorMsg);
 
         SLResponsOBJ<Boolean> RsystemManager = addNewMember(RguestVisit.value, email, Password, phoneNumber);
-        if (RsystemManager.errorOccurred()) return RsystemManager;
+        if (RsystemManager.errorOccurred()) return new SLResponsOBJ<>(RsystemManager.errorMsg);
         PermissionManager permissionManager = PermissionManager.getInstance();
 
         DResponseObj<Boolean> Respons = permissionManager.setSystemManager(email);
-        if (Respons.errorOccurred()) return new SLResponsOBJ<>(Respons);
+        if (Respons.errorOccurred()) return new SLResponsOBJ<>(Respons.errorMsg);
 
         //supply and payment connections//TODO YAKI ??
 
-        return new SLResponsOBJ<>(true);
+        return new SLResponsOBJ<>(RguestVisit.value,-1);
     }
 
 
@@ -144,7 +145,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<Boolean> login(String userId, String email, String password) {
+    public SLResponsOBJ<String> login(String userId, String email, String password) {
 
         /**
          * @requirement II. 1 . 4
@@ -165,15 +166,15 @@ public class Facade implements IMarket {
          * Successful user is identified as a member
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false, ErrorCode.NOTMEMBER);
+            return new SLResponsOBJ<>(null, ErrorCode.NOTMEMBER);
 
         if (email == null || email.equals(""))
-            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
 
         if (password == null || password.equals(""))
-            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
-
-        return new SLResponsOBJ<>(userManager.Login(UUID.fromString(userId), email, password));
+            return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
+        UUID uid = userManager.Login(UUID.fromString(userId), email, password).value;
+        return new SLResponsOBJ<>(uid.toString());
     }
 //-----------------------------------2 .פעולות קנייה של מבקר-אורח-----------------------------------------------
 
@@ -493,7 +494,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<Boolean> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) {
+    public SLResponsOBJ<String> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) {
 
         /**
          * @requirement II. 2 .5
@@ -514,12 +515,14 @@ public class Facade implements IMarket {
          */
         if (userId == null || userId.equals("") || creditCard.CreditCard == null || creditCard.CreditCard.equals("")||creditCard.CreditDate==null||creditCard.CreditDate.equals("")||creditCard.pin==null||creditCard.pin.equals(""))
             return new SLResponsOBJ<>(ErrorCode.NOTSTRING);
-
-        return new SLResponsOBJ<>(market.order(UUID.fromString(userId),city,adress,apartment , creditCard.CreditCard,creditCard.CreditDate,creditCard.pin));
+        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = market.order(UUID.fromString(userId),city,adress,apartment , creditCard.CreditCard,creditCard.CreditDate,creditCard.pin);
+        if(res.errorOccurred()) return new SLResponsOBJ<>(-2);
+        //TODO: make res.val to string of certificates external servieces.
+        return new SLResponsOBJ<>("is ok");
     }
 
     @Override
-    public SLResponsOBJ<Boolean> logout(String userId) {
+    public SLResponsOBJ<String> logout(String userId) {
 
         /**
          * @requirement II. 3.1
@@ -540,8 +543,13 @@ public class Facade implements IMarket {
          */
         if (userId == null || userId.equals(""))
             return new SLResponsOBJ<>(ErrorCode.NOTSTRING);
+        UUID uid = userManager.Logout(UUID.fromString(userId)).value;
+        return new SLResponsOBJ<>(uid.toString());
+    }
 
-        return new SLResponsOBJ<>(userManager.Logout(UUID.fromString(userId)));
+    @Override
+    public SLResponsOBJ<BitSet> changePassword(String email) {
+        return null;
     }
 
 
@@ -931,12 +939,12 @@ public class Facade implements IMarket {
         return new SLResponsOBJ<List<List<ServiceHistory>>>(ServiceHistoryList);
     }
 
-    public SLResponsOBJ<Integer> addNewProductType(UUID uuid, String name , String description, int category)
+    public SLResponsOBJ<Integer> addNewProductType(String uuid, String name , String description, int category)
     {
         if(name==null||name.equals("")||description==null||description.equals("")||category<0){
             return new SLResponsOBJ<>(ErrorCode.NOTVALIDINPUT);
         }
-        return new SLResponsOBJ<>( market.addNewProductType(uuid,name,description,category).value);
+        return new SLResponsOBJ<>( market.addNewProductType(UUID.fromString(uuid),name,description,category).value);
     }
 
     @Override //TODO way search product ? if you return stores ??
