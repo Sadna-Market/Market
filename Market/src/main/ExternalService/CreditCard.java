@@ -5,6 +5,18 @@ public class CreditCard {
     String CreditDate;
     String pin;
 
+    public String getCreditCard() {
+        return CreditCard;
+    }
+
+    public String getCreditDate() {
+        return CreditDate;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
     @Override
     public String toString() {
         return "CreditCard{" +
