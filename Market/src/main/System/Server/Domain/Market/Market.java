@@ -41,14 +41,21 @@ public class Market {
         this.userManager = userManager;
     }
     /*************************************************Functions*********************************************************/
+    //1.1
+    //pre: -
+    //post: the external Services connect
     public DResponseObj<Boolean> init(){
         PaymentService p = PaymentService.getInstance();
         DResponseObj<String> check = p.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        p.connect();
 
         SupplyService supplyService = SupplyService.getInstance();
         check = supplyService.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        supplyService.connect();
+
+
         return new DResponseObj<>(true);
     }
 
