@@ -218,7 +218,17 @@ public class Store {
     }
 
 
-
+    //requirement II.2.5
+    //productsInBag <productID,quantity>
+    public DResponseObj<Boolean> rollbackProductQuantity(ConcurrentHashMap<Integer,Integer> productsInBag){
+        for (Map.Entry<Integer, Integer> entry : productsInBag.entrySet()) {
+            int productID = entry.getKey();
+            int quantityToAdd = entry.getValue();
+            DResponseObj<Boolean> add = inventory.addQuantity(productID,quantityToAdd);
+            if(add.errorOccurred()) return add;
+        }
+        return new DResponseObj<>(true);
+    }
 
     //requirement II.4.9  (only owners)
     public DResponseObj<Boolean> closeStore() {
