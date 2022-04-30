@@ -1,44 +1,89 @@
 package main.System.Server.Domain.Market;
 
+import main.ErrorCode;
+import main.ExternalService.PaymentService;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingBag;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
+import org.apache.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Purchase {
-
-    Market market;
-    public boolean order(ShoppingCart shoppingCart){
-        //catch
-        //supply
-        //payment
+    static Logger logger=Logger.getLogger(Purchase.class);
 
 
-        //for (ShoppingBag sb: shoppingCart.)
-            return false;
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user){
+        //init
+        DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> bagsRes=getBags(user);
+        if (bagsRes.errorOccurred()) return new DResponseObj<>(bagsRes.getErrorMsg());
+        DResponseObj<String> DRemail =user.getEmail();
+        if (DRemail.errorOccurred()) return new DResponseObj<>(DRemail.getErrorMsg());
+        String email=DRemail.getValue();
+        ConcurrentHashMap<Integer, ShoppingBag> bags=bagsRes.getValue();
+        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> output=new ConcurrentHashMap<>();
+
+
+         for (Integer i: bags.keySet()){
+             ShoppingBag currBag = bags.get(i);
+             DResponseObj<Store> getStore = currBag.getStore();
+             DResponseObj<ConcurrentHashMap<Integer, Integer>> checkBags=currBag.getProductQuantity();
+             if (!getStore.errorOccurred() && !checkBags.errorOccurred()) {
+                 ConcurrentHashMap<Integer, Integer> crrAmount = catchItems(getStore.getValue(), checkBags.getValue());
+
+                 //check abount Discount
+                 DResponseObj<ConcurrentHashMap<Integer, Integer>> DRpolicy = getStore.value.checkBuyPolicy(email,crrAmount);
+                 Double discount=0.;
+                 if (!DRpolicy.errorOccurred()){
+                     DResponseObj<Double> DRdiscount = getStore.value.checkDiscountPolicy(email,DRpolicy.getValue());
+                     if (!DRdiscount.errorOccurred()) discount =DRdiscount.getValue();
+                 }
+                 //rollback if pay or price didnt work
+                 DResponseObj<Double> price = getStore.value.calculateBagPrice(crrAmount);
+                 if (price.errorOccurred()) rollBack(getStore.getValue(),crrAmount);
+                 else{
+                     PaymentService p=PaymentService.getInstance();
+                     DResponseObj<Integer> TIP=p.pay(user.getCard(),price.getValue()-discount);
+                     if (TIP.errorOccurred()) rollBack(getStore.getValue(),crrAmount);
+                     else{
+                         getStore.getValue().addHistory(TIP.getValue(),email,crrAmount,price.getValue()-discount);
+                         output.put(i,crrAmount);
+                         logger.info("this order success");
+                     }
+                 }
+             }
+         }
+        return new DResponseObj<>(output);
     }
 
-    public DResponseObj<Boolean> order(User user){
-        // ConcurrentHashMap<Integer,ShoppingBag> bags =user.getShoppingCart().getHashShoppingCart();
-//         for (Integer i: bags.keySet()){
-//             ShoppingBag bag=bags.get(i);
-//             Store store=bag.getStore();
-//
-//             for (Integer j: bag.getProductQuantity().keySet()){
-//
-//             }
-//         }
-//;
-        //catch
-        //supply
-        //payment
+    //goal: to get storeID and Shopping bag of this store.
+    private DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>>  getBags(User user){
+        DResponseObj<ShoppingCart> getCart =user.GetSShoppingCart();
+        if (getCart.errorOccurred()) return new DResponseObj<>(getCart.getErrorMsg());
+        DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> getBags = getCart.getValue().getHashShoppingCart();
+        if (getBags.errorOccurred()) return new DResponseObj<>(getBags.getErrorMsg());
+        return new DResponseObj(getBags.getValue());
+    }
 
+    //catch the items and understand how much we took.
+    private ConcurrentHashMap<Integer, Integer> catchItems(Store store,ConcurrentHashMap<Integer, Integer> hashMap){
+        ConcurrentHashMap<Integer, Integer> output = new ConcurrentHashMap<>();
+        for (Integer j: hashMap.keySet()){
+            Integer amount = hashMap.get(j);
+            DResponseObj<Integer> amonutCanBuy = store.setProductQuantityForBuy(j,amount);
+            if (!amonutCanBuy.errorOccurred()) output.put(j,amonutCanBuy.getValue());
+        }
+        return output;
+    }
 
-        //for (ShoppingBag sb: shoppingCart.)
-        return null;
+    private DResponseObj<Boolean> rollBack(Store store,ConcurrentHashMap<Integer, Integer> hashMap){
+        logger.warn("rool back");
+        DResponseObj<Boolean> ans=store.rollbackProductQuantity(hashMap);
+        return new DResponseObj<>(ErrorCode.ROLLBACK);
     }
 
 

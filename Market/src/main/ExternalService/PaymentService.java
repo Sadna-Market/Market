@@ -1,8 +1,14 @@
 package main.ExternalService;
 
+import main.System.Server.Domain.Response.DResponseObj;
+
 //threadsafe
 public class PaymentService {
-   private static class PaymentServiceWrapper{
+    public DResponseObj<Integer> pay(CreditCard card, double v) {
+        return null;
+    }
+
+    private static class PaymentServiceWrapper{
        static  PaymentService INSTANSE = new PaymentService();
    }
    private PaymentService(){}
