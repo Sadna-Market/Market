@@ -36,12 +36,14 @@ public class Market {
     if you want to use with ProductType, productCounter - acquire - lock_TP
      */
     private StampedLock lock_stores = new StampedLock(), lock_TP = new StampedLock();
-
-    /*************************************************constructors******************************************************/
+     /*************************************************constructors******************************************************/
     public Market(UserManager userManager) {
         this.userManager = userManager;
     }
     /*************************************************Functions*********************************************************/
+    public DResponseObj<Boolean> isStoreClosed(int StoreID){
+        return new DResponseObj<>(closeStores.containsKey(StoreID));
+    }
     //1.1
     //pre: -
     //post: the external Services connect
@@ -55,8 +57,6 @@ public class Market {
         check = supplyService.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
         supplyService.connect();
-
-
         return new DResponseObj<>(true);
     }
 
@@ -82,6 +82,9 @@ public class Market {
         DResponseObj<String> str =s.getValue().getProductInStoreInfo(productID);
         return str;
     }
+
+
+
 
     //2.2.2
     //pre: -
@@ -251,15 +254,12 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-<<<<<<< HEAD
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String CreditCard , String CardDate , String pin) {
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId,String City,String Street,int apartment ,String CreditCard , String CardDate , String pin) {
         if(!Validator.isValidCreditCard(CreditCard)||!Validator.isValidCreditDate(CardDate)||
                 !Validator.isValidPin(pin)){
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-=======
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, CreditCard c) {
->>>>>>> 03d32c93ca4fe54c5bb6af5c1e546986b16da976
+
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
 
@@ -269,35 +269,31 @@ public class Market {
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
         DResponseObj<User> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-<<<<<<< HEAD
-        return new DResponseObj(purchase.order(user.getValue(), new CreditCard(CreditCard,CardDate , pin)));
-=======
-        return new DResponseObj(purchase.order(user.getValue(),c));
+        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment, new CreditCard(CreditCard,CardDate , pin)));
 
->>>>>>> 03d32c93ca4fe54c5bb6af5c1e546986b16da976
     }
 
     //2.3.2
     //pre: user is Member
     //post: new Store add to the market
-    public DResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    public DResponseObj<Integer> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         DResponseObj<Boolean> checkUM=userManager.isLogged(userId);
-        if (checkUM.errorOccurred() || !checkUM.getValue()) return checkUM;
+        if (checkUM.errorOccurred() || !checkUM.getValue()) return new DResponseObj<>(checkUM.errorMsg);
 
-        Store store = new Store(name, discountPolicy, buyPolicy, founder);
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");
         try {
-            stores.put(storeCounter++, store);
+            Store store = new Store(storeCounter++,name, discountPolicy, buyPolicy, founder);
+            stores.put(store.getStoreId().value, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
-            return new DResponseObj<>(true);
+            return new DResponseObj<>(storeCounter);
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock");
         }
     }
-
+//todo yo donot generate new product id!!!!!!!!! , need too put to hash of all products!!!!!!!!!//
     //2.4.1.1
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
@@ -306,9 +302,35 @@ public class Market {
         if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
         ProductType productType= result.getValue().item2;
-
         return store.addNewProduct(productType, quantity, price);
     }
+
+    public DResponseObj<Integer> addNewProductType(UUID uuid,String name , String description, int category){
+
+        long stamp = lock_TP.writeLock();
+        try {
+            for(ProductType productType : productTypes.values()){
+                if(productType.productName.equals(name)){
+                    return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+                }
+            }
+
+            if(!userManager.isLogged(uuid).value){
+                return new DResponseObj<>(ErrorCode.NOTLOGGED);
+            }
+            if(!PermissionManager.getInstance().isSystemManager(userManager.getOnlineUser(uuid).value.getEmail().value).value){
+                return new DResponseObj<>(ErrorCode.NOPERMISSION);
+            }
+            ProductType p = new ProductType(productCounter++,name,description,category);
+            productTypes.put(p.productID,p);
+            return new DResponseObj<>( p.productID);
+        }finally {
+            lock_stores.unlockWrite(stamp);
+            logger.debug("released the WriteLock");
+        }
+    }
+
+
 
 
     //2.4.1.2
@@ -373,12 +395,12 @@ public class Market {
     //2.4.7
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
-    public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm) {
+    public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm,boolean onof) {
         DResponseObj<Tuple<Store,ProductType>> result = checkValid(userId,storeId,permissionType.permissionEnum.setManagerPermissions,null);
         if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
         Store store=result.getValue().item1;
 
-        return userManager.setManagerPermissions(userId, store, mangerMail, perm);
+        return userManager.setManagerPermissions(userId, store, mangerMail, perm,onof);
     }
 
     //2.4.9
@@ -436,13 +458,16 @@ public class Market {
     //2.4.13 & 2.6.4 (only system manager)
     //pre: this store exist in the system.
     //post: market ask the store about that with USerEmail.
-    public DResponseObj<List<History>> getUserHistoryInStore(String userID, int storeID) {
+    public DResponseObj<List<List<History>>> getUserInfo(String userID, String email) {
         DResponseObj<Boolean> isOnline = userManager.isOnline(UUID.fromString(userID));
         if (isOnline.errorOccurred()) return new DResponseObj<>(isOnline.getErrorMsg());
-        DResponseObj<Store> store = getStore(storeID);
-        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
+        List<List<History>> res = new LinkedList<>();
+        for(Store s :stores.values()){
+           List<History>  list = s.getUserHistory(email).value;
+           res.add(list);
+        }
 
-        return store.getValue().getUserHistory(userID);
+        return new DResponseObj<>(res);
     }
 
 
@@ -450,7 +475,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: market receive this store to the user.
     public DResponseObj<Store> getStore(int storeID){
-        if (storeID<0 | storeID>=productCounter){
+        if (storeID<0 | storeID>= storeCounter){
             logger.warn("the StoreID is illegal");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
@@ -581,13 +606,13 @@ public class Market {
     public void setForTesting(){
         userManager = new UserManagerStab();
         for (int i = 0; i < 10; i++) {
-            ProductType p = new ProductType(productCounter++, "product" + i, "hello");
+            ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
             p.setRate(i);
             p.setCategory(i % 3);
             productTypes.put(i, p);
         }
         for (int i = 0; i < 10; i++) {
-            Store s = new StoreStab();
+            Store s = new StoreStab(i);
             s.addNewProduct(getProductType(1).getValue(), 100, 0.5);
             s.newStoreRate(i);
             stores.put(i, s);

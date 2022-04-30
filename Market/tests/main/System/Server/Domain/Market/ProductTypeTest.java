@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 class ProductTypeTest {
     static Logger logger=Logger.getLogger(ProductTypeTest.class);
-    ProductType pt=new ProductType(1,"Abba Ganov","90210");
+    ProductType pt=new ProductType(1,"Abba Ganov","90210",1);
 
 
     @BeforeEach

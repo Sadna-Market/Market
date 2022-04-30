@@ -10,10 +10,7 @@ import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.UserManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Facade implements IMarket {
     UserManager userManager;
@@ -60,7 +57,6 @@ public class Facade implements IMarket {
 
         return new SLResponsOBJ<>(true);
     }
-
 
 
 
@@ -302,6 +298,9 @@ public class Facade implements IMarket {
         return new SLResponsOBJ<>(market.searchProductByRate(rate));
     }
 
+
+
+
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByCategory(int category) {
 
@@ -415,7 +414,7 @@ public class Facade implements IMarket {
         DResponseObj<ShoppingCart> RShoppingCart = userManager.getUserShoppingCart(UUID.fromString(userId));
         if (RShoppingCart.errorOccurred()) return new SLResponsOBJ<>(RShoppingCart.errorMsg);
 
-        return new SLResponsOBJ<>(new ServiceShoppingCard(RShoppingCart.getValue()));
+        return new SLResponsOBJ<>(new ServiceShoppingCard(RShoppingCart.value));
     }
 
     @Override
@@ -494,7 +493,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<Boolean> orderShoppingCart(String userId,String creditCard, String CardDate ,String cardPin) {
+    public SLResponsOBJ<Boolean> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) {
 
         /**
          * @requirement II. 2 .5
@@ -513,10 +512,10 @@ public class Facade implements IMarket {
          * Purchase of the shopping cart.
          * //next version : in accordance with the possible types of purchase and discount for guests, according to policy
          */
-        if (userId == null || userId.equals("") || creditCard == null || creditCard.equals("")||CardDate==null||CardDate.equals("")||cardPin==null||cardPin.equals(""))
+        if (userId == null || userId.equals("") || creditCard.CreditCard == null || creditCard.CreditCard.equals("")||creditCard.CreditDate==null||creditCard.CreditDate.equals("")||creditCard.pin==null||creditCard.pin.equals(""))
             return new SLResponsOBJ<>(ErrorCode.NOTSTRING);
 
-        return new SLResponsOBJ<>(market.order(UUID.fromString(userId) , creditCard , CardDate,cardPin));
+        return new SLResponsOBJ<>(market.order(UUID.fromString(userId),city,adress,apartment , creditCard.CreditCard,creditCard.CreditDate,creditCard.pin));
     }
 
     @Override
@@ -547,7 +546,7 @@ public class Facade implements IMarket {
 
 
     @Override
-    public SLResponsOBJ<Boolean> openNewStore(String userId, String name, String founder, DiscountPolicy
+    public SLResponsOBJ<Integer> openNewStore(String userId, String name, String founder, DiscountPolicy
             discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
 
         /**
@@ -781,7 +780,7 @@ public class Facade implements IMarket {
 
     @Override
     public SLResponsOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
-            mangerEmil, String per) {
+            mangerEmil, String per ,boolean onof) {
 
         /**
          * @requirement II. 4.7
@@ -808,7 +807,7 @@ public class Facade implements IMarket {
         if (storeId < 0)
             return new SLResponsOBJ<>(ErrorCode.NEGATIVENUMBER);
 
-        return new SLResponsOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, permissionType.permissionEnum.valueOf(per)));
+        return new SLResponsOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, permissionType.permissionEnum.valueOf(per),onof));
     }
 
     @Override
@@ -900,7 +899,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<List<ServiceHistory>> getUserHistoryInStore(String userId, int storeId) {
+    public SLResponsOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email){
         /**
          * @requirement: ?????
          * @param userId: String
@@ -917,16 +916,27 @@ public class Facade implements IMarket {
          * @documentation:
          */
 
-        market.getUserHistoryInStore(userId, storeId);
-        SLResponsOBJ<List<History>> RHistory =new SLResponsOBJ<>( market.getUserHistoryInStore(userId, storeId));
-        if (RHistory.errorOccurred()) return new SLResponsOBJ<>(RHistory.errorMsg);
-        List<ServiceHistory> ServiceHistoryList = new ArrayList<>();
-        List<History> HistoryList = RHistory.getValue();
+        DResponseObj<List<List<History>>> h =  market.getUserInfo(userID,email);
+        if (h.errorOccurred()) return new SLResponsOBJ<>(h.errorMsg);
+        List<List<ServiceHistory>> ServiceHistoryList = new ArrayList<>();
+        List<List<History>> HistoryList = h.getValue();
 
-        for (History history : HistoryList) {
-            ServiceHistoryList.add(new ServiceHistory(history));
+        for (List<History> historyList : HistoryList) {
+            List<ServiceHistory> s = new LinkedList<>();
+            for (History history : historyList ){
+                s.add(new ServiceHistory(history));
+            }
+            ServiceHistoryList.add(s);
         }
-        return new SLResponsOBJ<>(ServiceHistoryList);
+        return new SLResponsOBJ<List<List<ServiceHistory>>>(ServiceHistoryList);
+    }
+
+    public SLResponsOBJ<Integer> addNewProductType(UUID uuid, String name , String description, int category)
+    {
+        if(name==null||name.equals("")||description==null||description.equals("")||category<0){
+            return new SLResponsOBJ<>(ErrorCode.NOTVALIDINPUT);
+        }
+        return new SLResponsOBJ<>( market.addNewProductType(uuid,name,description,category).value);
     }
 
     @Override //TODO way search product ? if you return stores ??

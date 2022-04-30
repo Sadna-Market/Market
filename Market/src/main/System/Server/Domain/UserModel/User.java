@@ -90,10 +90,16 @@ public class User extends Guest {
         return (permissionManager.createPermission(user, store, this, userTypes.manager, userTypes.owner));
     }
 
-    public DResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
-        PermissionManager permissionManager = PermissionManager.getInstance();
-        DResponseObj<Boolean> b = permissionManager.addManagerPermissionType(perm, user, store, this);
-        return b;
+    public DResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm, boolean onOf) {
+        if(onOf) {
+            PermissionManager permissionManager = PermissionManager.getInstance();
+            DResponseObj<Boolean> b = permissionManager.addManagerPermissionType(perm, user, store, this);
+            return b;
+        }else {
+            PermissionManager permissionManager = PermissionManager.getInstance();
+            DResponseObj<Boolean> b = permissionManager.removeManagerPermissionType(perm, user, store, this);
+            return b;
+        }
     }
 
 

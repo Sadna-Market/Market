@@ -20,7 +20,7 @@ class UserTest {
     @BeforeEach
     void setUp() {
         userManager = new UserManager();
-        store = new Store("Best Store", null, null, "dor@gmail.com");
+        store = new Store(1,"Best Store", null, null, "dor@gmail.com");
 
 
     }
@@ -32,7 +32,7 @@ class UserTest {
     @Test
     void addFounder() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0],CreditCard[0],CreditDate[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
         userManager.Login(uuid,emails[0],passwords[0]);
         userManager.addFounder(uuid,store);
         User a = userManager.getLoginUsers().value.get(uuid);

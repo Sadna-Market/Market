@@ -86,6 +86,15 @@ public class UserManager {
 
     }
 
+    public DResponseObj<Boolean> ishasSystemManager(){
+        for(String mail : members.keySet()){
+            if(PermissionManager.getInstance().isSystemManager(mail).value){
+                return new DResponseObj<>(true);
+            }
+        }
+        return new DResponseObj<>(false);
+    }
+
     public DResponseObj<UUID> Logout(UUID userId) {
         if (LoginUsers.containsKey(userId)) {
             LoginUsers.remove(userId);
@@ -128,6 +137,16 @@ public class UserManager {
 
     }
 
+    public DResponseObj<Boolean> isFounder(UUID user,Store store) {
+        if(!isLogged(user).value){
+            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
+            return a;
+        }
+        User u = LoginUsers.get(user);
+        logger.debug("UserManager isFownder");
+        PermissionManager permissionManager =PermissionManager.getInstance();
+        return new DResponseObj( permissionManager.isFounder(u,store));
+    }
 
 
 
@@ -141,7 +160,6 @@ public class UserManager {
         logger.debug("UserManager isOwner");
         PermissionManager permissionManager =PermissionManager.getInstance();
         return new DResponseObj<>( permissionManager.getGranteeUserType(u,store).equals(userTypes.owner));
-
     }
 
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
@@ -156,6 +174,16 @@ public class UserManager {
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         a.errorMsg = ErrorCode.NOTLOGGED;
         return a;
+    }
+
+    public DResponseObj<Boolean> isCartExist(UUID uuid){
+        if(GuestVisitors.containsKey(uuid)){
+            return new DResponseObj<>(true);
+        }
+        if(LoginUsers.containsKey(uuid)){
+            return new DResponseObj<>(true);
+        }
+        return new DResponseObj<>(false);
     }
 
     public DResponseObj<Boolean> addFounder(UUID userId, Store store) {
@@ -185,13 +213,13 @@ public class UserManager {
 
 
 
-    public DResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm) {
+    public DResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm ,boolean onof) {
         logger.debug("UserManager setManagerPermissions");
         if(isLogged(userId).value ) {
             User loggedUser = LoginUsers.get(userId);
             if (isOwner(userId,store).value) {
                 User Manager = members.get(email);
-                return loggedUser.setManagerPermissions(Manager,store,perm);
+                return loggedUser.setManagerPermissions(Manager,store,perm,onof);
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);

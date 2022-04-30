@@ -1,3 +1,4 @@
+
 package Stabs;
 
 import main.System.Server.Domain.Market.Permission;
@@ -15,11 +16,11 @@ public class StoreStab extends Store {
 
     int rate;
     String name;
-    public StoreStab(String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder) {
-        super(name, discountPolicy, buyPolicy, founder);
+    public StoreStab(int s ,String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder) {
+        super(s,name, discountPolicy, buyPolicy, founder);
     }
-    public StoreStab(){
-        super("",new DiscountPolicy(),new BuyPolicy(),"");
+    public StoreStab(int s){
+        super(s,"",new DiscountPolicy(),new BuyPolicy(),"");
     }
 
 
@@ -164,7 +165,7 @@ public class StoreStab extends Store {
         return i;
     }
 
-    public Inventory getInventory() {
+    public DResponseObj<Inventory> getInventory() {
         return null;
     }
 

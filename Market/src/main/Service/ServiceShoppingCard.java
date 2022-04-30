@@ -10,4 +10,7 @@ public class ServiceShoppingCard {
     public ServiceShoppingCard(ShoppingCart shoppingCart){
 
     }
+    public String toString(){
+        return " ";
+    }
 }

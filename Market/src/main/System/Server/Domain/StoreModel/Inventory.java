@@ -25,6 +25,10 @@ public class Inventory {
         this.storeId = storeId;
     }
 
+    public DResponseObj<Boolean> haseItem(int itemId){
+        return new DResponseObj<>(products.containsKey(itemId));
+    }
+
 
     /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
 

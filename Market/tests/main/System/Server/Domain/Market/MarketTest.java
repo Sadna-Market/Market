@@ -248,7 +248,7 @@ class MarketTest {
     @ValueSource(ints = {0,1,3,4,1,9,9,5})
     @Test
     void getUserHistoryInStore(int i) {
-        assertEquals(new ArrayList<>(),market.getUserHistoryInStore("", i).getValue());
+        assertEquals(new ArrayList<>(),market.getUserInfo("DSd", "eee").getValue());
     }
 
     @DisplayName("getUserHistoryInStore  - failure -StoreID")
@@ -256,7 +256,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-2,-40,-66666,90})
     @Test
     void getUserHistoryInStore2(int i) {
-        assertTrue(market.getUserHistoryInStore("", i).errorOccurred());
+        assertTrue(market.getUserInfo("", "i").errorOccurred());
     }
 
 

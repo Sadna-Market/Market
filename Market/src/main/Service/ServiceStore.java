@@ -3,11 +3,11 @@ package main.Service;
 import main.System.Server.Domain.StoreModel.Store;
 
 public class ServiceStore {
-    private final int storeId;
-    private final String name;
-    private String founder;
-    private boolean isOpen;
-    private int rate; // between 0-10
+     final int storeId;
+     final String name;
+     String founder;
+     boolean isOpen;
+     int rate; // between 0-10
     //private int numOfRated;
 
 
@@ -27,4 +27,6 @@ public class ServiceStore {
                 "rate : "+ rate +"\n" + "" +
                 "";
     }
+
+
 }
