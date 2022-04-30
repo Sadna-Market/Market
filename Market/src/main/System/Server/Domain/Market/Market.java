@@ -293,7 +293,7 @@ public class Market {
             logger.debug("released the WriteLock");
         }
     }
-//todo yo donot generate new product id!!!!!!!!! , need too put to hash of all products!!!!!!!!!//
+
     //2.4.1.1
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
@@ -310,9 +310,9 @@ public class Market {
         long stamp = lock_TP.writeLock();
         try {
             for(ProductType productType : productTypes.values()){
-                if(productType.productName.equals(name)){
+                DResponseObj<String> nameProduct = productType.getProductName();
+                if (nameProduct.errorOccurred() || name.equals(nameProduct.getValue()))
                     return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
-                }
             }
 
             if(!userManager.isLogged(uuid).value){
