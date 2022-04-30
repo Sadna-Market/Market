@@ -28,9 +28,10 @@ class MarketTest {
         market.setForTesting();
     }
 
+
     @AfterEach
     void tearDown(){
-        market = new Market(new UserManager());
+        market =new Market(new UserManager());
         logger.info("the test finished  to run right now");
     }
 
