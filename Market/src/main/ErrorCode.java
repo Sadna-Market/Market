@@ -29,4 +29,5 @@ public class ErrorCode {
 
    public static int SERVICEALREADYCONNECT = 50;
    public static int SERVICEALREADYDISCONNECT = 50;
+   public static int EXISTEXTERNALSERVICEWITHTHISNAME =51;
 }
