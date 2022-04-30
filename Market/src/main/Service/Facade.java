@@ -81,8 +81,8 @@ public class Facade implements IMarket {
          * user visit(entering) the market, As a guest-visitor (or in short, a guest). Upon entering, the guest
          * receives a unique string that identifies, a shopping cart, and can function As a buyer.
          * */
-
-        return new SLResponsOBJ<>(userManager.GuestVisit().toString());
+        DResponseObj<UUID> res = userManager.GuestVisit();
+        return new SLResponsOBJ<>(res.value.toString());
     }
 
     @Override
@@ -140,8 +140,8 @@ public class Facade implements IMarket {
 
         if (phoneNumber == null || phoneNumber.equals(""))
             return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
-
-        return new SLResponsOBJ<>(userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber));
+        DResponseObj<Boolean> res =userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber);
+        return new SLResponsOBJ<>(res);
     }
 
     @Override
@@ -586,8 +586,8 @@ public class Facade implements IMarket {
 
         if (founder == null || founder.equals(""))
             return new SLResponsOBJ<>(ErrorCode.NOTSTRING);
-
-        return new SLResponsOBJ<>(market.OpenNewStore(UUID.fromString(userId), name, founder, discountPolicy, buyPolicy, buyStrategy));
+        DResponseObj<Integer> res = market.OpenNewStore(UUID.fromString(userId), name, founder, discountPolicy, buyPolicy, buyStrategy);
+        return new SLResponsOBJ<>(res.value,res.errorMsg);
     }
 
     @Override
@@ -944,7 +944,8 @@ public class Facade implements IMarket {
         if(name==null||name.equals("")||description==null||description.equals("")||category<0){
             return new SLResponsOBJ<>(ErrorCode.NOTVALIDINPUT);
         }
-        return new SLResponsOBJ<>( market.addNewProductType(UUID.fromString(uuid),name,description,category).value);
+        DResponseObj<Integer> res = market.addNewProductType(UUID.fromString(uuid),name,description,category);
+        return new SLResponsOBJ<>( res.value,-1);
     }
 
     @Override //TODO way search product ? if you return stores ??

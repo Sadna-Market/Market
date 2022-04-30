@@ -25,8 +25,8 @@ public class SLResponsOBJ<T> extends SLRespons {
         super();
     }
 
-    public SLResponsOBJ(DResponseObj drResponse) {
-        this.value = (T) drResponse.getValue();
+    public SLResponsOBJ(DResponseObj<T> drResponse) {
+        this.value = drResponse.getValue();
         this.errorMsg = drResponse.errorMsg;
     }
 

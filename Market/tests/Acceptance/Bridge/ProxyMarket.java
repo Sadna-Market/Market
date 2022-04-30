@@ -204,7 +204,7 @@ public class ProxyMarket implements MarketBridge{
      * @return filtered list
      */
     public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank) {
-        return new ATResponseObj<>("");
+        return null;
     }
 
     /**

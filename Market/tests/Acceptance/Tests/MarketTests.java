@@ -32,8 +32,8 @@ public class MarketTests {
 
     protected void initStoreAndItem() {
         counter = 1;
-        sysManager = new User("SysManager", "sysManager@gamil.com", "123qweASD!", new Address("Tel-Aviv", "Nordau", 2), "0523111110");
-        member = new User("member", "member@gmail.com", "123qweASD!", new Address("Tel-Aviv", "Nordau", 3), "0523111111");
+        sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110");
+        member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111");
 
         String uuid = market.initSystem(sysManager).value;
         //add items to system
