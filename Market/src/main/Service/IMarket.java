@@ -9,7 +9,10 @@ import java.util.List;
 //Api of all
 public interface IMarket {
     //1.1
-    public SLResponsOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String CreditCared, String CreditDate);
+    public SLResponsOBJ<Boolean> initMarket(String email, String Password, String phoneNumber);
+
+    public void exitSystem();
+
 
     //todo i just declare all the funcs, in the futer we will change the passing args and the return value acording to the drishot.
 
@@ -20,7 +23,7 @@ public interface IMarket {
     public SLResponsOBJ<Boolean> guestLeave(String guestId);
 
     //2.1.3
-    public SLResponsOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber, String CreditCared, String CreditDate);
+    public SLResponsOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber) ;
 
     //2.1.4
     public SLResponsOBJ<Boolean> login(String userid, String email, String password);
@@ -59,7 +62,7 @@ public interface IMarket {
     public SLResponsOBJ<Boolean> setProductQuantityShoppingBag(String userId, int productId, int storeId, int quantity);
 
     //2.2.5
-    public SLResponsOBJ<Boolean> orderShoppingCart(String userId);
+    public SLResponsOBJ<Boolean> orderShoppingCart(String userId,String creditCard, String CardDate ,String cardPin);
 
     //2.3.1
     public SLResponsOBJ<Boolean> logout(String userId);

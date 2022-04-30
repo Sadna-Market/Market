@@ -43,6 +43,19 @@ public class Validator {
         return m.matches();
     }
 
+    public static boolean isValidPin(String pin) {
+        String regex = "^(?=.*[0-9])"
+                + ".{3}$";
+        Pattern p = Pattern.compile(regex);
+        if (pin == null) {
+            return false;
+        }
+
+        Matcher m = p.matcher(pin);
+
+        return m.matches();
+    }
+
     public static boolean isValidCreditCard(String CreditCard) {
         String regex = "^(?=.*[0-9])"
                 + ".{16}$";

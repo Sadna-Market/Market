@@ -11,6 +11,7 @@ import java.util.concurrent.locks.StampedLock;
 //threadsafe
 public class PaymentService extends AbsExternalService{
     ConcurrentHashMap<Integer,Double> list=new ConcurrentHashMap<>();
+    static boolean isConnected =true;
 
     public DResponseObj<Integer> pay(CreditCard card, double v) {
         long stamp= stampedLock.writeLock();
@@ -25,6 +26,11 @@ public class PaymentService extends AbsExternalService{
             stampedLock.unlockWrite(stamp);
             logger.debug("release lock");
         }
+    }
+
+
+    public static boolean isConnected(){
+        return isConnected;
     }
 
 

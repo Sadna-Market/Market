@@ -71,33 +71,35 @@ public class UserManager {
 
 
 
-    public DResponseObj<Boolean> Login(UUID userID, String email, String password) {
+    public DResponseObj<UUID> Login(UUID userID, String email, String password) {
         logger.debug("UserManager Login");
         if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password).value) {
             User LogUser = members.get(email);
-            LoginUsers.put(userID, LogUser);
+            UUID newMemberUUid= UUID.randomUUID();
+            LoginUsers.put(newMemberUUid, LogUser);
             GuestVisitors.remove(userID);
-            return new DResponseObj<>(true);
+            return new DResponseObj<>(newMemberUUid);
         } else {
-            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
+            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
             return a;
         }
 
     }
 
-    public DResponseObj<Boolean> Logout(UUID userId) {
+    public DResponseObj<UUID> Logout(UUID userId) {
         if (LoginUsers.containsKey(userId)) {
             LoginUsers.remove(userId);
             Guest guest = new Guest();
-            GuestVisitors.put(userId, guest);
-            return new DResponseObj<>(true);
+            UUID newMemberUUid= UUID.randomUUID();
+            GuestVisitors.put(newMemberUUid, guest);
+            return new DResponseObj<>(newMemberUUid);
         }
-        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
+        DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOTLOGGED);
         return a;
     }
 
 
-    public DResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber, String CreditCared, String CreditDate) {
+    public DResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber) {
 
         long stamp= LockUsers.writeLock();
         try {
@@ -111,14 +113,13 @@ public class UserManager {
                 DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
                 a.errorMsg = ErrorCode.NOTMEMBER;
                 return a;            }
-            if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)||
-                    !Validator.isValidCreditCard(CreditCared)||!Validator.isValidCreditDate(CreditDate)){
+            if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)){
 
                 DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
                 a.errorMsg = ErrorCode.NOTVALIDINPUT;
                 return a;
             }
-            User user = new User(email, Password,phoneNumber,CreditCared,CreditDate);
+            User user = new User(email, Password,phoneNumber);
             members.put(email, user);
             return new DResponseObj<>(true);
         }finally {
@@ -126,6 +127,8 @@ public class UserManager {
         }
 
     }
+
+
 
 
 

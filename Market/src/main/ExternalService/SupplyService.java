@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SupplyService extends AbsExternalService{
 
     ConcurrentHashMap<Integer,Date> list=new ConcurrentHashMap<>();
-
     public DResponseObj<Date> supply(User user, Store store, ConcurrentHashMap<Integer,Integer> hashMap) {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
@@ -27,6 +26,8 @@ public class SupplyService extends AbsExternalService{
             logger.debug("release lock");
         }
     }
+
+
 
 
     private static class SupplyServiceWrapper{

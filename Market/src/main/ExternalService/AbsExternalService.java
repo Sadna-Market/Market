@@ -37,6 +37,8 @@ public class AbsExternalService implements IExternalService {
         }
     }
 
+
+
     @Override
     public DResponseObj<Boolean> connect() {
         long stamp= stampedLock.writeLock();

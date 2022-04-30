@@ -3,6 +3,7 @@ package main.System.Server.Domain.Market;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
 import main.ErrorCode;
+import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
 import main.System.Server.Domain.StoreModel.*;
@@ -11,6 +12,7 @@ import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
+import main.System.Server.Domain.UserModel.Validator;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -258,16 +260,18 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId) {
-        //////////////////////////////////////
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String CreditCard , String CardDate , String pin) {
+        if(!Validator.isValidCreditCard(CreditCard)||!Validator.isValidCreditDate(CardDate)||
+                !Validator.isValidPin(pin)){
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
         DResponseObj<User> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-        return new DResponseObj(purchase.order(user.getValue()));
-
+        return new DResponseObj(purchase.order(user.getValue(), new CreditCard(CreditCard,CardDate , pin)));
     }
 
     //2.3.2
@@ -539,6 +543,14 @@ public class Market {
             s.newStoreRate(i);
             stores.put(i, s);
         }
+    }
+
+    public DResponseObj<Boolean> isHavePaymentInstane(){
+        return new DResponseObj( PaymentService.getInstance().isConnect());
+    }
+
+    public DResponseObj<Boolean> isHaveSupplyService(){
+        return new DResponseObj( SupplyService.getInstance().isConnect());
     }
 
 
