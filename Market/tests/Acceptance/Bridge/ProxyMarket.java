@@ -14,16 +14,18 @@ public class ProxyMarket implements MarketBridge{
      * init all resources of system (External Services, cart..)
      *
      * @return true if success else false
+     * @param sysManager
      */
-    public boolean initSystem() {
-        return false;
+    public ATResponseObj<String> initSystem(User sysManager) {
+        return realMarket.initSystem(sysManager);
     }
 
     /**
      * Discards all resources from init (doesn't change the memory)
+     * @param uuid
      */
-    public void exitSystem() {
-
+    public void exitSystem(String uuid) {
+        realMarket.exitSystem(uuid);
     }
 
     /**
@@ -32,7 +34,7 @@ public class ProxyMarket implements MarketBridge{
      * @return true if there is, else false
      */
     public boolean hasSystemManager() {
-        return false;
+        return realMarket.hasSystemManager();
     }
 
     /**
@@ -41,7 +43,7 @@ public class ProxyMarket implements MarketBridge{
      * @return true if there is, else false
      */
     public boolean hasPaymentService() {
-        return false;
+        return realMarket.hasPaymentService();
     }
 
     /**
@@ -50,14 +52,7 @@ public class ProxyMarket implements MarketBridge{
      * @return true if there is, else false
      */
     public boolean hasSupplierService() {
-        return false;
-    }
-
-    /**
-     * deletes all system managers( just for the testing)
-     */
-    public void deleteSystemManagers() {
-
+        return realMarket.hasSupplierService();
     }
 
     /**
@@ -66,7 +61,7 @@ public class ProxyMarket implements MarketBridge{
      * @param service the service to disconnect
      */
     public void disconnectExternalService(String service) {
-
+        realMarket.disconnectExternalService(service);
     }
 
     /**
@@ -76,7 +71,7 @@ public class ProxyMarket implements MarketBridge{
      * @return true if the system has connection else false
      */
     public boolean serviceIsAlive(String service) {
-        return false;
+        return realMarket.serviceIsAlive(service);
     }
 
     /**
@@ -87,7 +82,7 @@ public class ProxyMarket implements MarketBridge{
      * @return response object with the recipe certification
      */
     public ATResponseObj<String> pay(CreditCard creditCard, int dollars) {
-        return new ATResponseObj<>("");
+        return realMarket.pay(creditCard,dollars);
     }
 
     /**
@@ -98,36 +93,40 @@ public class ProxyMarket implements MarketBridge{
      * @return certificate for success supply
      */
     public ATResponseObj<String> supply(List<ItemDetail> deliver, User user) {
-        return new ATResponseObj<>("");
+        return realMarket.supply(deliver,user);
     }
 
     /**
      * chechs if exists a cart after init system
      *
      * @return true is exists else false
+     * @param uuid
      */
-    public boolean cartExists() {
-        return false;
+    public boolean cartExists(String uuid) {
+        return realMarket.cartExists(uuid);
     }
 
     /**
      * checks if system has guest "connected"
      *
      * @return true if yes else false
+     * @param uuid
      */
-    public boolean guestOnline() {
-        return false;
+    public boolean guestOnline(String uuid) {
+        return realMarket.guestOnline(uuid);
     }
 
     /**
      * register a new user to the system
      *
+     *
+     * @param uuid
      * @param username username - email
      * @param password password
      * @return true if success else false
      */
-    public boolean register(String username, String password) {
-        return false;
+    public boolean register(String uuid, String username, String password) {
+        return realMarket.register(uuid, username, password);
     }
 
     /**
@@ -137,37 +136,38 @@ public class ProxyMarket implements MarketBridge{
      * @return true if registered else false
      */
     public boolean isMember(User newUser) {
-        return false;
+        return realMarket.isMember(newUser);
     }
 
     /**
      * logs in the user to the system
      *
+     *
+     * @param uuid
      * @param member the user to login
      * @return true if sucess else false
      */
-    public boolean login(User member) {
-        return false;
+    public ATResponseObj<String> login(String uuid, User member) {
+        return realMarket.login(uuid, member);
     }
 
     /**
      * check if the user is logged in to the system
      *
-     * @param member the user to check
+     * @param uuid the user to check
      * @return true if success else false
      */
-    public boolean isLoggedIn(User member) {
-        return false;
+    public boolean isLoggedIn(String uuid) {
+        return realMarket.isLoggedIn(uuid);
     }
 
     /**
      * change the password of a user in the system
      *
      * @param member  the member to change the password
-     * @param newPass the new password
      * @return true if success else false
      */
-    public boolean changePassword(User member, String newPass) {
+    public boolean changePassword(User member) {
         return false;
     }
 
@@ -178,7 +178,7 @@ public class ProxyMarket implements MarketBridge{
      * @return info of the store
      */
     public ATResponseObj<String> getStoreInfo(int storeID) {
-        return new ATResponseObj<>("");
+        return realMarket.getStoreInfo(storeID);
     }
 
     /**
@@ -189,8 +189,8 @@ public class ProxyMarket implements MarketBridge{
      * @param keyWords words that can relate to the items specifications
      * @return list of result items
      */
-    public ATResponseObj<List<ItemDetail>> searchItems(String itemName, String category, List<String> keyWords) {
-        return new ATResponseObj<>("");
+    public ATResponseObj<List<Integer>> searchItems(String itemName, String category, List<String> keyWords) {
+        return realMarket.searchItems(itemName,category,keyWords);
     }
 
     /**
@@ -203,28 +203,31 @@ public class ProxyMarket implements MarketBridge{
      * @param storeRank   filter param
      * @return filtered list
      */
-    public ATResponseObj<List<ItemDetail>> filterSearchResults(List<ItemDetail> items, int productRank, String priceRange, String category, int storeRank) {
+    public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank) {
         return new ATResponseObj<>("");
     }
 
     /**
      * add to cart the item that is in storeID
      *
+     *
+     * @param uuid
      * @param storeID the store that the item is related to
      * @param item    the item to add to the cart
      * @return true if success, else false
      */
-    public boolean addToCart(int storeID, ItemDetail item) {
-        return false;
+    public boolean addToCart(String uuid, int storeID, ItemDetail item) {
+        return realMarket.addToCart(uuid, storeID, item);
     }
 
     /**
      * gets the cart of the current user
      *
      * @return list of list of items - Cart that has shopping bags related to different stores
+     * @param uuid
      */
-    public ATResponseObj<List<List<ItemDetail>>> getCart() {
-        return new ATResponseObj<>("");
+    public ATResponseObj<List<List<ItemDetail>>> getCart(String uuid) {
+        return realMarket.getCart(uuid);
     }
 
     /**
@@ -235,95 +238,101 @@ public class ProxyMarket implements MarketBridge{
      * @return quantity of the item in the store
      */
     public int getAmountOfProductInStore(int storeID, ItemDetail item) {
-        return 0;
+        return realMarket.getAmountOfProductInStore(storeID,item);
     }
 
     /**
      * removes the item from the cart of current user's cart
      *
+     *
+     * @param uuid
      * @param item item to remove
+     * @param storeID
      * @return true if success, else false
      */
-    public boolean removeProductFromCart(ItemDetail item) {
-        return false;
+    public boolean removeProductFromCart(String uuid, ItemDetail item, int storeID) {
+        return realMarket.removeProductFromCart(uuid, item, storeID);
     }
 
     /**
      * update the item of current user's cart to new quantity
      *
+     *
+     * @param uuid
      * @param item        the item to update
      * @param newQuantity new quantity
+     * @param storeID
      * @return true if success, else false
      */
-    public boolean updateProductQuantity(ItemDetail item, int newQuantity) {
-        return false;
+    public boolean updateProductQuantity(String uuid, ItemDetail item, int newQuantity, int storeID) {
+        return realMarket.updateProductQuantity(uuid, item, newQuantity, storeID);
     }
 
     /**
      * resets all memory from ram (cart,members,history purchases...)
      */
     public void resetMemory() {
-
-    }
-
-    /**
-     * adds a system manager to the system (the highest permission)
-     *
-     * @param sysManager manager to assign
-     */
-    public void addSystemManager(User sysManager) {
-
+        realMarket.resetMemory();
     }
 
     /**
      * creates a new store with a owner
      *
+     *
+     * @param uuid
      * @param owner owner of the store to be created
      * @return Response- msg error if occurred else id of the store that was created
      */
-    public ATResponseObj<Integer> addStore(User owner) {
-        return new ATResponseObj<>("");
+    public ATResponseObj<Integer> addStore(String uuid, User owner) {
+        return realMarket.addStore(uuid, owner);
     }
 
     /**
      * adds the item to the store
      *
+     *
+     * @param uuid
      * @param storeID the store that the item will be added to
      * @param item    the item to add
      * @return true if success else false
      */
-    public boolean addItemToStore(int storeID, ItemDetail item) {
-        return false;
+    public boolean addItemToStore(String uuid, int storeID, ItemDetail item) {
+        return realMarket.addItemToStore(uuid, storeID, item);
     }
 
     /**
      * logout from connected user
      *
      * @return true if success else false
+     * @param uuid
      */
-    public boolean logout() {
-        return false;
+    public ATResponseObj<String> logout(String uuid) {
+        return realMarket.logout(uuid);
     }
 
     /**
      * purchase the current cart of the user
      *
+     *
+     * @param uuid
      * @param creditCard credit card details to take the money for payment service
      * @param address    address to send the items for supply service
      * @return certificated of payment and supply
      */
-    public ATResponseObj<String> purchaseCart(CreditCard creditCard, Address address) {
-        return new ATResponseObj<>("");
+    public ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address) {
+        return realMarket.purchaseCart(uuid, creditCard, address);
     }
 
     /**
      * query to get the history of all purchases of a store with storeID
      *
+     *
+     * @param uuid
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    public ATResponseObj<List<String>> getHistoryPurchase(int storeID) {
-        return new ATResponseObj<>("");
+    public ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID) {
+        return realMarket.getHistoryPurchase(uuid, storeID);
     }
 
     /**
@@ -345,30 +354,34 @@ public class ProxyMarket implements MarketBridge{
      * @return true if contains item, else false
      */
     public boolean hasItem(int storeID, int itemID) {
-        return false;
+        return realMarket.hasItem(storeID,itemID);
     }
 
     /**
      * removes a product from store
      *
+     *
+     * @param uuid
      * @param storeID the store in which to remove the product from
      * @param item    the product to remove
      * @return true if success, else false
      */
-    public boolean removeProductFromStore(int storeID, ItemDetail item) {
-        return false;
+    public boolean removeProductFromStore(String uuid, int storeID, ItemDetail item) {
+        return realMarket.removeProductFromStore(uuid, storeID, item);
     }
 
     /**
      * update product details of a store
      *
+     *
+     * @param uuid
      * @param storeID         the store to update its product
      * @param existingProduct the product to update
      * @param updatedProduct  the product details to update
      * @return true if success, else false
      */
-    public boolean updateProductInStore(int storeID, ItemDetail existingProduct, ItemDetail updatedProduct) {
-        return false;
+    public boolean updateProductInStore(String uuid, int storeID, ItemDetail existingProduct, ItemDetail updatedProduct) {
+        return realMarket.updateProductInStore(uuid,storeID,existingProduct,updatedProduct);
     }
 
     /**
@@ -396,13 +409,14 @@ public class ProxyMarket implements MarketBridge{
     /**
      * assigns a new user to be owner of the store
      *
+     *
+     * @param uuid
      * @param storeID  store id to add owner
-     * @param owner    existing owner of the store
      * @param newOwner new owner to add
      * @return true if success, else false
      */
-    public boolean assignNewOwner(int storeID, User owner, User newOwner) {
-        return false;
+    public boolean assignNewOwner(String uuid, int storeID, User newOwner) {
+        return realMarket.assignNewOwner(uuid,storeID,newOwner);
     }
 
     /**
@@ -419,36 +433,41 @@ public class ProxyMarket implements MarketBridge{
     /**
      * assigns a new user to be manager of the store
      *
+     *
+     * @param uuid
      * @param storeID    store id to add owner
-     * @param user       existing owner/manager of the store
      * @param newManager new manager to add
      * @return true if success, else false
      */
-    public boolean assignNewManager(int storeID, User user, User newManager) {
-        return false;
+    public boolean assignNewManager(String uuid, int storeID, User newManager) {
+        return realMarket.assignNewManager(uuid,storeID,newManager);
     }
 
     /**
      * update/change permission of manager in store
      *
+     *
+     * @param uuid
      * @param permission the new permission
      * @param onOf       turn on or off
      * @param manager    the manager
      * @param storeID    store id
      * @return true if success else false
      */
-    public boolean updatePermission(String permission, boolean onOf, User manager, int storeID) {
-        return false;
+    public boolean updatePermission(String uuid, String permission, boolean onOf, User manager, int storeID) {
+        return realMarket.updatePermission(uuid,permission,onOf,manager,storeID);
     }
 
     /**
      * close the store
      *
+     *
+     * @param uuid
      * @param storeID store id
      * @return true if success, else false
      */
-    public boolean closeStore(int storeID) {
-        return false;
+    public boolean closeStore(String uuid, int storeID) {
+        return realMarket.closeStore(uuid,storeID);
     }
 
     /**
@@ -464,21 +483,34 @@ public class ProxyMarket implements MarketBridge{
     /**
      * query to get role info of user in store
      *
+     * @param uuid    the user
      * @param storeID id of store
-     * @param user    the user
      * @return info of user's roles
      */
-    public ATResponseObj<String> getUserRoleInfo(int storeID, User user) {
-        return new ATResponseObj<>("");
+    public ATResponseObj<String> getUserRoleInfo(String uuid, int storeID) {
+        return realMarket.getUserRoleInfo(uuid,storeID);
     }
 
     /**
      * query to get info of any user member in the system
      *
+     *
+     * @param uuid
      * @param user the user
      * @return info of user
      */
-    public ATResponseObj<String> getBuyerInfo(User user) {
+    public ATResponseObj<String> getBuyerInfo(String uuid, User user) {
         return new ATResponseObj<>("");
+    }
+
+    /**
+     * add product type to system
+     *
+     * @param uuid
+     * @param item
+     * @return id of the item
+     */
+    public ATResponseObj<Integer> addProductType(String uuid, ItemDetail item) {
+        return realMarket.addProductType(uuid,item);
     }
 }

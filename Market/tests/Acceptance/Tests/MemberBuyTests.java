@@ -7,15 +7,16 @@ import org.junit.jupiter.api.*;
 import java.util.List;
 @DisplayName("Member Buy Tests  - AT")
 public class MemberBuyTests extends MarketTests{
+    String uuid;
     @BeforeEach
     public void setUp() {
-        market.initSystem();
+        uuid = market.initSystem(sysManager).value;
     }
 
     @AfterEach
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
-        market.exitSystem();
+        market.exitSystem(uuid);
         initStoreAndItem(); // restore state as before
     }
 
@@ -26,16 +27,24 @@ public class MemberBuyTests extends MarketTests{
     @DisplayName("req: #2.3.1 - success test")
     void Logout_Success() {
         assertTrue(market.isMember(member));
-        assertTrue(market.login(member));
-        ItemDetail item = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
-        assertTrue(market.addToCart(existing_storeID, item));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        ItemDetail item = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
+        item.itemID = IPHONE_6;
+        assertTrue(market.addToCart(uuid, existing_storeID, item));
 
-        assertTrue(market.logout());
+        ATResponseObj<String> guestID = market.logout(uuid);
+        assertFalse(guestID.errorOccurred());
+        uuid = guestID.value;
 
-        assertTrue(market.guestOnline());
-        assertTrue(market.cartExists());
-        assertTrue(market.login(member));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertTrue(market.guestOnline(uuid));
+        assertTrue(market.cartExists(uuid));
+        memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
@@ -50,11 +59,13 @@ public class MemberBuyTests extends MarketTests{
     @DisplayName("req: #2.3.2 - success test")
     void createStore_Success() {
         User user = generateUser();
-        assertTrue(market.register(user.username,user.password));
+        assertTrue(market.register(uuid, user.username, user.password));
         assertTrue(market.isMember(user));
-        assertTrue(market.login(user));
+        ATResponseObj<String> memberID = market.login(uuid, user);
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
         //TODO: this doesnt check with params of discount policy/but type at this point of version..
-        ATResponseObj<Integer> response = market.addStore(user);
+        ATResponseObj<Integer> response = market.addStore(uuid, user);
         assertFalse(response.errorOccurred());
         int storeID = response.value;
         assertTrue(market.isContributor(storeID,user));
@@ -65,14 +76,14 @@ public class MemberBuyTests extends MarketTests{
     @DisplayName("req: #2.3.2 - fail test [guest trying to add store]")
     void createStore_Fail1() {
         User user = generateUser();
-        ATResponseObj<Integer> response = market.addStore(user);
+        ATResponseObj<Integer> response = market.addStore(uuid, user);
         assertTrue(response.errorOccurred());
     }
 
     @Test
     @DisplayName("req: #2.3.2 - fail test [invalid input]")
     void createStore_Fail2() {
-        ATResponseObj<Integer> response = market.addStore(null);
+        ATResponseObj<Integer> response = market.addStore(uuid, null);
         assertTrue(response.errorOccurred());
     }
 

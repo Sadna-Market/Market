@@ -44,7 +44,9 @@ public class UserManager {
         LoginUsers = new ConcurrentHashMap<>();
     }
 
-
+    public DResponseObj<Boolean> isMember(String email){
+        return new DResponseObj<>(members.containsKey(email));
+    }
 
     public DResponseObj<UUID> GuestVisit(){
         logger.debug("UserManager GuestVisit");
@@ -137,15 +139,11 @@ public class UserManager {
 
     }
 
-    public DResponseObj<Boolean> isFounder(UUID user,Store store) {
-        if(!isLogged(user).value){
-            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-            return a;
+    public DResponseObj<Boolean> isFounder(Store store,String email) {
+        if(!members.containsKey(email)){
+            return new DResponseObj<Boolean>(false,ErrorCode.NOTMEMBER);
         }
-        User u = LoginUsers.get(user);
-        logger.debug("UserManager isFownder");
-        PermissionManager permissionManager =PermissionManager.getInstance();
-        return new DResponseObj( permissionManager.isFounder(u,store));
+        return PermissionManager.getInstance().isFounder(members.get(email),store);
     }
 
 
@@ -298,5 +296,6 @@ public class UserManager {
     public DResponseObj< User> getOnlineUser(UUID uuid){
         return new DResponseObj<>( LoginUsers.getOrDefault(uuid, null));
     }
+
 
 }

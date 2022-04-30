@@ -1,15 +1,14 @@
 package main.Service;
 
+import main.ErrorCode;
 import main.ExternalService.ExternalService;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
 import main.System.Server.Domain.Market.Market;
-import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
 
-import java.net.ServerSocket;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,7 +84,7 @@ public class TestableFacade extends Facade {
         return new SLResponsOBJ<>( ExternalService.getService(service).value.isConnect().value);
     }
 
-    public SLResponsOBJ<String> supply(ServiceUser user,LinkedList<ServiseItem> items) {
+    public SLResponsOBJ<String> supply(ServiceUser user,List<ServiceItem> items) {
         /**
          * @requirement @requirement II. 3
          *
@@ -100,15 +99,16 @@ public class TestableFacade extends Facade {
 
          * */
         ConcurrentHashMap<Integer,Integer> a= new ConcurrentHashMap<>();
-        for(ServiseItem i : items){
+        for(ServiceItem i : items){
             a.put(i.itemID,i.quantity);
         }
         User u = user.getUser();
-        return new SLResponsOBJ(SupplyService.getInstance().supply(u,user.city,user.Street,user.apartment,a));
+        DResponseObj<String> sup = SupplyService.getInstance().supply(u,user.city,user.Street,user.apartment,a);
+        return sup.errorOccurred() ? new SLResponsOBJ<>(ErrorCode.EXTERNAL_SERVICE_ERROR) : new SLResponsOBJ<>(sup.value);
     }
 
 
-    public SLResponsOBJ<Boolean> payment(ServiceCreditCard C,double amount) {
+    public SLResponsOBJ<String> payment(ServiceCreditCard C,double amount) {
         /**
          * @requirement II. 4
          *
@@ -124,8 +124,8 @@ public class TestableFacade extends Facade {
 
          * */
 
-
-        return new SLResponsOBJ(PaymentService.getInstance().pay(C.getCreditCard(),amount).value);
+        DResponseObj<Integer> res = PaymentService.getInstance().pay(C.getCreditCard(),amount);
+        return res.errorOccurred() ? new SLResponsOBJ<>(res.errorMsg) : new SLResponsOBJ<>(res.value.toString(),-1);
     }
 
     public SLResponsOBJ<Boolean> connectService(String serviceName) {
@@ -179,8 +179,9 @@ public class TestableFacade extends Facade {
      *
      * @return true is exists else false
      */
-    public SLResponsOBJ<Boolean> cartExists(UUID uuid) {
-        return new SLResponsOBJ<>( userManager.isCartExist(uuid).value);
+    public SLResponsOBJ<Boolean> cartExists(String uuid) {
+        DResponseObj<Boolean> res =  userManager.isCartExist(UUID.fromString(uuid));
+        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
     }
 
     /**
@@ -188,8 +189,9 @@ public class TestableFacade extends Facade {
      *
      * @return true if yes else false
      */
-    public SLResponsOBJ<Boolean> guestOnline(UUID uuid) {
-        return new SLResponsOBJ<>( userManager.isOnline(uuid));
+    public SLResponsOBJ<Boolean> guestOnline(String uuid) {
+        DResponseObj<Boolean> res = userManager.isOnline(UUID.fromString(uuid));
+        return res.errorOccurred()? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
     }
 
     /**
@@ -197,8 +199,9 @@ public class TestableFacade extends Facade {
      * @param uuid the user to check
      * @return true if success else false
      */
-    public SLResponsOBJ<Boolean> isLoggedIn(UUID uuid){
-        return new SLResponsOBJ<>(userManager.isLogged(uuid));
+    public SLResponsOBJ<Boolean> isLoggedIn(String uuid){
+        DResponseObj<Boolean> res = userManager.isLogged(UUID.fromString(uuid));
+        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
     }
 
     /**
@@ -219,8 +222,9 @@ public class TestableFacade extends Facade {
      *  user    the user to check if is a contributor
      * @return true is user is a contributor else false
      */
-    public SLResponsOBJ<Boolean> isFounder(UUID uid, int StoreID) {
-        return new SLResponsOBJ<>(userManager.isFounder(uid,market.getStore(StoreID).value).value);
+    public SLResponsOBJ<Boolean> isFounder(int StoreID, String email) {
+        DResponseObj<Boolean> res = userManager.isFounder(market.getStore(StoreID).value,email);
+        return res.errorOccurred() ? new SLResponsOBJ<>(false, res.errorMsg) : new SLResponsOBJ<>(true,-1);
     }
 
     /**
@@ -233,6 +237,20 @@ public class TestableFacade extends Facade {
         return new SLResponsOBJ(  market.isStoreClosed(storeID).value);
     }
 
+    /**
+     * checks if newUser is registered
+     *
+     * @param email email to check
+     * @return true if registered else false
+     */
+    public SLResponsOBJ<Boolean> isMember(String email) {
+        DResponseObj<Boolean> res = userManager.isMember(email);
+        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
+    }
 
+   public SLResponsOBJ<Integer> getProductQuantity(int storeID, int productID){
+        DResponseObj<Integer> res = market.getStore(storeID).getValue().getProductQuantity(productID);
+        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(res.value,-1);
+   }
 
 }

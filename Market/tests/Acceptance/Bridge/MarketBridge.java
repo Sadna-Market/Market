@@ -8,13 +8,15 @@ public interface MarketBridge {
     /**
      * init all resources of system (External Services, cart..)
      * @return true if success else false
+     * @param sysManager
      */
-    boolean initSystem();
+    ATResponseObj<String> initSystem(User sysManager);
 
     /**
      * Discards all resources from init (doesn't change the memory)
+     * @param uuid
      */
-    void exitSystem();
+    void exitSystem(String uuid);
 
     /**
      * Checks if the system has a system manager
@@ -33,11 +35,6 @@ public interface MarketBridge {
      * @return true if there is, else false
      */
     boolean hasSupplierService();
-
-    /**
-     * deletes all system managers( just for the testing)
-     */
-    void deleteSystemManagers();
 
     /**
      * disconnects the service from system
@@ -71,22 +68,26 @@ public interface MarketBridge {
     /**
      * chechs if exists a cart after init system
      * @return true is exists else false
+     * @param uuid
      */
-    boolean cartExists();
+    boolean cartExists(String uuid);
 
     /**
      * checks if system has guest "connected"
      * @return true if yes else false
+     * @param uuid
      */
-    boolean guestOnline();
+    boolean guestOnline(String uuid);
 
     /**
      * register a new user to the system
+     *
+     * @param uuid
      * @param username username - email
      * @param password password
      * @return true if success else false
      */
-    boolean register(String username, String password);
+    boolean register(String uuid, String username, String password);
 
     /**
      * checks if newUser is registered
@@ -97,25 +98,26 @@ public interface MarketBridge {
 
     /**
      * logs in the user to the system
+     *
+     * @param uuid
      * @param member the user to login
      * @return true if sucess else false
      */
-    boolean login(User member);
+    ATResponseObj<String> login(String uuid, User member);
 
     /**
      * check if the user is logged in to the system
-     * @param member the user to check
+     * @param uuid the user to check
      * @return true if success else false
      */
-    boolean isLoggedIn(User member);
+    boolean isLoggedIn(String uuid);
 
     /**
      * change the password of a user in the system
      * @param member the member to change the password
-     * @param newPass the new password
      * @return true if success else false
      */
-    boolean changePassword(User member, String newPass);
+    boolean changePassword(User member);
 
     /**
      * get information of a store and its products
@@ -131,7 +133,7 @@ public interface MarketBridge {
      * @param keyWords words that can relate to the items specifications
      * @return list of result items
      */
-    ATResponseObj<List<ItemDetail>> searchItems(String itemName, String category, List<String> keyWords);
+    ATResponseObj<List<Integer>> searchItems(String itemName, String category, List<String> keyWords);
 
     /**
      * given a list of items, filter them by rank,price range, store rank, category.
@@ -142,21 +144,24 @@ public interface MarketBridge {
      * @param storeRank filter param
      * @return filtered list
      */
-    ATResponseObj<List<ItemDetail>> filterSearchResults(List<ItemDetail> items, int productRank, String priceRange, String category, int storeRank);
+    ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank);
 
     /**
      * add to cart the item that is in storeID
+     *
+     * @param uuid
      * @param storeID the store that the item is related to
      * @param item the item to add to the cart
      * @return true if success, else false
      */
-    boolean addToCart(int storeID, ItemDetail item);
+    boolean addToCart(String uuid, int storeID, ItemDetail item);
 
     /**
      * gets the cart of the current user
      * @return list of list of items - Cart that has shopping bags related to different stores
+     * @param uuid
      */
-    ATResponseObj<List<List<ItemDetail>>> getCart();
+    ATResponseObj<List<List<ItemDetail>>> getCart(String uuid);
 
     /**
      * query to verify quantity of item in storeID
@@ -168,18 +173,24 @@ public interface MarketBridge {
 
     /**
      * removes the item from the cart of current user's cart
+     *
+     * @param uuid
      * @param item item to remove
+     * @param storeID
      * @return true if success, else false
      */
-    boolean removeProductFromCart(ItemDetail item);
+    boolean removeProductFromCart(String uuid, ItemDetail item, int storeID);
 
     /**
      * update the item of current user's cart to new quantity
+     *
+     * @param uuid
      * @param item the item to update
      * @param newQuantity new quantity
+     * @param storeID
      * @return true if success, else false
      */
-    boolean updateProductQuantity(ItemDetail item, int newQuantity);
+    boolean updateProductQuantity(String uuid, ItemDetail item, int newQuantity, int storeID);
 
     /**
      * resets all memory from ram (cart,members,history purchases...)
@@ -187,46 +198,49 @@ public interface MarketBridge {
     void resetMemory();
 
     /**
-     * adds a system manager to the system (the highest permission)
-     * @param sysManager manager to assign
-     */
-    void addSystemManager(User sysManager);
-
-    /**
      * creates a new store with a owner
+     *
+     * @param uuid
      * @param owner owner of the store to be created
      * @return Response- msg error if occurred else id of the store that was created
      */
-    ATResponseObj<Integer> addStore(User owner);
+    ATResponseObj<Integer> addStore(String uuid, User owner);
 
     /**
      * adds the item to the store
+     *
+     * @param uuid
      * @param storeID the store that the item will be added to
      * @param item the item to add
      * @return  true if success else false
      */
-    boolean addItemToStore(int storeID, ItemDetail item);
+    boolean addItemToStore(String uuid, int storeID, ItemDetail item);
 
     /**
      * logout from connected user
      * @return true if success else false
+     * @param uuid
      */
-    boolean logout();
+    ATResponseObj<String> logout(String uuid);
 
     /**
      * purchase the current cart of the user
+     *
+     * @param uuid
      * @param creditCard credit card details to take the money for payment service
      * @param address address to send the items for supply service
      * @return certificated of payment and supply
      */
-    ATResponseObj<String> purchaseCart(CreditCard creditCard, Address address);
+    ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address);
 
     /**
      * query to get the history of all purchases of a store with storeID
+     *
+     * @param uuid
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    ATResponseObj<List<String>> getHistoryPurchase(int storeID);
+    ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID);
 
     /**
      * chechs if user is a contributor of store
@@ -246,20 +260,24 @@ public interface MarketBridge {
 
     /**
      * removes a product from store
+     *
+     * @param uuid
      * @param storeID the store in which to remove the product from
      * @param item the product to remove
      * @return true if success, else false
      */
-    boolean removeProductFromStore(int storeID, ItemDetail item);
+    boolean removeProductFromStore(String uuid, int storeID, ItemDetail item);
 
     /**
      * update product details of a store
+     *
+     * @param uuid
      * @param storeID the store to update its product
      * @param existingProduct the product to update
      * @param updatedProduct the product details to update
      * @return true if success, else false
      */
-    boolean updateProductInStore(int storeID, ItemDetail existingProduct, ItemDetail updatedProduct);
+    boolean updateProductInStore(String uuid, int storeID, ItemDetail existingProduct, ItemDetail updatedProduct);
 
     /**
      * query to get item info from store
@@ -279,12 +297,13 @@ public interface MarketBridge {
 
     /**
      * assigns a new user to be owner of the store
+     *
+     * @param uuid
      * @param storeID store id to add owner
-     * @param owner existing owner of the store
      * @param newOwner new owner to add
      * @return true if success, else false
      */
-    boolean assignNewOwner(int storeID, User owner, User newOwner);
+    boolean assignNewOwner(String uuid, int storeID, User newOwner);
 
     /**
      * checks if user is manager in store
@@ -296,29 +315,34 @@ public interface MarketBridge {
 
     /**
      * assigns a new user to be manager of the store
+     *
+     * @param uuid
      * @param storeID store id to add owner
-     * @param user existing owner/manager of the store
      * @param newManager new manager to add
      * @return true if success, else false
      */
-    boolean assignNewManager(int storeID, User user, User newManager);
+    boolean assignNewManager(String uuid, int storeID, User newManager);
 
     /**
      * update/change permission of manager in store
+     *
+     * @param uuid
      * @param permission the new permission
      * @param onOf turn on or off
      * @param manager the manager
      * @param storeID store id
      * @return true if success else false
      */
-    boolean updatePermission(String permission, boolean onOf, User manager, int storeID);
+    boolean updatePermission(String uuid, String permission, boolean onOf, User manager, int storeID);
 
     /**
      * close the store
+     *
+     * @param uuid
      * @param storeID store id
      * @return true if success, else false
      */
-    boolean closeStore(int storeID);
+    boolean closeStore(String uuid, int storeID);
 
     /**
      * checks if store is closed
@@ -329,16 +353,27 @@ public interface MarketBridge {
 
     /**
      * query to get role info of user in store
+     * @param uuid the user
      * @param storeID id of store
-     * @param user the user
      * @return info of user's roles
      */
-    ATResponseObj<String> getUserRoleInfo(int storeID, User user);
+    ATResponseObj<String> getUserRoleInfo(String uuid, int storeID);
 
     /**
      * query to get info of any user member in the system
+     *
+     * @param uuid
      * @param user the user
      * @return info of user
      */
-    ATResponseObj<String> getBuyerInfo(User user);
+    ATResponseObj<String> getBuyerInfo(String uuid, User user);
+
+    /**
+     * add product type to system
+     *
+     * @param uuid
+     * @param item
+     * @return id of the item
+     */
+    ATResponseObj<Integer> addProductType(String uuid, ItemDetail item);
 }

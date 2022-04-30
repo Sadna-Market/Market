@@ -10,14 +10,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Guest Buy Tests  - AT")
 public class GuestBuyTests extends MarketTests{
+    String uuid;
     @BeforeEach
     public void setUp() {
-        market.initSystem();
+        uuid = market.initSystem(sysManager).value;
     }
 
     @AfterEach
     public void tearDown() {
-        market.exitSystem();
+        market.exitSystem(uuid);
     }
 
 
@@ -56,7 +57,7 @@ public class GuestBuyTests extends MarketTests{
         String itemName = "iphone";
         String category = "mobile phone";
         List<String> keyWords = List.of("telephone,apple");
-        ATResponseObj<List<ItemDetail>> response = market.searchItems(itemName, category, keyWords);
+        ATResponseObj<List<Integer>> response = market.searchItems(itemName, category, keyWords);
         assertFalse(response.errorOccurred());
         assertFalse(response.value.isEmpty());
     }
@@ -67,14 +68,14 @@ public class GuestBuyTests extends MarketTests{
         String itemName = "PC";
         String category = "computer";
         List<String> keyWords = List.of("microsoft,dell");
-        ATResponseObj<List<ItemDetail>> response = market.searchItems(itemName, category, keyWords);
+        ATResponseObj<List<Integer>> response = market.searchItems(itemName, category, keyWords);
         assertTrue(response.value.isEmpty());
     }
 
     @Test
     @DisplayName("req: #2.2.2 - fail test [invalid input]")
     void SearchItem_Fail2() {
-        ATResponseObj<List<ItemDetail>> response = market.searchItems(null, "null", new LinkedList<>());
+        ATResponseObj<List<Integer>> response = market.searchItems(null, "null", new LinkedList<>());
         assertTrue(response.errorOccurred());
         response = market.searchItems("null", null, new LinkedList<>());
         assertTrue(response.errorOccurred());
@@ -91,14 +92,14 @@ public class GuestBuyTests extends MarketTests{
         String itemName = "iphone";
         String category = "mobile phone";
         List<String> keyWords = List.of("telephone,apple");
-        ATResponseObj<List<ItemDetail>> response = market.searchItems(itemName, category, keyWords);
+        ATResponseObj<List<Integer>> response = market.searchItems(itemName, category, keyWords);
         assertFalse(response.errorOccurred());
         assertFalse(response.value.isEmpty());
 
         int productRank = 2;
         String priceRange = "0-10";
         int storeRank = 5;
-        ATResponseObj<List<ItemDetail>> filteredResponse = market.filterSearchResults(response.value, productRank, priceRange, category, storeRank);
+        ATResponseObj<List<Integer>> filteredResponse = market.filterSearchResults(response.value, productRank, priceRange, category, storeRank);
         assertFalse(filteredResponse.errorOccurred());
         assertFalse(filteredResponse.value.isEmpty());
     }
@@ -109,14 +110,14 @@ public class GuestBuyTests extends MarketTests{
         String itemName = "iphone";
         String category = "mobile phone";
         List<String> keyWords = List.of("telephone,apple");
-        ATResponseObj<List<ItemDetail>> response = market.searchItems(itemName, category, keyWords);
+        ATResponseObj<List<Integer>> response = market.searchItems(itemName, category, keyWords);
         assertFalse(response.errorOccurred());
         assertFalse(response.value.isEmpty());
 
         int productRank = 2;
         String priceRange = "100-200";
         int storeRank = 5;
-        ATResponseObj<List<ItemDetail>> filteredResponse = market.filterSearchResults(response.value, productRank, priceRange, category, storeRank);
+        ATResponseObj<List<Integer>> filteredResponse = market.filterSearchResults(response.value, productRank, priceRange, category, storeRank);
         assertTrue(filteredResponse.errorOccurred());
         assertTrue(filteredResponse.value.isEmpty());
     }
@@ -124,7 +125,7 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.2 - fail test [invalid input]")
     void Filter_Fail2() {
-        ATResponseObj<List<ItemDetail>> filteredResponse = market.filterSearchResults(null, 2, "priceRange", "category", 5);
+        ATResponseObj<List<Integer>> filteredResponse = market.filterSearchResults(null, 2, "priceRange", "category", 5);
         assertTrue(filteredResponse.errorOccurred());
     }
 
@@ -134,9 +135,10 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.3 - success1 test")
     void addProductToShoppingBag_Success1() {
-        ItemDetail item1 = new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone");
-        assertTrue(market.addToCart(existing_storeID, item1));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5;
+        assertTrue(market.addToCart(uuid, existing_storeID, item1));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertEquals(1, cart.size());
@@ -150,10 +152,11 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.3 - success2 test")
     void addProductToShoppingBag_Success2() {
-        ItemDetail item3 = new ItemDetail("screenFULLHD", 3232, 1, 10, List.of("TV"), "screen");
-        assertTrue(market.addToCart(existing_storeID, item3));
-        assertTrue(market.addToCart(existing_storeID, item3));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ItemDetail item3 = new ItemDetail("screenFULLHD",  1, 10, List.of("TV"), "screen");
+        item3.itemID = SCREEN_FULL_HD;
+        assertTrue(market.addToCart(uuid, existing_storeID, item3));
+        assertTrue(market.addToCart(uuid, existing_storeID, item3));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertEquals(1, cart.size());
@@ -168,9 +171,10 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.3 - fail test [want more then there is in stock]")
     void addProductToShoppingBag_Fail1() {
-        ItemDetail item1 = new ItemDetail("iphone5", 5000, 2, 10, List.of("phone"), "phone");
-        assertFalse(market.addToCart(existing_storeID, item1));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ItemDetail item1 = new ItemDetail("iphone5",  2, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5;
+        assertFalse(market.addToCart(uuid, existing_storeID, item1));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertEquals(0, cart.size());
@@ -183,8 +187,8 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.3 - fail test [invalid input]")
     void addProductToShoppingBag_Fail2() {
-        assertFalse(market.addToCart(existing_storeID, null));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(market.addToCart(uuid, existing_storeID, null));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertEquals(0, cart.size());
@@ -198,11 +202,12 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.1 - success test")
     void getCartDetails_Success() {
-        assertTrue(market.cartExists());
-        ItemDetail item1 = new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone");
-        assertTrue(market.addToCart(existing_storeID, item1));
+        assertTrue(market.cartExists(uuid));
+        ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5;
+        assertTrue(market.addToCart(uuid, existing_storeID, item1));
 
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
@@ -214,7 +219,7 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.1 - fail test [empty cart]")
     void getCartDetails_Fail1() {
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertTrue(cart.isEmpty());
@@ -226,16 +231,17 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.2 - success test")
     void removeProductFromCart_Success() {
-        assertTrue(market.cartExists());
-        ItemDetail item1 = new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone");
-        assertTrue(market.addToCart(existing_storeID, item1));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertTrue(market.cartExists(uuid));
+        ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5;
+        assertTrue(market.addToCart(uuid, existing_storeID, item1));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
 
-        assertTrue(market.removeProductFromCart(item1));
-        response = market.getCart();
+        assertTrue(market.removeProductFromCart(uuid, item1, existing_storeID));
+        response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         cart = response.value;
         assertTrue(cart.isEmpty());
@@ -244,9 +250,10 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.2 - fail test [product not exits in cart]")
     void removeProductFromCart_Fail1() {
-        ItemDetail item = new ItemDetail("xxx", 1111, 1, 10, List.of("bla"), "bb");
-        assertFalse(market.removeProductFromCart(item));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ItemDetail item = new ItemDetail("xxx",  1, 10, List.of("bla"), "bb");
+        item.itemID = 1111;
+        assertFalse(market.removeProductFromCart(uuid, item, existing_storeID));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertTrue(cart.isEmpty());
@@ -256,8 +263,8 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.2 - fail test [invalid input]")
     void removeProductFromCart_Fail2() {
-        assertFalse(market.removeProductFromCart(null));
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        assertFalse(market.removeProductFromCart(uuid, null, existing_storeID));
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertTrue(cart.isEmpty());
@@ -269,13 +276,14 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.3 - success test")
     void updateQuantityInCart_Success() {
-        assertTrue(market.cartExists());
-        ItemDetail item3 = new ItemDetail("screenFULLHD", 3232, 1, 10, List.of("TV"), "screen");
-        assertTrue(market.addToCart(existing_storeID, item3));
+        assertTrue(market.cartExists(uuid));
+        ItemDetail item3 = new ItemDetail("screenFULLHD",  1, 10, List.of("TV"), "screen");
+        item3.itemID = SCREEN_FULL_HD;
+        assertTrue(market.addToCart(uuid, existing_storeID, item3));
 
-        assertTrue(market.updateProductQuantity(item3,2));
+        assertTrue(market.updateProductQuantity(uuid, item3, 2, existing_storeID));
 
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
@@ -287,14 +295,16 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.3 - fail test [product no available in cart]")
     void updateQuantityInCart_Fail1() {
-        assertTrue(market.cartExists());
-        ItemDetail item3 = new ItemDetail("screenFULLHD", 3232, 1, 10, List.of("TV"), "screen");
-        assertTrue(market.addToCart(existing_storeID, item3));
+        assertTrue(market.cartExists(uuid));
+        ItemDetail item3 = new ItemDetail("screenFULLHD",  1, 10, List.of("TV"), "screen");
+        item3.itemID = SCREEN_FULL_HD;
+        assertTrue(market.addToCart(uuid, existing_storeID, item3));
 
-        ItemDetail item2 = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
-        assertFalse(market.updateProductQuantity(item2,2));
+        ItemDetail item2 = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
+        item2.itemID = IPHONE_6;
+        assertFalse(market.updateProductQuantity(uuid, item2, 2, existing_storeID));
 
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
@@ -307,13 +317,14 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.3 - fail test [quantity to updated is not available]")
     void updateQuantityInCart_Fail2() {
-        assertTrue(market.cartExists());
-        ItemDetail item2 = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
-        assertTrue(market.addToCart(existing_storeID, item2));
+        assertTrue(market.cartExists(uuid));
+        ItemDetail item2 = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
+        item2.itemID=IPHONE_6;
+        assertTrue(market.addToCart(uuid, existing_storeID, item2));
 
-        assertFalse(market.updateProductQuantity(item2,2));
+        assertFalse(market.updateProductQuantity(uuid, item2, 2, existing_storeID));
 
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
@@ -326,13 +337,14 @@ public class GuestBuyTests extends MarketTests{
     @Test
     @DisplayName("req: #2.2.4.3 - fail test [invalid input]")
     void updateQuantityInCart_Fail3() {
-        assertTrue(market.cartExists());
-        ItemDetail item2 = new ItemDetail("iphone6", 3000, 1, 60, List.of("phone"), "phone");
-        assertTrue(market.addToCart(existing_storeID, item2));
+        assertTrue(market.cartExists(uuid));
+        ItemDetail item2 = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
+        item2.itemID = IPHONE_6;
+        assertTrue(market.addToCart(uuid, existing_storeID, item2));
 
-        assertFalse(market.updateProductQuantity(item2,-1));
+        assertFalse(market.updateProductQuantity(uuid, item2, -1, existing_storeID));
 
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart();
+        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
         List<List<ItemDetail>> cart = response.value;
         assertFalse(cart.isEmpty());
