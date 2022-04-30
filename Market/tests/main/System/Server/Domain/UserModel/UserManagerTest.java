@@ -27,7 +27,7 @@ class UserManagerTest {
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
         Assertions.assertTrue(userManager.getMembers().value.containsKey(emails[0]));
-        userManager.Login(uuid,emails[0],passwords[0]);
+        uuid = userManager.Login(uuid,emails[0],passwords[0]).value;
         Assertions.assertTrue(userManager.getLoginUsers().value.containsKey(uuid));
     }
     @Test
@@ -65,7 +65,7 @@ class UserManagerTest {
     void logoutLoggedUser() {
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
-        userManager.Login(uuid,emails[0],passwords[0]);
+        uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
         uuid = userManager.Logout(uuid).value;
         Assertions.assertFalse(userManager.getLoginUsers().value.containsKey(uuid));
     }
@@ -126,7 +126,7 @@ class UserManagerTest {
         Assertions.assertFalse(userManager.isLogged(UUID.randomUUID()).value);
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
-        System.out.println(userManager.Login(uuid,emails[0],passwords[0]));
+        uuid = userManager.Login(uuid,emails[0],passwords[0]).value;
         Assertions.assertTrue(userManager.isLogged(uuid).value);
 
     }

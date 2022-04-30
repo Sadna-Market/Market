@@ -19,7 +19,7 @@ public class ShoppingCart {
         if(!shoppingBagHash.containsKey(Store.getStoreId())){
             shoppingBagHash.put(Store.getStoreId().value,new ShoppingBag(Store));
         }
-        ShoppingBag shoppingBag = shoppingBagHash.get(Store.getStoreId());
+        ShoppingBag shoppingBag = shoppingBagHash.get(Store.getStoreId().value);
         return new DResponseObj<Boolean>( shoppingBag.addProduct(ProductId,quantity).value);
     }
 
