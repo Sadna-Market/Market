@@ -2,6 +2,9 @@ package main.System.Server.Domain.Market;
 
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
+import main.ErrorCode;
+import main.ExternalService.PaymentService;
+import main.ExternalService.SupplyService;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -38,6 +41,17 @@ public class Market {
         this.userManager = userManager;
     }
     /*************************************************Functions*********************************************************/
+    public DResponseObj<Boolean> init(){
+        PaymentService p = PaymentService.getInstance();
+        DResponseObj<String> check = p.ping();
+        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+
+        SupplyService supplyService = SupplyService.getInstance();
+        check = supplyService.ping();
+        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        return new DResponseObj<>(true);
+    }
+
     //2.2.1
     //pre: -
     //post: get info from valid store and product.
@@ -56,7 +70,8 @@ public class Market {
             output.setErrorMsg(s.getErrorMsg());
             return output;
         }
-        return s.getValue().getProductInStoreInfo2(productID);
+        DResponseObj<String> str =s.getValue().getProductInStoreInfo(productID);
+        return str;
     }
 
     //2.2.2
@@ -64,10 +79,9 @@ public class Market {
     //post: get all the open stores that the arg is apart of their names
     public DResponseObj<List<Integer>> searchProductByName(String name) {
         if (name==null){
-            String warning="the name is null";
-            logger.warn(warning);
+            logger.warn("the name is null");
             DResponseObj<List<Integer>> output=new DResponseObj<>();
-            output.setErrorMsg(warning);
+            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
         long stamp = lock_TP.readLock();
@@ -92,14 +106,13 @@ public class Market {
     //post: get all the open stores that the arg is apart of their description
     public DResponseObj<List<Integer>> searchProductByDesc(String desc) {
         if (desc==null){
-            String warning="description arrived null";
-            logger.warn(warning);
+            logger.warn("description arrived null");
             DResponseObj<List<Integer>> output=new DResponseObj<>();
-            output.setErrorMsg(warning);
+            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
         long stamp = lock_TP.readLock();
-        logger.debug("ProductSearchByDesc() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try {
             List<Integer> output = new ArrayList<>();
             for (ProductType p : productTypes.values()) {
@@ -112,7 +125,7 @@ public class Market {
             return new DResponseObj<>(output);
         } finally {
             lock_TP.unlockRead(stamp);
-            logger.debug("ProductSearchByDesc() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
@@ -121,9 +134,8 @@ public class Market {
     //post: get all the products that them rate higher or equal to the arg(arg>0)
     public DResponseObj<List<Integer>> searchProductByRate(int minRate) {
         if (minRate < 0 || minRate > 10) {
-            String warning="args invalid";
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("rate is invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
@@ -148,9 +160,8 @@ public class Market {
     //post: get all the open stores that their rate higher or equal to the arg(arg>0)
     public DResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
         if (rate < 0 || rate > 10) {
-            String warning="args invalid";
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("rate is invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock.");
@@ -175,9 +186,8 @@ public class Market {
     //post: get all the products that them price is between min and max
     public DResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
         if (min > max) {
-            String warning="min bigger then max - invalid";
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("min bigger then max - invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
         DResponseObj<ProductType> pt = getProductType(productID);
@@ -189,10 +199,13 @@ public class Market {
         logger.debug("catch the ReadLock");
         try {
             for (Store store: stores.values()){
-                Double price = store.getProductPrice(productID);
-                if (price != null && (price <= (double) max & price >= (double) min)){
-                    DResponseObj<Integer> getStoreID=store.getStoreId();
-                    if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+                DResponseObj<Double> getPrice = store.getProductPrice(productID);
+                if (!getPrice.errorOccurred()) {
+                    Double price=getPrice.getValue();
+                    if (price != null && (price <= (double) max & price >= (double) min)) {
+                        DResponseObj<Integer> getStoreID = store.getStoreId();
+                        if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+                    }
                 }
             }
             return new DResponseObj<>(output);
@@ -208,9 +221,8 @@ public class Market {
     //post: get all the products that them price is between min and max
     public DResponseObj<List<Integer>> searchProductByCategory(int category) {
         if (category<0){
-            String warning = "categoryID illegal";
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("new categoryID is illegal");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
@@ -233,23 +245,28 @@ public class Market {
     //pre: user is online
     //post: add <quantity> times this product from this store
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        DResponseObj<Boolean> online=userManager.isOnline(userId);
-        if (online.errorOccurred()) return online;
+        DResponseObj<Boolean> isOnline = isOnline(userId);
+        if (isOnline.errorOccurred() || !isOnline.getValue()) return isOnline;
         DResponseObj<Store> s = getStore(StoreId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().isProductExistInStock(ProductId, quantity);
 
     }
 
+
+
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<Boolean> order(UUID userId) {
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId) {
+        //////////////////////////////////////
         DResponseObj<Boolean> online=userManager.isOnline(userId);
-        if (online.errorOccurred()) return online;
+        if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
-        return new DResponseObj<>(purchase.order(shoppingCart.value));
+        DResponseObj<User> user=userManager.getOnlineUser(userId);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+        return new DResponseObj(purchase.order(user.getValue()));
 
     }
 
@@ -258,7 +275,7 @@ public class Market {
     //post: new Store add to the market
     public DResponseObj<Boolean> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         DResponseObj<Boolean> checkUM=userManager.isLogged(userId);
-        if (checkUM.errorOccurred()) return checkUM;
+        if (checkUM.errorOccurred() || !checkUM.getValue()) return checkUM;
 
         Store store = new Store(name, discountPolicy, buyPolicy, founder);
         long stamp = lock_stores.writeLock();
@@ -367,6 +384,10 @@ public class Market {
 
         DResponseObj<Boolean> checkCloseStore=store.closeStore();
         if (checkCloseStore.errorOccurred()) return checkCloseStore;
+        if (!checkCloseStore.getValue()){
+            logger.warn("Store return that can not close this store");
+            return new DResponseObj<>(ErrorCode.CANNOTCLOSESTORE);
+        }
         DResponseObj<Integer> getStoreID = store.getStoreId();
         if (getStoreID.errorOccurred()) return new DResponseObj<>(getStoreID.getErrorMsg());
         long stamp = lock_stores.writeLock();
@@ -390,7 +411,7 @@ public class Market {
         if (result.errorOccurred())  return new DResponseObj<>(result.getErrorMsg());
         Store store=result.getValue().item1;
 
-        return store.getStoreRules();
+        return store.getStoreRoles();
     }
 
     //2.4.13
@@ -423,18 +444,17 @@ public class Market {
     //post: market receive this store to the user.
     public DResponseObj<Store> getStore(int storeID){
         if (storeID<0 | storeID>=productCounter){
-            String warning="the StoreID is illegal";
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("the StoreID is illegal");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp= lock_stores.readLock();
-        logger.debug("getStore() catch the ReadLock.");
+        logger.debug("catch the ReadLock.");
         try{
             return new DResponseObj<>(stores.get(storeID));
         }
         finally {
             lock_stores.unlockRead(stamp);
-            logger.debug("getStore() released the ReadLock.");
+            logger.debug("released the ReadLock.");
         }
     }
 
@@ -449,9 +469,8 @@ public class Market {
         DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionEnum,logIN.getValue(),s.getValue());
         if (hasPer.errorOccurred()) return new DResponseObj<>(hasPer.getErrorMsg());
         if (!hasPer.getValue()) {
-            String warning = "this user does not have permission to "+permissionEnum.name()+"in the store #"+storeId;
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("this user does not have permission to "+permissionEnum.name()+"in the store #"+storeId);
+            return new DResponseObj<>(ErrorCode.NOPERMISSION);
         }
         if (productId==null) return new DResponseObj<>(new Tuple(s.getValue(),null));
 
@@ -465,24 +484,32 @@ public class Market {
 
     private DResponseObj<ProductType> getProductType(int productID) {
         if (productID<0){
-            String warning= "productID is illegal";
-            logger.warn(warning);
-            return new DResponseObj<>(warning);
+            logger.warn("productID is illegal");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_TP.readLock();
         logger.debug("catch the ReadLock.");
         try {
             ProductType p=productTypes.get(productID);
             if (p==null){
-                String warning="the productID not exist in the system";
-                logger.warn(warning);
-                return new DResponseObj<>(warning);
+                logger.warn("the productID not exist in the system");
+                return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
             }
             return new DResponseObj<>(p);
         } finally {
             lock_TP.unlockRead(stamp);
             logger.debug("released the ReadLock.");
         }
+    }
+
+    private DResponseObj<Boolean> isOnline(UUID userId){
+        DResponseObj<Boolean> online=userManager.isOnline(userId);
+        if (online.errorOccurred()) return online;
+        if (!online.getValue()){
+            logger.warn("the user not online");
+            return new DResponseObj<>(ErrorCode.NOTONLINE);
+        }
+        return new DResponseObj<>(true);
     }
 
     class Tuple<E,T>{

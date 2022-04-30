@@ -21,4 +21,13 @@ public class ErrorCode {
    public static int PRODUCTALLREADYINSTORE = 31;
    public static int PRODUCTNOTEXISTINSTORE = 32;
 
+
+   public static int STORENOTINTHEPRODUCTTYPE = 40;
+   public static int STORESTAYINTHEPRODUCTTYPE = 41;
+   public static int CANNOTCLOSESTORE = 42;
+   public static int ROLLBACK =43;
+
+   public static int SERVICEALREADYCONNECT = 50;
+   public static int SERVICEALREADYDISCONNECT = 50;
+   public static int EXISTEXTERNALSERVICEWITHTHISNAME =51;
 }

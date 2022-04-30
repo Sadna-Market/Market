@@ -260,6 +260,7 @@ public class Store {
 
     //requirement II.4.11  (only owners)
     public DResponseObj<HashMap<String,List<String>>> getStoreRoles(){
+
         List<String> managers = new ArrayList<>();
         List<String> owners = new ArrayList<>();
         List<String> founder = new ArrayList<>();
@@ -344,6 +345,7 @@ public class Store {
     public void openStoreAgain() {
         isOpen = true;
     }
+
 }
 
 

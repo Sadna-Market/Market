@@ -12,11 +12,11 @@ public class ServiceStore {
 
 
     public ServiceStore(Store store){
-        this.storeId=store.getStoreId();
-        this.name=store.getName();
-        this.founder=store.getFounder();
-        this.isOpen=store.isOpen();
-        this.rate=store.getRate();
+        this.storeId=store.getStoreId().getValue();
+        this.name=store.getName().getValue();
+        this.founder=store.getFounder().getValue();
+        this.isOpen=store.isOpen().getValue();
+        this.rate=store.getRate().getValue();
         //this.numOfRated=store.
     }
     public String toString() {

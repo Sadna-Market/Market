@@ -25,15 +25,15 @@ public class StoreStab extends Store {
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
-    public DResponseObj<String> getProductInStoreInfo2(int productId){
+    public DResponseObj<String> getProductInStoreInfo(int productId){
         DResponseObj<String> output=new DResponseObj<>();
         output.value="yaki";
         return output;
     }
 
     //requirement II.2.1
-    public List<ProductStore> GetStoreProducts() {
-        return new ArrayList<>(new ArrayList<>());
+    public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> GetStoreProducts() {
+        return new DResponseObj<>(new ConcurrentHashMap<>());
     }
 
     //requirement II.2.3 & II.2.4.2 (before add product to shoppingBag check quantity
@@ -64,8 +64,8 @@ public class StoreStab extends Store {
     }
 
     //requirement II.2.2
-    public Double getProductPrice(int productId) {
-        return 8.0;
+    public DResponseObj<Double> getProductPrice(int productId) {
+        return new DResponseObj<>(8.0);
     }
 
     //requirement II.4.13 & II.6.4 (only system manager)
@@ -79,8 +79,8 @@ public class StoreStab extends Store {
     }
 
     //niv tests
-    public List<Integer> getTIDHistory(){
-        return new ArrayList<>();
+    public DResponseObj<List<Integer>> getTIDHistory(){
+        return new DResponseObj<>(new ArrayList<>());
     }
 
     //requirement II.2.5
@@ -90,20 +90,20 @@ public class StoreStab extends Store {
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public ConcurrentHashMap<Integer, Integer> checkBuyPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
-        return new ConcurrentHashMap<>();
+    public DResponseObj<ConcurrentHashMap<Integer, Integer>> checkBuyPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+        return new DResponseObj<>(new ConcurrentHashMap<>());
     }
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public double checkDiscountPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
-        return 1.0;
+    public DResponseObj<Double> checkDiscountPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+        return new DResponseObj<>(1.0);
     }
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public double calculateBagPrice(ConcurrentHashMap<Integer, Integer> productsInBag){
-        return 8.0;
+    public DResponseObj<Double> calculateBagPrice(ConcurrentHashMap<Integer, Integer> productsInBag){
+        return new DResponseObj<>(8.0);
     }
 
     //requirement II.2.5
@@ -151,23 +151,25 @@ public class StoreStab extends Store {
     public void removePermission(Permission p){
         ;
     }
-    public List<Permission> getPermission(){
-        return new ArrayList<>();
+    public DResponseObj<List<Permission>> getPermission(){
+        return new DResponseObj<>(new ArrayList<>());
     }
 
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
     public DResponseObj<Integer> getStoreId(){
-        return new DResponseObj<>(8);
+        DResponseObj<Integer> i= new DResponseObj<>();
+        i.value=8;
+        return i;
     }
 
     public Inventory getInventory() {
         return null;
     }
 
-    public String getName() {
-        return "yaki";
+    public DResponseObj<String> getName() {
+        return new DResponseObj<>("yaki");
     }
 
     public DResponseObj<Boolean> isOpen() {
@@ -175,7 +177,9 @@ public class StoreStab extends Store {
     }
 
     public DResponseObj<Integer> getRate() {
-        return new DResponseObj<>(rate);
+        DResponseObj<Integer> i= new DResponseObj<>();
+        i.value=rate;
+        return i;
     }
 
     public DiscountPolicy getDiscountPolicy() {
@@ -187,12 +191,12 @@ public class StoreStab extends Store {
         return new BuyPolicy();
     }
 
-    public String getFounder() {
-        return "Yaki";
+    public DResponseObj<String> getFounder() {
+        return new DResponseObj<>("Yaki");
     }
 
-    public List<Permission> getSafePermission() {
-        return new ArrayList<>();
+    public DResponseObj<List<Permission>> getSafePermission() {
+        return new DResponseObj<>(new ArrayList<>());
     }
 
     public void setHistory(ConcurrentHashMap<Integer,History> history) {
@@ -213,8 +217,8 @@ public class StoreStab extends Store {
 
     }
 
-    public ConcurrentHashMap<Integer, History> getHistory() {
-        return new ConcurrentHashMap<>();
+    public DResponseObj<ConcurrentHashMap<Integer, History>> getHistory() {
+        return new DResponseObj<>(new ConcurrentHashMap<>());
     }
 
     public void openStoreAgain() {
