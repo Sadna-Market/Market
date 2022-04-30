@@ -31,4 +31,6 @@ public class ErrorCode {
    public static int SERVICEALREADYDISCONNECT = 50;
    public static int EXISTEXTERNALSERVICEWITHTHISNAME =51;
    public static int NOTEXISTEXTERNALSERVICEWITHTHISNAME =52;
+
+   public static int ILLEGALCARD = 53;
 }

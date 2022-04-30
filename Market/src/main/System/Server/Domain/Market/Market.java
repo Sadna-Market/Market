@@ -3,6 +3,7 @@ package main.System.Server.Domain.Market;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
 import main.ErrorCode;
+import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
 import main.Service.SLResponsOBJ;
@@ -249,7 +250,7 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId) {
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, CreditCard c) {
         //////////////////////////////////////
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
@@ -257,7 +258,7 @@ public class Market {
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
         DResponseObj<User> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-        return new DResponseObj(purchase.order(user.getValue()));
+        return new DResponseObj(purchase.order(user.getValue(),c));
 
     }
 

@@ -1,6 +1,7 @@
 package main.System.Server.Domain.Market;
 
 import main.ErrorCode;
+import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.Response.DResponseObj;
@@ -17,7 +18,12 @@ public class Purchase {
     static Logger logger=Logger.getLogger(Purchase.class);
 
 
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user){
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user, CreditCard c){
+        //check card
+        //DResponseObj<Boolean> creditcard=checkCard(c);
+        //if (creditcard.errorOccurred()) return new DResponseObj<>(creditcard.getErrorMsg());
+
+
         //init
         DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> bagsRes=getBags(user);
         if (bagsRes.errorOccurred()) return new DResponseObj<>(bagsRes.getErrorMsg());
@@ -48,7 +54,7 @@ public class Purchase {
                  else{
                      //supply
                      PaymentService p=PaymentService.getInstance();
-                     DResponseObj<Integer> TIP=p.pay(user.getCard(),price.getValue()-discount);
+                     DResponseObj<Integer> TIP=p.pay(c,price.getValue()-discount);
                      if (TIP.errorOccurred()) rollBack(getStore.getValue(),crrAmount);
                      else{
                          getStore.getValue().addHistory(TIP.getValue(),email,crrAmount,price.getValue()-discount);
@@ -85,6 +91,13 @@ public class Purchase {
         logger.warn("rool back");
         DResponseObj<Boolean> ans=store.rollbackProductQuantity(hashMap);
         return new DResponseObj<>(ErrorCode.ROLLBACK);
+    }
+
+    private DResponseObj<Boolean> checkCard(CreditCard c){
+        if (!c.getCreditCard().matches("^[0-9]+$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        //if (!c.getCreditDate().matches("^[0-1][0-9]$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        if (!c.getPin().matches("^[1-9]&&[0-9]&&[0-9]]")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        return new DResponseObj<>(true);
     }
 
 
