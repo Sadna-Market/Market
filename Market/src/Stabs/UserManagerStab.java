@@ -40,14 +40,14 @@ public class UserManagerStab extends UserManager {
     }
 
 
-    public DResponseObj<Boolean> Login(UUID userID, String email, String password) {
+    public DResponseObj<UUID> Login(UUID userID, String email, String password) {
         
-        return new DResponseObj<>(true);
+        return new DResponseObj<>(UUID.randomUUID());
     }
 
-    public DResponseObj<Boolean> Logout(UUID userId) {
+    public DResponseObj<UUID> Logout(UUID userId) {
         
-        return new DResponseObj<>(true);
+        return new DResponseObj<>(UUID.randomUUID());
     }
 
 

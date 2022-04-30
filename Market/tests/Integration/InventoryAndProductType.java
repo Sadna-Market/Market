@@ -15,14 +15,14 @@ public class InventoryAndProductType {
 
 
     Inventory i = new Inventory(1);
-    ProductType productType1 = new ProductType(1, "milk", "good milk");
-    ProductType productType2 = new ProductType(2, "table", "good table");
+    ProductType productType1 = new ProductType(1, "milk", "good milk",1);
+    ProductType productType2 = new ProductType(2, "table", "good table",1);
 
     @BeforeEach
     void setUp() {
         i = new Inventory(1);
-        productType1 = new ProductType(1, "milk", "good milk");
-        productType2 = new ProductType(2, "table", "good table");
+        productType1 = new ProductType(1, "milk", "good milk",1);
+        productType2 = new ProductType(2, "table", "good table",1);
         i.addNewProduct(productType1,6,5.3);
     }
 

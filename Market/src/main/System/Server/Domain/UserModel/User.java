@@ -16,8 +16,7 @@ public class User extends Guest {
     String Password;
     String email;
     String phoneNumber;
-    String CreditCard;
-    String CreditDate;
+
 
     private List<Permission> accessPermission = new LinkedList<>();
     ; // all the permission is my
@@ -26,13 +25,12 @@ public class User extends Guest {
     private List<Permission> safeAccessPermission = Collections.synchronizedList(accessPermission);
     private List<Permission> safeGrantorPermission = Collections.synchronizedList(grantorPermission);
 
-    public User(String email, String password, String phoneNumber, String CreditCared, String CreditDate) {
+    public User(String email, String password, String phoneNumber) {
         shoppingCart = new ShoppingCart();
         this.email = email;
         this.Password = password;
         this.phoneNumber = phoneNumber;
-        this.CreditCard = CreditCared;
-        this.CreditDate = CreditDate;
+
 
     }
 
@@ -92,10 +90,16 @@ public class User extends Guest {
         return (permissionManager.createPermission(user, store, this, userTypes.manager, userTypes.owner));
     }
 
-    public DResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm) {
-        PermissionManager permissionManager = PermissionManager.getInstance();
-        DResponseObj<Boolean> b = permissionManager.addManagerPermissionType(perm, user, store, this);
-        return b;
+    public DResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm, boolean onOf) {
+        if(onOf) {
+            PermissionManager permissionManager = PermissionManager.getInstance();
+            DResponseObj<Boolean> b = permissionManager.addManagerPermissionType(perm, user, store, this);
+            return b;
+        }else {
+            PermissionManager permissionManager = PermissionManager.getInstance();
+            DResponseObj<Boolean> b = permissionManager.removeManagerPermissionType(perm, user, store, this);
+            return b;
+        }
     }
 
 

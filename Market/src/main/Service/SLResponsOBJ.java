@@ -14,6 +14,8 @@ public class SLResponsOBJ<T> extends SLRespons {
         this.value = value;
     }
 
+
+
     public SLResponsOBJ(T value, int msg) {
         super(msg);
         this.value = value;

@@ -11,22 +11,23 @@ import java.util.concurrent.ConcurrentHashMap;
 //threadsafe
 public class SupplyService extends AbsExternalService{
 
-    ConcurrentHashMap<Integer,Date> list=new ConcurrentHashMap<>();
-
-    public DResponseObj<Date> supply(User user, Store store, ConcurrentHashMap<Integer,Integer> hashMap) {
+    ConcurrentHashMap<Integer,String> list=new ConcurrentHashMap<>();
+    public DResponseObj<String> supply(User user,String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
         try{
-            list.put(counterTIP,new Date());
+            list.put(counterTIP,new Date().toString());
             logger.info("new supply");
             int output=counterTIP++;
-            return new DResponseObj(output-1,-1);
+            return new DResponseObj("ok",-1);
         }
         finally {
             stampedLock.unlockWrite(stamp);
             logger.debug("release lock");
         }
     }
+
+
 
 
     private static class SupplyServiceWrapper{

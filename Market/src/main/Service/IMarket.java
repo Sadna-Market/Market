@@ -5,22 +5,27 @@ import main.System.Server.Domain.StoreModel.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 //Api of all
 public interface IMarket {
     //1.1
-    public SLResponsOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String CreditCared, String CreditDate);
+    public SLResponsOBJ<Boolean> initMarket(String email, String Password, String phoneNumber);
+
+
 
     //todo i just declare all the funcs, in the futer we will change the passing args and the return value acording to the drishot.
 
     // 2.1.1 when a user enter to the system he recognized us a guest visitor
     public SLResponsOBJ<String> guestVisit();
 
+
+
     //2.1.2
     public SLResponsOBJ<Boolean> guestLeave(String guestId);
 
     //2.1.3
-    public SLResponsOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber, String CreditCared, String CreditDate);
+    public SLResponsOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber) ;
 
     //2.1.4
     public SLResponsOBJ<Boolean> login(String userid, String email, String password);
@@ -43,6 +48,7 @@ public interface IMarket {
 
     public SLResponsOBJ<List<Integer>> searchProductByRangePrices(int productId, int min, int max);
 
+    public SLResponsOBJ<Integer> addNewProductType(UUID uuid, String name , String description, int category);
 
     //2.2.3
     public SLResponsOBJ<Boolean> addProductToShoppingBag(String userId, int storeId, int productId, int quantity);
@@ -59,14 +65,14 @@ public interface IMarket {
     public SLResponsOBJ<Boolean> setProductQuantityShoppingBag(String userId, int productId, int storeId, int quantity);
 
     //2.2.5
-    public SLResponsOBJ<Boolean> orderShoppingCart(String userId);
+    public SLResponsOBJ<Boolean> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) ;
 
     //2.3.1
     public SLResponsOBJ<Boolean> logout(String userId);
 
 
     //2.3.2
-    public SLResponsOBJ<Boolean> openNewStore(String userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy);
+    public SLResponsOBJ<Integer> openNewStore(String userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy);
 
 
     //2.4.1.1
@@ -90,8 +96,8 @@ public interface IMarket {
     public SLResponsOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil);
 
     //2.4.7
-    public SLResponsOBJ<Boolean> setManagerPermissions(String UserId, int StoreId, String mangerEmil, String per);
-
+    public SLResponsOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
+            mangerEmil, String per ,boolean onof);
     //2.4.9
     public SLResponsOBJ<Boolean> closeStore(String UserId, int StoreId);
 
@@ -104,7 +110,7 @@ public interface IMarket {
     //2.6.5 && //2.4.13
     public SLResponsOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
 
-    public SLResponsOBJ<List<ServiceHistory>> getUserHistoryInStore(String userID, int storeID);
+    public SLResponsOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email);
 
 
     //todo 2.5 use case

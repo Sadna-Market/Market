@@ -18,8 +18,8 @@ public class ProductTypeStab extends ProductType {
     List<Integer> stores=new ArrayList<>();
 
 
-    public ProductTypeStab(int productID, String productName, String description) {
-        super(productID, productName, description);
+    public ProductTypeStab(int productID, String productName, String description,int category) {
+        super(productID, productName, description,category);
     }
 
     public DResponseObj<Integer> getRate() {

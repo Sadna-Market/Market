@@ -37,8 +37,8 @@ public class Store {
     /////////////////////////////////////////////// Constructors ///////////////////////////////////////////////////
 
     //requirement II.3.2
-    public Store(String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
-        int storeId = nextStoreId.incrementAndGet();
+    public Store(int storeCounter,String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
+        int storeId = storeCounter;
         inventory = new Inventory(storeId);
         this.storeId = storeId;
         this.name = name;
@@ -201,6 +201,8 @@ public class Store {
             return discountPolicy.checkShoppingBag(user,productsInBag);
     }
 
+
+
     //requirement II.2.5
     //productsInBag <productID,quantity>
     public DResponseObj<Double> calculateBagPrice(ConcurrentHashMap<Integer, Integer> productsInBag){
@@ -296,6 +298,9 @@ public class Store {
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
+    public DResponseObj<Inventory> getInventory(){
+        return new DResponseObj<>(inventory);
+    }
     public DResponseObj<Integer> getStoreId(){
         return new DResponseObj<>(storeId,-1);
     }

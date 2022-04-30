@@ -28,7 +28,8 @@ public class ProductType {
 
     private StampedLock lock_stores= new StampedLock(),rateLock=new StampedLock();
 
-    public ProductType(int productID, String productName, String description) {
+    public ProductType(int productID, String productName, String description,int category) {
+        this.category = category;
         this.productID = productID;
         this.productName = productName;
         this.description = description;

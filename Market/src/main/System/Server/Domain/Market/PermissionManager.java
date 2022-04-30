@@ -303,7 +303,33 @@ public class PermissionManager {
         return new DResponseObj<>(userTypes.member);
     }
 
+    public DResponseObj<Boolean> isSystemManager(String email) {
+        /**
+         Assumption:
+         documentation:
+         Given user email  return true if the user is the system manager
 
+         */
+        return new DResponseObj<>(email.equals(systemManagerEmail));
+    }
+    public DResponseObj<Boolean> isFounder(User grantee, Store store) {
+        /**
+         Assumption: a User is always a members
+         documentation:
+         Given grantee and store we will return true if the grantee is the founder of this store
+
+         */
+        //systemManager
+        List<Permission> accessPermissionStore = grantee.getAccessPermission().value;
+        for (Permission p : accessPermissionStore) {
+            if (store.getStoreId() == (p.getStore()).value.getStoreId()) {
+                userTypes UT=p.getGranteeType().value;
+                if (UT==userTypes.owner && p.getGrantorType().value==userTypes.system)
+                    return new DResponseObj<>(true);
+            }
+        }
+        return new DResponseObj<>(false);
+    }
 //*********************************************** private method ******************************************************
 
 
