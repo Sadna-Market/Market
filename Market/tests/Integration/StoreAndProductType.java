@@ -224,7 +224,7 @@ public class StoreAndProductType {
     void addHistoryS1() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
         assertTrue(store.addNewProduct(productType2, 8, 5.3).getValue());
-        HashMap<Integer,Integer> h = new HashMap<>();
+        ConcurrentHashMap<Integer,Integer> h = new ConcurrentHashMap<>();
         h.put(productType1.getProductID().getValue(),4);
         h.put(productType2.getProductID().getValue(),4);
         assertTrue(store.addHistory(1,user,h,333.5).getValue());
@@ -234,7 +234,7 @@ public class StoreAndProductType {
     @Test
     void addHistoryF() {
         assertTrue(store.addNewProduct(productType1, 6, 5.3).getValue());
-        HashMap<Integer,Integer> h = new HashMap<>();
+        ConcurrentHashMap<Integer,Integer> h = new ConcurrentHashMap<>();
         h.put(productType1.getProductID().getValue(),4);
         h.put(productType2.getProductID().getValue(),4);
         assertFalse(store.addHistory(1,"dor@gmail.com",h,333.5).getValue());

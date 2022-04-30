@@ -166,7 +166,7 @@ public class Store {
     }
 
     //requirement II.2.5
-    public DResponseObj<Boolean> addHistory(int TID, String user, HashMap<Integer,Integer> products, double finalPrice) {
+    public DResponseObj<Boolean> addHistory(int TID, String user, ConcurrentHashMap<Integer,Integer> products, double finalPrice) {
         List<ProductStore> productsBuy = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
             Integer productID = entry.getKey();
