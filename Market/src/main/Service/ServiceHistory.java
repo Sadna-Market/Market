@@ -32,4 +32,14 @@ public class ServiceHistory {
     public String getUser() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "ServiceHistory{" +
+                "TID=" + TID +
+                ", finalPrice=" + finalPrice +
+                ", products=" + products +
+                ", user='" + user + '\'' +
+                '}';
+    }
 }

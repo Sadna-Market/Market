@@ -9,14 +9,15 @@ import java.util.List;
 
 @DisplayName("System Tests - AT")
 public class SystemTests extends MarketTests{
+    String uuid;
     @BeforeEach
     public void setUp() {
-        market.initSystem();
+        uuid = market.initSystem(sysManager).value;
     }
 
     @AfterEach
     public void tearDown() {
-        market.exitSystem();
+        market.exitSystem(uuid);
     }
 
     /**
@@ -29,14 +30,6 @@ public class SystemTests extends MarketTests{
         assertTrue(market.hasSystemManager());
         assertTrue(market.hasPaymentService());
         assertTrue(market.hasSupplierService());
-    }
-
-    @Test
-    @DisplayName("req: #1.1 - fail test [no system manager]")
-    void InitSystem_Fail1() {
-        market.deleteSystemManagers();
-        market.exitSystem();
-        assertFalse(market.initSystem());
     }
 
     @Test
@@ -117,7 +110,9 @@ public class SystemTests extends MarketTests{
     @DisplayName("req: #1.4 - success test")
     void SupplyService_Success() {
         User user = generateUser();
-        List<ItemDetail> deliver = List.of(new ItemDetail("iphone5", 5000, 1, 10, List.of("phone"), "phone"));
+        ItemDetail item = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
+        item.itemID = IPHONE_5;
+        List<ItemDetail> deliver = List.of(item);
         ATResponseObj<String> response = market.supply(deliver, user);
 
         assertFalse(response.errorOccurred());
@@ -129,7 +124,9 @@ public class SystemTests extends MarketTests{
     @DisplayName("req: #1.4 - fail test [item doesnt exist in market]")
     void SupplyService_Fail1() {
         User user = generateUser();
-        List<ItemDetail> deliver = List.of(new ItemDetail("iphoneXZ", 8887, 1, 10, List.of("phone"), "phone"));
+        ItemDetail item = new ItemDetail("iphoneXZ", 1, 10, List.of("phone"), "phone");
+        item.itemID = 8887;
+        List<ItemDetail> deliver = List.of(item);
         ATResponseObj<String> response = market.supply(deliver, user);
         assertTrue(response.errorOccurred());
     }

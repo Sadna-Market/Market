@@ -8,15 +8,16 @@ import java.util.List;
 
 @DisplayName("Store Manager Tests  - AT")
 public class StoreManagerTests extends MarketTests {
+    String uuid;
     @BeforeEach
     public void setUp() {
-        market.initSystem();
+        uuid = market.initSystem(sysManager).value;
     }
 
     @AfterEach
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
-        market.exitSystem();
+        market.exitSystem(uuid);
         initStoreAndItem(); // restore state as before
     }
 
@@ -28,13 +29,15 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - success test")
     void managerAction_Success() {
         User newManager = generateUser();
-        assertTrue(market.register(newManager.username,newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password));
         assertTrue(market.isMember(member));
-        assertTrue(market.login(member));
-        assertTrue(market.assignNewManager(existing_storeID, member, newManager));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.assignNewManager(uuid, existing_storeID, newManager));
         assertTrue(market.isManager(existing_storeID, newManager));
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(existing_storeID);
+        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(historyPurchase.errorOccurred());
     }
 
@@ -42,11 +45,13 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - fail test [no permission]")
     void managerAction_Fail1() {
         User user = generateUser();
-        assertTrue(market.register(user.username,user.password));
+        assertTrue(market.register(uuid, user.username, user.password));
         assertTrue(market.isMember(user));
-        assertTrue(market.login(user));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(existing_storeID);
+        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertTrue(historyPurchase.errorOccurred());
     }
 
@@ -54,9 +59,11 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - fail test [invalid store id]")
     void managerAction_Fail2() {
         assertTrue(market.isMember(member));
-        assertTrue(market.login(member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(-1);
+        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, -1);
         assertFalse(historyPurchase.errorOccurred());
     }
 }
