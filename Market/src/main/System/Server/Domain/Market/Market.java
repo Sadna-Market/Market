@@ -3,6 +3,8 @@ package main.System.Server.Domain.Market;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
 import main.ErrorCode;
+import main.ExternalService.PaymentService;
+import main.ExternalService.SupplyService;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -39,6 +41,17 @@ public class Market {
         this.userManager = userManager;
     }
     /*************************************************Functions*********************************************************/
+    public DResponseObj<Boolean> init(){
+        PaymentService p = PaymentService.getInstance();
+        DResponseObj<String> check = p.ping();
+        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+
+        SupplyService supplyService = SupplyService.getInstance();
+        check = supplyService.ping();
+        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        return new DResponseObj<>(true);
+    }
+
     //2.2.1
     //pre: -
     //post: get info from valid store and product.
