@@ -30,17 +30,15 @@ public class Store {
     private List<Permission> safePermission = Collections.synchronizedList(permission);
 
 
-    private static AtomicInteger nextStoreId = new AtomicInteger();
     private final StampedLock historyLock = new StampedLock();
     static Logger logger=Logger.getLogger(Store.class);
 
     /////////////////////////////////////////////// Constructors ///////////////////////////////////////////////////
 
     //requirement II.3.2
-    public Store(int storeCounter,String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
-        int storeId = storeCounter;
-        inventory = new Inventory(storeId);
+    public Store(int storeId,String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
         this.storeId = storeId;
+        inventory = new Inventory(storeId);
         this.name = name;
         this.founder = founder;
         isOpen = true;
