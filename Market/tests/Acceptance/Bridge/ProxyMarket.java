@@ -343,7 +343,7 @@ public class ProxyMarket implements MarketBridge{
      * @return true is user is a contributor else false
      */
     public boolean isContributor(int storeID, User user) {
-        return false;
+        return realMarket.isContributor(storeID, user);
     }
 
     /**

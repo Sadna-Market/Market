@@ -68,6 +68,7 @@ public class MemberBuyTests extends MarketTests{
         ATResponseObj<Integer> response = market.addStore(uuid, user);
         assertFalse(response.errorOccurred());
         int storeID = response.value;
+        System.out.println(storeID);
         assertTrue(market.isContributor(storeID,user));
 
     }

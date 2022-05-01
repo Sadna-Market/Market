@@ -1,5 +1,7 @@
 package main.System.Server.Domain.UserModel;
 
+
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Store;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,15 +35,39 @@ class UserTest {
     void addFounder() {
         UUID uuid = userManager.GuestVisit().value;
         userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
-        userManager.Login(uuid,emails[0],passwords[0]);
+        uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
         userManager.addFounder(uuid,store);
-        User a = userManager.getLoginUsers().value.get(uuid);
+        boolean A=userManager.isFounder(store,userManager.getOnlineUser(uuid).value.getEmail().value).getValue();
+        Assertions.assertTrue(A);
+
 
 
     }
 
     @Test
     void addNewStoreOwner() {
+        UUID uuid = userManager.GuestVisit().value;
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1]);
+        uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
+        userManager.addFounder(uuid,store);
+        userManager.addNewStoreOwner(uuid,store,emails[1]);
+        uuid = userManager.GuestVisit().value;
+        uuid=userManager.Login(uuid,emails[1],passwords[1]).value;
+        boolean A=userManager.isOwner(uuid,store).getValue();
+        Assertions.assertTrue(A);
+
+    }
+    @Test
+
+    void addNewStoreOwnerWithUserThatNotOuner() {
+        UUID uuid = userManager.GuestVisit().value;
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1]);
+        uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
+        Assertions.assertFalse(userManager.addNewStoreOwner(uuid,store,emails[1]).value);
+
+
     }
 
     @Test
