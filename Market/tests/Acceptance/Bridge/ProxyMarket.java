@@ -513,4 +513,13 @@ public class ProxyMarket implements MarketBridge{
     public ATResponseObj<Integer> addProductType(String uuid, ItemDetail item) {
         return realMarket.addProductType(uuid,item);
     }
+
+    /**
+     * generates uuid
+     *
+     * @return return uuid
+     */
+    public String guestVisit() {
+        return realMarket.guestVisit();
+    }
 }

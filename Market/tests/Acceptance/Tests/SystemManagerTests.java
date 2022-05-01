@@ -13,7 +13,7 @@ public class SystemManagerTests extends MarketTests{
     User buyer;
     @BeforeEach
     public void setUp() {
-        uuid = market.initSystem(sysManager).value;
+        uuid = market.guestVisit();
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5;
         CreditCard creditCard = new CreditCard("1111222233334444","1123","111");

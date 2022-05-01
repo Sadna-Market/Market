@@ -376,4 +376,10 @@ public interface MarketBridge {
      * @return id of the item
      */
     ATResponseObj<Integer> addProductType(String uuid, ItemDetail item);
+
+    /**
+     * generates uuid
+     * @return return uuid
+     */
+    String guestVisit();
 }
