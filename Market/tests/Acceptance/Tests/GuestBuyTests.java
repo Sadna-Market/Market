@@ -13,7 +13,7 @@ public class GuestBuyTests extends MarketTests{
     String uuid;
     @BeforeEach
     public void setUp() {
-        uuid = market.initSystem(sysManager).value;
+        uuid = market.guestVisit();
     }
 
     @AfterEach
