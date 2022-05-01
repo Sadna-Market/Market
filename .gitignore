@@ -29,7 +29,6 @@ Market/.idea/**/dbnavigator.xml
 
 # Gradle
 Market/.idea/**/gradle.xml
-Market/.idea/**/libraries
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
