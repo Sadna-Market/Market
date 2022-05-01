@@ -577,6 +577,15 @@ public class RealMarket implements MarketBridge {
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
 
+    /**
+     * generates uuid
+     *
+     * @return return uuid
+     */
+    public String guestVisit() {
+        return market.guestVisit().value;
+    }
+
 
 }
 
