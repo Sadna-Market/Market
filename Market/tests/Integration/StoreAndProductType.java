@@ -17,17 +17,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StoreAndProductType {
-/*
-    Store store = new Store("Best Store", null, null, "dor@gmail.com");
-    ProductType productType1 = new ProductType(1, "milk", "good milk");
-    ProductType productType2 = new ProductType(2, "table", "good table");
+
+    Store store = new Store(1,"Best Store", null, null, "dor@gmail.com");
+    ProductType productType1 = new ProductType(1, "milk", "good milk",1);
+    ProductType productType2 = new ProductType(2, "table", "good table",1);
     String user = "dor@gmail.com";
 
     @BeforeEach
     void setUp() {
-        store = new Store("Best Store", null, null, "dor@gmail.com");
-        productType1 = new ProductType(1, "milk", "good milk");
-        productType2 = new ProductType(2, "table", "good table");
+        store = new Store(1,"Best Store", null, null, "dor@gmail.com");
+        productType1 = new ProductType(1, "milk", "good milk",1);
+        productType2 = new ProductType(2, "table", "good table",1);
     }
 
     @AfterEach
@@ -293,7 +293,7 @@ public class StoreAndProductType {
         assertEquals(5, store.getRate().getValue());
     }
 
- */
+
 
 }
 
