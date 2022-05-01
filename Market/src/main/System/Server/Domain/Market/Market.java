@@ -286,7 +286,7 @@ public class Market {
             stores.put(store.getStoreId().value, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
-            return new DResponseObj<>(storeCounter,-1);
+            return new DResponseObj<Integer>(store.getStoreId().value,-1);
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock");

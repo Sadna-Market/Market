@@ -173,8 +173,8 @@ public class Facade implements IMarket {
 
         if (password == null || password.equals(""))
             return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
-        UUID uid = userManager.Login(UUID.fromString(userId), email, password).value;
-        return new SLResponsOBJ<>(uid.toString());
+        DResponseObj<UUID> res = userManager.Login(UUID.fromString(userId), email, password);
+                return res.errorOccurred()? new SLResponsOBJ<>(res.errorMsg): new SLResponsOBJ<>(res.value.toString());
     }
 //-----------------------------------2 .פעולות קנייה של מבקר-אורח-----------------------------------------------
 

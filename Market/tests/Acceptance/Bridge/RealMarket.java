@@ -175,7 +175,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean isLoggedIn(String uuid) {
         SLResponsOBJ<Boolean> res = market.isLoggedIn(uuid);
-        return !res.errorOccurred();
+        return res.value;
     }
 
     /**

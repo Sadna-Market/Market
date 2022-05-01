@@ -201,7 +201,7 @@ public class TestableFacade extends Facade {
      */
     public SLResponsOBJ<Boolean> isLoggedIn(String uuid){
         DResponseObj<Boolean> res = userManager.isLogged(UUID.fromString(uuid));
-        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
+        return res.errorOccurred() ? new SLResponsOBJ<>(res.errorMsg) : new SLResponsOBJ<>(res.value,-1);
     }
 
     /**
