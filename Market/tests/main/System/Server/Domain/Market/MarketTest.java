@@ -116,10 +116,16 @@ class MarketTest {
 
     @DisplayName("searchProductByStoreRate  -  successful")
     @ParameterizedTest
-    @ValueSource(ints = {1,2,3,4,5,6,7,8,9,0})
+    @ValueSource(ints = {1,2,3,4,5,6,7,8,9})
     @Test
     void searchProductByStoreRate(int i) {
-        assertEquals(10-i,market.searchProductByStoreRate(i).value.size());
+        assertEquals(11-i,market.searchProductByStoreRate(i).value.size());
+    }
+
+    @DisplayName("searchProductByStoreRate  - 0  successful")
+    @Test
+    void searchProductByStoreRate3() {
+        assertEquals(10,market.searchProductByStoreRate(0).value.size());
     }
 
     @DisplayName("searchProductByStoreRate  -  failure")
