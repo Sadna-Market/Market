@@ -614,7 +614,7 @@ public class Market {
             Store s = new StoreStab(i);
             s.addNewProduct(getProductType(1).getValue(), 100, 0.5);
             s.newStoreRate(i);
-            stores.put(i, s);
+            stores.put(storeCounter++, s);
         }
     }
 

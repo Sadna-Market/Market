@@ -175,15 +175,27 @@ class MarketTest {
 
 
 
-
-
-
+    @DisplayName("setProductPriceInStore  -  successful-productID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,3,5,8})
+    @Test
+    void setProductPriceInStore4(int i) {
+        assertFalse(market.setProductPriceInStore(UUID.randomUUID(),1,i,15).errorOccurred());
+    }
 
     @DisplayName("setProductPriceInStore  -  successful-storeID")
     @ParameterizedTest
-    @ValueSource(ints = {1,3,5,7,0})
+    @ValueSource(ints = {1,3,5,7,9})
     @Test
     void setProductPriceInStore(int i) {
+        assertFalse(market.setProductPriceInStore(UUID.randomUUID(), i, 1, 15).errorOccurred());
+    }
+
+    @DisplayName("setProductPriceInStore  -  failure-storeID")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-3,-5,70,90,0})
+    @Test
+    void setProductPriceInStore2(int i) {
         assertFalse(market.setProductPriceInStore(UUID.randomUUID(), i, 1, 15).errorOccurred());
     }
 
@@ -191,17 +203,35 @@ class MarketTest {
     @ParameterizedTest
     @ValueSource(ints = {200,-300,500,-800})
     @Test
-    void setProductPriceInStore2(int i) {
+    void setProductPriceInStore3(int i) {
         assertTrue(market.setProductPriceInStore(UUID.randomUUID(),1,i,15).errorOccurred());
     }
 
     @DisplayName("setProductQuantityInStore  -  successful-storeID")
     @ParameterizedTest
-    @ValueSource(ints = {1,3,5,7,0})
+    @ValueSource(ints = {1,3,5,7,9})
     @Test
     void setProductQuantityInStore(int i) {
         assertFalse(market.setProductQuantityInStore(UUID.randomUUID(),i,1,15).errorOccurred());
     }
+
+    @DisplayName("setProductPriceInStore  -  failure-storeID")
+    @ParameterizedTest
+    @ValueSource(ints = {-1,-3,-5,70,90,0})
+    @Test
+    void setProductQuantityInStore3(int i) {
+        assertFalse(market.setProductQuantityInStore(UUID.randomUUID(), i, 1, 15).errorOccurred());
+    }
+
+
+    @DisplayName("setProductPriceInStore  -  successful-productID")
+    @ParameterizedTest
+    @ValueSource(ints = {1,3,5,8})
+    @Test
+    void setProductQuantityInStore4(int i) {
+        assertFalse(market.setProductQuantityInStore(UUID.randomUUID(),1,i,15).errorOccurred());
+    }
+
 
     @DisplayName("setProductQuantityInStore  -  failure-productID")
     @ParameterizedTest
