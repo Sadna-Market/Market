@@ -462,8 +462,9 @@ public class Market {
         if (isOnline.errorOccurred()) return new DResponseObj<>(isOnline.getErrorMsg());
         List<List<History>> res = new LinkedList<>();
         for(Store s :stores.values()){
-           List<History>  list = s.getUserHistory(email).value;
-           res.add(list);
+           DResponseObj<List<History>> list = s.getUserHistory(email);
+           if (!list.errorOccurred() && !list.getValue().isEmpty())  res.add(list.getValue());
+
         }
 
         return new DResponseObj<>(res);
@@ -474,7 +475,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: market receive this store to the user.
     public DResponseObj<Store> getStore(int storeID){
-        if (storeID<0 | storeID>= storeCounter){
+        if (storeID<=0 | storeID>= storeCounter){
             logger.warn("the StoreID is illegal");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
@@ -611,7 +612,7 @@ public class Market {
             productTypes.put(i, p);
         }
         for (int i = 0; i < 10; i++) {
-            Store s = new StoreStab(i);
+            Store s = new StoreStab(storeCounter);
             s.addNewProduct(getProductType(1).getValue(), 100, 0.5);
             s.newStoreRate(i);
             stores.put(storeCounter++, s);
