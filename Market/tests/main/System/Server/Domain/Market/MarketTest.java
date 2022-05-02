@@ -196,7 +196,7 @@ class MarketTest {
     @ValueSource(ints = {-1,-3,-5,70,90,0})
     @Test
     void setProductPriceInStore2(int i) {
-        assertFalse(market.setProductPriceInStore(UUID.randomUUID(), i, 1, 15).errorOccurred());
+        assertTrue(market.setProductPriceInStore(UUID.randomUUID(), i, 1, 15).errorOccurred());
     }
 
     @DisplayName("setProductPriceInStore  -  failure-productID")
