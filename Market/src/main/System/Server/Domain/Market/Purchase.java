@@ -4,13 +4,16 @@ import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
+import main.System.Server.Domain.StoreModel.History;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.Response.DResponseObj;
+import main.System.Server.Domain.UserModel.Guest;
 import main.System.Server.Domain.UserModel.ShoppingBag;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,18 +24,20 @@ public class Purchase {
 
 
 
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user,String city ,String Street,int apartment ,CreditCard c){
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(Guest user,String email, String city , String Street, int apartment , CreditCard c){
         //check card
         //DResponseObj<Boolean> creditcard=checkCard(c);
         //if (creditcard.errorOccurred()) return new DResponseObj<>(creditcard.getErrorMsg());
         //init
         DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> bagsRes=getBags(user);
         if (bagsRes.errorOccurred()) return new DResponseObj<>(bagsRes.getErrorMsg());
-        DResponseObj<String> DRemail =user.getEmail();
-        if (DRemail.errorOccurred()) return new DResponseObj<>(DRemail.getErrorMsg());
-        String email=DRemail.getValue();
         ConcurrentHashMap<Integer, ShoppingBag> bags=bagsRes.getValue();
-        ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> output=new ConcurrentHashMap<>();
+
+
+        double totalPrice=0.;
+        ConcurrentHashMap<Store, ConcurrentHashMap<Integer, Integer>> totalProducts=new ConcurrentHashMap<>();
+        List<Integer> totalSupply = new ArrayList<>();
+        ConcurrentHashMap<Store, Double> prices=new ConcurrentHashMap<>();
 
 
          for (Integer i: bags.keySet()){
@@ -40,31 +45,37 @@ public class Purchase {
              DResponseObj<Store> getStore = currBag.getStore();
              DResponseObj<ConcurrentHashMap<Integer, Integer>> checkBags=currBag.getProductQuantity();
              if (!getStore.errorOccurred() && !checkBags.errorOccurred()) {
-                 ConcurrentHashMap<Integer, Integer> crrAmount = catchItems(getStore.getValue(), checkBags.getValue());
+                 Store curStore=getStore.getValue();
+                 ConcurrentHashMap<Integer, Integer> crrAmount = catchItems(curStore, checkBags.getValue());
 
                  //check abount Discount
-                 DResponseObj<ConcurrentHashMap<Integer, Integer>> DRpolicy = getStore.value.checkBuyPolicy(email,crrAmount);
+                 DResponseObj<ConcurrentHashMap<Integer, Integer>> DRpolicy = curStore.checkBuyPolicy(email,crrAmount);
                  Double discount=0.;
                  if (!DRpolicy.errorOccurred()){
-                     DResponseObj<Double> DRdiscount = getStore.value.checkDiscountPolicy(email,DRpolicy.getValue());
+                     DResponseObj<Double> DRdiscount = curStore.checkDiscountPolicy(email,DRpolicy.getValue());
                      if (!DRdiscount.errorOccurred()) discount =DRdiscount.getValue();
                  }
+
                  //rollback if pay or price didnt work
-                 DResponseObj<Double> price = getStore.value.calculateBagPrice(crrAmount);
-                 if (price.errorOccurred()) rollBack(getStore.getValue(),crrAmount);
+                 DResponseObj<Double> price = curStore.calculateBagPrice(crrAmount);
+                 if (price.errorOccurred()) rollBack(curStore,crrAmount);
                  else{
 
-                     DResponseObj<Boolean> supply = createSupply(user,city,Street,apartment,crrAmount);
+                     DResponseObj<Integer> supply = createSupply(user,city,Street,apartment,crrAmount);
                      if (!supply.errorOccurred()) {
                          //supply
-                         PaymentService p = PaymentService.getInstance();
-                         DResponseObj<Integer> TIP = p.pay(c, price.getValue() - discount);
-                         if (TIP.errorOccurred()) rollBack(getStore.getValue(), crrAmount);
-                         else {
-                             getStore.getValue().addHistory(TIP.getValue(), email, crrAmount, price.getValue() - discount);
-                             output.put(i, crrAmount);
-                             logger.info("this order success");
-                         }
+                         totalPrice += price.getValue()-discount;
+                         totalProducts.put(curStore,crrAmount);
+                         prices.put(curStore,price.getValue()-discount);
+                         totalSupply.add(supply.getValue());
+//                         PaymentService p = PaymentService.getInstance();
+//                         DResponseObj<Integer> TIP = p.pay(c, price.getValue() - discount);
+//                         if (TIP.errorOccurred()) rollBack(getStore.getValue(), crrAmount);
+//                         else {
+//                             getStore.getValue().addHistory(TIP.getValue(), email, crrAmount, price.getValue() - discount);
+//                             output.put(i, crrAmount);
+//                             logger.info("this order success");
+//                         }
                      }else{
                          rollBack(getStore.getValue(), crrAmount);
                          logger.warn("supply didnt work");
@@ -72,17 +83,46 @@ public class Purchase {
                  }
              }
          }
-        return new DResponseObj<>(output);
+
+
+         PaymentService paymentService = PaymentService.getInstance();
+         List<History> histories = new ArrayList<>();
+         DResponseObj<Integer> TIP = paymentService.pay(c,totalPrice);
+         int counterMinus=-1;
+         if (!TIP.errorOccurred()){
+             ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> output=new ConcurrentHashMap<>();
+             for (Store store: totalProducts.keySet()){
+                 DResponseObj<Integer> storeID = store.getStoreId();
+                 if (storeID.errorOccurred()) {
+                     logger.error("not exist name for this Store.");
+                     output.put(counterMinus--,totalProducts.get(store));
+                 }
+                 else output.put(storeID.getValue(),totalProducts.get(store));
+                 DResponseObj<History> historyDResponseObj =store.addHistory(TIP.getValue(), email, totalProducts.get(store), prices.get(store));
+                 if (historyDResponseObj.errorOccurred())   logger.error("the History for This Store, didnt save");
+                 else histories.add(historyDResponseObj.getValue());
+             }
+             DResponseObj<Boolean> checkHistory = addHistories(histories,user);
+             if (checkHistory.errorOccurred()) logger.error("User didnt get his Histories.");
+             return new DResponseObj<>(output);
+         }
+         else{
+             logger.error("The payment is failure");
+             for (Store store: totalProducts.keySet())
+                 rollBack(store,totalProducts.get(store));
+             return new DResponseObj<>(ErrorCode.PAYMENT_FAIL);
+         }
     }
 
-    private DResponseObj<Boolean> createSupply(User user, String city, String street, int apartment, ConcurrentHashMap<Integer, Integer> crrAmount) {
+
+    private DResponseObj<Integer> createSupply(Guest user, String city, String street, int apartment, ConcurrentHashMap<Integer, Integer> crrAmount) {
         SupplyService s=SupplyService.getInstance();
-        DResponseObj<String> d= s.supply(user,city,street,apartment,crrAmount);
-        return d.errorOccurred()? new DResponseObj<>(d.getErrorMsg()) : new DResponseObj<>(true);
+        DResponseObj<Integer> d= s.supply(user,city,street,apartment,crrAmount);
+        return d.errorOccurred()? new DResponseObj<>(d.getErrorMsg()) : d;
     }
 
     //goal: to get storeID and Shopping bag of this store.
-    private DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>>  getBags(User user){
+    private DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>>  getBags(Guest user){
         DResponseObj<ShoppingCart> getCart =user.GetSShoppingCart();
         if (getCart.errorOccurred()) return new DResponseObj<>(getCart.getErrorMsg());
         DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> getBags = getCart.getValue().getHashShoppingCart();
@@ -113,6 +153,14 @@ public class Purchase {
         if (!c.getPin().matches("^[1-9]&&[0-9]&&[0-9]]")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
         return new DResponseObj<>(true);
     }
+    
+    private DResponseObj<Boolean> addHistories(List<History> histories,User u){
+        return u.addHistoies(histories);
+    }
+    private DResponseObj<Boolean> addHistories(List<History> histories,Guest u){
+        return new DResponseObj<>(true);
+    }
+
 
 
 }

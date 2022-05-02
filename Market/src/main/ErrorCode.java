@@ -35,4 +35,6 @@ public class ErrorCode {
    public static int ILLEGALCARD = 53;
 
    public static int EXTERNAL_SERVICE_ERROR =54;
+
+   public static int PAYMENT_FAIL = 60;
 }

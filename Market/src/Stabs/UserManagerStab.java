@@ -127,8 +127,9 @@ public class UserManagerStab extends UserManager {
         return new DResponseObj<>(LoginUsers);
     }
 
+
     //UUID
-    public DResponseObj<User> getOnlineUser(UUID uuid){
+    public DResponseObj<Guest> getOnlineUser(UUID uuid){
         return new DResponseObj<>(new User("yaki@gmail.com","",""));
     }
 }
