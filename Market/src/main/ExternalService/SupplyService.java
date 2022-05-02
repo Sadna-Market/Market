@@ -3,6 +3,7 @@ package main.ExternalService;
 
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Store;
+import main.System.Server.Domain.UserModel.Guest;
 import main.System.Server.Domain.UserModel.User;
 
 import java.util.Date;
@@ -11,15 +12,19 @@ import java.util.concurrent.ConcurrentHashMap;
 //threadsafe
 public class SupplyService extends AbsExternalService{
 
+
+
     ConcurrentHashMap<Integer,String> list=new ConcurrentHashMap<>();
-    public DResponseObj<String> supply(User user,String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
+    public DResponseObj<Integer> supply(Guest user, String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
         try{
             list.put(counterTIP,new Date().toString());
             logger.info("new supply");
             int output=counterTIP++;
-            return new DResponseObj("ok",-1);
+            DResponseObj<Integer> o= new DResponseObj<>();
+            o.value=output;
+            return o;
         }
         finally {
             stampedLock.unlockWrite(stamp);

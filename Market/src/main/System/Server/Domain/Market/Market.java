@@ -10,10 +10,7 @@ import main.Service.SLResponsOBJ;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
-import main.System.Server.Domain.UserModel.ShoppingCart;
-import main.System.Server.Domain.UserModel.User;
-import main.System.Server.Domain.UserModel.UserManager;
-import main.System.Server.Domain.UserModel.Validator;
+import main.System.Server.Domain.UserModel.*;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -48,16 +45,7 @@ public class Market {
     //pre: -
     //post: the external Services connect
     public DResponseObj<Boolean> init(){
-        PaymentService p = PaymentService.getInstance();
-        DResponseObj<String> check = p.ping();
-        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
-        p.connect();
-
-        SupplyService supplyService = SupplyService.getInstance();
-        check = supplyService.ping();
-        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
-        supplyService.connect();
-        return new DResponseObj<>(true);
+        return paymentAndSupplyConnct();
     }
 
     //2.2.1
@@ -262,15 +250,19 @@ public class Market {
         DResponseObj<Boolean> online=userManager.isOnline(userId);
         if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
 
-        DResponseObj<Boolean> checkInit = init();
-        if (checkInit.errorOccurred()) return new DResponseObj<>(checkInit.getErrorMsg());
+        DResponseObj<Boolean> checkServices = paymentAndSupplyConnct();
+        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
-        DResponseObj<User> user=userManager.getOnlineUser(userId);
+        DResponseObj<Guest> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment, new CreditCard(CreditCard,CardDate , pin)));
+        DResponseObj<String> email=getEmail(user.getValue());
+        if (email.errorOccurred()) return new DResponseObj<>(email.getErrorMsg());
+        return new DResponseObj(purchase.order(user.getValue(),email.getValue(),City,Street,apartment, new CreditCard(CreditCard,CardDate , pin)));
 
     }
+
+
 
     //2.3.2
     //pre: user is Member
@@ -462,8 +454,9 @@ public class Market {
         if (isOnline.errorOccurred()) return new DResponseObj<>(isOnline.getErrorMsg());
         List<List<History>> res = new LinkedList<>();
         for(Store s :stores.values()){
-           List<History>  list = s.getUserHistory(email).value;
-           res.add(list);
+           DResponseObj<List<History>> list = s.getUserHistory(email);
+           if (!list.errorOccurred() && !list.getValue().isEmpty())  res.add(list.getValue());
+
         }
 
         return new DResponseObj<>(res);
@@ -474,7 +467,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: market receive this store to the user.
     public DResponseObj<Store> getStore(int storeID){
-        if (storeID<0 | storeID>= storeCounter){
+        if (storeID<=0 | storeID>= storeCounter){
             logger.warn("the StoreID is illegal");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
@@ -491,8 +484,16 @@ public class Market {
 
     /*************************************************private methods*****************************************************/
 
+    private DResponseObj<String> getEmail(User u){
+        return u.getEmail();
+    }
+
+    private DResponseObj<String> getEmail(Guest u){
+        return new DResponseObj<>("Guest");
+    }
+
     private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, Integer productId) {
-        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
+        DResponseObj<Guest> logIN=userManager.getOnlineUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
@@ -510,6 +511,7 @@ public class Market {
 
         return new DResponseObj<>(new Tuple(s.getValue(),p.getValue()));
     }
+
 
 
 
@@ -588,6 +590,18 @@ public class Market {
         return pIDs;
 
     }
+    private DResponseObj<Boolean> paymentAndSupplyConnct(){
+        PaymentService p = PaymentService.getInstance();
+        DResponseObj<String> check = p.ping();
+        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        p.connect();
+
+        SupplyService supplyService = SupplyService.getInstance();
+        check = supplyService.ping();
+        if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
+        supplyService.connect();
+        return new DResponseObj<>(true);
+    }
 
     class Tuple<E,T>{
         E item1;
@@ -611,10 +625,10 @@ public class Market {
             productTypes.put(i, p);
         }
         for (int i = 0; i < 10; i++) {
-            Store s = new StoreStab(i);
+            Store s = new StoreStab(storeCounter);
             s.addNewProduct(getProductType(1).getValue(), 100, 0.5);
-            s.newStoreRate(i);
-            stores.put(i, s);
+            s.newStoreRate(storeCounter);
+            stores.put(storeCounter++, s);
         }
     }
 

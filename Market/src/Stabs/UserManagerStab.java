@@ -126,4 +126,10 @@ public class UserManagerStab extends UserManager {
         logger.debug("UserManager getLoginUsers");
         return new DResponseObj<>(LoginUsers);
     }
+
+
+    //UUID
+    public DResponseObj<Guest> getOnlineUser(UUID uuid){
+        return new DResponseObj<>(new User("yaki@gmail.com","",""));
+    }
 }
