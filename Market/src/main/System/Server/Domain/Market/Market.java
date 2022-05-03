@@ -241,23 +241,27 @@ public class Market {
     //pre: user is online
     //post: start process of sealing with the User
     public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, CreditCard c) {
+        //check valid Card
+        DResponseObj<Boolean> checkValidCard = checkValidCard(c);
+        if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
 
-        if(!Validator.isValidCreditCard(c.getCardNumber())||!Validator.isValidCreditDate(c.getExp())||
-                !Validator.isValidPin(c.getPin())){
-            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
-        }
-
-        DResponseObj<Boolean> online=userManager.isOnline(userId);
-        if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
-
-        DResponseObj<Boolean> checkServices = paymentAndSupplyConnct();
-        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
-        DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
-        if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
+        //get User
         DResponseObj<User> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,c));
 
+        //check PaymentService AND check SupplyService
+        DResponseObj<Boolean> checkServices = paymentAndSupplyConnct();
+        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
+        if (!checkServices.getValue()){
+            logger.warn("this External Services dont connect.");
+            return new DResponseObj<>(ErrorCode.EXTERNAL_SERVICE_ERROR);
+        }
+
+        //check Cart
+        DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
+        if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
+
+        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,c));
     }
 
 
@@ -484,6 +488,42 @@ public class Market {
 
     /*************************************************private methods*****************************************************/
 
+
+    //target: this func chack that the card is valid
+    private DResponseObj<Boolean> checkValidCard(CreditCard c) {
+
+        //check card number
+        DResponseObj<String> getCardNumber = c.getCardNumber();
+        if (getCardNumber.errorOccurred()) return new DResponseObj<>(getCardNumber.getErrorMsg());
+        DResponseObj<Boolean> cardNumberValid = Validator.isValidCreditCard(getCardNumber.getValue());
+        if (cardNumberValid.errorOccurred()) return new DResponseObj<>(cardNumberValid.getErrorMsg());
+        if (!cardNumberValid.getValue()){
+            logger.warn("this CreditCard is invalid - card Number");
+            return new DResponseObj<>(ErrorCode.CARD_NUMBER_ILLEGAL);
+        }
+
+        //check card exp
+        DResponseObj<String> getCardExp = c.getExp();
+        if (getCardExp.errorOccurred()) return new DResponseObj<>(getCardExp.getErrorMsg());
+        DResponseObj<Boolean> cardExpValid = Validator.isValidCreditDate(getCardExp.getValue());
+        if (cardExpValid.errorOccurred()) return new DResponseObj<>(cardExpValid.getErrorMsg());
+        if (!cardExpValid.getValue()){
+            logger.warn("this CreditCard is invalid - card Exp");
+            return new DResponseObj<>(ErrorCode.CARD_EXP_ILLEGAL);
+        }
+
+        //check card pin
+        DResponseObj<String> getCardPin = c.getPin();
+        if (getCardPin.errorOccurred()) return new DResponseObj<>(getCardPin.getErrorMsg());
+        DResponseObj<Boolean> cardPinValid = Validator.isValidPin(getCardPin.getValue());
+        if (cardPinValid.errorOccurred()) return new DResponseObj<>(cardPinValid.getErrorMsg());
+        if (!cardPinValid.getValue()){
+            logger.warn("this CreditCard is invalid - pin Exp");
+            return new DResponseObj<>(ErrorCode.CARD_PIN_ILLEGAL);
+        }
+
+        return new DResponseObj<>(true);
+    }
 
     private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, Integer productId) {
         DResponseObj<User> logIN=userManager.getOnlineUser(userId);

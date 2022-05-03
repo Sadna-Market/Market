@@ -153,7 +153,7 @@ class MarketTest {
     @Test
     void order() {
         market.order(UUID.randomUUID(), "", "",5,new CreditCard("123","123","123"));
-        assertNotNull(market.searchProductByRangePrices(1,101,150));
+        assertFalse(market.order(UUID.randomUUID(), "", "",5,new CreditCard("1234567891234567","123","123")).errorOccurred());
     }
 
 

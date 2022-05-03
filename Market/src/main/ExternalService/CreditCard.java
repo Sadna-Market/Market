@@ -1,5 +1,7 @@
 package main.ExternalService;
 
+import main.System.Server.Domain.Response.DResponseObj;
+
 public class CreditCard {
     final String cardNumber;
     final String exp;
@@ -11,15 +13,15 @@ public class CreditCard {
         this.pin = pin;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public DResponseObj<String> getCardNumber() {
+        return new DResponseObj<>(cardNumber);
     }
 
-    public String getExp() {
-        return exp;
+    public DResponseObj<String> getExp() {
+        return new DResponseObj<>(exp);
     }
 
-    public String getPin() {
-        return pin;
+    public DResponseObj<String> getPin() {
+        return new DResponseObj<>(pin);
     }
 }

@@ -1,5 +1,7 @@
 package main.System.Server.Domain.UserModel;
 
+import main.System.Server.Domain.Response.DResponseObj;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.regex.Matcher;
@@ -43,30 +45,30 @@ public class Validator {
         return m.matches();
     }
 
-    public static boolean isValidPin(String pin) {
+    public static DResponseObj<Boolean> isValidPin(String pin) {
         String regex = "^(?=.*[0-9])"
                 + ".{3}$";
         Pattern p = Pattern.compile(regex);
         if (pin == null) {
-            return false;
+            return new DResponseObj<>(false);
         }
 
         Matcher m = p.matcher(pin);
 
-        return m.matches();
+        return new DResponseObj<>(m.matches());
     }
 
-    public static boolean isValidCreditCard(String CreditCard) {
+    public static DResponseObj<Boolean> isValidCreditCard(String CreditCard) {
         String regex = "^(?=.*[0-9])"
                 + ".{16}$";
         Pattern p = Pattern.compile(regex);
         if (CreditCard == null) {
-            return false;
+            return new DResponseObj<>(false);
         }
 
         Matcher m = p.matcher(CreditCard);
 
-        return m.matches();
+        return new DResponseObj<>(m.matches());
     }
 
     public static void main(String[] args) {
@@ -76,17 +78,17 @@ public class Validator {
 
     }
 
-    public static boolean isValidCreditDate(String CreditDATE) {
+    public static DResponseObj<Boolean> isValidCreditDate(String CreditDATE) {
         String regex = "^(?=.*[0-9])"
                 + ".{4}$";
         Pattern p = Pattern.compile(regex);
         if (CreditDATE == null) {
-            return false;
+            return new DResponseObj<>(false);
         }
 
         Matcher m = p.matcher(CreditDATE);
 
-        return m.matches();
+        return new DResponseObj<>(m.matches());
     }
 
 

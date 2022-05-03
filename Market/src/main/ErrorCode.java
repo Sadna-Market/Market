@@ -37,4 +37,8 @@ public class ErrorCode {
    public static int EXTERNAL_SERVICE_ERROR =54;
 
    public static int PAYMENT_FAIL = 60;
+   public static int CARD_NUMBER_ILLEGAL = 61;
+   public static int CARD_EXP_ILLEGAL = 62;
+   public static int CARD_PIN_ILLEGAL = 63;
+
 }
