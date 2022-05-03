@@ -37,7 +37,7 @@ public class User  {
     }
     public User(){
         shoppingCart=new ShoppingCart();
-        email = "guest@gmail.com";
+        email = "guest";
         this.Password="guest";
         this.phoneNumber="0000000000";
 
