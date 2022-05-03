@@ -1,10 +1,13 @@
 package main.ExternalService;
 
 import main.System.Server.Domain.Response.DResponseObj;
+import org.apache.log4j.Logger;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PaymentService extends AbsExternalService{
+    static Logger logger = Logger.getLogger(PaymentService.class);
+
     ConcurrentHashMap<Integer,Double> list=new ConcurrentHashMap<>();
     static boolean isConnected =true;
 

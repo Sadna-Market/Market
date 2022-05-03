@@ -2,11 +2,13 @@ package main.ExternalService;
 
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.User;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SupplyService extends AbsExternalService {
+    static Logger logger = Logger.getLogger(SupplyService.class);
 
 
 
