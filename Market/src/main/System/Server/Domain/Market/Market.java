@@ -1,12 +1,12 @@
 package main.System.Server.Domain.Market;
 
+import Stabs.PurchaseStab;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
 import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
-import main.Service.SLResponsOBJ;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
-import java.util.stream.Collectors;
 
 public class Market {
     /*************************************************fields************************************************************/
@@ -237,29 +236,32 @@ public class Market {
     }
 
 
-
+// todo : fix this func
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId,String City,String Street,int apartment ,String CreditCard , String CardDate , String pin) {
-        if(!Validator.isValidCreditCard(CreditCard)||!Validator.isValidCreditDate(CardDate)||
-                !Validator.isValidPin(pin)){
-            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
-        }
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, CreditCard c) {
+        //check valid Card
+        DResponseObj<Boolean> checkValidCard = checkValidCard(c);
+        if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
 
-        DResponseObj<Boolean> online=userManager.isOnline(userId);
-        if (online.errorOccurred()) return new DResponseObj<>(online.getErrorMsg());
+        //get User
+        DResponseObj<User> user=userManager.getOnlineUser(userId);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
 
+        //check PaymentService AND check SupplyService
         DResponseObj<Boolean> checkServices = paymentAndSupplyConnct();
         if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
+        if (!checkServices.getValue()){
+            logger.warn("this External Services dont connect.");
+            return new DResponseObj<>(ErrorCode.EXTERNAL_SERVICE_ERROR);
+        }
+
+        //check Cart
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
-        DResponseObj<Guest> user=userManager.getOnlineUser(userId);
-        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-        DResponseObj<String> email=getEmail(user.getValue());
-        if (email.errorOccurred()) return new DResponseObj<>(email.getErrorMsg());
-        return new DResponseObj(purchase.order(user.getValue(),email.getValue(),City,Street,apartment, new CreditCard(CreditCard,CardDate , pin)));
 
+        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,c));
     }
 
 
@@ -296,6 +298,8 @@ public class Market {
         return store.addNewProduct(productType, quantity, price);
     }
 
+
+    //todo: fix this func
     public DResponseObj<Integer> addNewProductType(UUID uuid,String name , String description, int category){
 
         long stamp = lock_TP.writeLock();
@@ -484,16 +488,45 @@ public class Market {
 
     /*************************************************private methods*****************************************************/
 
-    private DResponseObj<String> getEmail(User u){
-        return u.getEmail();
-    }
 
-    private DResponseObj<String> getEmail(Guest u){
-        return new DResponseObj<>("Guest");
+    //target: this func chack that the card is valid
+    private DResponseObj<Boolean> checkValidCard(CreditCard c) {
+
+        //check card number
+        DResponseObj<String> getCardNumber = c.getCardNumber();
+        if (getCardNumber.errorOccurred()) return new DResponseObj<>(getCardNumber.getErrorMsg());
+        DResponseObj<Boolean> cardNumberValid = Validator.isValidCreditCard(getCardNumber.getValue());
+        if (cardNumberValid.errorOccurred()) return new DResponseObj<>(cardNumberValid.getErrorMsg());
+        if (!cardNumberValid.getValue()){
+            logger.warn("this CreditCard is invalid - card Number");
+            return new DResponseObj<>(ErrorCode.CARD_NUMBER_ILLEGAL);
+        }
+
+        //check card exp
+        DResponseObj<String> getCardExp = c.getExp();
+        if (getCardExp.errorOccurred()) return new DResponseObj<>(getCardExp.getErrorMsg());
+        DResponseObj<Boolean> cardExpValid = Validator.isValidCreditDate(getCardExp.getValue());
+        if (cardExpValid.errorOccurred()) return new DResponseObj<>(cardExpValid.getErrorMsg());
+        if (!cardExpValid.getValue()){
+            logger.warn("this CreditCard is invalid - card Exp");
+            return new DResponseObj<>(ErrorCode.CARD_EXP_ILLEGAL);
+        }
+
+        //check card pin
+        DResponseObj<String> getCardPin = c.getPin();
+        if (getCardPin.errorOccurred()) return new DResponseObj<>(getCardPin.getErrorMsg());
+        DResponseObj<Boolean> cardPinValid = Validator.isValidPin(getCardPin.getValue());
+        if (cardPinValid.errorOccurred()) return new DResponseObj<>(cardPinValid.getErrorMsg());
+        if (!cardPinValid.getValue()){
+            logger.warn("this CreditCard is invalid - pin Exp");
+            return new DResponseObj<>(ErrorCode.CARD_PIN_ILLEGAL);
+        }
+
+        return new DResponseObj<>(true);
     }
 
     private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, Integer productId) {
-        DResponseObj<Guest> logIN=userManager.getOnlineUser(userId);
+        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
@@ -618,6 +651,7 @@ public class Market {
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
         userManager = new UserManagerStab();
+        purchase = new PurchaseStab();
         for (int i = 0; i < 10; i++) {
             ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
             p.setRate(i);

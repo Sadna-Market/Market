@@ -1,21 +1,19 @@
 package main.ExternalService;
 
-
 import main.System.Server.Domain.Response.DResponseObj;
-import main.System.Server.Domain.StoreModel.Store;
-import main.System.Server.Domain.UserModel.Guest;
 import main.System.Server.Domain.UserModel.User;
+import org.apache.log4j.Logger;
 
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-//threadsafe
-public class SupplyService extends AbsExternalService{
+public class SupplyService extends AbsExternalService {
+    static Logger logger = Logger.getLogger(SupplyService.class);
 
 
 
     ConcurrentHashMap<Integer,String> list=new ConcurrentHashMap<>();
-    public DResponseObj<Integer> supply(Guest user, String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
+    public DResponseObj<Integer> supply(User user, String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
         try{

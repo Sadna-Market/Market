@@ -1,34 +1,36 @@
 package main.ExternalService;
 
+import main.System.Server.Domain.Response.DResponseObj;
+
 public class CreditCard {
-    String CreditCard;
-    String CreditDate;
-    String pin;
+    final String cardNumber;
+    final String exp;
+    final String pin;
 
-    public String getCreditCard() {
-        return CreditCard;
+    public CreditCard(String cardNumber, String exp, String pin) {
+        this.cardNumber = cardNumber;
+        this.exp = exp;
+        this.pin = pin;
     }
 
-    public String getCreditDate() {
-        return CreditDate;
+    public DResponseObj<String> getCardNumber() {
+        return new DResponseObj<>(cardNumber);
     }
 
-    public String getPin() {
-        return pin;
+    public DResponseObj<String> getExp() {
+        return new DResponseObj<>(exp);
+    }
+
+    public DResponseObj<String> getPin() {
+        return new DResponseObj<>(pin);
     }
 
     @Override
     public String toString() {
         return "CreditCard{" +
-                "CreditCard='" + CreditCard + '\'' +
-                ", CreditDate='" + CreditDate + '\'' +
+                "cardNumber='" + cardNumber + '\'' +
+                ", exp='" + exp + '\'' +
                 ", pin='" + pin + '\'' +
                 '}';
-    }
-
-    public CreditCard(String creditCard, String creditDate, String pin) {
-        CreditCard = creditCard;
-        CreditDate = creditDate;
-        this.pin = pin;
     }
 }
