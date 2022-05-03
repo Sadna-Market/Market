@@ -110,6 +110,7 @@ public class Purchase {
             if (historyDResponseObj.errorOccurred())   logger.error("the History for This Store, didnt save");
             else histories.add(historyDResponseObj.getValue());
         }
+        
         // add all Histories to the User.
         DResponseObj<Boolean> checkHistory = user.addHistoies(histories);
         if (checkHistory.errorOccurred()) logger.error("User didnt get his Histories.");
