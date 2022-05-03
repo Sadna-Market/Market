@@ -164,7 +164,7 @@ public class Store {
     }
 
     //requirement II.2.5
-    public DResponseObj<Boolean> addHistory(int TID, String user, ConcurrentHashMap<Integer,Integer> products, double finalPrice) {
+    public DResponseObj<History> addHistory(int TID, int SupplyID , String user, ConcurrentHashMap<Integer,Integer> products, double finalPrice) {
         List<ProductStore> productsBuy = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : products.entrySet()) {
             Integer productID = entry.getKey();
@@ -172,13 +172,14 @@ public class Store {
             DResponseObj<ProductStore> productStore = inventory.getProductStoreAfterBuy(productID, productQuantity);
             if(productStore.errorOccurred()) {
                 logger.warn("ProductId: " + productID + " not exist in inventory");
-                return new DResponseObj<>(false,productStore.getErrorMsg());
+                return new DResponseObj<>(productStore.getErrorMsg());
             }
             productsBuy.add(productStore.getValue());
         }
-        history.put(TID, new History(TID, finalPrice, productsBuy, user));
+        History newHistory = new History(TID, SupplyID, finalPrice, productsBuy, user);
+        history.put(TID, newHistory);
         logger.info("new history added to storeId: "+ storeId + " ,TID: " + TID);
-        return new DResponseObj<>(true);
+        return new DResponseObj<>(newHistory);
     }
 
     //requirement II.2.5
