@@ -1,12 +1,12 @@
 package main.System.Server.Domain.Market;
 
+import Stabs.PurchaseStab;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
 import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
-import main.Service.SLResponsOBJ;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
-import java.util.stream.Collectors;
 
 public class Market {
     /*************************************************fields************************************************************/
@@ -237,13 +236,14 @@ public class Market {
     }
 
 
-
+// todo : fix this func
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId,String City,String Street,int apartment ,String CreditCard , String CardDate , String pin) {
-        if(!Validator.isValidCreditCard(CreditCard)||!Validator.isValidCreditDate(CardDate)||
-                !Validator.isValidPin(pin)){
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, CreditCard c) {
+
+        if(!Validator.isValidCreditCard(c.getCardNumber())||!Validator.isValidCreditDate(c.getExp())||
+                !Validator.isValidPin(c.getPin())){
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
@@ -254,11 +254,9 @@ public class Market {
         if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
-        DResponseObj<Guest> user=userManager.getOnlineUser(userId);
+        DResponseObj<User> user=userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
-        DResponseObj<String> email=getEmail(user.getValue());
-        if (email.errorOccurred()) return new DResponseObj<>(email.getErrorMsg());
-        return new DResponseObj(purchase.order(user.getValue(),email.getValue(),City,Street,apartment, new CreditCard(CreditCard,CardDate , pin)));
+        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,c));
 
     }
 
@@ -296,6 +294,8 @@ public class Market {
         return store.addNewProduct(productType, quantity, price);
     }
 
+
+    //todo: fix this func
     public DResponseObj<Integer> addNewProductType(UUID uuid,String name , String description, int category){
 
         long stamp = lock_TP.writeLock();
@@ -484,16 +484,9 @@ public class Market {
 
     /*************************************************private methods*****************************************************/
 
-    private DResponseObj<String> getEmail(User u){
-        return u.getEmail();
-    }
-
-    private DResponseObj<String> getEmail(Guest u){
-        return new DResponseObj<>("Guest");
-    }
 
     private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, Integer productId) {
-        DResponseObj<Guest> logIN=userManager.getOnlineUser(userId);
+        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
@@ -618,6 +611,7 @@ public class Market {
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
         userManager = new UserManagerStab();
+        purchase = new PurchaseStab();
         for (int i = 0; i < 10; i++) {
             ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
             p.setRate(i);

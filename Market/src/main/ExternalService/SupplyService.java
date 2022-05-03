@@ -1,18 +1,17 @@
 package main.ExternalService;
 
-
 import main.System.Server.Domain.Response.DResponseObj;
+import main.System.Server.Domain.UserModel.User;
 
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-//threadsafe
-public class SupplyService extends AbsExternalService{
+public class SupplyService extends AbsExternalService {
 
 
 
     ConcurrentHashMap<Integer,String> list=new ConcurrentHashMap<>();
-    public DResponseObj<Integer> supply(Guest user, String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
+    public DResponseObj<Integer> supply(User user, String city, String Street, int apartment , ConcurrentHashMap<Integer,Integer> hashMap) {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
         try{

@@ -1,5 +1,6 @@
 package main.System.Server.Domain.Market;
 
+import main.ExternalService.CreditCard;
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.DiscountPolicy;
 import main.System.Server.Domain.StoreModel.Store;
@@ -145,6 +146,13 @@ class MarketTest {
     @DisplayName("searchProductByStoreRate  -  failure")
     @Test
     void searchProductByRangePrices2() {
+        assertNotNull(market.searchProductByRangePrices(1,101,150));
+    }
+
+    @DisplayName("order ")
+    @Test
+    void order() {
+        market.order(UUID.randomUUID(), "", "",5,new CreditCard("123","123","123"));
         assertNotNull(market.searchProductByRangePrices(1,101,150));
     }
 

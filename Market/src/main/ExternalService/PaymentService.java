@@ -1,14 +1,9 @@
 package main.ExternalService;
 
-import main.ErrorCode;
-import main.System.Server.Domain.Market.Market;
 import main.System.Server.Domain.Response.DResponseObj;
-import org.apache.log4j.Logger;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.StampedLock;
 
-//threadsafe
 public class PaymentService extends AbsExternalService{
     ConcurrentHashMap<Integer,Double> list=new ConcurrentHashMap<>();
     static boolean isConnected =true;
@@ -35,13 +30,13 @@ public class PaymentService extends AbsExternalService{
 
 
     private static class PaymentServiceWrapper{
-       static  PaymentService INSTANSE = new PaymentService();
-   }
-   private PaymentService(){
+        static  PaymentService INSTANSE = new PaymentService();
+    }
+    private PaymentService(){
         super("Payment");
-   }
+    }
 
-   public static PaymentService getInstance(){
-       return PaymentServiceWrapper.INSTANSE;
-   }
+    public static PaymentService getInstance(){
+        return PaymentServiceWrapper.INSTANSE;
+    }
 }

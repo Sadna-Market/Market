@@ -1,34 +1,25 @@
 package main.ExternalService;
 
 public class CreditCard {
-    String CreditCard;
-    String CreditDate;
-    String pin;
+    final String cardNumber;
+    final String exp;
+    final String pin;
 
-    public String getCreditCard() {
-        return CreditCard;
+    public CreditCard(String cardNumber, String exp, String pin) {
+        this.cardNumber = cardNumber;
+        this.exp = exp;
+        this.pin = pin;
     }
 
-    public String getCreditDate() {
-        return CreditDate;
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public String getExp() {
+        return exp;
     }
 
     public String getPin() {
         return pin;
-    }
-
-    @Override
-    public String toString() {
-        return "CreditCard{" +
-                "CreditCard='" + CreditCard + '\'' +
-                ", CreditDate='" + CreditDate + '\'' +
-                ", pin='" + pin + '\'' +
-                '}';
-    }
-
-    public CreditCard(String creditCard, String creditDate, String pin) {
-        CreditCard = creditCard;
-        CreditDate = creditDate;
-        this.pin = pin;
     }
 }

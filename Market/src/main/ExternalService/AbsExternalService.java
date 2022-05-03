@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 
-public class AbsExternalService implements IExternalService {
+public class AbsExternalService {
     static Logger logger = Logger.getLogger(AbsExternalService.class);
 
     boolean connect=false;
@@ -23,7 +23,7 @@ public class AbsExternalService implements IExternalService {
     public AbsExternalService(String name) {
         this.name = name;
     }
-    @Override
+
     public DResponseObj<Boolean> isConnect() {
         long stamp= stampedLock.readLock();
         logger.debug("catch lock");
@@ -39,7 +39,7 @@ public class AbsExternalService implements IExternalService {
 
 
 
-    @Override
+
     public DResponseObj<Boolean> connect() {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
@@ -59,7 +59,6 @@ public class AbsExternalService implements IExternalService {
         }
     }
 
-    @Override
     public DResponseObj<Boolean> disConnect() {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
@@ -79,7 +78,6 @@ public class AbsExternalService implements IExternalService {
         }
     }
 
-    @Override
     public DResponseObj<String> ping() {
         return new DResponseObj<>(name);
     }

@@ -1,12 +1,13 @@
 package main.System.Server.Domain.Market;
 
 import main.ErrorCode;
+
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.History;
 import main.System.Server.Domain.StoreModel.Store;
-import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.UserModel.ShoppingBag;
 import main.System.Server.Domain.UserModel.ShoppingCart;
 import main.System.Server.Domain.UserModel.User;
@@ -21,7 +22,8 @@ public class Purchase {
 
 
 
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(Guest user,String email, String city , String Street, int apartment , CreditCard c){
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user, String city , String Street, int apartment,
+                                                                                               CreditCard c){
         //check card
         //DResponseObj<Boolean> creditcard=checkCard(c);
         //if (creditcard.errorOccurred()) return new DResponseObj<>(creditcard.getErrorMsg());
@@ -29,6 +31,9 @@ public class Purchase {
         DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> bagsRes=getBags(user);
         if (bagsRes.errorOccurred()) return new DResponseObj<>(bagsRes.getErrorMsg());
         ConcurrentHashMap<Integer, ShoppingBag> bags=bagsRes.getValue();
+        DResponseObj<String> Demail= user.getEmail();
+        if (Demail.errorOccurred()) return new DResponseObj<>(Demail.getErrorMsg());
+        String email = Demail.getValue();
 
 
         double totalPrice=0.;
@@ -111,15 +116,17 @@ public class Purchase {
          }
     }
 
+    /*************************************************private methods*****************************************************/
 
-    private DResponseObj<Integer> createSupply(Guest user, String city, String street, int apartment, ConcurrentHashMap<Integer, Integer> crrAmount) {
+
+    private DResponseObj<Integer> createSupply(User user, String city, String street, int apartment, ConcurrentHashMap<Integer, Integer> crrAmount) {
         SupplyService s=SupplyService.getInstance();
         DResponseObj<Integer> d= s.supply(user,city,street,apartment,crrAmount);
         return d.errorOccurred()? new DResponseObj<>(d.getErrorMsg()) : d;
     }
 
     //goal: to get storeID and Shopping bag of this store.
-    private DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>>  getBags(Guest user){
+    private DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>>  getBags(User user){
         DResponseObj<ShoppingCart> getCart =user.GetSShoppingCart();
         if (getCart.errorOccurred()) return new DResponseObj<>(getCart.getErrorMsg());
         DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> getBags = getCart.getValue().getHashShoppingCart();
@@ -144,18 +151,15 @@ public class Purchase {
         return new DResponseObj<>(ErrorCode.ROLLBACK);
     }
 
-    private DResponseObj<Boolean> checkCard(CreditCard c){
-        if (!c.getCreditCard().matches("^[0-9]+$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
-        //if (!c.getCreditDate().matches("^[0-1][0-9]$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
-        if (!c.getPin().matches("^[1-9]&&[0-9]&&[0-9]]")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+    private DResponseObj<Boolean> checkCard(String cardNumber,String exp,String pin){
+        if (!cardNumber.matches("^[0-9]+$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        if (!exp.matches("^[0-1][0-9]$")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
+        if (!pin.matches("^[1-9]&&[0-9]&&[0-9]]")) return new DResponseObj<>(ErrorCode.ILLEGALCARD);
         return new DResponseObj<>(true);
     }
     
     private DResponseObj<Boolean> addHistories(List<History> histories,User u){
         return u.addHistoies(histories);
-    }
-    private DResponseObj<Boolean> addHistories(List<History> histories,Guest u){
-        return new DResponseObj<>(true);
     }
 
 
