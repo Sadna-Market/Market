@@ -17,7 +17,7 @@ public class UserManagerStab extends UserManager {
     /** menage all the members that have a saved user in the system , key : Emile , value : User*/
     ConcurrentHashMap<String, User> members;  // menage all the members that have a saved user in the system , key : Emile , value : User
     /** menage all the Visitors in the System , Visitors is set combines a members and gusts. key : userId , value Guest */
-    ConcurrentHashMap<UUID, Guest> GuestVisitors ;
+    ConcurrentHashMap<UUID, User> GuestVisitors ;
     /**menage all the logged in users in the system, key : user id  , value : User*/
     ConcurrentHashMap<UUID,User> LoginUsers;
 
@@ -116,7 +116,7 @@ public class UserManagerStab extends UserManager {
     }
 
 
-    public DResponseObj<ConcurrentHashMap<UUID, Guest>> getGuestVisitors() {
+    public DResponseObj<ConcurrentHashMap<UUID, User>> getGuestVisitors() {
         logger.debug("UserManager getGuestVisitors");
         return new DResponseObj<>(GuestVisitors);
     }
@@ -129,7 +129,7 @@ public class UserManagerStab extends UserManager {
 
 
     //UUID
-    public DResponseObj<Guest> getOnlineUser(UUID uuid){
+    public DResponseObj<User> getOnlineUser(UUID uuid){
         return new DResponseObj<>(new User("yaki@gmail.com","",""));
     }
 }

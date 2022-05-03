@@ -11,11 +11,12 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class User extends Guest {
+public class User  {
     ShoppingCart shoppingCart;
     String Password;
     String email;
     String phoneNumber;
+
 
 
     private List<Permission> accessPermission = new LinkedList<>();
@@ -30,10 +31,17 @@ public class User extends Guest {
         this.email = email;
         this.Password = password;
         this.phoneNumber = phoneNumber;
+        shoppingCart=new ShoppingCart();
 
 
     }
+    public User(){
+        shoppingCart=new ShoppingCart();
+        email = "guest@gmail.com";
+        this.Password="guest";
+        this.phoneNumber="0000000000";
 
+    }
     public DResponseObj<Boolean> addAccessPermission(Permission p) {
         accessPermission.add(p);
         return new DResponseObj<>(true);
