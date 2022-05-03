@@ -227,7 +227,12 @@ public class StoreAndProductType {
         ConcurrentHashMap<Integer,Integer> h = new ConcurrentHashMap<>();
         h.put(productType1.getProductID().getValue(),4);
         h.put(productType2.getProductID().getValue(),4);
-        assertTrue(store.addHistory(1,user,h,333.5).getValue());
+        History history = (store.addHistory(1,2,user,h,333.5)).getValue();
+        assertEquals(history.getUser(), user);
+        assertEquals(history.getFinalPrice(), 333.5);
+        assertEquals(history.getTID(),1);
+        assertEquals(history.getSupplyID(), 2);
+
     }
 
     @DisplayName("addHistory  -  failure")
@@ -237,8 +242,9 @@ public class StoreAndProductType {
         ConcurrentHashMap<Integer,Integer> h = new ConcurrentHashMap<>();
         h.put(productType1.getProductID().getValue(),4);
         h.put(productType2.getProductID().getValue(),4);
-        assertFalse(store.addHistory(1,"dor@gmail.com",h,333.5).getValue());
+        assertTrue(store.addHistory(1,2,"dor@gmail.com",h,333.5).errorOccurred());
     }
+
 
     @DisplayName("checkBuyPolicy  -  success")
     @Test
