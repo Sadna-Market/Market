@@ -4,6 +4,7 @@ import main.System.Server.Domain.Market.Permission;
 import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Market.permissionType;
 import main.System.Server.Domain.Market.userTypes;
+import main.System.Server.Domain.StoreModel.History;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -117,5 +118,9 @@ public class User  {
 
     public DResponseObj<ShoppingCart> GetSShoppingCart() {
         return new DResponseObj<>( this.shoppingCart);
+    }
+
+    public DResponseObj<Boolean> addHistoies(List<History> histories) {
+        return new DResponseObj<>(false,-1);
     }
 }
