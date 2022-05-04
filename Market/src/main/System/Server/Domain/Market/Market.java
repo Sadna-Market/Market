@@ -635,12 +635,20 @@ public class Market {
         PaymentService p = PaymentService.getInstance();
         DResponseObj<String> check = p.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
-        p.connect();
+        DResponseObj<Boolean> isPayConnect = p.connect();
+        if (isPayConnect.errorOccurred()) return new DResponseObj<>(isPayConnect.getErrorMsg());
+        if(!isPayConnect.getValue()){
+            logger.warn("Payment didnt connect");
+        }
 
         SupplyService supplyService = SupplyService.getInstance();
         check = supplyService.ping();
         if (check.errorOccurred()) return new DResponseObj<>(check.getErrorMsg());
-        supplyService.connect();
+        DResponseObj<Boolean> isSupplyConnect = supplyService.connect();
+        if (isSupplyConnect.errorOccurred()) return new DResponseObj<>(isSupplyConnect.getErrorMsg());
+        if(!isSupplyConnect.getValue()){
+            logger.warn("Supply didnt connect");
+        }
         return new DResponseObj<>(true);
     }
 
@@ -659,6 +667,34 @@ public class Market {
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
         userManager = new UserManagerStab();
+    }
+
+    public void setForIntegrationTestingWithUserManager(){
+        userManager = new UserManager();
+        initMarketTest();
+
+    }
+    public void setForIntegrationTestingWithStore(){
+        userManager = new UserManagerStab();
+        purchase = new PurchaseStab();
+
+        for (int i = 0; i < 10; i++) {
+            ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
+            p.setRate(i);
+            p.setCategory(i % 3);
+            productTypes.put(i, p);
+        }
+
+        for (int i=0; i<10; i++){
+            OpenNewStore("name"+i,"founder"+1,new DiscountPolicy(),new BuyPolicy(),new BuyStrategy());
+        }
+
+
+
+
+    }
+    private void initMarketTest(){
+        init();
         purchase = new PurchaseStab();
         for (int i = 0; i < 10; i++) {
             ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
@@ -674,13 +710,17 @@ public class Market {
         }
     }
 
-    public DResponseObj<Boolean> isHavePaymentInstane(){
-        return new DResponseObj( PaymentService.getInstance().isConnect());
+    private void OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+
+        long stamp = lock_stores.writeLock();
+        logger.debug("catch the WriteLock");
+        try {
+            Store store = new Store(storeCounter++,name, discountPolicy, buyPolicy, founder);
+            stores.put(store.getStoreId().value, store);
+            logger.info("new Store join to the Market");
+        } finally {
+            lock_stores.unlockWrite(stamp);
+            logger.debug("released the WriteLock");
+        }
     }
-
-    public DResponseObj<Boolean> isHaveSupplyService(){
-        return new DResponseObj( SupplyService.getInstance().isConnect());
-    }
-
-
 }
