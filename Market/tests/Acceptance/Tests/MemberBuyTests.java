@@ -16,8 +16,8 @@ public class MemberBuyTests extends MarketTests{
     @AfterEach
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
+        roleBackAfterReset();
         market.exitSystem(uuid);
-        initStoreAndItem(); // restore state as before
     }
 
     /**
@@ -31,7 +31,7 @@ public class MemberBuyTests extends MarketTests{
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
         ItemDetail item = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
-        item.itemID = IPHONE_6;
+        item.itemID = IPHONE_6_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item));
 
         ATResponseObj<String> guestID = market.logout(uuid);

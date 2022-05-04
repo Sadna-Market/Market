@@ -23,6 +23,8 @@ public class ExternalService {
     private ExternalService(){
         services.put("Payment",PaymentService.getInstance());
         services.put("Supply",SupplyService.getInstance());
+        names.add("Payment");
+        names.add("Supply");
     }
     public static DResponseObj<AbsExternalService> newService(String name){
         long stamp = lock.writeLock();

@@ -39,6 +39,7 @@ public class SystemTests extends MarketTests{
         assertFalse(market.serviceIsAlive("Payment"));
         ATResponseObj<String> res = market.pay(new CreditCard("1111222233334444","123","111"),100);
         assertTrue(res.errorOccurred());
+        assertTrue(market.connectExternalService("Payment"));
     }
 
     /**
@@ -78,7 +79,7 @@ public class SystemTests extends MarketTests{
     @Test
     @DisplayName("req: #1.3 - fail test [invalid payment details]")
     void PaymentService_Fail1() {
-        CreditCard creditCard = new CreditCard("1111222233334444", "1110", "111"); //invalid exp date
+        CreditCard creditCard = new CreditCard("1111222233334444", "110", "111"); //invalid exp date
 
         ATResponseObj<String> response = market.pay(creditCard, 10);
 
@@ -111,7 +112,7 @@ public class SystemTests extends MarketTests{
     void SupplyService_Success() {
         User user = generateUser();
         ItemDetail item = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item.itemID = IPHONE_5;
+        item.itemID = IPHONE_5_ID;
         List<ItemDetail> deliver = List.of(item);
         ATResponseObj<String> response = market.supply(deliver, user);
 
