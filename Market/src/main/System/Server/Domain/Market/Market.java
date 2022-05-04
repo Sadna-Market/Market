@@ -236,13 +236,12 @@ public class Market {
     }
 
 
-// todo : fix this func
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, CreditCard c) {
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, String cardNumber, String exp, String pin) {
         //check valid Card
-        DResponseObj<Boolean> checkValidCard = checkValidCard(c);
+        DResponseObj<Boolean> checkValidCard = checkValidCard(cardNumber,exp,pin);
         if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
 
         //get User
@@ -261,7 +260,7 @@ public class Market {
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
 
-        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,c));
+        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,cardNumber,exp,pin));
     }
 
 
@@ -299,34 +298,27 @@ public class Market {
     }
 
 
-    //todo: fix this func
     public DResponseObj<Integer> addNewProductType(UUID uuid,String name , String description, int category){
+        DResponseObj<Boolean> isManager= isSystemMan(uuid);
+        if (isManager.errorOccurred()) return new DResponseObj<>(isManager.getErrorMsg());
 
         long stamp = lock_TP.writeLock();
+        logger.debug("catch the WriteLock");
         try {
             for(ProductType productType : productTypes.values()){
                 DResponseObj<String> nameProduct = productType.getProductName();
                 if (nameProduct.errorOccurred() || name.equals(nameProduct.getValue()))
                     return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
             }
-
-            if(!userManager.isLogged(uuid).value){
-                return new DResponseObj<>(ErrorCode.NOTLOGGED);
-            }
-            if(!PermissionManager.getInstance().isSystemManager(userManager.getOnlineUser(uuid).value.getEmail().value).value){
-                return new DResponseObj<>(ErrorCode.NOPERMISSION);
-            }
-            ProductType p = new ProductType(productCounter++,name,description,category);
-            productTypes.put(p.productID,p);
-            return new DResponseObj<>( p.productID,-1);
+            int productID = productCounter++;
+            ProductType p = new ProductType(productID,name,description,category);
+            productTypes.put(productID,p);
+            return new DResponseObj<>( productID,-1);
         }finally {
             lock_TP.unlockWrite(stamp);
             logger.debug("released the WriteLock");
         }
     }
-
-
-
 
     //2.4.1.2
     //pre: user is Owner
@@ -489,13 +481,33 @@ public class Market {
     /*************************************************private methods*****************************************************/
 
 
+    //target: check if for this UUID is System Manager.
+    private DResponseObj<Boolean> isSystemMan(UUID uuid){
+        //get user online.
+        DResponseObj<User> user = userManager.getOnlineUser(uuid);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+
+        //get email
+        DResponseObj<String> demail = user.getValue().getEmail();
+        if (demail.errorOccurred()) return new DResponseObj<>(demail.getErrorMsg());
+
+        //check System maneger permission
+        PermissionManager permissionManager =PermissionManager.getInstance();
+        DResponseObj<Boolean> isSystemManager = permissionManager.isSystemManager(demail.getValue());
+        if (isSystemManager.errorOccurred()) return new DResponseObj<>(isSystemManager.getErrorMsg());
+        if (!isSystemManager.getValue()){
+            logger.warn("this user is not SystemManger - the ack canceled.");
+            return new DResponseObj<>(ErrorCode.NOPERMISSION);
+        }
+        return new DResponseObj<>(true);
+    }
+
+
     //target: this func chack that the card is valid
-    private DResponseObj<Boolean> checkValidCard(CreditCard c) {
+    private DResponseObj<Boolean> checkValidCard(String cardNumber,String exp,String pin) {
 
         //check card number
-        DResponseObj<String> getCardNumber = c.getCardNumber();
-        if (getCardNumber.errorOccurred()) return new DResponseObj<>(getCardNumber.getErrorMsg());
-        DResponseObj<Boolean> cardNumberValid = Validator.isValidCreditCard(getCardNumber.getValue());
+        DResponseObj<Boolean> cardNumberValid = Validator.isValidCreditCard(cardNumber);
         if (cardNumberValid.errorOccurred()) return new DResponseObj<>(cardNumberValid.getErrorMsg());
         if (!cardNumberValid.getValue()){
             logger.warn("this CreditCard is invalid - card Number");
@@ -503,9 +515,7 @@ public class Market {
         }
 
         //check card exp
-        DResponseObj<String> getCardExp = c.getExp();
-        if (getCardExp.errorOccurred()) return new DResponseObj<>(getCardExp.getErrorMsg());
-        DResponseObj<Boolean> cardExpValid = Validator.isValidCreditDate(getCardExp.getValue());
+        DResponseObj<Boolean> cardExpValid = Validator.isValidCreditDate(exp);
         if (cardExpValid.errorOccurred()) return new DResponseObj<>(cardExpValid.getErrorMsg());
         if (!cardExpValid.getValue()){
             logger.warn("this CreditCard is invalid - card Exp");
@@ -513,9 +523,7 @@ public class Market {
         }
 
         //check card pin
-        DResponseObj<String> getCardPin = c.getPin();
-        if (getCardPin.errorOccurred()) return new DResponseObj<>(getCardPin.getErrorMsg());
-        DResponseObj<Boolean> cardPinValid = Validator.isValidPin(getCardPin.getValue());
+        DResponseObj<Boolean> cardPinValid = Validator.isValidPin(pin);
         if (cardPinValid.errorOccurred()) return new DResponseObj<>(cardPinValid.getErrorMsg());
         if (!cardPinValid.getValue()){
             logger.warn("this CreditCard is invalid - pin Exp");

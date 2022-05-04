@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PurchaseStab extends Purchase {
     @Override
     public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user, String city , String Street, int apartment,
-                                                                                               CreditCard c){
+                                                                                               String card,String exp,String pin){
         return new DResponseObj<>(new ConcurrentHashMap<>());
     }
 }

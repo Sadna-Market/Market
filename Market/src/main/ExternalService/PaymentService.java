@@ -11,12 +11,12 @@ public class PaymentService extends AbsExternalService{
     ConcurrentHashMap<Integer,Double> list=new ConcurrentHashMap<>();
     static boolean isConnected =true;
 
-    public DResponseObj<Integer> pay(CreditCard card, double v) {
+    public DResponseObj<Integer> pay(String cardNumber, String exp, String pin, double v) {
         long stamp= stampedLock.writeLock();
         logger.debug("catch lock");
         try{
             list.put(counterTIP,v);
-            logger.info("creditCart #"+card.toString() +" pay: "+v);
+            logger.info("creditCart #"+createString(cardNumber,exp,pin) +" pay: "+v);
             int output=counterTIP++;
             return new DResponseObj<>(output-1,-1);
         }
@@ -41,5 +41,14 @@ public class PaymentService extends AbsExternalService{
 
     public static PaymentService getInstance(){
         return PaymentServiceWrapper.INSTANSE;
+    }
+
+
+    private String createString(String cardNumber, String exp, String pin){
+        return "CreditCard{" +
+                "cardNumber='" + cardNumber + '\'' +
+                ", exp='" + exp + '\'' +
+                ", pin='" + pin + '\'' +
+                '}';
     }
 }
