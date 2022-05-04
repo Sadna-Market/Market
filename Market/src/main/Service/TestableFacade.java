@@ -84,7 +84,7 @@ public class TestableFacade extends Facade {
         return new SLResponsOBJ<>( ExternalService.getService(service).value.isConnect().value);
     }
 
-    public SLResponsOBJ<String> supply(ServiceUser user,List<ServiceItem> items) {
+    public SLResponsOBJ<Integer> supply(ServiceUser user,List<ServiceItem> items) {
         /**
          * @requirement @requirement II. 3
          *
@@ -103,7 +103,7 @@ public class TestableFacade extends Facade {
             a.put(i.itemID,i.quantity);
         }
         User u = user.getUser();
-        DResponseObj<String> sup = SupplyService.getInstance().supply(u,user.city,user.Street,user.apartment,a);
+        DResponseObj<Integer> sup = SupplyService.getInstance().supply(u,user.city,user.Street,user.apartment,a);
         return sup.errorOccurred() ? new SLResponsOBJ<>(ErrorCode.EXTERNAL_SERVICE_ERROR) : new SLResponsOBJ<>(sup.value);
     }
 
