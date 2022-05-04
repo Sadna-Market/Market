@@ -43,6 +43,7 @@ public class Purchase {
         List<Integer> totalSupply = new ArrayList<>();
         // per Store we keep the price for history
         ConcurrentHashMap<Store, Double> prices=new ConcurrentHashMap<>();
+        ConcurrentHashMap<Store, Integer> deliveries=new ConcurrentHashMap<>();
 
 
         for (Integer bagID: bags.keySet()) {
@@ -75,6 +76,7 @@ public class Purchase {
                     if (rollBack.errorOccurred()) logger.error("rollback does not work!!!");
                     continue;
                 }
+                deliveries.put(curStore,supply.getValue());
 
                 //update the vars
                 totalPrice += price; // add to the total after discount.
@@ -106,11 +108,11 @@ public class Purchase {
                 output.put(storeID.getValue(),totalProducts.get(store));
 
             //create History for this store.
-            DResponseObj<History> historyDResponseObj =store.addHistory(TIP.getValue(), email, totalProducts.get(store), prices.get(store));
+            DResponseObj<History> historyDResponseObj =store.addHistory(TIP.getValue(),deliveries.get(store), email, totalProducts.get(store), prices.get(store));
             if (historyDResponseObj.errorOccurred())   logger.error("the History for This Store, didnt save");
             else histories.add(historyDResponseObj.getValue());
         }
-        
+
         // add all Histories to the User.
         DResponseObj<Boolean> checkHistory = user.addHistoies(histories);
         if (checkHistory.errorOccurred()) logger.error("User didnt get his Histories.");
