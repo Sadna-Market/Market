@@ -26,7 +26,7 @@ public class Purchase {
     //pre:user is connect, credit card is valid.
     //post: the paying of all the cart is successes.
     public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user, String city , String Street, int apartment,
-                                                                                               CreditCard c){
+                                                                                               String cardNumber, String exp, String pin){
         //get email and bags of the user.
         DResponseObj<Tuple<String,ConcurrentHashMap<Integer, ShoppingBag>>> emailAndBags = getEmailAndShoppingBags(user);
         if (emailAndBags.errorOccurred()) return new DResponseObj<>(emailAndBags.getErrorMsg());
@@ -87,7 +87,7 @@ public class Purchase {
             }
         }
         //check if can pay
-        DResponseObj<Integer> TIP= buy(c,totalPrice,totalProducts);
+        DResponseObj<Integer> TIP= buy(cardNumber,exp,pin,totalPrice,totalProducts);
         if (TIP.errorOccurred()) return new DResponseObj<>(TIP.getErrorMsg());
 
         //for store that we can not find the ID.
@@ -123,11 +123,11 @@ public class Purchase {
     /*************************************************private methods*****************************************************/
 
     //target: to buy all the products if error then rollback.
-    private DResponseObj<Integer> buy(CreditCard c,Double totalPrice,
+    private DResponseObj<Integer> buy(String cardNumber, String exp, String pin,Double totalPrice,
                                       ConcurrentHashMap<Store, ConcurrentHashMap<Integer, Integer>> totalProducts){
         PaymentService paymentService = PaymentService.getInstance();
         List<History> histories = new ArrayList<>();
-        DResponseObj<Integer> TIP = paymentService.pay(c,totalPrice);
+        DResponseObj<Integer> TIP = paymentService.pay(cardNumber,exp,pin,totalPrice);
         if (TIP.errorOccurred()){
             logger.error("The payment is failure");
             for (Store store: totalProducts.keySet())

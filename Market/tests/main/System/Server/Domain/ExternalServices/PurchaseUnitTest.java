@@ -18,6 +18,6 @@ public class PurchaseUnitTest {
 
     @Test
     public void order(){
-        assertFalse(purchase.order(new User(emails[0],passwords[0],PhoneNum[0]),"aa","aa",1,new CreditCard("11212223331","12/26","123")).errorOccurred());
+        assertFalse(purchase.order(new User(emails[0],passwords[0],PhoneNum[0]),"aa","aa",1,"11212223331","12/26","123").errorOccurred());
     }
 }

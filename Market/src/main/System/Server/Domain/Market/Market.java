@@ -240,9 +240,9 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, CreditCard c) {
+    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, String cardNumber, String exp, String pin) {
         //check valid Card
-        DResponseObj<Boolean> checkValidCard = checkValidCard(c);
+        DResponseObj<Boolean> checkValidCard = checkValidCard(cardNumber,exp,pin);
         if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
 
         //get User
@@ -261,7 +261,7 @@ public class Market {
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
 
-        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,c));
+        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,cardNumber,exp,pin));
     }
 
 
@@ -490,12 +490,10 @@ public class Market {
 
 
     //target: this func chack that the card is valid
-    private DResponseObj<Boolean> checkValidCard(CreditCard c) {
+    private DResponseObj<Boolean> checkValidCard(String cardNumber,String exp,String pin) {
 
         //check card number
-        DResponseObj<String> getCardNumber = c.getCardNumber();
-        if (getCardNumber.errorOccurred()) return new DResponseObj<>(getCardNumber.getErrorMsg());
-        DResponseObj<Boolean> cardNumberValid = Validator.isValidCreditCard(getCardNumber.getValue());
+        DResponseObj<Boolean> cardNumberValid = Validator.isValidCreditCard(cardNumber);
         if (cardNumberValid.errorOccurred()) return new DResponseObj<>(cardNumberValid.getErrorMsg());
         if (!cardNumberValid.getValue()){
             logger.warn("this CreditCard is invalid - card Number");
@@ -503,9 +501,7 @@ public class Market {
         }
 
         //check card exp
-        DResponseObj<String> getCardExp = c.getExp();
-        if (getCardExp.errorOccurred()) return new DResponseObj<>(getCardExp.getErrorMsg());
-        DResponseObj<Boolean> cardExpValid = Validator.isValidCreditDate(getCardExp.getValue());
+        DResponseObj<Boolean> cardExpValid = Validator.isValidCreditDate(exp);
         if (cardExpValid.errorOccurred()) return new DResponseObj<>(cardExpValid.getErrorMsg());
         if (!cardExpValid.getValue()){
             logger.warn("this CreditCard is invalid - card Exp");
@@ -513,9 +509,7 @@ public class Market {
         }
 
         //check card pin
-        DResponseObj<String> getCardPin = c.getPin();
-        if (getCardPin.errorOccurred()) return new DResponseObj<>(getCardPin.getErrorMsg());
-        DResponseObj<Boolean> cardPinValid = Validator.isValidPin(getCardPin.getValue());
+        DResponseObj<Boolean> cardPinValid = Validator.isValidPin(pin);
         if (cardPinValid.errorOccurred()) return new DResponseObj<>(cardPinValid.getErrorMsg());
         if (!cardPinValid.getValue()){
             logger.warn("this CreditCard is invalid - pin Exp");

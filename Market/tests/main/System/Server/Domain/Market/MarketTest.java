@@ -36,10 +36,10 @@ class MarketTest {
         logger.info("the test finished  to run right now");
     }
 
+    @Test
     @DisplayName("getInfoProductInStore  -  successful")
     @ParameterizedTest
     @ValueSource(ints = {1,3,5,7,9})
-    @Test
     void getStoreInfo(int i) {
         assertFalse(market.getInfoProductInStore(1,i).errorOccurred());
     }
@@ -152,8 +152,7 @@ class MarketTest {
     @DisplayName("order ")
     @Test
     void order() {
-        market.order(UUID.randomUUID(), "", "",5,new CreditCard("123","123","123"));
-        assertFalse(market.order(UUID.randomUUID(), "", "",5,new CreditCard("1234567891234567","123","123")).errorOccurred());
+        assertFalse(market.order(UUID.randomUUID(), "", "",5,"123","123","123").errorOccurred());
     }
 
 
