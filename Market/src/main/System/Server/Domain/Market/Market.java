@@ -232,7 +232,7 @@ public class Market {
         DResponseObj<Store> s = getStore(StoreId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.getValue().isProductExistInStock(ProductId, quantity);
-
+        //TODO: add the product to the user's shopping bag
     }
 
 

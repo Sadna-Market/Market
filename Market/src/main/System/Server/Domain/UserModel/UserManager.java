@@ -249,8 +249,8 @@ public class UserManager {
         if(GuestVisitors.containsKey(userId)){
             return new DResponseObj<ShoppingCart>( GuestVisitors.get(userId).GetSShoppingCart().value);
         }
-        else if(members.containsKey(userId)){
-            return new DResponseObj<ShoppingCart>( members.get(userId).GetSShoppingCart().value);
+        else if(LoginUsers.containsKey(userId)){
+            return new DResponseObj<ShoppingCart>( LoginUsers.get(userId).GetSShoppingCart().value);
         }
         DResponseObj<ShoppingCart> a = new DResponseObj<>();
         a.errorMsg = ErrorCode.NOTONLINE;

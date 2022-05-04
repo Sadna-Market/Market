@@ -1,11 +1,14 @@
 package main.Service;
 
 import main.ErrorCode;
+import main.ExternalService.AbsExternalService;
 import main.ExternalService.ExternalService;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
 import main.System.Server.Domain.Market.Market;
 import main.System.Server.Domain.Response.DResponseObj;
+import main.System.Server.Domain.StoreModel.Inventory;
+import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.UserModel.User;
 import main.System.Server.Domain.UserModel.UserManager;
 
@@ -34,6 +37,7 @@ public class TestableFacade extends Facade {
          * */
         this.userManager = new UserManager();
         this.market = new Market(this.userManager);
+        this.market.init();
     }
 
     /**
@@ -42,7 +46,7 @@ public class TestableFacade extends Facade {
      * @return true if there is, else false
      */
     public SLResponsOBJ<Boolean> hasSystemManager() {
-        return new SLResponsOBJ<>( userManager.ishasSystemManager().value);
+        return new SLResponsOBJ<>(userManager.ishasSystemManager().value);
     }
 
     /**
@@ -52,7 +56,7 @@ public class TestableFacade extends Facade {
      */
     public SLResponsOBJ<Boolean> hasPaymentService() {
         DResponseObj<Boolean> res = PaymentService.getInstance().isConnect();
-        return new SLResponsOBJ<>(res.value);
+        return new SLResponsOBJ<>(res);
     }
 
     /**
@@ -60,11 +64,10 @@ public class TestableFacade extends Facade {
      *
      * @return true if there is, else false
      */
-    public SLResponsOBJ<Boolean>  hasSupplierService() {
-            DResponseObj<Boolean> res = SupplyService.getInstance().isConnect();
-            return new SLResponsOBJ<>(res.value);
-        }
-
+    public SLResponsOBJ<Boolean> hasSupplierService() {
+        DResponseObj<Boolean> res = SupplyService.getInstance().isConnect();
+        return new SLResponsOBJ<>(res);
+    }
 
 
     /**
@@ -73,7 +76,8 @@ public class TestableFacade extends Facade {
      * @param service the service to disconnect
      */
     public void disconnectExternalService(String service) {
-        ExternalService.getService(service).value.disConnect();
+        DResponseObj<AbsExternalService> res = ExternalService.getService(service);
+        res.value.disConnect();
     }
 
     /**
@@ -83,10 +87,10 @@ public class TestableFacade extends Facade {
      * @return true if the system has connection else false
      */
     public SLResponsOBJ<Boolean> serviceIsAlive(String service) {
-        return new SLResponsOBJ<>( ExternalService.getService(service).value.isConnect().value);
+        return new SLResponsOBJ<>(ExternalService.getService(service).value.isConnect().value);
     }
 
-    public SLResponsOBJ<Integer> supply(ServiceUser user,List<ServiceItem> items) {
+    public SLResponsOBJ<Integer> supply(ServiceUser user, List<ServiceItem> items) {
         /**
          * @requirement @requirement II. 3
          *
@@ -100,17 +104,17 @@ public class TestableFacade extends Facade {
          * @documentation: not for the user!
 
          * */
-        ConcurrentHashMap<Integer,Integer> a= new ConcurrentHashMap<>();
-        for(ServiceItem i : items){
-            a.put(i.itemID,i.quantity);
+        ConcurrentHashMap<Integer, Integer> a = new ConcurrentHashMap<>();
+        for (ServiceItem i : items) {
+            a.put(i.itemID, i.quantity);
         }
         User u = user.getUser();
-        DResponseObj<Integer> sup = SupplyService.getInstance().supply(u,user.city,user.Street,user.apartment,a);
-        return sup.errorOccurred() ? new SLResponsOBJ<>(ErrorCode.EXTERNAL_SERVICE_ERROR) : new SLResponsOBJ<>(sup.value);
+        DResponseObj<Integer> sup = SupplyService.getInstance().supply(u, user.city, user.Street, user.apartment, a);
+        return sup.errorOccurred() ? new SLResponsOBJ<>(-1,ErrorCode.EXTERNAL_SERVICE_ERROR) : new SLResponsOBJ<>(sup);
     }
 
 
-    public SLResponsOBJ<String> payment(ServiceCreditCard C,double amount) {
+    public SLResponsOBJ<String> payment(ServiceCreditCard C, double amount) {
         /**
          * @requirement II. 4
          *
@@ -126,9 +130,9 @@ public class TestableFacade extends Facade {
 
          * */
 
-
-        DResponseObj<Integer> res = PaymentService.getInstance().pay(C.CreditCard,C.CreditDate,C.pin,amount);
-        return res.errorOccurred() ? new SLResponsOBJ<>(res.errorMsg) : new SLResponsOBJ<>(res.value.toString(),-1);
+        if (C == null || amount <= 0 || C.CreditCard.length() != 16 || C.CreditDate.length() != 4 || C.pin.length() != 3) return new SLResponsOBJ<>("error", -2);
+        DResponseObj<Integer> res = PaymentService.getInstance().pay(C.CreditCard, C.CreditDate, C.pin, amount);
+        return res.errorOccurred() ? new SLResponsOBJ<>(null,res.errorMsg) : new SLResponsOBJ<>(res.value.toString(), -1);
     }
 
     public SLResponsOBJ<Boolean> connectService(String serviceName) {
@@ -146,7 +150,8 @@ public class TestableFacade extends Facade {
          * @documentation: not for the user!
 
          * */
-        return new SLResponsOBJ(ExternalService.newService(serviceName).value);
+        DResponseObj<AbsExternalService> res = ExternalService.newService(serviceName);
+        return new SLResponsOBJ<>(res.value != null, res.errorMsg);
     }
 
     public SLResponsOBJ<Boolean> disconnectService(String serviceName) {
@@ -164,8 +169,9 @@ public class TestableFacade extends Facade {
          * @documentation: not for the user!
 
          * */
-
-        return new SLResponsOBJ(ExternalService.getService(serviceName).value.disConnect().value);
+        DResponseObj<AbsExternalService> res = ExternalService.getService(serviceName);
+        DResponseObj<Boolean> r = res.value.disConnect();
+        return new SLResponsOBJ<>(r.value, r.errorMsg);
     }
     /**
      * contacts the Payment service to pay with creditCard amount of dollars
@@ -176,15 +182,14 @@ public class TestableFacade extends Facade {
      */
 
 
-
     /**
      * chechs if exists a cart after init system
      *
      * @return true is exists else false
      */
     public SLResponsOBJ<Boolean> cartExists(String uuid) {
-        DResponseObj<Boolean> res =  userManager.isCartExist(UUID.fromString(uuid));
-        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
+        DResponseObj<Boolean> res = userManager.isCartExist(UUID.fromString(uuid));
+        return new SLResponsOBJ<>(res);
     }
 
     /**
@@ -194,17 +199,18 @@ public class TestableFacade extends Facade {
      */
     public SLResponsOBJ<Boolean> guestOnline(String uuid) {
         DResponseObj<Boolean> res = userManager.isOnline(UUID.fromString(uuid));
-        return res.errorOccurred()? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
+        return new SLResponsOBJ<>(res);
     }
 
     /**
      * check if the user is logged in to the system
+     *
      * @param uuid the user to check
      * @return true if success else false
      */
-    public SLResponsOBJ<Boolean> isLoggedIn(String uuid){
+    public SLResponsOBJ<Boolean> isLoggedIn(String uuid) {
         DResponseObj<Boolean> res = userManager.isLogged(UUID.fromString(uuid));
-        return res.errorOccurred() ? new SLResponsOBJ<>(res.errorMsg) : new SLResponsOBJ<>(res.value,-1);
+        return new SLResponsOBJ<>(res);
     }
 
     /**
@@ -215,19 +221,25 @@ public class TestableFacade extends Facade {
      * @return true if contains item, else false
      */
     public SLResponsOBJ<Boolean> hasItem(int storeID, int itemID) {
-        return new  SLResponsOBJ(market.getStore(storeID).value.getInventory().value.haseItem(itemID).value);
+        DResponseObj<Store> store = market.getStore(storeID);
+        if (store.errorOccurred()) return new SLResponsOBJ<>(false, store.errorMsg);
+        DResponseObj<Inventory> inv = store.value.getInventory();
+        if (inv.errorOccurred()) return new SLResponsOBJ<>(false, inv.errorMsg);
+        DResponseObj<Boolean> has = inv.value.haseItem(itemID);
+        return new SLResponsOBJ<>(has);
     }
 
     /**
      * chechs if user is a contributor of store
+     * <p>
+     * the store to check on
+     * user    the user to check if is a contributor
      *
-     *   the store to check on
-     *  user    the user to check if is a contributor
      * @return true is user is a contributor else false
      */
     public SLResponsOBJ<Boolean> isFounder(int StoreID, String email) {
-        DResponseObj<Boolean> res = userManager.isFounder(market.getStore(StoreID).value,email);
-        return res.errorOccurred() ? new SLResponsOBJ<>(false, res.errorMsg) : new SLResponsOBJ<>(true,-1);
+        DResponseObj<Boolean> res = userManager.isFounder(market.getStore(StoreID).value, email);
+        return new SLResponsOBJ<>(res);
     }
 
     /**
@@ -237,7 +249,8 @@ public class TestableFacade extends Facade {
      * @return true is store is closed, else false
      */
     public SLResponsOBJ<Boolean> storeIsClosed(int storeID) {
-        return new SLResponsOBJ(  market.isStoreClosed(storeID).value);
+        DResponseObj<Boolean> res = market.isStoreClosed(storeID);
+        return new SLResponsOBJ<>(res);
     }
 
     /**
@@ -248,12 +261,12 @@ public class TestableFacade extends Facade {
      */
     public SLResponsOBJ<Boolean> isMember(String email) {
         DResponseObj<Boolean> res = userManager.isMember(email);
-        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(true,-1);
+        return new SLResponsOBJ<>(res);
     }
 
-   public SLResponsOBJ<Integer> getProductQuantity(int storeID, int productID){
+    public SLResponsOBJ<Integer> getProductQuantity(int storeID, int productID) {
         DResponseObj<Integer> res = market.getStore(storeID).getValue().getProductQuantity(productID);
-        return res.errorOccurred() ? new SLResponsOBJ<>(-2) : new SLResponsOBJ<>(res.value,-1);
-   }
+        return new SLResponsOBJ<>(res);
+    }
 
 }

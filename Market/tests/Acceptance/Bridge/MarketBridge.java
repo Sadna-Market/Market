@@ -382,4 +382,11 @@ public interface MarketBridge {
      * @return return uuid
      */
     String guestVisit();
+
+    /**
+     * connects the specified service
+     * @param payment
+     * @return
+     */
+    boolean connectExternalService(String payment);
 }

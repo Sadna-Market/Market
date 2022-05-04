@@ -54,7 +54,7 @@ public class AbsExternalService {
             }
         }
         finally {
-            stampedLock.unlockRead(stamp);
+            stampedLock.unlockWrite(stamp);
             logger.debug("release lock");
         }
     }
@@ -73,7 +73,7 @@ public class AbsExternalService {
             }
         }
         finally {
-            stampedLock.unlockRead(stamp);
+            stampedLock.unlockWrite(stamp);
             logger.debug("release lock");
         }
     }

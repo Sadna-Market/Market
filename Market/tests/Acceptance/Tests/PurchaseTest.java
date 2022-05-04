@@ -15,8 +15,8 @@ public class PurchaseTest extends MarketTests {
     @AfterEach
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
+        roleBackAfterReset();
         market.exitSystem(uuid);
-        initStoreAndItem(); // restore state as before
     }
 
     /**
@@ -29,9 +29,9 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         ItemDetail item2 = new ItemDetail("screenFULLHD", 1, 10, List.of("TV"), "screen");
-        item2.itemID = SCREEN_FULL_HD;
+        item2.itemID = SCREEN_FULL_HD_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
         assertTrue(market.addToCart(uuid, existing_storeID, item2));
 
@@ -65,9 +65,9 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         ItemDetail item2 = new ItemDetail("screenFULLHD", 1, 10, List.of("TV"), "screen");
-        item2.itemID = SCREEN_FULL_HD;
+        item2.itemID = SCREEN_FULL_HD_ID;
         CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         ATResponseObj<String> memberID = market.login(uuid,member);
@@ -104,9 +104,9 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         ItemDetail item2 = new ItemDetail("screenFULLHD", 1, 10, List.of("TV"), "screen");
-        item2.itemID = SCREEN_FULL_HD;
+        item2.itemID = SCREEN_FULL_HD_ID;
         CreditCard creditCard = new CreditCard("XXX","1113","111");
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
@@ -148,7 +148,7 @@ public class PurchaseTest extends MarketTests {
         //3. Member login, system will restore his cart. Then member try to purchase (expected fail - item not available).
 
         ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         CreditCard creditCard = new CreditCard("1111222233334444","1125","111");
         User registeredUser = generateUser();
         assertTrue(market.register(uuid,registeredUser.username,registeredUser.password));
@@ -217,9 +217,9 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         ItemDetail item2 = new ItemDetail("screenFULLHD", 1, 10, List.of("TV"), "screen");
-        item2.itemID = SCREEN_FULL_HD;
+        item2.itemID = SCREEN_FULL_HD_ID;
 
         assertTrue(market.addToCart(uuid, existing_storeID, null));
         assertTrue(market.addToCart(uuid, existing_storeID, null));

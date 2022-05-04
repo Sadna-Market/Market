@@ -17,8 +17,8 @@ public class StoreManagerTests extends MarketTests {
     @AfterEach
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
+        roleBackAfterReset();
         market.exitSystem(uuid);
-        initStoreAndItem(); // restore state as before
     }
 
 
