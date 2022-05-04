@@ -117,7 +117,7 @@ public interface MarketBridge {
      * @param member the member to change the password
      * @return true if success else false
      */
-    boolean changePassword(User member);
+    public boolean changePassword(String uuid , User member , String newPassword) ;
 
     /**
      * get information of a store and its products

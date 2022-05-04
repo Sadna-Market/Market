@@ -143,17 +143,19 @@ public class GuestGeneralTests extends MarketTests{
     void changePass_Success(){
         String oldpass = member.password;
         String newPass = PasswordGenerator.generateStrongPassword();
-        assertTrue(market.changePassword(member));
+        assertTrue(market.changePassword(uuid,member,newPass));
         assertEquals(member.password,newPass);
-        assertTrue(market.changePassword(member));
+        member.password=newPass;
+        assertTrue(market.changePassword(uuid,member,oldpass));
         assertEquals(member.password,oldpass);
+        member.password=oldpass;
     }
     @Test
     @DisplayName("req: #2.1.4.2 - fail test [user is not a member]")
     void changePass_Fail1(){
         User user = generateUser();
         String newPass = PasswordGenerator.generateStrongPassword();
-        assertFalse(market.changePassword(user));
+        assertFalse(market.changePassword(uuid,user,newPass));
     }
 
     @Test
@@ -161,7 +163,7 @@ public class GuestGeneralTests extends MarketTests{
     void changePass_Fail2(){
         String oldpass = member.password;
         String newPass = "123";
-        assertFalse(market.changePassword(member));
+        assertFalse(market.changePassword(uuid,member,newPass));
         assertNotEquals(member.password,newPass);
         assertEquals(member.password,oldpass);
     }
@@ -169,7 +171,7 @@ public class GuestGeneralTests extends MarketTests{
     @DisplayName("req: #2.1.4.2 - fail test [invalid inputs]")
     void changePass_Fail3(){
         String oldpass = member.password;
-        assertFalse(market.changePassword(member));
+        assertFalse(market.changePassword(uuid,member,null));
         assertNotEquals(member.password,null);
         assertEquals(member.password,oldpass);
     }

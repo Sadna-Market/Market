@@ -167,9 +167,6 @@ public class ProxyMarket implements MarketBridge{
      * @param member  the member to change the password
      * @return true if success else false
      */
-    public boolean changePassword(User member) {
-        return false;
-    }
 
     /**
      * get information of a store and its products
@@ -193,16 +190,19 @@ public class ProxyMarket implements MarketBridge{
         return realMarket.searchItems(itemName,category,keyWords);
     }
 
-    /**
-     * given a list of items, filter them by rank,price range, store rank, category.
-     *
-     * @param items       list of items to filter
-     * @param productRank filter param
-     * @param priceRange  filter param
-     * @param category    filter param
-     * @param storeRank   filter param
-     * @return filtered list
-     */
+    public boolean changePassword(String uuid , User member , String newPassword) {
+        return realMarket.changePassword(uuid,member,newPassword);
+    }
+        /**
+         * given a list of items, filter them by rank,price range, store rank, category.
+         *
+         * @param items       list of items to filter
+         * @param productRank filter param
+         * @param priceRange  filter param
+         * @param category    filter param
+         * @param storeRank   filter param
+         * @return filtered list
+         */
     public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank) {
         return null;
     }

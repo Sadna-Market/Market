@@ -548,8 +548,24 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<BitSet> changePassword(String email) {
-        return null;
+    public SLResponsOBJ<Boolean> changePassword(String uuid, String email , String password ,String newPassword) {
+        if(uuid==null){
+            return new SLResponsOBJ<>(ErrorCode.NOTVALIDINPUT);
+        }
+        if(email==null||email.equals("")){
+            return new SLResponsOBJ<>(ErrorCode.NOT_VALID_EMILE);
+        }
+        if(password==null || password.equals("")){
+            return new SLResponsOBJ<>(ErrorCode.NOT_VALID_PASSWORD);
+        }
+        if(newPassword == null || newPassword.equals("")){
+            return new SLResponsOBJ<>(ErrorCode.NOT_VALID_PASSWORD);
+        }
+        DResponseObj<Boolean> res = userManager.changePassword(UUID.fromString(uuid),email,password,newPassword);
+        if(res.errorOccurred()){
+            return new SLResponsOBJ<>(res.errorMsg);
+        }
+        return new SLResponsOBJ<Boolean>(res.value);
     }
 
 

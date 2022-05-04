@@ -184,9 +184,9 @@ public class RealMarket implements MarketBridge {
      * @param member the member to change the password
      * @return true if success else false
      */
-    public boolean changePassword(User member) {
-        //TODO: add for tests in iMarket
-        return false;
+    public boolean changePassword(String uuid , User member , String newPassword) {
+        SLResponsOBJ<Boolean> res = market.changePassword(uuid,member.username, member.password,newPassword);
+        return res.value;
     }
 
     /**

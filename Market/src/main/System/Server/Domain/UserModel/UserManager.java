@@ -123,13 +123,21 @@ public class UserManager {
 
                 DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
                 a.errorMsg = ErrorCode.NOTMEMBER;
-                return a;            }
-            if (!Validator.isValidEmailAddress(email) || !Validator.isValidPassword(Password) || !Validator.isValidPhoneNumber(phoneNumber)){
-
-                DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-                a.errorMsg = ErrorCode.NOTVALIDINPUT;
                 return a;
             }
+            DResponseObj <Boolean> res= Validator.isValidPassword(Password);
+            if(res.value==false){
+                return new DResponseObj<>(ErrorCode.NOT_VALID_PASSWORD);
+            }
+            res = Validator.isValidEmailAddress(email);
+            if(res.value==false){
+                return new DResponseObj<>(ErrorCode.NOT_VALID_EMILE);
+            }
+            res=Validator.isValidPhoneNumber(phoneNumber);
+            if(res.value==false){
+                return new DResponseObj<>(ErrorCode.NOT_VALID_PHONE);
+            }
+
             User user = new User(email, Password,phoneNumber);
             members.put(email, user);
             return new DResponseObj<>(true);
@@ -277,6 +285,32 @@ public class UserManager {
     public DResponseObj< ConcurrentHashMap<String, User>> getMembers() {
         logger.debug("UserManager getMembers");
         return new DResponseObj<>( members);
+    }
+
+    public DResponseObj<Boolean> changePassword(UUID uuid, String email , String password,String newPassword)
+    {
+        if(!isOnline(uuid).value)
+        {
+            return new DResponseObj<>(ErrorCode.NOTONLINE);
+        }
+        if(!members.containsKey(email))
+        {
+            return new DResponseObj<>(ErrorCode.NOTMEMBER);
+        }
+        DResponseObj<Boolean> res = Validator.isValidPassword(newPassword);
+        if(res.value==false){
+            return new DResponseObj<>(ErrorCode.NOT_VALID_PASSWORD);
+        }
+        User u = members.get(uuid);
+        res = u.isPasswordEquals(password);
+        if(res.value==false){
+            return new DResponseObj<>(ErrorCode.NOT_VALID_PASSWORD);
+        }
+        res =u.changePassword(newPassword);
+        if(res.errorOccurred()){
+            return res;
+        }
+        return new DResponseObj<>(true);
     }
 
 

@@ -111,6 +111,10 @@ public class User  {
         }
     }
 
+    public DResponseObj<Boolean> changePassword(String password){
+        this.Password=password;
+        return new DResponseObj<>(true);
+    }
 
     public DResponseObj< Boolean > isPasswordEquals(String password) {
         return new DResponseObj<>( this.Password.equals(password));
