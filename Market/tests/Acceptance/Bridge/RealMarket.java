@@ -105,8 +105,8 @@ public class RealMarket implements MarketBridge {
             lst.add(new ServiceItem(i.quantity, i.price, i.itemID));
         });
         ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment);
-        SLResponsOBJ<String> res = market.supply(su, lst);
-        return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value, null);
+        SLResponsOBJ<Integer> res = market.supply(su, lst);
+        return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(String.valueOf(res.value), null);
     }
 
     /**

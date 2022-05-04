@@ -51,7 +51,8 @@ public class TestableFacade extends Facade {
      * @return true if there is, else false
      */
     public SLResponsOBJ<Boolean> hasPaymentService() {
-        return new SLResponsOBJ (PaymentService.getInstance().isConnect());
+        DResponseObj<Boolean> res = PaymentService.getInstance().isConnect();
+        return new SLResponsOBJ<>(res.value);
     }
 
     /**
@@ -60,7 +61,8 @@ public class TestableFacade extends Facade {
      * @return true if there is, else false
      */
     public SLResponsOBJ<Boolean>  hasSupplierService() {
-            return new SLResponsOBJ (SupplyService.getInstance().isConnect());
+            DResponseObj<Boolean> res = SupplyService.getInstance().isConnect();
+            return new SLResponsOBJ<>(res.value);
         }
 
 
@@ -124,7 +126,8 @@ public class TestableFacade extends Facade {
 
          * */
 
-        DResponseObj<Integer> res = PaymentService.getInstance().pay(C.getCreditCard(),amount);
+
+        DResponseObj<Integer> res = PaymentService.getInstance().pay(C.CreditCard,C.CreditDate,C.pin,amount);
         return res.errorOccurred() ? new SLResponsOBJ<>(res.errorMsg) : new SLResponsOBJ<>(res.value.toString(),-1);
     }
 
