@@ -136,7 +136,7 @@ public class GuestBuyTests extends MarketTests{
     @DisplayName("req: #2.2.3 - success1 test")
     void addProductToShoppingBag_Success1() {
         ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
         ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
@@ -153,7 +153,7 @@ public class GuestBuyTests extends MarketTests{
     @DisplayName("req: #2.2.3 - success2 test")
     void addProductToShoppingBag_Success2() {
         ItemDetail item3 = new ItemDetail("screenFULLHD",  1, 10, List.of("TV"), "screen");
-        item3.itemID = SCREEN_FULL_HD;
+        item3.itemID = SCREEN_FULL_HD_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item3));
         assertTrue(market.addToCart(uuid, existing_storeID, item3));
         ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
@@ -172,7 +172,7 @@ public class GuestBuyTests extends MarketTests{
     @DisplayName("req: #2.2.3 - fail test [want more then there is in stock]")
     void addProductToShoppingBag_Fail1() {
         ItemDetail item1 = new ItemDetail("iphone5",  2, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         assertFalse(market.addToCart(uuid, existing_storeID, item1));
         ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
@@ -204,7 +204,7 @@ public class GuestBuyTests extends MarketTests{
     void getCartDetails_Success() {
         assertTrue(market.cartExists(uuid));
         ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
 
         ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
@@ -233,7 +233,7 @@ public class GuestBuyTests extends MarketTests{
     void removeProductFromCart_Success() {
         assertTrue(market.cartExists(uuid));
         ItemDetail item1 = new ItemDetail("iphone5",  1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
         ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
@@ -278,7 +278,7 @@ public class GuestBuyTests extends MarketTests{
     void updateQuantityInCart_Success() {
         assertTrue(market.cartExists(uuid));
         ItemDetail item3 = new ItemDetail("screenFULLHD",  1, 10, List.of("TV"), "screen");
-        item3.itemID = SCREEN_FULL_HD;
+        item3.itemID = SCREEN_FULL_HD_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item3));
 
         assertTrue(market.updateProductQuantity(uuid, item3, 2, existing_storeID));
@@ -297,11 +297,11 @@ public class GuestBuyTests extends MarketTests{
     void updateQuantityInCart_Fail1() {
         assertTrue(market.cartExists(uuid));
         ItemDetail item3 = new ItemDetail("screenFULLHD",  1, 10, List.of("TV"), "screen");
-        item3.itemID = SCREEN_FULL_HD;
+        item3.itemID = SCREEN_FULL_HD_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item3));
 
         ItemDetail item2 = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
-        item2.itemID = IPHONE_6;
+        item2.itemID = IPHONE_6_ID;
         assertFalse(market.updateProductQuantity(uuid, item2, 2, existing_storeID));
 
         ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
@@ -319,7 +319,7 @@ public class GuestBuyTests extends MarketTests{
     void updateQuantityInCart_Fail2() {
         assertTrue(market.cartExists(uuid));
         ItemDetail item2 = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
-        item2.itemID=IPHONE_6;
+        item2.itemID= IPHONE_6_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item2));
 
         assertFalse(market.updateProductQuantity(uuid, item2, 2, existing_storeID));
@@ -339,7 +339,7 @@ public class GuestBuyTests extends MarketTests{
     void updateQuantityInCart_Fail3() {
         assertTrue(market.cartExists(uuid));
         ItemDetail item2 = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
-        item2.itemID = IPHONE_6;
+        item2.itemID = IPHONE_6_ID;
         assertTrue(market.addToCart(uuid, existing_storeID, item2));
 
         assertFalse(market.updateProductQuantity(uuid, item2, -1, existing_storeID));

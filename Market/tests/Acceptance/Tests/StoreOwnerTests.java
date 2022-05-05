@@ -16,8 +16,8 @@ public class StoreOwnerTests extends MarketTests{
     @AfterEach
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
+        roleBackAfterReset();
         market.exitSystem(uuid);
-        initStoreAndItem(); // restore state as before
     }
 
     /**
@@ -27,7 +27,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.1 - success test")
     void addProduct_Success() {
         ItemDetail item = new ItemDetail("galaxyS10", 1, 10, List.of("phone"), "phone");
-        item.itemID = GALAXY;
+        item.itemID = GALAXY_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -44,7 +44,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.1 - fail test [storeID doesnt exist]")
     void addProduct_Fail1() {
         ItemDetail item = new ItemDetail("galaxyS10", 1, 10, List.of("phone"), "phone");
-        item.itemID = GALAXY;
+        item.itemID = GALAXY_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -59,7 +59,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.1 - fail test [product exists already]")
     void addProduct_Fail2() {
         ItemDetail item = new ItemDetail("iphone6",  1, 60, List.of("phone"), "phone");
-        item.itemID = IPHONE_6;
+        item.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -84,7 +84,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.1 - fail test [invalid input- price]]")
     void addProduct_Fail4() {
         ItemDetail item = new ItemDetail("galaxyS10",  1, -10, List.of("phone"), "phone");
-        item.itemID = GALAXY;
+        item.itemID = GALAXY_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -100,7 +100,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.2 - success test")
     void removeProduct_Success() {
         ItemDetail item = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
-        item.itemID = IPHONE_6;
+        item.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -115,7 +115,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.2 - fail test [storeID doesnt exist]")
     void removeProduct_Fail1() {
         ItemDetail item = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
-        item.itemID = IPHONE_6;
+        item.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -158,9 +158,9 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.3 - success test")
     void updateProductInStore_Success() {
         ItemDetail existingProduct = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
-        existingProduct.itemID = IPHONE_6;
+        existingProduct.itemID = IPHONE_6_ID;
         ItemDetail updatedProduct = new ItemDetail("iphone6",  3, 150, List.of("phone"), "phone");
-        updatedProduct.itemID = IPHONE_6;
+        updatedProduct.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -178,9 +178,9 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.3 - fail test [storeID doesnt exist]")
     void updateProductInStore_Fail1() {
         ItemDetail existingProduct = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
-        existingProduct.itemID = IPHONE_6;
+        existingProduct.itemID = IPHONE_6_ID;
         ItemDetail updatedProduct = new ItemDetail("iphone6",  3, 150, List.of("phone"), "phone");
-        updatedProduct.itemID = IPHONE_6;
+        updatedProduct.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -212,9 +212,9 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.3 - fail test [invalid price to update]")
     void updateProductInStore_Fail3() {
         ItemDetail existingProduct = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
-        existingProduct.itemID = IPHONE_6;
+        existingProduct.itemID = IPHONE_6_ID;
         ItemDetail updatedProduct = new ItemDetail("iphone6",  3, -150, List.of("phone"), "phone");
-        updatedProduct.itemID = IPHONE_6;
+        updatedProduct.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -232,7 +232,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.1.3 - fail test [invalid input]]")
     void updateProductInStore_Fail4() {
         ItemDetail existingProduct = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
-        existingProduct.itemID = IPHONE_6;
+        existingProduct.itemID = IPHONE_6_ID;
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -566,7 +566,7 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(market.storeIsClosed(existing_storeID));
         ItemDetail item = new ItemDetail("iphoneZX", 1, 10, List.of("phone"), "phone");
         item.itemID = 1122;
-        assertFalse(market.addItemToStore(uuid, existing_storeID,item ));
+        assertFalse(market.addItemToStore(uuid, existing_storeID,item));
     }
 
     @Test

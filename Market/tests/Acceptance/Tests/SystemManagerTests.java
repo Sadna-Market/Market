@@ -15,7 +15,7 @@ public class SystemManagerTests extends MarketTests{
     public void setUp() {
         uuid = market.guestVisit();
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5;
+        item1.itemID = IPHONE_5_ID;
         CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         buyer = generateUser();
@@ -30,7 +30,7 @@ public class SystemManagerTests extends MarketTests{
     public void tearDown() {
         market.resetMemory(); // discard all resources(cart,members,history purchases...)
         market.exitSystem(uuid);
-        initStoreAndItem(); // restore state as before
+        //initStoreAndItem(); // restore state as before
     }
 
     /**
@@ -45,7 +45,6 @@ public class SystemManagerTests extends MarketTests{
         ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
         assertFalse(res.errorOccurred());
         assertNotEquals("",res.value);
-
         ATResponseObj<List<String>> res2 = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(res2.errorOccurred());
         assertFalse(res2.value.isEmpty());

@@ -4,6 +4,8 @@ import Acceptance.Obj.PasswordGenerator;
 import Acceptance.Obj.User;
 import org.junit.jupiter.api.*;
 
+import java.util.function.BooleanSupplier;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -12,12 +14,21 @@ public class GuestGeneralTests extends MarketTests{
     String uuid;
     @BeforeEach
     public void setUp() {
-       uuid = market.guestVisit();
+        System.out.println(uuid +" ========================setUp====================");
+
+        uuid = market.guestVisit();
+        System.out.println(uuid +" ======================setUp======================");
+
     }
 
     @AfterEach
     public void tearDown() {
+        System.out.println(uuid +" =================tearDown===========================");
+
         market.exitSystem(uuid);
+        System.out.println(uuid +" =================tearDown===========================");
+
+
     }
 
     /**
@@ -26,6 +37,8 @@ public class GuestGeneralTests extends MarketTests{
     @Test
     @DisplayName("req: #2.1.1 - success test")
     void entrance_Success(){
+        System.out.println(uuid +" ============================================");
+
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
     }
@@ -50,6 +63,8 @@ public class GuestGeneralTests extends MarketTests{
     @Test
     @DisplayName("req: #2.1.3 - success test")
     void registration_Success(){
+        System.out.println(uuid +" ============================================");
+
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         User newUser = generateUser();
@@ -59,6 +74,8 @@ public class GuestGeneralTests extends MarketTests{
     @Test
     @DisplayName("req: #2.1.3 - fail test [invalid password]")
     void registration_Fail1(){
+        System.out.println(uuid +" ============================================");
+
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         User newUser = generateUser();
@@ -69,6 +86,9 @@ public class GuestGeneralTests extends MarketTests{
     @Test
     @DisplayName("req: #2.1.3 - fail test [user already exists]")
     void registration_Fail2(){
+        System.out.println(uuid +" ============================================");
+        System.out.println(uuid +" ============================================");
+
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         User newUser = generateUser();
@@ -141,13 +161,16 @@ public class GuestGeneralTests extends MarketTests{
     @Test
     @DisplayName("req: #2.1.4.2 - success test")
     void changePass_Success(){
+        System.out.println(uuid +" ====================changePass_Success========================");
+
         String oldpass = member.password;
         String newPass = PasswordGenerator.generateStrongPassword();
         assertTrue(market.changePassword(uuid,member,newPass));
-        assertEquals(member.password,newPass);
         member.password=newPass;
         assertTrue(market.changePassword(uuid,member,oldpass));
-        assertEquals(member.password,oldpass);
+        member.password=newPass;
+        assertTrue( market.login(uuid,member).errorOccurred());
+        member.password=oldpass;
         member.password=oldpass;
     }
     @Test
