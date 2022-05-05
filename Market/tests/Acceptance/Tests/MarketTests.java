@@ -10,7 +10,7 @@ import Acceptance.Obj.User;
 import java.util.List;
 
 public class MarketTests {
-    protected final MarketBridge market;
+    protected MarketBridge market;
     private int counter;
     protected User sysManager;
     protected User member;
@@ -26,16 +26,6 @@ public class MarketTests {
         counter = 1;
         sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110");
         member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111");
-        System.out.println("---------MarketTests-----------");
-        initMarketWithSysManagerAndItems();
-        System.out.println("---------MarketTests-----------");
-
-        registerMemberData();
-        System.out.println("---------MarketTests-----------");
-
-        populateItemsAndStore();
-        System.out.println("---------MarketTests-----------");
-
     }
     public User generateUser() {
         int suffix = counter++;
@@ -63,31 +53,19 @@ public class MarketTests {
         market.exitSystem(uuid);
     }
     protected void initMarketWithSysManagerAndItems(){
-        System.out.println("initMarketWithSysManagerAndItems");
-
         String uuid = market.initSystem(sysManager).value;
         //add items to system
-        System.out.println("initMarketWithSysManagerAndItems");
         uuid = market.login(uuid, sysManager).value;
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         ItemDetail item2 = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
         ItemDetail item3 = new ItemDetail("screenFULLHD", 3, 10, List.of("TV"), "screen");
         ItemDetail item4  = new ItemDetail("galaxyS10", 1, 10, List.of("phone"), "phone");
-        System.out.println("initMarketWithSysManagerAndItems");
-        System.out.println("initMarketWithSysManagerAndItems");
-
         IPHONE_5_ID = market.addProductType(uuid, item1).value;
-        System.out.println("initMarketWithSysManagerAndItems");
-
         IPHONE_6_ID = market.addProductType(uuid, item2).value;
         SCREEN_FULL_HD_ID = market.addProductType(uuid, item3).value;
         GALAXY_ID = market.addProductType(uuid, item4).value;
-        System.out.println("initMarketWithSysManagerAndItems");
-
         uuid = market.logout(uuid).value;
         market.exitSystem(uuid);
-        System.out.println("initMarketWithSysManagerAndItems");
-
     }
 
     protected void registerMemberData(){

@@ -16,6 +16,8 @@ public class ErrorCode {
    public static int NOPERMISSION = 21;
    public static int MISTAKEPERMISSIONTYPE = 22;
    public static int ALLREADYHAVESYSTEMMANAGER = 23;
+   public static int NOT_MANAGER = 53;
+
 
    public static int PRODUCTNOTEXIST = 30;
    public static int PRODUCTALLREADYINSTORE = 31;

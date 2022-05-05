@@ -65,7 +65,21 @@ public class UserManager {
         User u = members.get(email);
         logger.debug("UserManager isOwner");
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return new DResponseObj<>( permissionManager.getGranteeUserType(u,store).equals(userTypes.owner));
+        DResponseObj<userTypes> res = permissionManager.getGranteeUserType(u,store);
+        return res.value.equals(userTypes.owner) ? new DResponseObj<>(true,-1) : new DResponseObj<>(false,ErrorCode.NOTOWNER);
+
+    }
+
+    public DResponseObj<Boolean> isManager(String email , Store store)
+    {
+        if(!members.containsKey(email)){
+            return new DResponseObj<>(ErrorCode.NOTMEMBER);
+        }
+        User u = members.get(email);
+        logger.debug("UserManager isManager");
+        PermissionManager permissionManager =PermissionManager.getInstance();
+        DResponseObj<userTypes> res = permissionManager.getGranteeUserType(u,store);
+        return res.value.equals(userTypes.manager) ? new DResponseObj<>(true,-1) : new DResponseObj<>(false,ErrorCode.NOT_MANAGER);
 
     }
 

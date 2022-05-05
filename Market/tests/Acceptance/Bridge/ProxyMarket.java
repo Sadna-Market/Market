@@ -204,7 +204,7 @@ public class ProxyMarket implements MarketBridge {
          * @return filtered list
          */
     public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank) {
-        return null;
+        return realMarket.filterSearchResults(items,productRank,priceRange,category,storeRank);
     }
 
     /**
@@ -383,7 +383,7 @@ public class ProxyMarket implements MarketBridge {
      * @return item will detail
      */
     public ATResponseObj<ItemDetail> getProduct(int storeID, int itemID) {
-        return new ATResponseObj<>("");
+        return realMarket.getProduct(storeID,itemID);
     }
 
     /**
@@ -394,7 +394,7 @@ public class ProxyMarket implements MarketBridge {
      * @return true if is owner, else false
      */
     public boolean isOwner(int storeID, User user) {
-        return false;
+        return realMarket.isOwner(storeID,user);
     }
 
     /**
@@ -417,7 +417,7 @@ public class ProxyMarket implements MarketBridge {
      * @return true if user is manager else false
      */
     public boolean isManager(int storeID, User user) {
-        return false;
+        return realMarket.isManager(storeID,user);
     }
 
     /**
