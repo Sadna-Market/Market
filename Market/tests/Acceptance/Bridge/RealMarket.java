@@ -187,7 +187,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean changePassword(String uuid , User member , String newPassword) {
         SLResponsOBJ<Boolean> res = market.changePassword(uuid,member.username, member.password,newPassword);
-        return !res.errorOccurred();
+        return res.value;
     }
 
     /**
@@ -452,8 +452,8 @@ public class RealMarket implements MarketBridge {
      * @return true if is owner, else false
      */
     public boolean isOwner(int storeID, User user) {
-        //TODO: add a function to testable facade
-        return false;
+        SLResponsOBJ<Boolean> res = market.isOwner(user.username,storeID);
+        return res.value;
     }
 
     /**
@@ -477,8 +477,8 @@ public class RealMarket implements MarketBridge {
      * @return true if user is manager else false
      */
     public boolean isManager(int storeID, User user) {
-        //TODO: add a function to testable facade
-        return false;
+        SLResponsOBJ<Boolean> res = market.isManager(user.username,storeID);
+        return res.value;
     }
 
     /**
@@ -528,7 +528,8 @@ public class RealMarket implements MarketBridge {
      * @return true is store is closed, else false
      */
     public boolean storeIsClosed(int storeID) {
-        return false;
+        SLResponsOBJ<Boolean> res = market.storeIsClosed(storeID);
+        return res.value;
     }
 
     /**

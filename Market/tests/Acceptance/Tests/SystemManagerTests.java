@@ -13,6 +13,9 @@ public class SystemManagerTests extends MarketTests{
     User buyer;
     @BeforeEach
     public void setUp() {
+        initMarketWithSysManagerAndItems();
+        registerMemberData();
+        populateItemsAndStore();
         uuid = market.guestVisit();
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5_ID;
@@ -28,9 +31,7 @@ public class SystemManagerTests extends MarketTests{
 
     @AfterEach
     public void tearDown() {
-        market.resetMemory(); // discard all resources(cart,members,history purchases...)
-        market.exitSystem(uuid);
-        //initStoreAndItem(); // restore state as before
+        market = null; //for garbage collector
     }
 
     /**

@@ -13,12 +13,15 @@ public class GuestBuyTests extends MarketTests{
     String uuid;
     @BeforeEach
     public void setUp() {
+        initMarketWithSysManagerAndItems();
+        registerMemberData();
+        populateItemsAndStore();
         uuid = market.guestVisit();
     }
 
     @AfterEach
     public void tearDown() {
-        market.exitSystem(uuid);
+        market = null; //for garbage collector
     }
 
 
