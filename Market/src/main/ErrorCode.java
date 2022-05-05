@@ -40,5 +40,8 @@ public class ErrorCode {
    public static int CARD_NUMBER_ILLEGAL = 61;
    public static int CARD_EXP_ILLEGAL = 62;
    public static int CARD_PIN_ILLEGAL = 63;
+   public static int NOT_VALID_PASSWORD = 100;
+   public static int NOT_VALID_EMILE = 101;
+   public static int NOT_VALID_PHONE = 102;
 
 }

@@ -45,7 +45,6 @@ public class SystemManagerTests extends MarketTests{
         ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
         assertFalse(res.errorOccurred());
         assertNotEquals("",res.value);
-
         ATResponseObj<List<String>> res2 = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(res2.errorOccurred());
         assertFalse(res2.value.isEmpty());

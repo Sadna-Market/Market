@@ -8,15 +8,19 @@ import main.System.Server.Domain.StoreModel.History;
 import main.System.Server.Domain.StoreModel.Store;
 import main.System.Server.Domain.Response.DResponseObj;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class User  {
     ShoppingCart shoppingCart;
     String Password;
     String email;
     String phoneNumber;
+    private List<History> histories = Collections.synchronizedList(new LinkedList<>());
 
 
 
@@ -52,6 +56,17 @@ public class User  {
         grantorPermission.add(p);
         return new DResponseObj<>(true);
     }
+
+    public DResponseObj<Boolean> addHistoriy(History history){
+        histories.add(history);
+        return new DResponseObj<>(true,-1);
+    }
+
+
+    public DResponseObj<List<History>> getAllHistories(){
+        return new DResponseObj<List<History>>(histories,-1);
+    }
+
 
     public DResponseObj<Boolean> removeAccessPermission(Permission p) {
         accessPermission.remove(p);
@@ -111,6 +126,10 @@ public class User  {
         }
     }
 
+    public DResponseObj<Boolean> changePassword(String password){
+        this.Password=password;
+        return new DResponseObj<>(true);
+    }
 
     public DResponseObj< Boolean > isPasswordEquals(String password) {
         return new DResponseObj<>( this.Password.equals(password));
@@ -121,6 +140,9 @@ public class User  {
     }
 
     public DResponseObj<Boolean> addHistoies(List<History> histories) {
-        return new DResponseObj<>(false,-1);
+        for(History h :histories){
+            this.histories.add(h);
+        }
+        return new DResponseObj<>(true,-1);
     }
 }
