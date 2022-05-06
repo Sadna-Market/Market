@@ -159,11 +159,6 @@ public class StoreStab extends Store {
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
-    public DResponseObj<Integer> getStoreId(){
-        DResponseObj<Integer> i= new DResponseObj<>();
-        i.value=8;
-        return i;
-    }
 
     public DResponseObj<Inventory> getInventory() {
         return null;

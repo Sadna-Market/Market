@@ -179,18 +179,28 @@ public class Market {
     //pre: -
     //post: get all the open stores that their rate higher or equal to the arg(arg>0)
     public DResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
+
+
+        List<Integer> pIDs= getStoreIDs(getStores());
+        return searchProductByStoreRate(pIDs,rate);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that their rate higher or equal to the arg(arg>0)
+    public DResponseObj<List<Integer>> searchProductByStoreRate(List<Integer> list,int rate) {
         if (rate < 0 || rate > 10) {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
-        List<Store> searchOn = getStores();
         List<Integer> output = new ArrayList<>();
-        for (Store store : searchOn) {
-            DResponseObj<Integer> getRate = store.getRate();
-            if (!getRate.errorOccurred() && getRate.getValue() >= rate) {
-                DResponseObj<Integer> getStoreID = store.getStoreId();
-                if (!getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+        for(Integer istore : list){
+            DResponseObj<Store> store = getStore(istore);
+            if (!store.errorOccurred()){
+                DResponseObj<Integer> getRate = store.getValue().getRate();
+                if (!getRate.errorOccurred() && getRate.getValue() >= rate)
+                    output.add(istore);
             }
         }
         return new DResponseObj<>(output);
@@ -671,6 +681,16 @@ public class Market {
         }
         return pIDs;
 
+    }
+
+    private List<Integer> getStoreIDs(List<Store> searchOn){
+        List<Integer> pIDs= new ArrayList<>();
+        for (Store p: searchOn){
+            DResponseObj<Integer> pID= p.getStoreId();
+            if (!pID.errorOccurred())
+                pIDs.add(pID.getValue());
+        }
+        return pIDs;
     }
     private DResponseObj<Boolean> paymentAndSupplyConnct(){
         PaymentService p = PaymentService.getInstance();
