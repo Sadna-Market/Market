@@ -7,6 +7,7 @@ import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
+import main.ExternalService.ExternalService;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
+import java.util.function.DoubleToIntFunction;
 
 public class Market {
     /*************************************************fields************************************************************/
@@ -35,6 +37,7 @@ public class Market {
      /*************************************************constructors******************************************************/
     public Market(UserManager userManager) {
         this.userManager = userManager;
+        ExternalService.getInstance();
     }
     /*************************************************Functions*********************************************************/
     public DResponseObj<Boolean> isStoreClosed(int StoreID){
@@ -93,8 +96,6 @@ public class Market {
             return output;
         }
 
-        List<ProductType> searchOn = getProductTypes();
-
         List<Integer> output = new ArrayList<>();
         for (Integer i: list){
             DResponseObj<ProductType> productTypeDR = getProductType(i);
@@ -102,8 +103,7 @@ public class Market {
                 ProductType productType = productTypeDR.getValue();
                 DResponseObj<Boolean> checkIfExist=productType.containName(name);
                 if (!checkIfExist.errorOccurred() && checkIfExist.value) {
-                    DResponseObj<Integer> pID= productType.getProductID();
-                    if (!pID.errorOccurred())  output.add(productType.getProductID().value);
+                    output.add(i);
                 }
             }
 
@@ -112,27 +112,35 @@ public class Market {
     }
 
 
-
-
     //2.2.2
     //pre: -
     //post: get all the open stores that the arg is apart of their description
     public DResponseObj<List<Integer>> searchProductByDesc(String desc) {
+        List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
+        return searchProductByDesc(pIDs,desc);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their description
+    public DResponseObj<List<Integer>> searchProductByDesc(List<Integer> list,String desc) {
         if (desc==null){
             logger.warn("description arrived null");
             DResponseObj<List<Integer>> output=new DResponseObj<>();
             output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
-
-        List<ProductType> searchOn = getProductTypes();
         List<Integer> output = new ArrayList<>();
-        for (ProductType p : searchOn) {
-            DResponseObj<Boolean> existInP=p.containDesc(desc);
-            if (!existInP.errorOccurred() && existInP.value) {
-                DResponseObj<Integer> val= p.getProductID();
-                if (!val.errorOccurred()) output.add(val.getValue());
+        for(Integer i: list){
+            DResponseObj<ProductType> productDR = getProductType(i);
+            if (!productDR.errorOccurred()){
+                ProductType productType = productDR.getValue();
+                DResponseObj<Boolean> exist = productType.containDesc(desc);
+                if (!exist.errorOccurred() && exist.getValue()){
+                    output.add(i);
+                }
             }
+
         }
         return new DResponseObj<>(output);
     }
@@ -141,18 +149,27 @@ public class Market {
     //pre: -
     //post: get all the products that them rate higher or equal to the arg(arg>0)
     public DResponseObj<List<Integer>> searchProductByRate(int minRate) {
+        List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
+        return searchProductByRate(pIDs,minRate);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the products that them rate higher or equal to the arg(arg>0)
+    public DResponseObj<List<Integer>> searchProductByRate(List<Integer> list,int minRate) {
         if (minRate < 0 || minRate > 10) {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-
-        List<ProductType> searchOn = getProductTypes();
         List<Integer> output = new ArrayList<>();
-        for (ProductType p : searchOn) {
-            DResponseObj<Integer> checkRate = p.getRate();
-            if (!checkRate.errorOccurred() && checkRate.getValue() >= minRate) {
-                DResponseObj<Integer> getID = p.getProductID();
-                if (!getID.errorOccurred()) output.add(getID.getValue());
+        for (Integer i: list){
+            DResponseObj<ProductType> p = getProductType(i);
+            if (!p.errorOccurred()){
+                ProductType productType = p.getValue();
+                DResponseObj<Integer> rate = productType.getRate();
+                if (!rate.errorOccurred() && rate.getValue() >=minRate){
+                    output.add(i);
+                }
             }
         }
         return new DResponseObj<>(output);
@@ -162,18 +179,28 @@ public class Market {
     //pre: -
     //post: get all the open stores that their rate higher or equal to the arg(arg>0)
     public DResponseObj<List<Integer>> searchProductByStoreRate(int rate) {
+
+
+        List<Integer> pIDs= getStoreIDs(getStores());
+        return searchProductByStoreRate(pIDs,rate);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that their rate higher or equal to the arg(arg>0)
+    public DResponseObj<List<Integer>> searchProductByStoreRate(List<Integer> list,int rate) {
         if (rate < 0 || rate > 10) {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
 
-        List<Store> searchOn = getStores();
         List<Integer> output = new ArrayList<>();
-        for (Store store : searchOn) {
-            DResponseObj<Integer> getRate = store.getRate();
-            if (!getRate.errorOccurred() && getRate.getValue() >= rate) {
-                DResponseObj<Integer> getStoreID = store.getStoreId();
-                if (!getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+        for(Integer istore : list){
+            DResponseObj<Store> store = getStore(istore);
+            if (!store.errorOccurred()){
+                DResponseObj<Integer> getRate = store.getValue().getRate();
+                if (!getRate.errorOccurred() && getRate.getValue() >= rate)
+                    output.add(istore);
             }
         }
         return new DResponseObj<>(output);
@@ -183,20 +210,31 @@ public class Market {
     //pre: -
     //post: get all the products that them price is between min and max
     public DResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
+
+        List<Integer> pIDs= getStoreIDs(getStores());
+        return searchProductByRangePrices(pIDs,productID,min,max);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the products that them price is between min and max
+    public DResponseObj<List<Integer>> searchProductByRangePrices(List<Integer> list,int productID, int min, int max) {
         if (min > max) {
             logger.warn("min bigger then max - invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
+        DResponseObj<ProductType> getProduct = getProductType(productID);
+        if (getProduct.errorOccurred()) return new DResponseObj<>(getProduct.getErrorMsg());
 
-        List<Store> searchOn = getStores();
         List<Integer> output = new ArrayList<>();
-        for (Store store: searchOn){
-            DResponseObj<Double> getPrice = store.getProductPrice(productID);
-            if (!getPrice.errorOccurred()) {
-                Double price=getPrice.getValue();
-                if (price != null && (price <= (double) max & price >= (double) min)) {
-                    DResponseObj<Integer> getStoreID = store.getStoreId();
-                    if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+        for (Integer istore : list){
+            DResponseObj<Store> store = getStore(istore);
+            if (!store.errorOccurred()){
+                DResponseObj<Double> getPrice = store.getValue().getProductPrice(productID);
+                if (!getPrice.errorOccurred()){
+                    Double price = getPrice.getValue();
+                    if (price != null && (price <= (double) max & price >= (double) min))
+                        output.add(istore);
                 }
             }
         }
@@ -222,17 +260,61 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the products that them price is between min and max
+    public DResponseObj<List<Integer>> searchProductByCategory(List<Integer> list,int category) {
+        if (category<0){
+            logger.warn("new categoryID is illegal");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
+        List<Integer> output = new ArrayList<>();
+        for (Integer iproduct: list){
+            DResponseObj<ProductType> product = getProductType(iproduct);
+            if(!product.errorOccurred()){
+                DResponseObj<Integer> cat = product.getValue().getCategory();
+                if (!cat.errorOccurred())
+                    output.add(iproduct);
+            }
+        }
+        return new DResponseObj<>(output);
+    }
+
 
     //2.2.3
     //pre: user is online
     //post: add <quantity> times this product from this store
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        DResponseObj<Boolean> isOnline = isOnline(userId);
-        if (isOnline.errorOccurred() || !isOnline.getValue()) return isOnline;
-        DResponseObj<Store> s = getStore(StoreId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        return s.getValue().isProductExistInStock(ProductId, quantity);
-        //TODO: add the product to the user's shopping bag
+        //get user
+        DResponseObj<User> user = userManager.getOnlineUser(userId);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+
+        //check if the productExist
+        DResponseObj<ProductType> productTypeDResponseObj = getProductType(ProductId);
+        if (productTypeDResponseObj.errorOccurred()) return new DResponseObj<>(productTypeDResponseObj.getErrorMsg());
+
+        //check the store
+        DResponseObj<Store> store = getStore(StoreId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
+        DResponseObj<Boolean> isExist = store.getValue().isProductExistInStock(ProductId, quantity);
+        if (isExist.errorOccurred()) return new DResponseObj<>(isExist.getErrorMsg());
+        if (!isExist.getValue()){
+            logger.warn("the quantity is not exist in the Store");
+            return new DResponseObj<>(ErrorCode.PRODUCT_DOESNT_EXIST_IN_THE_STORE);
+        }
+
+        //get cart
+        DResponseObj<ShoppingCart> cart = user.getValue().GetSShoppingCart();
+        if (cart.errorOccurred()) return new DResponseObj<>(cart.getErrorMsg());
+
+        //get args for the
+        DResponseObj<Boolean> add = cart.getValue().addNewProductToShoppingBag(ProductId,store.getValue(),quantity);
+        if (add.errorOccurred()) return new DResponseObj<>(add.getErrorMsg());
+        if (!add.getValue()){
+            logger.warn("the Cart didnt add this product");
+            return new DResponseObj<>(ErrorCode.CART_FAIL);
+        }
+        return new DResponseObj<>(true);
     }
 
 
@@ -631,6 +713,16 @@ public class Market {
         return pIDs;
 
     }
+
+    private List<Integer> getStoreIDs(List<Store> searchOn){
+        List<Integer> pIDs= new ArrayList<>();
+        for (Store p: searchOn){
+            DResponseObj<Integer> pID= p.getStoreId();
+            if (!pID.errorOccurred())
+                pIDs.add(pID.getValue());
+        }
+        return pIDs;
+    }
     private DResponseObj<Boolean> paymentAndSupplyConnct(){
         PaymentService p = PaymentService.getInstance();
         DResponseObj<String> check = p.ping();
@@ -667,6 +759,7 @@ public class Market {
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
         userManager = new UserManagerStab();
+        initMarketTest();
     }
 
     public void setForIntegrationTestingWithUserManager(){
@@ -679,10 +772,10 @@ public class Market {
         purchase = new PurchaseStab();
 
         for (int i = 0; i < 10; i++) {
-            ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
-            p.setRate(i);
-            p.setCategory(i % 3);
-            productTypes.put(i, p);
+            ProductType p = new ProductType(productCounter, "product" + i, "hello",3);
+            p.setRate(productCounter);
+            p.setCategory(productCounter % 3);
+            productTypes.put(productCounter++, p);
         }
 
         for (int i=0; i<10; i++){
@@ -697,10 +790,10 @@ public class Market {
         init();
         purchase = new PurchaseStab();
         for (int i = 0; i < 10; i++) {
-            ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
+            ProductType p = new ProductType(productCounter, "product" + i, "hello",3);
             p.setRate(i);
             p.setCategory(i % 3);
-            productTypes.put(i, p);
+            productTypes.put(productCounter++, p);
         }
         for (int i = 0; i < 10; i++) {
             Store s = new StoreStab(storeCounter);
