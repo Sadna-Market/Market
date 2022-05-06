@@ -229,12 +229,36 @@ public class Market {
     //pre: user is online
     //post: add <quantity> times this product from this store
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        DResponseObj<Boolean> isOnline = isOnline(userId);
-        if (isOnline.errorOccurred() || !isOnline.getValue()) return isOnline;
-        DResponseObj<Store> s = getStore(StoreId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        return s.getValue().isProductExistInStock(ProductId, quantity);
-        //TODO: add the product to the user's shopping bag
+        //get user
+        DResponseObj<User> user = userManager.getOnlineUser(userId);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+
+        //check if the productExist
+        DResponseObj<ProductType> productTypeDResponseObj = getProductType(ProductId);
+        if (productTypeDResponseObj.errorOccurred()) return new DResponseObj<>(productTypeDResponseObj.getErrorMsg());
+
+        //check the store
+        DResponseObj<Store> store = getStore(StoreId);
+        if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
+        DResponseObj<Boolean> isExist = store.getValue().isProductExistInStock(ProductId, quantity);
+        if (isExist.errorOccurred()) return new DResponseObj<>(isExist.getErrorMsg());
+        if (!isExist.getValue()){
+            logger.warn("the quantity is not exist in the Store");
+            return new DResponseObj<>(ErrorCode.PRODUCT_DOESNT_EXIST_IN_THE_STORE);
+        }
+
+        //get cart
+        DResponseObj<ShoppingCart> cart = user.getValue().GetSShoppingCart();
+        if (cart.errorOccurred()) return new DResponseObj<>(cart.getErrorMsg());
+
+        //get args for the
+        DResponseObj<Boolean> add = cart.getValue().addNewProductToShoppingBag(ProductId,store.getValue(),quantity);
+        if (add.errorOccurred()) return new DResponseObj<>(add.getErrorMsg());
+        if (!add.getValue()){
+            logger.warn("the Cart didnt add this product");
+            return new DResponseObj<>(ErrorCode.CART_FAIL);
+        }
+        return new DResponseObj<>(true);
     }
 
 
