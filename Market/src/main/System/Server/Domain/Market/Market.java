@@ -116,23 +116,6 @@ public class Market {
     //pre: -
     //post: get all the open stores that the arg is apart of their description
     public DResponseObj<List<Integer>> searchProductByDesc(String desc) {
-//        if (desc==null){
-//            logger.warn("description arrived null");
-//            DResponseObj<List<Integer>> output=new DResponseObj<>();
-//            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
-//            return output;
-//        }
-//
-//        List<ProductType> searchOn = getProductTypes();
-//        List<Integer> output = new ArrayList<>();
-//        for (ProductType p : searchOn) {
-//            DResponseObj<Boolean> existInP=p.containDesc(desc);
-//            if (!existInP.errorOccurred() && existInP.value) {
-//                DResponseObj<Integer> val= p.getProductID();
-//                if (!val.errorOccurred()) output.add(val.getValue());
-//            }
-//        }
-//        return new DResponseObj<>(output);
         List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
         return searchProductByDesc(pIDs,desc);
     }
@@ -166,18 +149,27 @@ public class Market {
     //pre: -
     //post: get all the products that them rate higher or equal to the arg(arg>0)
     public DResponseObj<List<Integer>> searchProductByRate(int minRate) {
+        List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
+        return searchProductByRate(pIDs,minRate);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the products that them rate higher or equal to the arg(arg>0)
+    public DResponseObj<List<Integer>> searchProductByRate(List<Integer> list,int minRate) {
         if (minRate < 0 || minRate > 10) {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-
-        List<ProductType> searchOn = getProductTypes();
         List<Integer> output = new ArrayList<>();
-        for (ProductType p : searchOn) {
-            DResponseObj<Integer> checkRate = p.getRate();
-            if (!checkRate.errorOccurred() && checkRate.getValue() >= minRate) {
-                DResponseObj<Integer> getID = p.getProductID();
-                if (!getID.errorOccurred()) output.add(getID.getValue());
+        for (Integer i: list){
+            DResponseObj<ProductType> p = getProductType(i);
+            if (!p.errorOccurred()){
+                ProductType productType = p.getValue();
+                DResponseObj<Integer> rate = productType.getRate();
+                if (!rate.errorOccurred() && rate.getValue() >=minRate){
+                    output.add(i);
+                }
             }
         }
         return new DResponseObj<>(output);
