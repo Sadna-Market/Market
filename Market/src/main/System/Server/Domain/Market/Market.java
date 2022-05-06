@@ -7,6 +7,7 @@ import main.ErrorCode;
 import main.ExternalService.CreditCard;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
+import main.ExternalService.ExternalService;
 import main.System.Server.Domain.StoreModel.*;
 import main.System.Server.Domain.Response.DResponseObj;
 
@@ -35,6 +36,7 @@ public class Market {
      /*************************************************constructors******************************************************/
     public Market(UserManager userManager) {
         this.userManager = userManager;
+        ExternalService.getInstance();
     }
     /*************************************************Functions*********************************************************/
     public DResponseObj<Boolean> isStoreClosed(int StoreID){
@@ -667,6 +669,7 @@ public class Market {
     /* forbidden to use with this function except Test*/
     public void setForTesting(){
         userManager = new UserManagerStab();
+        initMarketTest();
     }
 
     public void setForIntegrationTestingWithUserManager(){
