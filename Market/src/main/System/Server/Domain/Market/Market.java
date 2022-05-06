@@ -260,6 +260,26 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the products that them price is between min and max
+    public DResponseObj<List<Integer>> searchProductByCategory(List<Integer> list,int category) {
+        if (category<0){
+            logger.warn("new categoryID is illegal");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
+        List<Integer> output = new ArrayList<>();
+        for (Integer iproduct: list){
+            DResponseObj<ProductType> product = getProductType(iproduct);
+            if(!product.errorOccurred()){
+                DResponseObj<Integer> cat = product.getValue().getCategory();
+                if (!cat.errorOccurred())
+                    output.add(iproduct);
+            }
+        }
+        return new DResponseObj<>(output);
+    }
+
 
     //2.2.3
     //pre: user is online
