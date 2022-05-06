@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
+import java.util.function.DoubleToIntFunction;
 
 public class Market {
     /*************************************************fields************************************************************/
@@ -95,8 +96,6 @@ public class Market {
             return output;
         }
 
-        List<ProductType> searchOn = getProductTypes();
-
         List<Integer> output = new ArrayList<>();
         for (Integer i: list){
             DResponseObj<ProductType> productTypeDR = getProductType(i);
@@ -104,8 +103,7 @@ public class Market {
                 ProductType productType = productTypeDR.getValue();
                 DResponseObj<Boolean> checkIfExist=productType.containName(name);
                 if (!checkIfExist.errorOccurred() && checkIfExist.value) {
-                    DResponseObj<Integer> pID= productType.getProductID();
-                    if (!pID.errorOccurred())  output.add(productType.getProductID().value);
+                    output.add(i);
                 }
             }
 
@@ -114,27 +112,52 @@ public class Market {
     }
 
 
-
-
     //2.2.2
     //pre: -
     //post: get all the open stores that the arg is apart of their description
     public DResponseObj<List<Integer>> searchProductByDesc(String desc) {
+//        if (desc==null){
+//            logger.warn("description arrived null");
+//            DResponseObj<List<Integer>> output=new DResponseObj<>();
+//            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
+//            return output;
+//        }
+//
+//        List<ProductType> searchOn = getProductTypes();
+//        List<Integer> output = new ArrayList<>();
+//        for (ProductType p : searchOn) {
+//            DResponseObj<Boolean> existInP=p.containDesc(desc);
+//            if (!existInP.errorOccurred() && existInP.value) {
+//                DResponseObj<Integer> val= p.getProductID();
+//                if (!val.errorOccurred()) output.add(val.getValue());
+//            }
+//        }
+//        return new DResponseObj<>(output);
+        List<Integer> pIDs= getProductTYpeIDs(getProductTypes());
+        return searchProductByDesc(pIDs,desc);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their description
+    public DResponseObj<List<Integer>> searchProductByDesc(List<Integer> list,String desc) {
         if (desc==null){
             logger.warn("description arrived null");
             DResponseObj<List<Integer>> output=new DResponseObj<>();
             output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
-
-        List<ProductType> searchOn = getProductTypes();
         List<Integer> output = new ArrayList<>();
-        for (ProductType p : searchOn) {
-            DResponseObj<Boolean> existInP=p.containDesc(desc);
-            if (!existInP.errorOccurred() && existInP.value) {
-                DResponseObj<Integer> val= p.getProductID();
-                if (!val.errorOccurred()) output.add(val.getValue());
+        for(Integer i: list){
+            DResponseObj<ProductType> productDR = getProductType(i);
+            if (!productDR.errorOccurred()){
+                ProductType productType = productDR.getValue();
+                DResponseObj<Boolean> exist = productType.containDesc(desc);
+                if (!exist.errorOccurred() && exist.getValue()){
+                    output.add(i);
+                }
             }
+
         }
         return new DResponseObj<>(output);
     }
@@ -706,10 +729,10 @@ public class Market {
         purchase = new PurchaseStab();
 
         for (int i = 0; i < 10; i++) {
-            ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
-            p.setRate(i);
-            p.setCategory(i % 3);
-            productTypes.put(i, p);
+            ProductType p = new ProductType(productCounter, "product" + i, "hello",3);
+            p.setRate(productCounter);
+            p.setCategory(productCounter % 3);
+            productTypes.put(productCounter++, p);
         }
 
         for (int i=0; i<10; i++){
@@ -724,10 +747,10 @@ public class Market {
         init();
         purchase = new PurchaseStab();
         for (int i = 0; i < 10; i++) {
-            ProductType p = new ProductType(productCounter++, "product" + i, "hello",3);
+            ProductType p = new ProductType(productCounter, "product" + i, "hello",3);
             p.setRate(i);
             p.setCategory(i % 3);
-            productTypes.put(i, p);
+            productTypes.put(productCounter++, p);
         }
         for (int i = 0; i < 10; i++) {
             Store s = new StoreStab(storeCounter);
