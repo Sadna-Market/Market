@@ -9,19 +9,19 @@ import java.util.List;
 @DisplayName("Store Manager Tests  - AT")
 public class StoreManagerTests extends MarketTests {
     String uuid;
+
     @BeforeEach
     public void setUp() {
+        initMarketWithSysManagerAndItems();
+        registerMemberData();
+        populateItemsAndStore();
         uuid = market.guestVisit();
     }
 
     @AfterEach
     public void tearDown() {
-        market.resetMemory(); // discard all resources(cart,members,history purchases...)
-        roleBackAfterReset();
-        market.exitSystem(uuid);
+        market = null; //for garbage collector
     }
-
-
     /**
      * Requirement: Action of manager permission - get purchase history  - #2.5
      */

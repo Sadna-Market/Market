@@ -71,8 +71,7 @@ public interface IMarket {
     //2.3.1
     public SLResponsOBJ<String> logout(String userId);
 
-    //TODO: next versions
-    public SLResponsOBJ<BitSet> changePassword(String email);
+    public SLResponsOBJ<Boolean> changePassword(String uuid, String email , String password ,String newPassword) ;
 
 
     //2.3.2

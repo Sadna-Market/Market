@@ -192,6 +192,8 @@ public class TestableFacade extends Facade {
         return new SLResponsOBJ<>(res);
     }
 
+
+
     /**
      * checks if system has guest "connected"
      *
@@ -212,6 +214,30 @@ public class TestableFacade extends Facade {
         DResponseObj<Boolean> res = userManager.isLogged(UUID.fromString(uuid));
         return new SLResponsOBJ<>(res);
     }
+
+
+
+
+    public SLResponsOBJ<Boolean> isOwner(String email , int storeId){
+        DResponseObj<Store> s = market.getStore(storeId);
+        if (s.errorOccurred()){
+            return new SLResponsOBJ<> (false,s.errorMsg);
+        }
+        DResponseObj<Boolean> res =  userManager.isOwner(email,s.value);
+        return new SLResponsOBJ<>(res);
+    }
+
+    public SLResponsOBJ<Boolean> isManager(String email , int storeId){
+        DResponseObj<Store> s = market.getStore(storeId);
+        if (s.errorOccurred()){
+            return new SLResponsOBJ<> (false,s.errorMsg);
+        }
+        DResponseObj<Boolean> res =  userManager.isManager(email,s.value);
+        return new SLResponsOBJ<>(res);
+    }
+
+
+
 
     /**
      * checks if store contains item in stock
@@ -242,16 +268,12 @@ public class TestableFacade extends Facade {
         return new SLResponsOBJ<>(res);
     }
 
-    /**
-     * checks if store is closed
-     *
-     * @param storeID id of store
-     * @return true is store is closed, else false
-     */
-    public SLResponsOBJ<Boolean> storeIsClosed(int storeID) {
-        DResponseObj<Boolean> res = market.isStoreClosed(storeID);
-        return new SLResponsOBJ<>(res);
+
+    public SLResponsOBJ<Boolean> storeIsClosed(int storeId){
+        DResponseObj<Boolean> res = market.isStoreClosed(storeId);
+        return !res.value ? new SLResponsOBJ<>(false,-2) : new SLResponsOBJ<>(true,-1);
     }
+
 
     /**
      * checks if newUser is registered

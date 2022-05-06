@@ -10,7 +10,7 @@ import Acceptance.Obj.User;
 import java.util.List;
 
 public class MarketTests {
-    protected final MarketBridge market;
+    protected MarketBridge market;
     private int counter;
     protected User sysManager;
     protected User member;
@@ -26,9 +26,6 @@ public class MarketTests {
         counter = 1;
         sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110");
         member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111");
-        initMarketWithSysManagerAndItems();
-        registerMemberData();
-        populateItemsAndStore();
     }
     public User generateUser() {
         int suffix = counter++;

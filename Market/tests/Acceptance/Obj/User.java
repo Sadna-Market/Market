@@ -11,6 +11,7 @@ public class User {
         password = p;
         this.name = name;
         phone_number = num;
+
         addr = adr;
 
     }

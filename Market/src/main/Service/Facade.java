@@ -55,7 +55,11 @@ public class Facade implements IMarket {
         if (setSysManagerPermission.errorOccurred()) return new SLResponsOBJ<>(null,setSysManagerPermission.errorMsg);
 
         DResponseObj<Boolean> initiateExternalServices = market.init();
-        if(initiateExternalServices.errorOccurred()) return new SLResponsOBJ<>(null,initiateExternalServices.errorMsg);
+        if(initiateExternalServices.errorOccurred()&&initiateExternalServices.errorMsg!=50) return new SLResponsOBJ<>(null,initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
+        /// the problem was from hear do with it watever you want
+        //when you try to connect again to the conection service its throw you with message error
+        //hara ahusharmuta
+        //&&initiateExternalServices.errorMsg!=50 this is that i add
 
         return new SLResponsOBJ<>(guestUUID.value,-1);
     }
@@ -133,6 +137,9 @@ public class Facade implements IMarket {
          * Successful registration process The guest is registered in the system as a member
          * (in order to receive member status, he must log)
          */
+        if(Password==null||Password.equals("")){
+            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_PASSWORD);
+        }
         if (uuid == null || uuid.equals(""))
             return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
 
@@ -549,8 +556,24 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponsOBJ<BitSet> changePassword(String email) {
-        return null;
+    public SLResponsOBJ<Boolean> changePassword(String uuid, String email , String password ,String newPassword) {
+        if(uuid==null){
+            return new SLResponsOBJ<>(false,ErrorCode.NOTVALIDINPUT);
+        }
+        if(email==null||email.equals("")){
+            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_EMILE);
+        }
+        if(password==null || password.equals("")){
+            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_PASSWORD);
+        }
+        if(newPassword == null || newPassword.equals("")){
+            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_PASSWORD);
+        }
+        DResponseObj<Boolean> res = userManager.changePassword(UUID.fromString(uuid),email,password,newPassword);
+        if(res.errorOccurred()){
+            return new SLResponsOBJ<>(false,res.errorMsg);
+        }
+        return new SLResponsOBJ<>(res);
     }
 
 

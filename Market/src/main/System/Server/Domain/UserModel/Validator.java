@@ -20,7 +20,7 @@ public class Validator {
         return validations;
     }
 
-    public static boolean isValidEmailAddress(String email) {
+    public static DResponseObj<Boolean> isValidEmailAddress(String email) {
         boolean result = true;
         try {
             InternetAddress emailAddr = new InternetAddress(email);
@@ -29,27 +29,27 @@ public class Validator {
             result = false;
         }
         System.out.println(result+ " emailll");
-        return result;
+        return new DResponseObj<>( result,-1);
     }
 
-    public static boolean isValidPhoneNumber(String phone) {
+    public static DResponseObj<Boolean> isValidPhoneNumber(String phone) {
         String regex = "^(?=.*[0-9])"
                 + ".{10}$";
         Pattern p = Pattern.compile(regex);
-        if (phone == null) {
-            return false;
+        if (phone == null||phone=="") {
+            return new DResponseObj<>(false);
         }
 
         Matcher m = p.matcher(phone);
 
-        return m.matches();
+        return new DResponseObj<>(m.matches());
     }
 
     public static DResponseObj<Boolean> isValidPin(String pin) {
         String regex = "^(?=.*[0-9])"
                 + ".{3}$";
         Pattern p = Pattern.compile(regex);
-        if (pin == null) {
+        if (pin == null||pin=="") {
             return new DResponseObj<>(false);
         }
 
@@ -62,7 +62,7 @@ public class Validator {
         String regex = "^(?=.*[0-9])"
                 + ".{16}$";
         Pattern p = Pattern.compile(regex);
-        if (CreditCard == null) {
+        if (CreditCard == null||CreditCard=="") {
             return new DResponseObj<>(false);
         }
 
@@ -82,7 +82,7 @@ public class Validator {
         String regex = "^(?=.*[0-9])"
                 + ".{4}$";
         Pattern p = Pattern.compile(regex);
-        if (CreditDATE == null) {
+        if (CreditDATE == null||CreditDATE=="") {
             return new DResponseObj<>(false);
         }
 
@@ -93,15 +93,15 @@ public class Validator {
 
 
 
-    public static boolean isValidPassword(String password)
+    public static DResponseObj<Boolean> isValidPassword(String password)
     {
         // Regex to check valid password.
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
                 + "(?=.*[!@#&()–[{}]:;',?/*~$^+=<>])"
                 + "(?=\\S+$).{8,20}$";
-        if (password == null) {
-            return false;
+        if (password == null||password=="") {
+            return new DResponseObj<>(false,-1);
         }
 
         // Compile the ReGex
@@ -110,7 +110,7 @@ public class Validator {
         // If the password is empty
         // return false
         if (password == null) {
-            return false;
+            return new DResponseObj<>( false,-1);
         }
 
         // Pattern class contains matcher() method
@@ -122,6 +122,6 @@ public class Validator {
 
         // Return if the password
         // matched the ReGex
-        return m.matches();
+        return new DResponseObj<>( m.matches(),-1);
     }
 }

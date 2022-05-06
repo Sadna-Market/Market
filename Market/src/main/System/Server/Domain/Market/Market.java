@@ -566,7 +566,7 @@ public class Market {
     //target: check if for this UUID is System Manager.
     private DResponseObj<Boolean> isSystemMan(UUID uuid){
         //get user online.
-        DResponseObj<User> user = userManager.getOnlineUser(uuid);
+        DResponseObj<User> user = userManager.getLoggedUser(uuid);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
 
         //get email
@@ -616,7 +616,7 @@ public class Market {
     }
 
     private DResponseObj<Tuple<Store, ProductType>> checkValid(UUID userId, int storeId, permissionType.permissionEnum permissionEnum, Integer productId) {
-        DResponseObj<User> logIN=userManager.getOnlineUser(userId);
+        DResponseObj<User> logIN=userManager.getLoggedUser(userId);// yakii whay not gett loged ???
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
