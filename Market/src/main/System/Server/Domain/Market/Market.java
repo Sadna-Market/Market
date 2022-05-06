@@ -210,20 +210,31 @@ public class Market {
     //pre: -
     //post: get all the products that them price is between min and max
     public DResponseObj<List<Integer>> searchProductByRangePrices(int productID, int min, int max) {
+
+        List<Integer> pIDs= getStoreIDs(getStores());
+        return searchProductByRangePrices(pIDs,productID,min,max);
+    }
+
+    //2.2.2
+    //pre: -
+    //post: get all the products that them price is between min and max
+    public DResponseObj<List<Integer>> searchProductByRangePrices(List<Integer> list,int productID, int min, int max) {
         if (min > max) {
             logger.warn("min bigger then max - invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
+        DResponseObj<ProductType> getProduct = getProductType(productID);
+        if (getProduct.errorOccurred()) return new DResponseObj<>(getProduct.getErrorMsg());
 
-        List<Store> searchOn = getStores();
         List<Integer> output = new ArrayList<>();
-        for (Store store: searchOn){
-            DResponseObj<Double> getPrice = store.getProductPrice(productID);
-            if (!getPrice.errorOccurred()) {
-                Double price=getPrice.getValue();
-                if (price != null && (price <= (double) max & price >= (double) min)) {
-                    DResponseObj<Integer> getStoreID = store.getStoreId();
-                    if (getStoreID.errorOccurred()) output.add(getStoreID.getValue());
+        for (Integer istore : list){
+            DResponseObj<Store> store = getStore(istore);
+            if (!store.errorOccurred()){
+                DResponseObj<Double> getPrice = store.getValue().getProductPrice(productID);
+                if (!getPrice.errorOccurred()){
+                    Double price = getPrice.getValue();
+                    if (price != null && (price <= (double) max & price >= (double) min))
+                        output.add(istore);
                 }
             }
         }
