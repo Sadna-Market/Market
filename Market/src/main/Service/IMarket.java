@@ -34,7 +34,7 @@ public interface IMarket {
     //2.2.1
     public SLResponsOBJ<ServiceStore> getStore(int StoreID);
 
-    public SLResponsOBJ<String> getInfoProductInStore(int storeID, int productID);
+    public SLResponsOBJ<ServiceItem> getInfoProductInStore(int storeID, int productID);
 
     //2.2.2
     public SLResponsOBJ<List<Integer>> searchProductByName(String productName);

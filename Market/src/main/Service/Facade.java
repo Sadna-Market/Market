@@ -187,7 +187,7 @@ public class Facade implements IMarket {
 //-----------------------------------2 .פעולות קנייה של מבקר-אורח-----------------------------------------------
 
     @Override
-    public SLResponsOBJ<String> getInfoProductInStore(int storeId, int productID) {
+    public SLResponsOBJ<ServiceItem> getInfoProductInStore(int storeId, int productID) {
 
         /**
          * @requirement II. 2 . 1
@@ -209,7 +209,10 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(ErrorCode.NEGATIVENUMBER);
         if (productID < 0)
             return new SLResponsOBJ<>(ErrorCode.NEGATIVENUMBER);
-        return new SLResponsOBJ<>(market.getInfoProductInStore(storeId, productID));
+/*        DResponseObj<ProductStore> productStore = market.getInfoProductInStore(storeId, productID);
+        if(productStore.errorOccurred()) return new SLResponsOBJ<>(productStore.getErrorMsg());
+        return new SLResponsOBJ<>(new ServiceItem(productStore.getValue()));*/
+        return null;
     }
 
     @Override
