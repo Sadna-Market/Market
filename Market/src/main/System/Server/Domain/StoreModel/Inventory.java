@@ -202,13 +202,13 @@ public class Inventory {
         }
     }
 
-    public DResponseObj<String> getProductInfo(int productId) {
+    public DResponseObj<ProductStore> getProductInfo(int productId) {
         ProductStore productStore = products.get(productId);
         if (productStore == null){
             logger.warn("productId:" + productId + " but inventory not contains this product");
             return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
         }
-            return new DResponseObj<>(productStore.toString());
+            return new DResponseObj<>(productStore);
     }
 
     public DResponseObj<Boolean> addQuantity(int productID, int quantityToAdd) {
