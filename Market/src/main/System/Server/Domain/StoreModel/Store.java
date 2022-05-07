@@ -54,7 +54,7 @@ public class Store {
 
 
     //requirement II.2.1
-    public DResponseObj<String> getProductInStoreInfo(int productId){
+    public DResponseObj<ProductStore> getProductInStoreInfo(int productId){
         return inventory.getProductInfo(productId);
     }
 
