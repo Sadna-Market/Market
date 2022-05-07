@@ -106,9 +106,12 @@ public class TestableFacade extends Facade {
          * */
         ConcurrentHashMap<Integer, Integer> a = new ConcurrentHashMap<>();
         for (ServiceItem i : items) {
+            if(market.searchProductByName(i.name).value.isEmpty())
+                return new SLResponsOBJ<>(null,-2);
             a.put(i.itemID, i.quantity);
         }
         User u = user.getUser();
+
         DResponseObj<Integer> sup = SupplyService.getInstance().supply(u, user.city, user.Street, user.apartment, a);
         return sup.errorOccurred() ? new SLResponsOBJ<>(-1,ErrorCode.EXTERNAL_SERVICE_ERROR) : new SLResponsOBJ<>(sup);
     }

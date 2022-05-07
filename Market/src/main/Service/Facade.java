@@ -262,6 +262,12 @@ public class Facade implements IMarket {
     }
 
     @Override
+    public SLResponsOBJ<List<Integer>> searchProductByName(List<Integer> lst, String productName) {
+        DResponseObj<List<Integer>> res = market.searchProductByName(lst,productName);
+        return new SLResponsOBJ<>(res);
+    }
+
+    @Override
     public SLResponsOBJ<List<Integer>> searchProductByDesc(String desc) {
 
         /**
@@ -281,6 +287,12 @@ public class Facade implements IMarket {
         if (desc == null || desc.equals(""))
             return new SLResponsOBJ<>(null,ErrorCode.NOTSTRING);
         return new SLResponsOBJ<>(market.searchProductByDesc(desc));
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> searchProductByDesc(List<Integer> lst, String desc) {
+        DResponseObj<List<Integer>> res = market.searchProductByDesc(lst,desc);
+        return new SLResponsOBJ<>(res);
     }
 
     @Override
@@ -307,7 +319,11 @@ public class Facade implements IMarket {
         return new SLResponsOBJ<>(market.searchProductByRate(rate));
     }
 
-
+    @Override
+    public SLResponsOBJ<List<Integer>> searchProductByRate(List<Integer> lst, int rate) {
+        DResponseObj<List<Integer>> res = market.searchProductByRate(lst,rate);
+        return new SLResponsOBJ<>(res);
+    }
 
 
     @Override
@@ -332,6 +348,12 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(null,ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.searchProductByCategory(category));
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> searchProductByCategory(List<Integer> lst, int category) {
+        DResponseObj<List<Integer>> res = market.searchProductByCategory(lst,category);
+        return new SLResponsOBJ<>(res);
     }
 
 
@@ -363,6 +385,12 @@ public class Facade implements IMarket {
 
         return new SLResponsOBJ<>(market.searchProductByRangePrices(productId, min, max));
 
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> searchProductByRangePrices(List<Integer> lst, int productId, int min, int max) {
+        DResponseObj<List<Integer>> res = market.searchProductByRangePrices(lst,productId,min,max);
+        return new SLResponsOBJ<>(res);
     }
 
 
@@ -994,6 +1022,12 @@ public class Facade implements IMarket {
         if (RProductByStoreRate.errorOccurred()) return new SLResponsOBJ<>(null,RProductByStoreRate.errorMsg);
 
         return new SLResponsOBJ<>(RProductByStoreRate.value,-1);
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> searchProductByStoreRate(List<Integer> lst, int rate) {
+        DResponseObj<List<Integer>> res = market.searchProductByStoreRate(lst,rate);
+        return new SLResponsOBJ<>(res);
     }
 
 }
