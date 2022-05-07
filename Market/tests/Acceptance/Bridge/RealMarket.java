@@ -101,9 +101,10 @@ public class RealMarket implements MarketBridge {
      * @return certificate for success supply
      */
     public ATResponseObj<String> supply(List<ItemDetail> deliver, User user) {
+        if(deliver == null) return new ATResponseObj<>("error");
         List<ServiceItem> lst = new ArrayList<>();
         deliver.forEach(i -> {
-            lst.add(new ServiceItem(i.quantity, i.price, i.itemID));
+            lst.add(new ServiceItem(i.quantity, i.price, i.itemID,i.name));
         });
         ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment);
         SLResponsOBJ<Integer> res = market.supply(su, lst);
@@ -210,7 +211,7 @@ public class RealMarket implements MarketBridge {
      * @param keyWords words that can relate to the items specifications
      * @return list of result items
      */
-    public ATResponseObj<List<Integer>> searchItems(String itemName, String category, List<String> keyWords) {
+    public ATResponseObj<List<Integer>> searchItems(String itemName, int category, List<String> keyWords) {
         HashSet<Integer> items = new HashSet<>();
         SLResponsOBJ<List<Integer>> res = market.searchProductByName(itemName);
         if (!res.errorOccurred()) items.addAll(res.value);
@@ -233,9 +234,21 @@ public class RealMarket implements MarketBridge {
      * @param storeRank   filter param
      * @return filtered list
      */
-    public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank) {
-        //TODO: check how to call
-        return null;
+    public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, int[] priceRange, int category, int storeRank) {
+        Set<Integer> set = new HashSet<>();
+        SLResponsOBJ<List<Integer>> res1 = market.searchProductByRate(items,productRank);
+        if(res1.errorOccurred()) return new ATResponseObj<>("error");
+        set.addAll(res1.value);
+//        SLResponsOBJ<List<Integer>> res2 = market.searchProductByRangePrices(items,)
+//        if(res2.errorOccurred()) return new ATResponseObj<>("error");
+//        set.addAll(res2.value); //TODO: change
+        SLResponsOBJ<List<Integer>> res3 = market.searchProductByCategory(items,category);
+        if(res3.errorOccurred()) return new ATResponseObj<>("error");
+        set.addAll(res3.value);
+        SLResponsOBJ<List<Integer>> res4 = market.searchProductByStoreRate(items,storeRank);
+        if(res4.errorOccurred()) return new ATResponseObj<>("error");
+        set.addAll(res4.value);
+        return new ATResponseObj<>(new ArrayList<>(set));
     }
 
     /**
@@ -257,17 +270,9 @@ public class RealMarket implements MarketBridge {
      * @param uuid
      * @return list of list of items - Cart that has shopping bags related to different stores
      */
-    public ATResponseObj<List<List<ItemDetail>>> getCart(String uuid) {
+    public ATResponseObj<List<List<Integer>>> getCart(String uuid) {
         SLResponsOBJ<ServiceShoppingCard> res = market.getShoppingCart(uuid);
-        List<List<ItemDetail>> lst = new LinkedList<>();
-        res.value.get().forEach(bag -> {
-            List<ItemDetail> item_lst = new LinkedList<>();
-            bag.forEach(si -> {
-                item_lst.add(new ItemDetail(si));
-            });
-            lst.add(item_lst);
-        });
-        return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(lst);
+        return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value.get());
     }
 
     /**

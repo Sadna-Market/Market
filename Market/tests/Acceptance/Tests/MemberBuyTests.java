@@ -45,12 +45,12 @@ public class MemberBuyTests extends MarketTests{
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
 
-        ATResponseObj<List<List<ItemDetail>>> response = market.getCart(uuid);
+        ATResponseObj<List<List<Integer>>> response = market.getCart(uuid);
         assertFalse(response.errorOccurred());
-        List<List<ItemDetail>> cart = response.value;
+        List<List<Integer>> cart = response.value;
         assertFalse(cart.isEmpty());
-        List<ItemDetail> bag = cart.get(0);
-        assertEquals(item.itemID, bag.get(0).itemID);
+        List<Integer> bag = cart.get(0);
+        assertEquals(item.quantity, bag.get(0));
     }
 
     /**

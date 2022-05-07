@@ -186,7 +186,7 @@ public class ProxyMarket implements MarketBridge {
      * @param keyWords words that can relate to the items specifications
      * @return list of result items
      */
-    public ATResponseObj<List<Integer>> searchItems(String itemName, String category, List<String> keyWords) {
+    public ATResponseObj<List<Integer>> searchItems(String itemName, int category, List<String> keyWords) {
         return realMarket.searchItems(itemName, category, keyWords);
     }
 
@@ -203,7 +203,7 @@ public class ProxyMarket implements MarketBridge {
          * @param storeRank   filter param
          * @return filtered list
          */
-    public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank) {
+    public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, int[] priceRange, int category, int storeRank) {
         return realMarket.filterSearchResults(items,productRank,priceRange,category,storeRank);
     }
 
@@ -225,7 +225,7 @@ public class ProxyMarket implements MarketBridge {
      * @param uuid
      * @return list of list of items - Cart that has shopping bags related to different stores
      */
-    public ATResponseObj<List<List<ItemDetail>>> getCart(String uuid) {
+    public ATResponseObj<List<List<Integer>>> getCart(String uuid) {
         return realMarket.getCart(uuid);
     }
 

@@ -133,7 +133,7 @@ public interface MarketBridge {
      * @param keyWords words that can relate to the items specifications
      * @return list of result items
      */
-    ATResponseObj<List<Integer>> searchItems(String itemName, String category, List<String> keyWords);
+    ATResponseObj<List<Integer>> searchItems(String itemName, int category, List<String> keyWords);
 
     /**
      * given a list of items, filter them by rank,price range, store rank, category.
@@ -144,7 +144,7 @@ public interface MarketBridge {
      * @param storeRank filter param
      * @return filtered list
      */
-    ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, String priceRange, String category, int storeRank);
+    ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, int[] priceRange, int category, int storeRank);
 
     /**
      * add to cart the item that is in storeID
@@ -161,7 +161,7 @@ public interface MarketBridge {
      * @return list of list of items - Cart that has shopping bags related to different stores
      * @param uuid
      */
-    ATResponseObj<List<List<ItemDetail>>> getCart(String uuid);
+    ATResponseObj<List<List<Integer>>> getCart(String uuid);
 
     /**
      * query to verify quantity of item in storeID

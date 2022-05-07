@@ -42,7 +42,6 @@ public class SystemTests extends MarketTests{
         assertFalse(market.serviceIsAlive("Payment"));
         ATResponseObj<String> res = market.pay(new CreditCard("1111222233334444","123","111"),100);
         assertTrue(res.errorOccurred());
-        assertTrue(market.connectExternalService("Payment"));
     }
 
     /**
