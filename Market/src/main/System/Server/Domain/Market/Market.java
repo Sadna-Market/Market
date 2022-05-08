@@ -112,6 +112,34 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
+    //2.2.2
+    //pre: -
+    //post: get all the open stores that the arg is apart of their names
+    public DResponseObj<List<Integer>> filterByName(List<Integer> list,String name) {
+        if (name==null){
+            logger.warn("the name is null");
+            DResponseObj<List<Integer>> output=new DResponseObj<>();
+            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
+            return output;
+        }
+        List<Integer> output=new ArrayList<>();
+
+        for (Integer productID: list){
+            DResponseObj<ProductType> productDR = getProductType(productID);
+            if (productDR.errorOccurred()) {
+                continue;
+            }
+            DResponseObj<Boolean> containName = productDR.getValue().containName(name);
+            if (containName.errorOccurred()) continue;
+            if (!containName.getValue()){
+                logger.debug("this product not contain the name");
+                continue;
+            }
+            output.add(productID);
+        }
+        return new DResponseObj<>(output);
+    }
+
 
     //2.2.2
     //pre: -
@@ -142,6 +170,31 @@ public class Market {
                 }
             }
 
+        }
+        return new DResponseObj<>(output);
+    }
+
+    public DResponseObj<List<Integer>> filterByDesc(List<Integer> list,String desc) {
+        if (desc==null){
+            logger.warn("the name is null");
+            DResponseObj<List<Integer>> output=new DResponseObj<>();
+            output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
+            return output;
+        }
+        List<Integer> output=new ArrayList<>();
+
+        for (Integer productID: list){
+            DResponseObj<ProductType> productDR = getProductType(productID);
+            if (productDR.errorOccurred()) {
+                continue;
+            }
+            DResponseObj<Boolean> containDesc = productDR.getValue().containDesc(desc);
+            if (containDesc.errorOccurred()) continue;
+            if (!containDesc.getValue()){
+                logger.debug("this product not contain the name");
+                continue;
+            }
+            output.add(productID);
         }
         return new DResponseObj<>(output);
     }
