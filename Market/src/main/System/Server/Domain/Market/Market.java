@@ -929,9 +929,6 @@ public class Market {
             OpenNewStore("name"+i,"founder"+1,new DiscountPolicy(),new BuyPolicy(),new BuyStrategy());
         }
 
-
-
-
     }
     private void initMarketTest(){
         init();
