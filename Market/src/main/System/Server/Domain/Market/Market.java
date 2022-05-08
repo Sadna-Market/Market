@@ -229,6 +229,29 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
+    public DResponseObj<List<Integer>> filterByRate(List<Integer> list,int minRate) {
+        if (minRate < 0 || minRate > 10) {
+            logger.warn("rate is invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
+        List<Integer> output=new ArrayList<>();
+
+        for (Integer productID: list){
+            DResponseObj<ProductType> productDR = getProductType(productID);
+            if (productDR.errorOccurred()) {
+                continue;
+            }
+            DResponseObj<Integer> isRate = productDR.getValue().getRate();
+            if (isRate.errorOccurred()) continue;
+            if (!isRate.getValue()< minRate){
+                logger.debug("this product not pass the min Rate");
+                continue;
+            }
+            output.add(productID);
+        }
+        return new DResponseObj<>(output);
+    }
+
     //2.2.2
     //pre: -
     //post: get all the open stores that their rate higher or equal to the arg(arg>0)
