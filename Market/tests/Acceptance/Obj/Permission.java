@@ -4,16 +4,16 @@ public class Permission {
     public Permission(){}
     //         Permissions type:
     //Guest:
-    public static final String GET_STORE_INFO = "GetStoreInfo";
-    public static final String PRODUCT_SEARCH = "ProductSearch";
-    public static final String ADD_PRODUCT_TO_SHOPPING_BAG = "AddProductToShoppingBag";
+    public static final String GET_STORE_INFO = "getStoreInfo";
+    public static final String PRODUCT_SEARCH = "productSearch";
+    public static final String ADD_PRODUCT_TO_SHOPPING_BAG = "addProductToShoppingBag";
     public static final String ORDER = "order";
     //Member:
-    public static final String LOGIN = "Login";
-    public static final String LOGOUT = "Logout";
-    public static final String OPEN_NEW_STORE = "OpenNewStore";
+    public static final String LOGIN = "login";
+    public static final String LOGOUT = "logout";
+    public static final String OPEN_NEW_STORE = "openNewStore";
     //StoreManager:
-    public static final String GET_ORDER_HISTORY = "getOrderHistory";
+    public static final String GET_ORDER_HISTORY = "getStoreOrderHistory";
     //Owner:
     public static final String ADD_NEW_PRODUCT_TO_STORE = "addNewProductToStore";
     public static final String DELETE_PRODUCT_FROM_STORE = "deleteProductFromStore";

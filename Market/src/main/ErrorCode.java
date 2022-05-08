@@ -38,6 +38,7 @@ public class ErrorCode {
 
 
    public static int EXTERNAL_SERVICE_ERROR =54;
+   public static int SERVICE_NOT_CONNECTED = 55;
 
    public static int PAYMENT_FAIL = 60;
    public static int CARD_NUMBER_ILLEGAL = 61;
@@ -52,5 +53,5 @@ public class ErrorCode {
    public static int NOT_VALID_PASSWORD = 100;
    public static int NOT_VALID_EMILE = 101;
    public static int NOT_VALID_PHONE = 102;
-
+   public static int INVALID_PERMISSION_TYPE = 103;
 }

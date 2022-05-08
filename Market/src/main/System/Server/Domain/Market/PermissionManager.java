@@ -176,9 +176,9 @@ public class PermissionManager {
             logger.warn("Their is no manager - owner connection to the grantee and grantor in this store\n");
             return new DResponseObj<>(false, ErrorCode.MISTAKEPERMISSIONTYPE);
         }
-        if (ManagerPermission.hasPermission(permissionType).value){
+        if (ManagerPermission.hasPermission(permissionType).value) {
             logger.warn("already have this permission type\n");
-            return new DResponseObj<>(false,ErrorCode.ALLREADYHAVESYSTEMMANAGER);
+            return new DResponseObj<>(false, ErrorCode.ALLREADYHAVESYSTEMMANAGER);
         }
         ManagerPermission.addManagerPermission(permissionType);
         logger.info("New manager permission type was added successfully\n");
@@ -290,7 +290,8 @@ public class PermissionManager {
          for member : always a constant list that they allowed. for manager and owner:  need to be check their permission.
 
          */
-        if (grantee.getEmail().value.equals("yaki@gmail.com")) return new DResponseObj<>(true);
+        if (grantee.getEmail().value.equals("yaki@gmail.com"))
+            return new DResponseObj<>(true);
 
         // for members (if memberPermissions not contains this pType, false will be returned because their is no permissions for members.)
         if (grantee.getEmail().value.equals(systemManagerEmail) && permissionType.systemManagerPermissions.contains(pType))
@@ -298,14 +299,15 @@ public class PermissionManager {
 
         if (permissionType.memberPermissions.contains(pType))
             return new DResponseObj<>(true);
-
-        List<Permission> accessPermissionStore = store.getPermission().value;
-        for (Permission p : accessPermissionStore) {
-            if (p.getGrantee().value.getEmail().value.equals(grantee.getEmail().value)) {
-                return new DResponseObj<>(p.hasPermission(pType).value);
+        if (store != null) {
+            List<Permission> accessPermissionStore = store.getPermission().value;
+            for (Permission p : accessPermissionStore) {
+                if (p.getGrantee().value.getEmail().value.equals(grantee.getEmail().value)) {
+                    return new DResponseObj<>(p.hasPermission(pType).value);
+                }
             }
         }
-        return new DResponseObj<>(false);
+        return new DResponseObj<>(false, ErrorCode.NOPERMISSION);
     }
 
     public DResponseObj<userTypes> getGranteeUserType(User grantee, Store store) {
