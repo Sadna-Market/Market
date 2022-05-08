@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,6 +53,30 @@ class MarketTest {
         DResponseObj<Store> store=market.getStore(i);
         int rate=store.getValue().getRate().getValue();
         assertEquals(i,rate);
+    }
+
+    @DisplayName("filterByName -  successful")
+    @ParameterizedTest
+    @ValueSource(strings = {"product","","pr","duct"})
+    @Test
+    void filterByName(String name) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(9,market.filterByName(list,name).getValue().size());
+        assertEquals(list,market.filterByName(list,name).getValue());
+    }
+
+    @DisplayName("filterByName -  failure")
+    @ParameterizedTest
+    @ValueSource(strings = {"Product","!"," ","123456"})
+    @Test
+    void filterByName2(String name) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(0,market.filterByName(list,name).getValue().size());
+        assertEquals(0,market.filterByName(list,name).getValue().size());
     }
 
 
