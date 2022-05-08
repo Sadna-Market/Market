@@ -22,7 +22,7 @@ public class ErrorCode {
    public static int PRODUCTNOTEXIST = 30;
    public static int PRODUCTALLREADYINSTORE = 31;
    public static int PRODUCTNOTEXISTINSTORE = 32;
-
+   public static int NOT_AVAILABLE_QUANTITY = 33;
 
    public static int STORENOTINTHEPRODUCTTYPE = 40;
    public static int STORESTAYINTHEPRODUCTTYPE = 41;
@@ -36,6 +36,7 @@ public class ErrorCode {
 
    public static int ILLEGALCARD = 53;
 
+
    public static int EXTERNAL_SERVICE_ERROR =54;
 
    public static int PAYMENT_FAIL = 60;
@@ -45,7 +46,9 @@ public class ErrorCode {
 
    public static int PRODUCT_DOESNT_EXIST_IN_THE_STORE = 64;
    public static int CART_FAIL = 65;
-
+   public static int NO_STORE_IN_BAG = 66;
+   public static int EMPTY_CART = 67;
+   public static int ORDER_FAIL = 68;
    public static int NOT_VALID_PASSWORD = 100;
    public static int NOT_VALID_EMILE = 101;
    public static int NOT_VALID_PHONE = 102;

@@ -26,9 +26,9 @@ public class StoreStab extends Store {
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
-    public DResponseObj<String> getProductInStoreInfo(int productId){
-        DResponseObj<String> output=new DResponseObj<>();
-        output.value="yaki";
+    public DResponseObj<ProductStore> getProductInStoreInfo(int productId){
+        DResponseObj<ProductStore> output=new DResponseObj<>();
+     //   output.value="yaki";
         return output;
     }
 

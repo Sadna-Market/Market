@@ -18,7 +18,7 @@ public class PaymentService extends AbsExternalService{
             list.put(counterTIP,v);
             logger.info("creditCart #"+createString(cardNumber,exp,pin) +" pay: "+v);
             int output=counterTIP++;
-            return new DResponseObj<>(output-1,-1);
+            return new DResponseObj<>(output,-1);
         }
         finally {
             stampedLock.unlockWrite(stamp);

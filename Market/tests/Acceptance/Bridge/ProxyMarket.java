@@ -486,7 +486,7 @@ public class ProxyMarket implements MarketBridge {
      * @return info of user
      */
     public ATResponseObj<String> getBuyerInfo(String uuid, User user) {
-        return new ATResponseObj<>("");
+        return realMarket.getBuyerInfo(uuid,user);
     }
 
     /**

@@ -45,26 +45,25 @@ public class Facade implements IMarket {
          * It will create system manager user and start connections with services (Payment and delivery).
          */
         SLResponsOBJ<String> guestUUID = guestVisit();
-        if (guestUUID.errorOccurred()) return new SLResponsOBJ<>(guestUUID.value,guestUUID.errorMsg);
+        if (guestUUID.errorOccurred()) return new SLResponsOBJ<>(guestUUID.value, guestUUID.errorMsg);
 
         SLResponsOBJ<Boolean> addedSysManager = addNewMember(guestUUID.value, email, Password, phoneNumber);
-        if (addedSysManager.errorOccurred()) return new SLResponsOBJ<>(null,addedSysManager.errorMsg);
+        if (addedSysManager.errorOccurred()) return new SLResponsOBJ<>(null, addedSysManager.errorMsg);
         PermissionManager permissionManager = PermissionManager.getInstance();
 
         DResponseObj<Boolean> setSysManagerPermission = permissionManager.setSystemManager(email);
-        if (setSysManagerPermission.errorOccurred()) return new SLResponsOBJ<>(null,setSysManagerPermission.errorMsg);
+        if (setSysManagerPermission.errorOccurred()) return new SLResponsOBJ<>(null, setSysManagerPermission.errorMsg);
 
         DResponseObj<Boolean> initiateExternalServices = market.init();
-        if(initiateExternalServices.errorOccurred()&&initiateExternalServices.errorMsg!=50) return new SLResponsOBJ<>(null,initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
+        if (initiateExternalServices.errorOccurred() && initiateExternalServices.errorMsg != 50)
+            return new SLResponsOBJ<>(null, initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
         /// the problem was from hear do with it watever you want
         //when you try to connect again to the conection service its throw you with message error
         //hara ahusharmuta
         //&&initiateExternalServices.errorMsg!=50 this is that i add
 
-        return new SLResponsOBJ<>(guestUUID.value,-1);
+        return new SLResponsOBJ<>(guestUUID.value, -1);
     }
-
-
 
 
     //---------------------------------------1 .פעולות כלליות של מבקר-אורח:-------------------------------------------
@@ -87,7 +86,7 @@ public class Facade implements IMarket {
          * receives a unique string that identifies, a shopping cart, and can function As a buyer.
          * */
         DResponseObj<UUID> res = userManager.GuestVisit();
-        return new SLResponsOBJ<>(res.value.toString(),-1);
+        return new SLResponsOBJ<>(res.value.toString(), -1);
     }
 
     @Override
@@ -137,8 +136,8 @@ public class Facade implements IMarket {
          * Successful registration process The guest is registered in the system as a member
          * (in order to receive member status, he must log)
          */
-        if(Password==null||Password.equals("")){
-            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_PASSWORD);
+        if (Password == null || Password.equals("")) {
+            return new SLResponsOBJ<>(false, ErrorCode.NOT_VALID_PASSWORD);
         }
         if (uuid == null || uuid.equals(""))
             return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
@@ -148,8 +147,8 @@ public class Facade implements IMarket {
 
         if (phoneNumber == null || phoneNumber.equals(""))
             return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
-        DResponseObj<Boolean> res =userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber);
-        return new SLResponsOBJ<>(res.value,res.errorMsg);
+        DResponseObj<Boolean> res = userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber);
+        return new SLResponsOBJ<>(res.value, res.errorMsg);
     }
 
     @Override
@@ -182,7 +181,7 @@ public class Facade implements IMarket {
         if (password == null || password.equals(""))
             return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
         DResponseObj<UUID> res = userManager.Login(UUID.fromString(userId), email, password);
-                return res.errorOccurred()? new SLResponsOBJ<>(res.errorMsg): new SLResponsOBJ<>(res.value.toString(),-1);
+        return res.errorOccurred() ? new SLResponsOBJ<>(res.errorMsg) : new SLResponsOBJ<>(res.value.toString(), -1);
     }
 //-----------------------------------2 .פעולות קנייה של מבקר-אורח-----------------------------------------------
 
@@ -209,10 +208,9 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(ErrorCode.NEGATIVENUMBER);
         if (productID < 0)
             return new SLResponsOBJ<>(ErrorCode.NEGATIVENUMBER);
-/*        DResponseObj<ProductStore> productStore = market.getInfoProductInStore(storeId, productID);
-        if(productStore.errorOccurred()) return new SLResponsOBJ<>(productStore.getErrorMsg());
-        return new SLResponsOBJ<>(new ServiceItem(productStore.getValue()));*/
-        return null;
+        DResponseObj<ProductStore> productStore = market.getInfoProductInStore(storeId, productID);
+        if (productStore.errorOccurred()) return new SLResponsOBJ<>(null, productStore.getErrorMsg());
+        return new SLResponsOBJ<>(new ServiceItem(productStore.getValue()));
     }
 
     @Override
@@ -235,11 +233,10 @@ public class Facade implements IMarket {
         SLResponsOBJ<Store> storeR = new SLResponsOBJ<>(market.getStore(storeId));
         if (storeR.errorOccurred()) return new SLResponsOBJ<>(storeR.errorMsg);
 
-        return new SLResponsOBJ<>(new ServiceStore(storeR.value),-1);
+        return new SLResponsOBJ<>(new ServiceStore(storeR.value), -1);
     }
 
 //TODO GET INFO ABOUT STORES IN THE MARKET
-
 
 
     @Override
@@ -260,13 +257,13 @@ public class Facade implements IMarket {
          * Search for products without focusing on a specific store, by product name.
          */
         if (productName == null || productName.equals(""))
-            return new SLResponsOBJ<>(null,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
         return new SLResponsOBJ<>(market.searchProductByName(productName));
     }
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByName(List<Integer> lst, String productName) {
-        DResponseObj<List<Integer>> res = market.searchProductByName(lst,productName);
+        DResponseObj<List<Integer>> res = market.searchProductByName(lst, productName);
         return new SLResponsOBJ<>(res);
     }
 
@@ -288,13 +285,13 @@ public class Facade implements IMarket {
          * Search for products without focusing on a specific store, by product description.
          */
         if (desc == null || desc.equals(""))
-            return new SLResponsOBJ<>(null,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
         return new SLResponsOBJ<>(market.searchProductByDesc(desc));
     }
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByDesc(List<Integer> lst, String desc) {
-        DResponseObj<List<Integer>> res = market.searchProductByDesc(lst,desc);
+        DResponseObj<List<Integer>> res = market.searchProductByDesc(lst, desc);
         return new SLResponsOBJ<>(res);
     }
 
@@ -317,14 +314,14 @@ public class Facade implements IMarket {
          */
 
         if (rate < 0)
-            return new SLResponsOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(null, ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.searchProductByRate(rate));
     }
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByRate(List<Integer> lst, int rate) {
-        DResponseObj<List<Integer>> res = market.searchProductByRate(lst,rate);
+        DResponseObj<List<Integer>> res = market.searchProductByRate(lst, rate);
         return new SLResponsOBJ<>(res);
     }
 
@@ -348,14 +345,14 @@ public class Facade implements IMarket {
          */
 
         if (category < 0)
-            return new SLResponsOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(null, ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.searchProductByCategory(category));
     }
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByCategory(List<Integer> lst, int category) {
-        DResponseObj<List<Integer>> res = market.searchProductByCategory(lst,category);
+        DResponseObj<List<Integer>> res = market.searchProductByCategory(lst, category);
         return new SLResponsOBJ<>(res);
     }
 
@@ -380,11 +377,11 @@ public class Facade implements IMarket {
          * Search for products without focusing on a specific store, by product Range Prices.
          */
         if (productId < 0)
-            return new SLResponsOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(null, ErrorCode.NEGATIVENUMBER);
         if (min < 0)
-            return new SLResponsOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(null, ErrorCode.NEGATIVENUMBER);
         if (max < 0)
-            return new SLResponsOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(null, ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.searchProductByRangePrices(productId, min, max));
 
@@ -392,7 +389,7 @@ public class Facade implements IMarket {
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByRangePrices(List<Integer> lst, int productId, int min, int max) {
-        DResponseObj<List<Integer>> res = market.searchProductByRangePrices(lst,productId,min,max);
+        DResponseObj<List<Integer>> res = market.searchProductByRangePrices(lst, productId, min, max);
         return new SLResponsOBJ<>(res);
     }
 
@@ -421,11 +418,11 @@ public class Facade implements IMarket {
         if (userId == null || userId.equals(""))
             return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (quantity < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.AddProductToShoppingBag(UUID.fromString(userId), storeId, productId, quantity));
     }
@@ -449,12 +446,12 @@ public class Facade implements IMarket {
          * Checking the contents of the shopping cart .
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(null,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
 
         DResponseObj<ShoppingCart> RShoppingCart = userManager.getUserShoppingCart(UUID.fromString(userId));
-        if (RShoppingCart.errorOccurred()) return new SLResponsOBJ<>(null,RShoppingCart.errorMsg);
+        if (RShoppingCart.errorOccurred()) return new SLResponsOBJ<>(null, RShoppingCart.errorMsg);
 
-        return new SLResponsOBJ<>(new ServiceShoppingCard(RShoppingCart.value),-1);
+        return new SLResponsOBJ<>(new ServiceShoppingCard(RShoppingCart.value), -1);
     }
 
     @Override
@@ -477,19 +474,19 @@ public class Facade implements IMarket {
          * Delete product from the shopping cart
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
         DResponseObj<ShoppingCart> RShppingCart = userManager.getUserShoppingCart(UUID.fromString(userId));
         if (RShppingCart.errorOccurred()) return new SLResponsOBJ<>(false, RShppingCart.getErrorMsg());
 
         if (!RShppingCart.value.removeProductFromShoppingBag(storeId, productId).value)
-            return new SLResponsOBJ<>(false,-1);
+            return new SLResponsOBJ<>(false, -1);
 
-        return new SLResponsOBJ<>(true,-1);
+        return new SLResponsOBJ<>(true, -1);
     }
 
     @Override
@@ -515,25 +512,25 @@ public class Facade implements IMarket {
          * Change product quantity from the shopping cart.
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (quantity < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
         DResponseObj<ShoppingCart> RShppingCart = userManager.getUserShoppingCart(UUID.fromString(userId));
         if (RShppingCart.errorOccurred()) return new SLResponsOBJ<>(false, RShppingCart.getErrorMsg());
 
         if (!RShppingCart.value.setProductQuantity(storeId, productId, quantity).value)
-            return new SLResponsOBJ<>(false,-1);
+            return new SLResponsOBJ<>(false, -1);
 
-        return new SLResponsOBJ<>(true,-1);
+        return new SLResponsOBJ<>(true, -1);
     }
 
     @Override
-    public SLResponsOBJ<String> orderShoppingCart(String userId, String city, String adress,int apartment ,ServiceCreditCard creditCard) {
+    public SLResponsOBJ<String> orderShoppingCart(String userId, String city, String adress, int apartment, ServiceCreditCard creditCard) {
 
         /**
          * @requirement II. 2 .5
@@ -552,12 +549,19 @@ public class Facade implements IMarket {
          * Purchase of the shopping cart.
          * //next version : in accordance with the possible types of purchase and discount for guests, according to policy
          */
-        if (userId == null || userId.equals("") || creditCard.CreditCard == null || creditCard.CreditCard.equals("")||creditCard.CreditDate==null||creditCard.CreditDate.equals("")||creditCard.pin==null||creditCard.pin.equals(""))
+        if (userId == null ||
+                userId.equals("") ||
+                creditCard.CreditCard == null ||
+                creditCard.CreditCard.equals("") ||
+                creditCard.CreditDate == null ||
+                creditCard.CreditDate.equals("") ||
+                creditCard.pin == null ||
+                creditCard.pin.equals(""))
             return new SLResponsOBJ<>(ErrorCode.NOTSTRING);
-        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = market.order(UUID.fromString(userId),city,adress,apartment , creditCard.CreditCard,creditCard.CreditDate,creditCard.pin);
-        if(res.errorOccurred()) return new SLResponsOBJ<>(null,res.errorMsg);
+        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = market.order(UUID.fromString(userId), city, adress, apartment, creditCard.CreditCard, creditCard.CreditDate, creditCard.pin);
+        if (res.errorOccurred()) return new SLResponsOBJ<>(null, res.errorMsg);
         //TODO: make res.val to string of certificates external servieces.
-        return new SLResponsOBJ<>("is ok",-1);
+        return new SLResponsOBJ<>("is ok", -1);
     }
 
     @Override
@@ -581,28 +585,28 @@ public class Facade implements IMarket {
          * Subscriber-visitor (returns to be a guest.
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(null,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(null, ErrorCode.NOTSTRING);
         UUID uid = userManager.Logout(UUID.fromString(userId)).value;
-        return new SLResponsOBJ<>(uid.toString(),-1);
+        return new SLResponsOBJ<>(uid.toString(), -1);
     }
 
     @Override
-    public SLResponsOBJ<Boolean> changePassword(String uuid, String email , String password ,String newPassword) {
-        if(uuid==null){
-            return new SLResponsOBJ<>(false,ErrorCode.NOTVALIDINPUT);
+    public SLResponsOBJ<Boolean> changePassword(String uuid, String email, String password, String newPassword) {
+        if (uuid == null) {
+            return new SLResponsOBJ<>(false, ErrorCode.NOTVALIDINPUT);
         }
-        if(email==null||email.equals("")){
-            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_EMILE);
+        if (email == null || email.equals("")) {
+            return new SLResponsOBJ<>(false, ErrorCode.NOT_VALID_EMILE);
         }
-        if(password==null || password.equals("")){
-            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_PASSWORD);
+        if (password == null || password.equals("")) {
+            return new SLResponsOBJ<>(false, ErrorCode.NOT_VALID_PASSWORD);
         }
-        if(newPassword == null || newPassword.equals("")){
-            return new SLResponsOBJ<>(false,ErrorCode.NOT_VALID_PASSWORD);
+        if (newPassword == null || newPassword.equals("")) {
+            return new SLResponsOBJ<>(false, ErrorCode.NOT_VALID_PASSWORD);
         }
-        DResponseObj<Boolean> res = userManager.changePassword(UUID.fromString(uuid),email,password,newPassword);
-        if(res.errorOccurred()){
-            return new SLResponsOBJ<>(false,res.errorMsg);
+        DResponseObj<Boolean> res = userManager.changePassword(UUID.fromString(uuid), email, password, newPassword);
+        if (res.errorOccurred()) {
+            return new SLResponsOBJ<>(false, res.errorMsg);
         }
         return new SLResponsOBJ<>(res);
     }
@@ -634,15 +638,15 @@ public class Facade implements IMarket {
          *  of the store (the store owner)
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(-1,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(-1, ErrorCode.NOTSTRING);
 
         if (name == null || name.equals(""))
-            return new SLResponsOBJ<>(-1,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(-1, ErrorCode.NOTSTRING);
 
         if (founder == null || founder.equals(""))
-            return new SLResponsOBJ<>(-1,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(-1, ErrorCode.NOTSTRING);
         DResponseObj<Integer> res = market.OpenNewStore(UUID.fromString(userId), name, founder, discountPolicy, buyPolicy, buyStrategy);
-        return new SLResponsOBJ<>(res.value,res.errorMsg);
+        return new SLResponsOBJ<>(res.value, res.errorMsg);
     }
 
     @Override
@@ -669,15 +673,15 @@ public class Facade implements IMarket {
          * @documentation: A store owner can manage the product inventory of a store he owns: Adding products
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (price < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (quantity < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         DResponseObj<Boolean> res = market.addNewProductToStore(UUID.fromString(userId), storeId, productId, price, quantity);
         return new SLResponsOBJ<>(res);
     }
@@ -705,11 +709,11 @@ public class Facade implements IMarket {
          */
 
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.deleteProductFromStore(UUID.fromString(userId), storeId, productId));
     }
@@ -736,13 +740,13 @@ public class Facade implements IMarket {
          * @documentation: A store owner can manage the product inventory of a store he owns: changing products Price
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (price < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
 
         return new SLResponsOBJ<>(market.setProductPriceInStore(UUID.fromString(userId), storeId, productId, price));
@@ -770,13 +774,13 @@ public class Facade implements IMarket {
          * @documentation: A store owner can manage the product inventory of a store he owns: changing products quantity
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (productId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (quantity < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         return new SLResponsOBJ<>(market.setProductQuantityInStore(UUID.fromString(userId), storeId, productId, quantity));
     }
 
@@ -804,11 +808,11 @@ public class Facade implements IMarket {
          * For another store owner. An eight-member subscriber has a new store owner's policy rights And store management.
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (ownerEmail == null || ownerEmail.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         return new SLResponsOBJ<>(market.addNewStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
@@ -834,17 +838,17 @@ public class Facade implements IMarket {
          *
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (mangerEmil == null || mangerEmil.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         return new SLResponsOBJ<>(market.addNewStoreManager(UUID.fromString(userId), storeId, mangerEmil));
     }
 
     @Override
     public SLResponsOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
-            mangerEmil, String per ,boolean onof) {
+            mangerEmil, String per, boolean onof) {
 
         /**
          * @requirement II. 4.7
@@ -865,13 +869,13 @@ public class Facade implements IMarket {
          * For a manager he has appointed. Each manager can set separate permissions.
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (mangerEmil == null || mangerEmil.equals("") || per == null)
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
-        return new SLResponsOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, permissionType.permissionEnum.valueOf(per),onof));
+        return new SLResponsOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, permissionType.permissionEnum.valueOf(per), onof));
     }
 
     @Override
@@ -897,15 +901,15 @@ public class Facade implements IMarket {
          * Their appointment was not harmed.
          */
         if (userId == null || userId.equals(""))
-            return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
+            return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
-            return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+            return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
 
         return new SLResponsOBJ<>(market.closeStore(UUID.fromString(userId), storeId));
     }
 
     @Override
-    public SLResponsOBJ<HashMap<String,List<String>>> getStoreRoles(String userId, int storeId) {
+    public SLResponsOBJ<HashMap<String, List<String>>> getStoreRoles(String userId, int storeId) {
         /**
          * @requirement II. 4.11
          *
@@ -953,19 +957,19 @@ public class Facade implements IMarket {
          */
 
         DResponseObj<List<History>> hist = market.getStoreOrderHistory(UUID.fromString(userId), storeId);
-        SLResponsOBJ<List<History>> RHistory =new SLResponsOBJ<>(hist);
-        if (RHistory.errorOccurred()) return new SLResponsOBJ<>(null,RHistory.errorMsg);
+        SLResponsOBJ<List<History>> RHistory = new SLResponsOBJ<>(hist);
+        if (RHistory.errorOccurred()) return new SLResponsOBJ<>(null, RHistory.errorMsg);
         List<ServiceHistory> ServiceHistoryList = new ArrayList<>();
         List<History> HistoryList = RHistory.getValue();
 
         for (History history : HistoryList) {
             ServiceHistoryList.add(new ServiceHistory(history));
         }
-        return new SLResponsOBJ<>(ServiceHistoryList,-1);
+        return new SLResponsOBJ<>(ServiceHistoryList, -1);
     }
 
     @Override
-    public SLResponsOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email){
+    public SLResponsOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email) {
         /**
          * @requirement: ?????
          * @param userId: String
@@ -982,28 +986,27 @@ public class Facade implements IMarket {
          * @documentation:
          */
 
-        DResponseObj<List<List<History>>> h =  market.getUserInfo(userID,email);
-        if (h.errorOccurred()) return new SLResponsOBJ<>(null,h.errorMsg);
+        DResponseObj<List<List<History>>> h = market.getUserInfo(userID, email);
+        if (h.errorOccurred()) return new SLResponsOBJ<>(null, h.errorMsg);
         List<List<ServiceHistory>> ServiceHistoryList = new ArrayList<>();
         List<List<History>> HistoryList = h.getValue();
 
         for (List<History> historyList : HistoryList) {
             List<ServiceHistory> s = new LinkedList<>();
-            for (History history : historyList ){
+            for (History history : historyList) {
                 s.add(new ServiceHistory(history));
             }
             ServiceHistoryList.add(s);
         }
-        return new SLResponsOBJ<>(ServiceHistoryList,-1);
+        return new SLResponsOBJ<>(ServiceHistoryList, -1);
     }
 
-    public SLResponsOBJ<Integer> addNewProductType(String uuid, String name , String description, int category)
-    {
-        if(name==null||name.equals("")||description==null||description.equals("")||category<0){
-            return new SLResponsOBJ<>(-1,ErrorCode.NOTVALIDINPUT);
+    public SLResponsOBJ<Integer> addNewProductType(String uuid, String name, String description, int category) {
+        if (name == null || name.equals("") || description == null || description.equals("") || category < 0) {
+            return new SLResponsOBJ<>(-1, ErrorCode.NOTVALIDINPUT);
         }
-        DResponseObj<Integer> res = market.addNewProductType(UUID.fromString(uuid),name,description,category);
-        return new SLResponsOBJ<>( res.value,-1);
+        DResponseObj<Integer> res = market.addNewProductType(UUID.fromString(uuid), name, description, category);
+        return new SLResponsOBJ<>(res.value, -1);
     }
 
     @Override //TODO way search product ? if you return stores ??
@@ -1023,15 +1026,15 @@ public class Facade implements IMarket {
          *
          * @documentation:
          */
-        SLResponsOBJ<List<Integer>> RProductByStoreRate =new SLResponsOBJ<>( market.searchProductByStoreRate(rate));
-        if (RProductByStoreRate.errorOccurred()) return new SLResponsOBJ<>(null,RProductByStoreRate.errorMsg);
+        SLResponsOBJ<List<Integer>> RProductByStoreRate = new SLResponsOBJ<>(market.searchProductByStoreRate(rate));
+        if (RProductByStoreRate.errorOccurred()) return new SLResponsOBJ<>(null, RProductByStoreRate.errorMsg);
 
-        return new SLResponsOBJ<>(RProductByStoreRate.value,-1);
+        return new SLResponsOBJ<>(RProductByStoreRate.value, -1);
     }
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByStoreRate(List<Integer> lst, int rate) {
-        DResponseObj<List<Integer>> res = market.searchProductByStoreRate(lst,rate);
+        DResponseObj<List<Integer>> res = market.searchProductByStoreRate(lst, rate);
         return new SLResponsOBJ<>(res);
     }
 

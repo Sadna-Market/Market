@@ -1,5 +1,6 @@
 package main.System.Server.Domain.UserModel;
 
+import main.ErrorCode;
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
@@ -14,12 +15,12 @@ public class ShoppingCart {
         shoppingBagHash=new ConcurrentHashMap<>();
     }
 
-    public DResponseObj<Boolean> addNewProductToShoppingBag(int ProductId, Store Store, int quantity){
+    public DResponseObj<Boolean> addNewProductToShoppingBag(int ProductId, Store store, int quantity){
         logger.debug("ShoppingCart addNewProductToShoppingBag");
-        if(!shoppingBagHash.containsKey(Store.getStoreId())){
-            shoppingBagHash.put(Store.getStoreId().value,new ShoppingBag(Store));
+        if(!shoppingBagHash.containsKey(store.getStoreId().value)){
+            shoppingBagHash.put(store.getStoreId().value,new ShoppingBag(store));
         }
-        ShoppingBag shoppingBag = shoppingBagHash.get(Store.getStoreId().value);
+        ShoppingBag shoppingBag = shoppingBagHash.get(store.getStoreId().value);
         return new DResponseObj<Boolean>( shoppingBag.addProduct(ProductId,quantity).value);
     }
 
@@ -33,10 +34,13 @@ public class ShoppingCart {
     {
         logger.debug("ShoppingCart setProductQuantity");
         if(shoppingBagHash.containsKey(storeId)){
-            return new DResponseObj<Boolean>( shoppingBagHash.get(storeId).setProductQuantity(productId,quantity).value);
+            ShoppingBag bag = shoppingBagHash.get(storeId);
+            Store store = bag.getStore().value;
+            DResponseObj<Boolean> hasQuantity = store.isProductExistInStock(productId,quantity);
+            return hasQuantity.errorOccurred() ? new DResponseObj<>(hasQuantity.value,hasQuantity.errorMsg) : bag.setProductQuantity(productId,quantity);
         }
         else {
-            return new DResponseObj<>( false);
+            return new DResponseObj<>( false, ErrorCode.NO_STORE_IN_BAG);
         }
     }
 
@@ -45,7 +49,12 @@ public class ShoppingCart {
     public  DResponseObj<Boolean>  removeProductFromShoppingBag(int storeId,int productId){
         logger.debug("ShoppingCart removeProductFromShoppingBag");
         if(shoppingBagHash.containsKey(storeId)) {
-            return new DResponseObj<Boolean>( shoppingBagHash.get(storeId).removeProductFromShoppingBag(productId).value);
+            DResponseObj<Boolean> res = shoppingBagHash.get(storeId).removeProductFromShoppingBag(productId);
+            if(res.errorOccurred())
+                return new DResponseObj<>(res.value,res.errorMsg);
+            if(shoppingBagHash.get(storeId).isEmpty().value)
+                shoppingBagHash.remove(storeId);
+            return new DResponseObj<>(true,-1);
         }
         else {
             return new DResponseObj<>( false);

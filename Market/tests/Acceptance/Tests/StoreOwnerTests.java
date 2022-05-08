@@ -171,8 +171,8 @@ public class StoreOwnerTests extends MarketTests{
 
         ATResponseObj<ItemDetail> response = market.getProduct(existing_storeID, updatedProduct.itemID);
         assertFalse(response.errorOccurred());
-        assertEquals(150, updatedProduct.price);
-        assertEquals(3, updatedProduct.quantity);
+        assertEquals(150, response.value.price);
+        assertEquals(3, response.value.quantity);
     }
 
     @Test
