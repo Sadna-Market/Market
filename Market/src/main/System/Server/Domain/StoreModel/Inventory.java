@@ -45,7 +45,7 @@ public class Inventory {
                 return new DResponseObj<>(true);
             }
             logger.info("productId:" + productId + " exist in stock but not enough quantity");
-            return new DResponseObj<>(false);
+            return new DResponseObj<>(false,ErrorCode.NOT_AVAILABLE_QUANTITY);
         }finally {
             productStore.getProductLock().unlockRead(stamp);
         }
@@ -87,6 +87,7 @@ public class Inventory {
             long stamp = productStore.getProductLock().writeLock();
             try {
                 int quantityInInventory = productStore.getQuantity().getValue();
+                 if(quantityInInventory == 0) return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXISTINSTORE);
                 if(quantityInInventory>=quantity) {
                     productStore.setQuantity(quantityInInventory - quantity);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + (quantityInInventory-quantity));

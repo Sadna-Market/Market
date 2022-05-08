@@ -79,11 +79,14 @@ public class GuestBuyTests extends MarketTests{
     @DisplayName("req: #2.2.2 - fail test [invalid input]")
     void SearchItem_Fail2() {
         ATResponseObj<List<Integer>> response = market.searchItems(null, -1, new LinkedList<>());
-        assertTrue(response.errorOccurred());
+        assertFalse(response.errorOccurred());
+        assertTrue(response.value.isEmpty());
         response = market.searchItems("null", -1, new LinkedList<>());
-        assertTrue(response.errorOccurred());
+        assertFalse(response.errorOccurred());
+        assertTrue(response.value.isEmpty());
         response = market.searchItems("null", -1, null);
-        assertTrue(response.errorOccurred());
+        assertFalse(response.errorOccurred());
+        assertTrue(response.value.isEmpty());
     }
 
     /**

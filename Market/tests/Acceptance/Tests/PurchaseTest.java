@@ -56,7 +56,7 @@ public class PurchaseTest extends MarketTests {
 
         ATResponseObj<List<String>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
         List<String> recipes = res.value;
-        assertTrue(recipes.contains(recipe));
+        assertTrue(recipes.contains("1"));
     }
 
     @Test
@@ -160,7 +160,6 @@ public class PurchaseTest extends MarketTests {
         uuid = memberID.value;
 
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
-
         ATResponseObj<String> guestID = market.logout(uuid);
         assertFalse(guestID.errorOccurred());
         uuid = guestID.value;
@@ -170,13 +169,8 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.guestOnline(uuid));
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
-        ATResponseObj<String> managerID = market.login(uuid,member);//manager of existing store
-        assertFalse(managerID.errorOccurred());
-        uuid = managerID.value;
-        int numOfRecipes = market.getHistoryPurchase(uuid, existing_storeID).value.size();
-        guestID = market.logout(uuid);
-        assertFalse(guestID.errorOccurred());
-        uuid = guestID.value;
+        int numOfRecipes = 0; //no purchases in exiting store yet
+
 
         //main action
         ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
@@ -187,6 +181,7 @@ public class PurchaseTest extends MarketTests {
         memberID = market.login(uuid, registeredUser);
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
+
         response = market.purchaseCart(uuid, creditCard, member.addr);
         assertTrue(response.errorOccurred());
 
@@ -222,8 +217,8 @@ public class PurchaseTest extends MarketTests {
         ItemDetail item2 = new ItemDetail("screenFULLHD", 1, 10, List.of("TV"), "screen");
         item2.itemID = SCREEN_FULL_HD_ID;
 
-        assertTrue(market.addToCart(uuid, existing_storeID, null));
-        assertTrue(market.addToCart(uuid, existing_storeID, null));
+        assertFalse(market.addToCart(uuid, existing_storeID, null));
+        assertFalse(market.addToCart(uuid, existing_storeID, null));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
@@ -232,7 +227,7 @@ public class PurchaseTest extends MarketTests {
         assertFalse(guestID.errorOccurred());
         uuid = guestID.value;
 
-        ATResponseObj<String> response = market.purchaseCart(uuid, null, null);
+        ATResponseObj<String> response = market.purchaseCart(uuid, new CreditCard("xxx","xx","xxx"), new Address("x","ss",-1));
         assertTrue(response.errorOccurred());
 
         //post conditions

@@ -21,7 +21,7 @@ public class RealMarket implements MarketBridge {
      */
     public ATResponseObj<String> initSystem(User sysManager) {
         SLResponsOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number);
-        return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value,null);
+        return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value, null);
     }
 
     /**
@@ -88,7 +88,7 @@ public class RealMarket implements MarketBridge {
      * @return response object with the recipe certification
      */
     public ATResponseObj<String> pay(CreditCard creditCard, int dollars) {
-        SLResponsOBJ<String> res = creditCard ==null ? market.payment(null,dollars) :
+        SLResponsOBJ<String> res = creditCard == null ? market.payment(null, dollars) :
                 market.payment(new ServiceCreditCard(creditCard.num, creditCard.expire, creditCard.cvv), dollars);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value, null);
     }
@@ -101,10 +101,10 @@ public class RealMarket implements MarketBridge {
      * @return certificate for success supply
      */
     public ATResponseObj<String> supply(List<ItemDetail> deliver, User user) {
-        if(deliver == null) return new ATResponseObj<>("error");
+        if (deliver == null) return new ATResponseObj<>("error");
         List<ServiceItem> lst = new ArrayList<>();
         deliver.forEach(i -> {
-            lst.add(new ServiceItem(i.quantity, i.price, i.itemID,i.name));
+            lst.add(new ServiceItem(i.quantity, i.price, i.itemID, i.name));
         });
         ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment);
         SLResponsOBJ<Integer> res = market.supply(su, lst);
@@ -186,8 +186,8 @@ public class RealMarket implements MarketBridge {
      * @param member the member to change the password
      * @return true if success else false
      */
-    public boolean changePassword(String uuid , User member , String newPassword) {
-        SLResponsOBJ<Boolean> res = market.changePassword(uuid,member.username, member.password,newPassword);
+    public boolean changePassword(String uuid, User member, String newPassword) {
+        SLResponsOBJ<Boolean> res = market.changePassword(uuid, member.username, member.password, newPassword);
         return res.value;
     }
 
@@ -200,7 +200,7 @@ public class RealMarket implements MarketBridge {
     public ATResponseObj<String> getStoreInfo(int storeID) {
         SLResponsOBJ<ServiceStore> response = market.getStore(storeID);
         String err = String.valueOf(response.errorMsg);
-        return response.errorOccurred() ? new ATResponseObj<>(err) : new ATResponseObj<>(response.value.toString(),null);
+        return response.errorOccurred() ? new ATResponseObj<>(err) : new ATResponseObj<>(response.value.toString(), null);
     }
 
     /**
@@ -213,15 +213,18 @@ public class RealMarket implements MarketBridge {
      */
     public ATResponseObj<List<Integer>> searchItems(String itemName, int category, List<String> keyWords) {
         HashSet<Integer> items = new HashSet<>();
-        SLResponsOBJ<List<Integer>> res = market.searchProductByName(itemName);
-        if (!res.errorOccurred()) items.addAll(res.value);
-        res = market.searchProductByCategory(1); //TODO: change category to string
-        if (!res.errorOccurred()) items.addAll(res.value);
-        for (String word : keyWords) {
-            SLResponsOBJ<List<Integer>> result = market.searchProductByDesc(word);
-            if (!result.errorOccurred()) items.addAll(result.value);
+        SLResponsOBJ<List<Integer>> res1 = market.searchProductByName(itemName);
+        if (!res1.errorOccurred()) items.addAll(res1.value);
+        SLResponsOBJ<List<Integer>> res2 = market.searchProductByCategory(category); //TODO: change category to string
+        if (!res2.errorOccurred()) items.addAll(res2.value);
+        if (keyWords != null) {
+            for (String word : keyWords) {
+                SLResponsOBJ<List<Integer>> result = market.searchProductByDesc(word);
+                if (!result.errorOccurred()) items.addAll(result.value);
+                items.addAll(result.value);
+            }
         }
-        return items.isEmpty() ? new ATResponseObj<>("not found") : new ATResponseObj<>(items.stream().toList());
+        return new ATResponseObj<>(new ArrayList<>(items));
     }
 
     /**
@@ -236,17 +239,17 @@ public class RealMarket implements MarketBridge {
      */
     public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, int[] priceRange, int category, int storeRank) {
         Set<Integer> set = new HashSet<>();
-        SLResponsOBJ<List<Integer>> res1 = market.searchProductByRate(items,productRank);
-        if(res1.errorOccurred()) return new ATResponseObj<>("error");
+        SLResponsOBJ<List<Integer>> res1 = market.searchProductByRate(items, productRank);
+        if (res1.errorOccurred()) return new ATResponseObj<>("error");
         set.addAll(res1.value);
 //        SLResponsOBJ<List<Integer>> res2 = market.searchProductByRangePrices(items,)
 //        if(res2.errorOccurred()) return new ATResponseObj<>("error");
 //        set.addAll(res2.value); //TODO: change
-        SLResponsOBJ<List<Integer>> res3 = market.searchProductByCategory(items,category);
-        if(res3.errorOccurred()) return new ATResponseObj<>("error");
+        SLResponsOBJ<List<Integer>> res3 = market.searchProductByCategory(items, category);
+        if (res3.errorOccurred()) return new ATResponseObj<>("error");
         set.addAll(res3.value);
-        SLResponsOBJ<List<Integer>> res4 = market.searchProductByStoreRate(items,storeRank);
-        if(res4.errorOccurred()) return new ATResponseObj<>("error");
+        SLResponsOBJ<List<Integer>> res4 = market.searchProductByStoreRate(items, storeRank);
+        if (res4.errorOccurred()) return new ATResponseObj<>("error");
         set.addAll(res4.value);
         return new ATResponseObj<>(new ArrayList<>(set));
     }
@@ -261,7 +264,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean addToCart(String uuid, int storeID, ItemDetail item) {
         SLResponsOBJ<Boolean> res;
-        if(item == null)
+        if (item == null)
             res = market.addProductToShoppingBag(uuid, storeID, -1, -1);
         else
             res = market.addProductToShoppingBag(uuid, storeID, item.itemID, item.quantity);
@@ -300,7 +303,7 @@ public class RealMarket implements MarketBridge {
      * @return true if success, else false
      */
     public boolean removeProductFromCart(String uuid, ItemDetail item, int storeID) {
-        SLResponsOBJ<Boolean> res = item == null ? market.removeProductFromShoppingBag(uuid,storeID,-1): market.removeProductFromShoppingBag(uuid, storeID, item.itemID);
+        SLResponsOBJ<Boolean> res = item == null ? market.removeProductFromShoppingBag(uuid, storeID, -1) : market.removeProductFromShoppingBag(uuid, storeID, item.itemID);
         return res.value;
     }
 
@@ -334,7 +337,7 @@ public class RealMarket implements MarketBridge {
      */
     public ATResponseObj<Integer> addStore(String uuid, User owner) {
         SLResponsOBJ<Integer> res;
-        if(owner == null)
+        if (owner == null)
             res = market.openNewStore(uuid, "moshe", null, null, null, null);
         else
             res = market.openNewStore(uuid, "moshe", owner.username, null, null, null);
@@ -350,7 +353,7 @@ public class RealMarket implements MarketBridge {
      * @return true if success else false
      */
     public boolean addItemToStore(String uuid, int storeID, ItemDetail item) {
-        SLResponsOBJ<Boolean> res = market.addNewProductToStore(uuid,storeID,item.itemID,item.price,item.quantity);
+        SLResponsOBJ<Boolean> res = market.addNewProductToStore(uuid, storeID, item.itemID, item.price, item.quantity);
         return res.value;
     }
 
@@ -374,7 +377,11 @@ public class RealMarket implements MarketBridge {
      * @return certificated of payment and supply
      */
     public ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address) {
-        SLResponsOBJ<String> res = market.orderShoppingCart(uuid, address.city, address.street, address.apartment, new ServiceCreditCard(creditCard.num, creditCard.expire, creditCard.cvv));
+        SLResponsOBJ<String> res = market.orderShoppingCart(uuid,
+                address.city,
+                address.street,
+                address.apartment,
+                new ServiceCreditCard(creditCard.num, creditCard.expire, creditCard.cvv));
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value, null);
     }
 
@@ -453,8 +460,8 @@ public class RealMarket implements MarketBridge {
      * @return item will detail
      */
     public ATResponseObj<ItemDetail> getProduct(int storeID, int itemID) {
-        //TODO: add ServiceProduct class and return it here
-        return null;
+        SLResponsOBJ<ServiceItem> res = market.getInfoProductInStore(storeID, itemID);
+        return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(new ItemDetail(res.value));
     }
 
     /**
@@ -465,7 +472,7 @@ public class RealMarket implements MarketBridge {
      * @return true if is owner, else false
      */
     public boolean isOwner(int storeID, User user) {
-        SLResponsOBJ<Boolean> res = market.isOwner(user.username,storeID);
+        SLResponsOBJ<Boolean> res = market.isOwner(user.username, storeID);
         return res.value;
     }
 
@@ -490,7 +497,7 @@ public class RealMarket implements MarketBridge {
      * @return true if user is manager else false
      */
     public boolean isManager(int storeID, User user) {
-        SLResponsOBJ<Boolean> res = market.isManager(user.username,storeID);
+        SLResponsOBJ<Boolean> res = market.isManager(user.username, storeID);
         return res.value;
     }
 

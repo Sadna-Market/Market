@@ -38,6 +38,7 @@ public class Market {
     public Market(UserManager userManager) {
         this.userManager = userManager;
         ExternalService.getInstance();
+        purchase = new Purchase();
     }
     /*************************************************Functions*********************************************************/
     public DResponseObj<Boolean> isStoreClosed(int StoreID){
@@ -53,11 +54,11 @@ public class Market {
     //2.2.1
     //pre: -
     //post: get info from valid store and product.
-    public DResponseObj<String> getInfoProductInStore(int storeID, int productID) {
+    public DResponseObj<ProductStore> getInfoProductInStore(int storeID, int productID) {
         DResponseObj<ProductType> p = getProductType(productID);
 
         if (p.errorOccurred()){
-            DResponseObj<String> output=new DResponseObj<>();
+            DResponseObj<ProductStore> output=new DResponseObj<>();
             output.setErrorMsg(p.getErrorMsg());
             return output;
         }
@@ -65,11 +66,11 @@ public class Market {
 
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()){
-            DResponseObj<String> output=new DResponseObj<>();
+            DResponseObj<ProductStore> output=new DResponseObj<>();
             output.setErrorMsg(s.getErrorMsg());
             return output;
         }
-        DResponseObj<String> str =s.getValue().getProductInStoreInfo(productID);
+        DResponseObj<ProductStore> str =s.getValue().getProductInStoreInfo(productID);
         return str;
     }
 
@@ -331,19 +332,23 @@ public class Market {
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
 
         //check PaymentService AND check SupplyService
-        DResponseObj<Boolean> checkServices = paymentAndSupplyConnct();
-        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
-        if (!checkServices.getValue()){
-            logger.warn("this External Services dont connect.");
-            return new DResponseObj<>(ErrorCode.EXTERNAL_SERVICE_ERROR);
-        }
+       // DResponseObj<Boolean> checkServices = paymentAndSupplyConnct(); //TODO: ask YAKI
+//        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
+//        if (!checkServices.getValue()){
+//            logger.warn("this External Services dont connect.");
+//            return new DResponseObj<>(ErrorCode.EXTERNAL_SERVICE_ERROR);
+//        }
 
         //check Cart
         DResponseObj<ShoppingCart> shoppingCart = userManager.getUserShoppingCart(userId);
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
-
-        return new DResponseObj(purchase.order(user.getValue(),City,Street,apartment,cardNumber,exp,pin));
+        if(shoppingCart.value.getHashShoppingCart().value.isEmpty())
+            return new DResponseObj<>(null,ErrorCode.EMPTY_CART);
+        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res =  purchase.order(user.getValue(),City,Street,apartment,cardNumber,exp,pin);
+        if(res.errorOccurred()) return new DResponseObj<>(null,ErrorCode.ORDER_FAIL);
+        return res.value.isEmpty() ? new DResponseObj<>(null,ErrorCode.ORDER_FAIL) : res;
     }
+
 
 
 
@@ -352,7 +357,7 @@ public class Market {
     //post: new Store add to the market
     public DResponseObj<Integer> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
         DResponseObj<Boolean> checkUM=userManager.isLogged(userId);
-        if (checkUM.errorOccurred() || !checkUM.getValue()) return new DResponseObj<>(checkUM.errorMsg);
+        if (checkUM.errorOccurred() || !checkUM.getValue()) return new DResponseObj<>(null,ErrorCode.NOTLOGGED);
 
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");
@@ -361,7 +366,7 @@ public class Market {
             stores.put(store.getStoreId().value, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
-            return new DResponseObj<Integer>(store.getStoreId().value,-1);
+            return new DResponseObj<>(store.getStoreId().value,-1);
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock");
