@@ -663,21 +663,21 @@ public class StoreOwnerTests extends MarketTests{
         memberID = market.login(uuid, newManager);
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
-        ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
+        ATResponseObj<String> res = market.getUserRoleInfo(uuid,existing_storeID);
         assertTrue(res.errorOccurred());
     }
 
     @Test
     @DisplayName("req: #2.4.11 - fail test [user doesnt exist]")
     void getRoleInfo_Fail3() {
-        ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
+        ATResponseObj<String> res = market.getUserRoleInfo(uuid,existing_storeID);
         assertTrue(res.errorOccurred());
     }
 
     @Test
     @DisplayName("req: #2.4.11 - fail test [invalid input]")
     void getRoleInfo_Fail4() {
-        ATResponseObj<String> res = market.getStoreInfo(-1);
+        ATResponseObj<String> res = market.getUserRoleInfo(uuid,-1);
         assertTrue(res.errorOccurred());
     }
 

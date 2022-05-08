@@ -200,7 +200,7 @@ public class RealMarket implements MarketBridge {
     public ATResponseObj<String> getStoreInfo(int storeID) {
         SLResponsOBJ<ServiceStore> response = market.getStore(storeID);
         String err = String.valueOf(response.errorMsg);
-        return response.errorOccurred() ? new ATResponseObj<>(err) : new ATResponseObj<>(response.value.toString(), err);
+        return response.errorOccurred() ? new ATResponseObj<>(err) : new ATResponseObj<>(response.value.toString(),null);
     }
 
     /**
@@ -260,8 +260,12 @@ public class RealMarket implements MarketBridge {
      * @return true if success, else false
      */
     public boolean addToCart(String uuid, int storeID, ItemDetail item) {
-        SLResponsOBJ<Boolean> res = market.addProductToShoppingBag(uuid, storeID, item.itemID, item.quantity);
-        return res.value;
+        SLResponsOBJ<Boolean> res;
+        if(item == null)
+            res = market.addProductToShoppingBag(uuid, storeID, -1, -1);
+        else
+            res = market.addProductToShoppingBag(uuid, storeID, item.itemID, item.quantity);
+        return !res.errorOccurred();
     }
 
     /**

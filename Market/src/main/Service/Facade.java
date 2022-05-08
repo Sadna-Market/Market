@@ -951,7 +951,8 @@ public class Facade implements IMarket {
          *
          * @documentation: Receiving information on in-store purchase history
          */
-        SLResponsOBJ<List<History>> RHistory =new SLResponsOBJ<>(market.getStoreOrderHistory(UUID.fromString(userId), storeId));
+        DResponseObj<List<History>> hist = market.getStoreOrderHistory(UUID.fromString(userId), storeId);
+        SLResponsOBJ<List<History>> RHistory =new SLResponsOBJ<>(hist);
         if (RHistory.errorOccurred()) return new SLResponsOBJ<>(null,RHistory.errorMsg);
         List<ServiceHistory> ServiceHistoryList = new ArrayList<>();
         List<History> HistoryList = RHistory.getValue();
