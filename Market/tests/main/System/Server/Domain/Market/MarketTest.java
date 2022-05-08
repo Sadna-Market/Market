@@ -78,6 +78,26 @@ class MarketTest {
         assertEquals(0,market.filterByName(list,name).getValue().size());
     }
 
+    @DisplayName("filterByCategory -  successful")
+    @Test
+    void filterByCategory() {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=10; i++)
+            list.add(i);
+        assertEquals(5,market.filterByCategory(list,1).getValue().size());
+    }
+
+    @DisplayName("filterByCategory -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,6,7,8,9,10})
+    @Test
+    void filterByCategory2(int cat) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=10; i++)
+            list.add(i);
+        assertNotEquals(cat,market.filterByCategory(list,2).getValue().size());
+    }
+
     @DisplayName("filterByDesc -  successful")
     @ParameterizedTest
     @ValueSource(strings = {"hello","","o","ell"})
@@ -122,6 +142,7 @@ class MarketTest {
             list.add(i);
         assertTrue(rate > market.filterByRate(list,rate).getValue().size());
     }
+
 
 
     @DisplayName("getStore  -  failure for 10")

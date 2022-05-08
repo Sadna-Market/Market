@@ -290,14 +290,14 @@ public class Market {
         }
         List<Integer> output=new ArrayList<>();
 
-        
+
         for (Integer productID: list){
             DResponseObj<List<Integer>> storePassRate = searchProductByStoreRate(minRate);
             for (Integer storeID : storePassRate.getValue()){
                 DResponseObj<Store> getStore = getStore(storeID);
                 if (getStore.errorOccurred()) continue;
-                DResponseObj<ProductType> product = getStore.getValue().getProductInStoreInfo(productID);
-                if (!product.errorOccurred()){
+                DResponseObj<Boolean> isExist = getStore.getValue().isProductExistInStock(productID,1);
+                if (!isExist.errorOccurred() && !isExist.getValue()){
                     logger.debug("Store #"+storeID+ " include product #"+productID);
                     output.add(productID);
                     break;
@@ -343,6 +343,24 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
+    public DResponseObj<List<Integer>> filterByRangePrices(List<Integer> list, int min, int max) {
+        if (min > max) {
+            logger.warn("min bigger then max - invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
+        List<Integer> output=new ArrayList<>();
+
+        List<Integer> storesID = getStoreIDs(getStores());
+        for (Integer productID: list){
+            DResponseObj<List<Integer>> storePassRate = searchProductByRangePrices(storesID,productID,min,max);
+            if (!storePassRate.errorOccurred() && storePassRate.getValue().size()>0){
+                logger.debug("found store that contain this product");
+                output.add(productID);
+            }
+        }
+        return new DResponseObj<>(output);
+    }
+
     //2.2.2
     //pre: -
     //post: get all the products that them price is between min and max
@@ -378,6 +396,29 @@ public class Market {
                 if (!cat.errorOccurred())
                     output.add(iproduct);
             }
+        }
+        return new DResponseObj<>(output);
+    }
+
+    public DResponseObj<List<Integer>> filterByCategory(List<Integer> list,int category) {
+        if (category < 0 || category > 10) {
+            logger.warn("category is invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
+        List<Integer> output=new ArrayList<>();
+
+        for (Integer productID: list){
+            DResponseObj<ProductType> productDR = getProductType(productID);
+            if (productDR.errorOccurred()) {
+                continue;
+            }
+            DResponseObj<Integer> isCategory = productDR.getValue().getCategory();
+            if (isCategory.errorOccurred()) continue;
+            if (isCategory.getValue() != category){
+                logger.debug("this product #"+productID + " from category #"+isCategory.getValue() + ".");
+                continue;
+            }
+            output.add(productID);
         }
         return new DResponseObj<>(output);
     }
@@ -898,7 +939,7 @@ public class Market {
         for (int i = 0; i < 10; i++) {
             ProductType p = new ProductType(productCounter, "product" + i, "hello",3);
             p.setRate(i);
-            p.setCategory(i % 3);
+            p.setCategory(i%2==0 ? 2 : 1);
             productTypes.put(productCounter++, p);
         }
         for (int i = 0; i < 10; i++) {
