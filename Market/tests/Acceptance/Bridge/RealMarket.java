@@ -333,7 +333,11 @@ public class RealMarket implements MarketBridge {
      * @return Response- msg error if occurred else id of the store that was created
      */
     public ATResponseObj<Integer> addStore(String uuid, User owner) {
-        SLResponsOBJ<Integer> res = market.openNewStore(uuid, "moshe", owner.username, null, null, null);
+        SLResponsOBJ<Integer> res;
+        if(owner == null)
+            res = market.openNewStore(uuid, "moshe", null, null, null, null);
+        else
+            res = market.openNewStore(uuid, "moshe", owner.username, null, null, null);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
 
@@ -514,8 +518,12 @@ public class RealMarket implements MarketBridge {
      * @return true if success else false
      */
     public boolean updatePermission(String uuid, String permission, boolean onOf, User manager, int storeID) {
-        SLResponsOBJ<Boolean> res = market.setManagerPermissions(uuid, storeID, manager.username, permission, onOf);
-        return res.value;
+        SLResponsOBJ<Boolean> res;
+        if(permission == null)
+            res = market.setManagerPermissions(uuid, storeID, manager.username, null, onOf);
+        else
+            res = market.setManagerPermissions(uuid, storeID, manager.username, permission, onOf);
+        return !res.errorOccurred();
     }
 
     /**
