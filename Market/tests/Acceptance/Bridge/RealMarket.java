@@ -77,7 +77,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean serviceIsAlive(String service) {
         SLResponsOBJ<Boolean> res = market.serviceIsAlive(service);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -119,7 +119,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean cartExists(String uuid) {
         SLResponsOBJ<Boolean> res = market.cartExists(uuid);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -130,7 +130,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean guestOnline(String uuid) {
         SLResponsOBJ<Boolean> res = market.guestOnline(uuid);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -154,7 +154,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean isMember(User newUser) {
         SLResponsOBJ<Boolean> res = market.isMember(newUser.username);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -177,7 +177,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean isLoggedIn(String uuid) {
         SLResponsOBJ<Boolean> res = market.isLoggedIn(uuid);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -188,7 +188,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean changePassword(String uuid, User member, String newPassword) {
         SLResponsOBJ<Boolean> res = market.changePassword(uuid, member.username, member.password, newPassword);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -304,7 +304,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean removeProductFromCart(String uuid, ItemDetail item, int storeID) {
         SLResponsOBJ<Boolean> res = item == null ? market.removeProductFromShoppingBag(uuid, storeID, -1) : market.removeProductFromShoppingBag(uuid, storeID, item.itemID);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -318,7 +318,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean updateProductQuantity(String uuid, ItemDetail item, int newQuantity, int storeID) {
         SLResponsOBJ<Boolean> res = market.setProductQuantityShoppingBag(uuid, item.itemID, storeID, newQuantity);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -353,8 +353,12 @@ public class RealMarket implements MarketBridge {
      * @return true if success else false
      */
     public boolean addItemToStore(String uuid, int storeID, ItemDetail item) {
-        SLResponsOBJ<Boolean> res = market.addNewProductToStore(uuid, storeID, item.itemID, item.price, item.quantity);
-        return res.value;
+        SLResponsOBJ<Boolean> res;
+        if (item == null) {
+            res = market.addNewProductToStore(uuid, storeID, -1, -1, -1);
+        } else
+            res = market.addNewProductToStore(uuid, storeID, item.itemID, item.price, item.quantity);
+        return !res.errorOccurred();
     }
 
     /**
@@ -408,7 +412,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean isContributor(int storeID, User user) {
         SLResponsOBJ<Boolean> res = market.isFounder(storeID, user.username);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -420,7 +424,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean hasItem(int storeID, int itemID) {
         SLResponsOBJ<Boolean> res = market.hasItem(storeID, itemID);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -432,8 +436,11 @@ public class RealMarket implements MarketBridge {
      * @return true if success, else false
      */
     public boolean removeProductFromStore(String uuid, int storeID, ItemDetail item) {
-        SLResponsOBJ<Boolean> res = market.deleteProductFromStore(uuid, storeID, item.itemID);
-        return res.value;
+        SLResponsOBJ<Boolean> res;
+        if (item == null) {
+            res = market.deleteProductFromStore(uuid, storeID, -1);
+        } else res = market.deleteProductFromStore(uuid, storeID, item.itemID);
+        return !res.errorOccurred();
     }
 
     /**
@@ -446,10 +453,10 @@ public class RealMarket implements MarketBridge {
      * @return true if success, else false
      */
     public boolean updateProductInStore(String uuid, int storeID, ItemDetail existingProduct, ItemDetail updatedProduct) {
-        SLResponsOBJ<Boolean> res = market.setProductPriceInStore(uuid, storeID, existingProduct.itemID, updatedProduct.price);
+        SLResponsOBJ<Boolean> res = market.setProductPriceInStore(uuid, storeID, existingProduct == null? -1: existingProduct.itemID,updatedProduct == null? -1: updatedProduct.price);
         if (res.errorOccurred()) return false;
-        res = market.setProductQuantityInStore(uuid, storeID, existingProduct.itemID, updatedProduct.quantity);
-        return res.value;
+        res = market.setProductQuantityInStore(uuid, storeID, existingProduct == null? -1: existingProduct.itemID, updatedProduct == null ? -1 : updatedProduct.quantity);
+        return !res.errorOccurred();
     }
 
     /**
@@ -473,7 +480,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean isOwner(int storeID, User user) {
         SLResponsOBJ<Boolean> res = market.isOwner(user.username, storeID);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -485,8 +492,8 @@ public class RealMarket implements MarketBridge {
      * @return true if success, else false
      */
     public boolean assignNewOwner(String uuid, int storeID, User newOwner) {
-        SLResponsOBJ<Boolean> res = market.addNewStoreOwner(uuid, storeID, newOwner.username);
-        return res.value;
+        SLResponsOBJ<Boolean> res = market.addNewStoreOwner(uuid, storeID, newOwner == null ? null : newOwner.username);
+        return !res.errorOccurred();
     }
 
     /**
@@ -498,7 +505,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean isManager(int storeID, User user) {
         SLResponsOBJ<Boolean> res = market.isManager(user.username, storeID);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -510,8 +517,8 @@ public class RealMarket implements MarketBridge {
      * @return true if success, else false
      */
     public boolean assignNewManager(String uuid, int storeID, User newManager) {
-        SLResponsOBJ<Boolean> res = market.addNewStoreManger(uuid, storeID, newManager.username);
-        return res.value;
+        SLResponsOBJ<Boolean> res = market.addNewStoreManger(uuid, storeID, newManager == null ? null : newManager.username);
+        return !res.errorOccurred();
     }
 
     /**
@@ -526,7 +533,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean updatePermission(String uuid, String permission, boolean onOf, User manager, int storeID) {
         SLResponsOBJ<Boolean> res;
-        if(permission == null)
+        if (permission == null)
             res = market.setManagerPermissions(uuid, storeID, manager.username, null, onOf);
         else
             res = market.setManagerPermissions(uuid, storeID, manager.username, permission, onOf);
@@ -542,7 +549,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean closeStore(String uuid, int storeID) {
         SLResponsOBJ<Boolean> res = market.closeStore(uuid, storeID);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -553,7 +560,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean storeIsClosed(int storeID) {
         SLResponsOBJ<Boolean> res = market.storeIsClosed(storeID);
-        return res.value;
+        return !res.errorOccurred();
     }
 
     /**
@@ -594,7 +601,7 @@ public class RealMarket implements MarketBridge {
                 sb.append(h.toString()).append("\n\n");
             });
         });
-        return new ATResponseObj<>(sb.toString());
+        return new ATResponseObj<>(sb.toString(),null);
     }
 
     @Override
@@ -620,7 +627,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean connectExternalService(String payment) {
         SLResponsOBJ<Boolean> res = market.connectService(payment);
-        return res.value;
+        return !res.errorOccurred();
     }
 
 

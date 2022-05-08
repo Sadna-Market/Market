@@ -47,7 +47,7 @@ public class StoreManagerTests extends MarketTests {
         User user = generateUser();
         assertTrue(market.register(uuid, user.username, user.password));
         assertTrue(market.isMember(user));
-        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        ATResponseObj<String> memberID = market.login(uuid, user);
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
 
@@ -64,6 +64,6 @@ public class StoreManagerTests extends MarketTests {
         uuid = memberID.value;
 
         ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, -1);
-        assertFalse(historyPurchase.errorOccurred());
+        assertTrue(historyPurchase.errorOccurred());
     }
 }

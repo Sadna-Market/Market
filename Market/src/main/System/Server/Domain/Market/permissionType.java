@@ -9,7 +9,7 @@ public class permissionType {
             (Arrays.asList(permissionEnum.login,permissionEnum.getStoreInfo,permissionEnum.getInfoProductInStore,
                     permissionEnum.productSearch,permissionEnum.searchProductByName,permissionEnum.searchProductByDesc,
                     permissionEnum.searchProductByRate,permissionEnum.searchProductByCategory,permissionEnum.searchProductByRangePrices,
-                    permissionEnum.addProductToShoppingBag,permissionEnum.GetShoppingCart,permissionEnum.RemoveProductFromShoppingBag,permissionEnum.setProductQuantityShoppingBag,
+                    permissionEnum.addProductToShoppingBag,permissionEnum.getShoppingCart,permissionEnum.removeProductFromShoppingBag,permissionEnum.setProductQuantityShoppingBag,
                     permissionEnum.orderShoppingCart, permissionEnum.logout, permissionEnum.openNewStore));
 
     static public List<permissionEnum> managerPermissions=new ArrayList<>
@@ -21,7 +21,7 @@ public class permissionType {
                     permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles));
 
     static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
-            (Arrays.asList(permissionType.permissionEnum.getStoreOrderHistory));
+            (Arrays.asList(permissionEnum.getStoreOrderHistory, permissionEnum.getUserInfo));
 
     public enum permissionEnum {
 
@@ -43,8 +43,8 @@ public class permissionType {
         searchProductByRangePrices,
 
         addProductToShoppingBag, //3 .שמירת מוצרים
-        GetShoppingCart,// 4 .בדיקת תכולת עגלת הקניות וביצוע שינויים
-        RemoveProductFromShoppingBag,
+        getShoppingCart,// 4 .בדיקת תכולת עגלת הקניות וביצוע שינויים
+        removeProductFromShoppingBag,
         setProductQuantityShoppingBag,
         orderShoppingCart,//5 .רכישת עגלת הקניות,
 
@@ -75,8 +75,8 @@ public class permissionType {
         deleteProductFromStore,
         setProductPriceInStore,
         setProductQuantityInStore,
-        AddNewStoreOwner,
-        AddNewStoreManger,
+//        AddNewStoreOwner,
+//        AddNewStoreManger,
 
         //TODO 2.שינוי סוגי וכללי )מדיניות( קניה והנחה של חנות
         //3 .קביעת אילוצי עקיבות עבור חנות://next versions
@@ -92,6 +92,7 @@ public class permissionType {
 
 
         // system manager
+            getUserInfo
         //1 .סגירת חנות לצמיתות://next versions:
         //2 .ביטול )הסרת( מנוי של השוק://next versions
         //next versions3// .קבלת מידע ומתן תגובה:

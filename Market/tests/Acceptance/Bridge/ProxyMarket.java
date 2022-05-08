@@ -464,7 +464,7 @@ public class ProxyMarket implements MarketBridge {
      * @return true is store is closed, else false
      */
     public boolean storeIsClosed(int storeID) {
-        return false;
+        return realMarket.storeIsClosed(storeID);
     }
 
     /**
