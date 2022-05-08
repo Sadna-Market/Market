@@ -76,7 +76,6 @@ class MarketTest {
         for (int i=1; i<10; i++)
             list.add(i);
         assertEquals(0,market.filterByName(list,name).getValue().size());
-        assertEquals(0,market.filterByName(list,name).getValue().size());
     }
 
     @DisplayName("filterByDesc -  successful")
@@ -100,7 +99,28 @@ class MarketTest {
         for (int i=1; i<10; i++)
             list.add(i);
         assertEquals(0,market.filterByDesc(list,desc).getValue().size());
-        assertEquals(0,market.filterByDesc(list,desc).getValue().size());
+    }
+
+    @DisplayName("filterByRate -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {0,1,2,3,4,5,6,7,8,9})
+    @Test
+    void filterByRate(int rate) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=10; i++)
+            list.add(i);
+        assertEquals(10-rate,market.filterByRate(list,rate).getValue().size());
+    }
+
+    @DisplayName("filterByRate -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,5,6,7,8,9})
+    @Test
+    void filterByRate2(int rate) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=rate; i++)
+            list.add(i);
+        assertTrue(rate > market.filterByRate(list,rate).getValue().size());
     }
 
 

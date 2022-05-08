@@ -243,7 +243,7 @@ public class Market {
             }
             DResponseObj<Integer> isRate = productDR.getValue().getRate();
             if (isRate.errorOccurred()) continue;
-            if (!isRate.getValue()< minRate){
+            if (isRate.getValue()< minRate){
                 logger.debug("this product not pass the min Rate");
                 continue;
             }
