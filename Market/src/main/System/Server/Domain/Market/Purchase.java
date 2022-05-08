@@ -60,6 +60,10 @@ public class Purchase {
                         catchItems(curStore, checkBags.getValue());
                 if (DRcrrAmount.errorOccurred()) continue;
                 ConcurrentHashMap<Integer, Integer> crrAmount = DRcrrAmount.getValue();
+                if (crrAmount.size() == 0){
+                    logger.warn("this client didnt catch no product in this store");
+                    continue;
+                }
 
                 //check price and policy
                 DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email, crrAmount);
