@@ -866,7 +866,7 @@ public class Facade implements IMarket {
          */
         if (userId == null || userId.equals(""))
             return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
-        if (mangerEmil == null || mangerEmil.equals(""))
+        if (mangerEmil == null || mangerEmil.equals("") || per == null)
             return new SLResponsOBJ<>(false,ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponsOBJ<>(false,ErrorCode.NEGATIVENUMBER);
@@ -951,6 +951,7 @@ public class Facade implements IMarket {
          *
          * @documentation: Receiving information on in-store purchase history
          */
+
         DResponseObj<List<History>> hist = market.getStoreOrderHistory(UUID.fromString(userId), storeId);
         SLResponsOBJ<List<History>> RHistory =new SLResponsOBJ<>(hist);
         if (RHistory.errorOccurred()) return new SLResponsOBJ<>(null,RHistory.errorMsg);
