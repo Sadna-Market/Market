@@ -79,6 +79,30 @@ class MarketTest {
         assertEquals(0,market.filterByName(list,name).getValue().size());
     }
 
+    @DisplayName("filterByDesc -  successful")
+    @ParameterizedTest
+    @ValueSource(strings = {"hello","","o","ell"})
+    @Test
+    void filterByDesc(String desc) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(9,market.filterByDesc(list,desc).getValue().size());
+        assertEquals(list,market.filterByDesc(list,desc).getValue());
+    }
+
+    @DisplayName("filterByDesc -  failure")
+    @ParameterizedTest
+    @ValueSource(strings = {"H","HELLO"," ","!","2"})
+    @Test
+    void filterByDesc2(String desc) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(0,market.filterByDesc(list,desc).getValue().size());
+        assertEquals(0,market.filterByDesc(list,desc).getValue().size());
+    }
+
 
     @DisplayName("getStore  -  failure for 10")
     @Test
