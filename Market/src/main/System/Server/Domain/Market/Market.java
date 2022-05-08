@@ -283,6 +283,31 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
+    public DResponseObj<List<Integer>> filterByStoreRate(List<Integer> list,int minRate) {
+        if (minRate < 0 || minRate > 10) {
+            logger.warn("rate is invalid");
+            return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+        }
+        List<Integer> output=new ArrayList<>();
+
+        
+        for (Integer productID: list){
+            DResponseObj<List<Integer>> storePassRate = searchProductByStoreRate(minRate);
+            for (Integer storeID : storePassRate.getValue()){
+                DResponseObj<Store> getStore = getStore(storeID);
+                if (getStore.errorOccurred()) continue;
+                DResponseObj<ProductType> product = getStore.getValue().getProductInStoreInfo(productID);
+                if (!product.errorOccurred()){
+                    logger.debug("Store #"+storeID+ " include product #"+productID);
+                    output.add(productID);
+                    break;
+                }
+            }
+        }
+        return new DResponseObj<>(output);
+    }
+
+
     //2.2.2
     //pre: -
     //post: get all the products that them price is between min and max
