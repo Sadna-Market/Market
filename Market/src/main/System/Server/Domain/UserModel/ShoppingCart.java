@@ -57,7 +57,7 @@ public class ShoppingCart {
             return new DResponseObj<>(true,-1);
         }
         else {
-            return new DResponseObj<>( false);
+            return new DResponseObj<>( false,ErrorCode.NOTVALIDINPUT);
         }
     }
 

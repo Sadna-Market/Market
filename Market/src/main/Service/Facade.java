@@ -482,9 +482,9 @@ public class Facade implements IMarket {
 
         DResponseObj<ShoppingCart> RShppingCart = userManager.getUserShoppingCart(UUID.fromString(userId));
         if (RShppingCart.errorOccurred()) return new SLResponsOBJ<>(false, RShppingCart.getErrorMsg());
-
-        if (!RShppingCart.value.removeProductFromShoppingBag(storeId, productId).value)
-            return new SLResponsOBJ<>(false, -1);
+        DResponseObj<Boolean> res= RShppingCart.value.removeProductFromShoppingBag(storeId, productId);
+        if (res.errorOccurred())
+            return new SLResponsOBJ<>(res);
 
         return new SLResponsOBJ<>(true, -1);
     }
@@ -523,8 +523,9 @@ public class Facade implements IMarket {
         DResponseObj<ShoppingCart> RShppingCart = userManager.getUserShoppingCart(UUID.fromString(userId));
         if (RShppingCart.errorOccurred()) return new SLResponsOBJ<>(false, RShppingCart.getErrorMsg());
 
-        if (!RShppingCart.value.setProductQuantity(storeId, productId, quantity).value)
-            return new SLResponsOBJ<>(false, -1);
+        DResponseObj<Boolean> res= RShppingCart.value.setProductQuantity(storeId, productId, quantity);
+        if (res.errorOccurred())
+            return new SLResponsOBJ<>(res);
 
         return new SLResponsOBJ<>(true, -1);
     }
@@ -874,8 +875,13 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponsOBJ<>(false, ErrorCode.NEGATIVENUMBER);
-
-        return new SLResponsOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, permissionType.permissionEnum.valueOf(per), onof));
+        permissionType.permissionEnum perm;
+        try{
+             perm = permissionType.permissionEnum.valueOf(per);
+        }catch (Exception e){
+            return new SLResponsOBJ<>(false,ErrorCode.INVALID_PERMISSION_TYPE);
+        }
+        return new SLResponsOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, perm, onof));
     }
 
     @Override

@@ -87,7 +87,10 @@ public class TestableFacade extends Facade {
      * @return true if the system has connection else false
      */
     public SLResponsOBJ<Boolean> serviceIsAlive(String service) {
-        return new SLResponsOBJ<>(ExternalService.getService(service).value.isConnect().value);
+        DResponseObj<AbsExternalService> ser = ExternalService.getService(service);
+        if(ser.errorOccurred()) return new SLResponsOBJ<>(false,ser.errorMsg);
+        DResponseObj<Boolean> isCon = ser.value.isConnect();
+        return new SLResponsOBJ<>(isCon);
     }
 
     public SLResponsOBJ<Integer> supply(ServiceUser user, List<ServiceItem> items) {

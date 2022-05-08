@@ -29,7 +29,7 @@ public class AbsExternalService {
         logger.debug("catch lock");
         try{
             boolean output=connect;
-            return new DResponseObj<>(output);
+            return new DResponseObj<>(output,!output? ErrorCode.SERVICE_NOT_CONNECTED:-1);
         }
         finally {
             stampedLock.unlockRead(stamp);

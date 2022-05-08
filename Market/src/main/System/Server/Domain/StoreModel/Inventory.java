@@ -26,7 +26,7 @@ public class Inventory {
     }
 
     public DResponseObj<Boolean> haseItem(int itemId){
-        return new DResponseObj<>(products.containsKey(itemId));
+        return products.containsKey(itemId)? new DResponseObj<>(true,-1): new DResponseObj<>(false,ErrorCode.PRODUCT_DOESNT_EXIST_IN_THE_STORE);
     }
 
 

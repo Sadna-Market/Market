@@ -46,7 +46,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> isMember(String email){
-        return new DResponseObj<>(members.containsKey(email));
+        return members.containsKey(email)? new DResponseObj<>(true,-1) :  new DResponseObj<>(false, ErrorCode.NOTMEMBER);
     }
 
     public DResponseObj<UUID> GuestVisit(){
@@ -185,13 +185,12 @@ public class UserManager {
 
     public DResponseObj<Boolean> isOwner(UUID user,Store store) {
         if(!isLogged(user).value){
-            DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-            return a;
+            return new DResponseObj<>(false,ErrorCode.NOTLOGGED);
         }
         User u = LoginUsers.get(user);
         logger.debug("UserManager isOwner");
         PermissionManager permissionManager =PermissionManager.getInstance();
-        return new DResponseObj<>( permissionManager.getGranteeUserType(u,store).equals(userTypes.owner));
+        return new DResponseObj<>( permissionManager.getGranteeUserType(u,store).value.equals(userTypes.owner));
     }
 
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
@@ -215,7 +214,7 @@ public class UserManager {
         if(LoginUsers.containsKey(uuid)){
             return new DResponseObj<>(true);
         }
-        return new DResponseObj<>(false);
+        return new DResponseObj<>(false,ErrorCode.CART_FAIL);
     }
 
     public DResponseObj<Boolean> addFounder(UUID userId, Store store) {
@@ -272,7 +271,7 @@ public class UserManager {
             return new DResponseObj<>(true,-1);
         }
         else {
-            return new DResponseObj<>( false,-1);
+            return new DResponseObj<>( false,ErrorCode.NOTLOGGED);
         }
     }
 
@@ -302,7 +301,7 @@ public class UserManager {
         if (LoginUsers.containsKey(uuid) || GuestVisitors.containsKey(uuid)) {
             return new DResponseObj<>(true,-1);
         } else {
-            return new DResponseObj<>( false,-1);
+            return new DResponseObj<>( false,ErrorCode.NOTONLINE);
         }
 
     }
