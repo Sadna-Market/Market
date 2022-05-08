@@ -180,8 +180,6 @@ public class GuestBuyTests extends MarketTests{
         assertFalse(response.errorOccurred());
         List<List<Integer>> cart = response.value;
         assertEquals(0, cart.size());
-        List<Integer> bag = cart.get(0);
-        assertEquals(0, bag.size());
         int amountInStock = market.getAmountOfProductInStore(existing_storeID, item1);
         assertEquals(1, amountInStock);
     }
@@ -194,8 +192,6 @@ public class GuestBuyTests extends MarketTests{
         assertFalse(response.errorOccurred());
         List<List<Integer>> cart = response.value;
         assertEquals(0, cart.size());
-        List<Integer> bag = cart.get(0);
-        assertEquals(0, bag.size());
     }
 
     /**
