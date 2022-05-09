@@ -37,7 +37,6 @@ class ProductTypeTest {
     @DisplayName("storeID is exist -  successful")
     @ParameterizedTest
     @ValueSource(ints = {1,3,5,7,9})
-    @Test
     void storeExist(int i) {
         assertFalse(pt.storeExist(i).errorOccurred());
         assertTrue(pt.storeExist(i).getValue());
@@ -46,7 +45,6 @@ class ProductTypeTest {
     @DisplayName("storeID is exist - args invalid  -failure")
     @ParameterizedTest
     @ValueSource(ints = {-1,-3,-5,-7,-9})
-    @Test
     void storeExist2(int i) {
         assertTrue(pt.storeExist(i).errorOccurred());
     }
@@ -54,10 +52,10 @@ class ProductTypeTest {
     @DisplayName("storeID is exist - args invalid  -failure")
     @ParameterizedTest
     @ValueSource(ints = {15,18,55545,295})
-    @Test
     void storeExist3(int i) {
         assertFalse(pt.storeExist(i).getValue());
     }
+
     @DisplayName("getStores -  successful")
     @Test
     void getStores() {
@@ -70,15 +68,13 @@ class ProductTypeTest {
     @DisplayName("add store  -  successful")
     @ParameterizedTest
     @ValueSource(ints = {800,10,100,1000})
-    @Test
     void addStore(int i) {
-        assertTrue(!pt.addStore(i).errorOccurred());
+        assertFalse(pt.addStore(i).errorOccurred());
     }
 
     @DisplayName("add store  -  failure")
     @ParameterizedTest
     @ValueSource(ints = {-800,1,2,3,-1})
-    @Test
     void addStore2(int i) {
         assertTrue(pt.addStore(i).errorOccurred());
     }
@@ -87,7 +83,6 @@ class ProductTypeTest {
     @DisplayName("containName  -  successful")
     @ParameterizedTest
     @ValueSource(strings = {"Abba","a","Ganov","Abba Ganov"})
-    @Test
     void containName(String name) {
         DResponseObj<Boolean> ans = pt.containName(name);
         assertFalse(ans.errorOccurred());
@@ -98,7 +93,6 @@ class ProductTypeTest {
     @DisplayName("containName  -  failure")
     @ParameterizedTest
     @ValueSource(strings = {"abba","B","ganov","abba ganov"})
-    @Test
     void containName2(String name) {
         DResponseObj<Boolean> ans = pt.containName(name);
         assertFalse(ans.errorOccurred());
@@ -107,7 +101,6 @@ class ProductTypeTest {
     @DisplayName("containDesc  -  successful")
     @ParameterizedTest
     @ValueSource(strings = {"0","90","","90210"})
-    @Test
     void containDesc(String name) {
         DResponseObj<Boolean> ans = pt.containDesc(name);
         assertFalse(ans.errorOccurred());
@@ -118,7 +111,6 @@ class ProductTypeTest {
     @DisplayName("containName  -  failure")
     @ParameterizedTest
     @ValueSource(strings = {"8","01209","0000","11"," "})
-    @Test
     void containDesc2(String name) {
         DResponseObj<Boolean> ans = pt.containDesc(name);
         assertFalse(ans.errorOccurred());
@@ -127,7 +119,6 @@ class ProductTypeTest {
     @DisplayName("SetRate  -  successful")
     @ParameterizedTest
     @ValueSource(ints = {1,2,3,4,5,6,7,8,9,10})
-    @Test
     void rate(int i) {
         DResponseObj<Boolean> ans =pt.setRate(i);
         assertFalse(ans.errorOccurred());
@@ -138,7 +129,6 @@ class ProductTypeTest {
     @DisplayName("SetRate  -  failure")
     @ParameterizedTest
     @ValueSource(ints = {-1,-2,-3,405,505,669,76,846,91,180})
-    @Test
     void rate2(int i) {
         DResponseObj<Boolean> ans =pt.setRate(i);
         assertTrue(ans.errorOccurred());
