@@ -1,6 +1,7 @@
 package main.Service;
 
 
+import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.*;
 
 import java.util.BitSet;
@@ -39,21 +40,28 @@ public interface IMarket {
     //2.2.2
     public SLResponsOBJ<List<Integer>> searchProductByName(String productName);
     public SLResponsOBJ<List<Integer>> searchProductByName(List<Integer> lst, String productName);
+    public SLResponsOBJ<List<Integer>> filterByName(List<Integer> list, String name);
 
     public SLResponsOBJ<List<Integer>> searchProductByDesc(String desc);
     public SLResponsOBJ<List<Integer>> searchProductByDesc(List<Integer> lst, String desc);
+    public SLResponsOBJ<List<Integer>> filterByDesc(List<Integer> list,String desc);
 
     public SLResponsOBJ<List<Integer>> searchProductByRate(int rate);
     public SLResponsOBJ<List<Integer>> searchProductByRate(List<Integer> lst,int rate);
+    public SLResponsOBJ<List<Integer>> filterByRate(List<Integer> list,int minRate);
+
 
     public SLResponsOBJ<List<Integer>> searchProductByCategory(int category);
     public SLResponsOBJ<List<Integer>> searchProductByCategory(List<Integer> lst, int category);
+    public SLResponsOBJ<List<Integer>> filterByCategory(List<Integer> list,int category);
 
     public SLResponsOBJ<List<Integer>> searchProductByStoreRate(int rate);
     public SLResponsOBJ<List<Integer>> searchProductByStoreRate(List<Integer> lst,int rate);
+    public SLResponsOBJ<List<Integer>> filterByStoreRate(List<Integer> list,int minRate);
 
     public SLResponsOBJ<List<Integer>> searchProductByRangePrices(int productId, int min, int max);
     public SLResponsOBJ<List<Integer>> searchProductByRangePrices(List<Integer> lst,int productId, int min, int max);
+    public SLResponsOBJ<List<Integer>> filterByRangePrices(List<Integer> list, int min, int max);
 
     public SLResponsOBJ<Integer> addNewProductType(String uuid, String name , String description, int category);
 

@@ -125,7 +125,7 @@ public class GuestBuyTests extends MarketTests{
         int[] priceRange = new int[]{100,200};
         int storeRank = 5;
         ATResponseObj<List<Integer>> filteredResponse = market.filterSearchResults(response.value, productRank, priceRange, category, storeRank);
-        assertTrue(filteredResponse.errorOccurred());
+        assertFalse(filteredResponse.errorOccurred());
         assertTrue(filteredResponse.value.isEmpty());
     }
 
