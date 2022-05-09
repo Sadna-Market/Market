@@ -21,6 +21,7 @@ public class GuestBuyTests extends MarketTests{
 
     @AfterEach
     public void tearDown() {
+        market.resetMemory();
         market = null; //for garbage collector
     }
 

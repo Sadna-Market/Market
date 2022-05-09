@@ -51,4 +51,10 @@ public class PaymentService extends AbsExternalService{
                 ", pin='" + pin + '\'' +
                 '}';
     }
+
+    public void reset(){
+        super.reset();
+        list = new ConcurrentHashMap<>();
+        isConnected = true;
+    }
 }

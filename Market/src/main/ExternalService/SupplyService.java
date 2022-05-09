@@ -41,4 +41,10 @@ public class SupplyService extends AbsExternalService {
     public static SupplyService getInstance(){
         return SupplyService.SupplyServiceWrapper.INSTANSE;
     }
+
+    public void reset(){
+        super.reset();
+        list = new ConcurrentHashMap<>();
+        connect();
+    }
 }

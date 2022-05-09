@@ -929,7 +929,11 @@ public class Market {
         }
 
         for (int i = 0; i < 10; i++) {
-            OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy(), new BuyStrategy());
+            Store store = OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy(), new BuyStrategy());
+            for (ProductType product : productTypes.values()) {
+                store.addNewProduct(product,5,10.2);
+            }
+            store.newStoreRate(i+1);
         }
 
 
@@ -953,7 +957,7 @@ public class Market {
         }
     }
 
-    private void OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    private Store OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
 
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");
@@ -961,6 +965,7 @@ public class Market {
             Store store = new Store(storeCounter++, name, discountPolicy, buyPolicy, founder);
             stores.put(store.getStoreId().value, store);
             logger.info("new Store join to the Market");
+            return store;
         } finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock");

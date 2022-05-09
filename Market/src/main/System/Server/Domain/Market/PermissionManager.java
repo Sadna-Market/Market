@@ -355,6 +355,11 @@ public class PermissionManager {
         }
         return new DResponseObj<>(false);
     }
+
+    public void reset(){
+        allDeletedPermissions = new ArrayList<>();
+        systemManagerEmail = null;
+    }
 //*********************************************** private method ******************************************************
 
 

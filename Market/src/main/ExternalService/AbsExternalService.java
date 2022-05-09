@@ -81,4 +81,8 @@ public class AbsExternalService {
     public DResponseObj<String> ping() {
         return new DResponseObj<>(name);
     }
+
+    public void reset(){
+        counterTIP = 1;
+    }
 }

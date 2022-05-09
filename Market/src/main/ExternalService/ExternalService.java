@@ -64,4 +64,13 @@ public class ExternalService {
     public static ExternalService getInstance(){
         return ExternalService.ExternalServiceWrapper.INSTANSE;
     }
+
+    public void reset(){
+        services  = new ConcurrentHashMap<>();
+        names = new ArrayList<>();
+        services.put("Payment",PaymentService.getInstance());
+        services.put("Supply",SupplyService.getInstance());
+        names.add("Payment");
+        names.add("Supply");
+    }
 }
