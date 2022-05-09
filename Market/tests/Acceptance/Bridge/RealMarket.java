@@ -238,17 +238,16 @@ public class RealMarket implements MarketBridge {
      * @return filtered list
      */
     public ATResponseObj<List<Integer>> filterSearchResults(List<Integer> items, int productRank, int[] priceRange, int category, int storeRank) {
-        Set<Integer> set = new HashSet<>();
-        SLResponsOBJ<List<Integer>> res1 = market.searchProductByRate(items, productRank);
+        SLResponsOBJ<List<Integer>> res1 = market.filterByRate(items, productRank);
         if (res1.errorOccurred()) return new ATResponseObj<>("error");
-        set.addAll(res1.value);
-//        SLResponsOBJ<List<Integer>> res2 = market.searchProductByRangePrices(items,)
-//        if(res2.errorOccurred()) return new ATResponseObj<>("error");
-//        set.addAll(res2.value); //TODO: change
-        SLResponsOBJ<List<Integer>> res3 = market.searchProductByCategory(items, category);
+        Set<Integer> set = new HashSet<>(res1.value);
+        SLResponsOBJ<List<Integer>> res2 = market.filterByRangePrices(items,priceRange[0],priceRange[1]);
+        if(res2.errorOccurred()) return new ATResponseObj<>("error");
+        set.addAll(res2.value);
+        SLResponsOBJ<List<Integer>> res3 = market.filterByCategory(items, category);
         if (res3.errorOccurred()) return new ATResponseObj<>("error");
         set.addAll(res3.value);
-        SLResponsOBJ<List<Integer>> res4 = market.searchProductByStoreRate(items, storeRank);
+        SLResponsOBJ<List<Integer>> res4 = market.filterByStoreRate(items, storeRank);
         if (res4.errorOccurred()) return new ATResponseObj<>("error");
         set.addAll(res4.value);
         return new ATResponseObj<>(new ArrayList<>(set));

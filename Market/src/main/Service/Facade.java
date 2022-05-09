@@ -272,6 +272,13 @@ public class Facade implements IMarket {
     }
 
     @Override
+    public SLResponsOBJ<List<Integer>> filterByName(List<Integer> list, String name) {
+        if(name == null || list == null)
+            return new SLResponsOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+        return new SLResponsOBJ<>(market.filterByName(list,name));
+    }
+
+    @Override
     public SLResponsOBJ<List<Integer>> searchProductByDesc(String desc) {
 
         /**
@@ -301,6 +308,13 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         DResponseObj<List<Integer>> res = market.searchProductByDesc(lst, desc);
         return new SLResponsOBJ<>(res);
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> filterByDesc(List<Integer> list, String desc) {
+        if(desc == null || list == null)
+            return new SLResponsOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+        return new SLResponsOBJ<>(market.filterByDesc(list,desc));
     }
 
     @Override
@@ -337,6 +351,13 @@ public class Facade implements IMarket {
         return new SLResponsOBJ<>(res);
     }
 
+    @Override
+    public SLResponsOBJ<List<Integer>> filterByRate(List<Integer> list, int minRate) {
+        if(minRate < 0 || list == null)
+            return new SLResponsOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+        return new SLResponsOBJ<>(market.filterByRate(list,minRate));
+    }
+
 
     @Override
     public SLResponsOBJ<List<Integer>> searchProductByCategory(int category) {
@@ -370,6 +391,13 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         DResponseObj<List<Integer>> res = market.searchProductByCategory(lst, category);
         return new SLResponsOBJ<>(res);
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> filterByCategory(List<Integer> list, int category) {
+        if(category < 0 || list == null)
+            return new SLResponsOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+        return new SLResponsOBJ<>(market.filterByCategory(list,category));
     }
 
 
@@ -411,6 +439,13 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         DResponseObj<List<Integer>> res = market.searchProductByRangePrices(lst, productId, min, max);
         return new SLResponsOBJ<>(res);
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> filterByRangePrices(List<Integer> list, int min, int max) {
+        if(min < 0 || max < 0 ||  list == null)
+            return new SLResponsOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+        return new SLResponsOBJ<>(market.filterByRangePrices(list,min,max));
     }
 
 
@@ -1068,6 +1103,13 @@ public class Facade implements IMarket {
             return new SLResponsOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         DResponseObj<List<Integer>> res = market.searchProductByStoreRate(lst, rate);
         return new SLResponsOBJ<>(res);
+    }
+
+    @Override
+    public SLResponsOBJ<List<Integer>> filterByStoreRate(List<Integer> list, int minRate) {
+        if(minRate < 0 || list == null)
+            return new SLResponsOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+        return new SLResponsOBJ<>(market.filterByStoreRate(list,minRate));
     }
 
 }
