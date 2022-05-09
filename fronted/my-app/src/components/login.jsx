@@ -6,11 +6,13 @@ import SignUp from "./signUp";
 import InitMarket from "./initMarket";
 
 function Login(props) {
-let ans =true;
+    let ans =true;
     function errorMsgChangeHandler(event) {
         setErrorMsgState(event);
     }
-
+    function try2(event) {
+        setEmailState(event);
+    }
     function FLogin(connID, name, pass) {
         return new Response();
     }
@@ -47,12 +49,12 @@ let ans =true;
         <form method="post" className="contact-form" >
             <h3>Sign In</h3>
             <div className="mb-3">
-                <label>1email address {enteredEmail}</label>
+                <label>email address {enteredEmail}</label>
                 <input
                     type="email"
                     className="form-control"
                     placeholder="Enter email"
-                    // onChange={emailChangeHandler}
+                    onChange={try2}
 
                 />
             </div>
@@ -90,13 +92,12 @@ let ans =true;
             <p className="forgot-password text-right">
                 Forgot <a href="#">password?</a>
             </p>
-            {ans?(
-                <MainPage
-                />
-                ):("")
-            }
+            {/*{ans?(*/}
+            {/*    <MainPage*/}
+            {/*    />*/}
+            {/*    ):("")*/}
+            {/*}*/}
         </form>
-
 
 
     )
