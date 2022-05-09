@@ -170,8 +170,6 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.guestOnline(uuid));
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
-        int numOfRecipes = 0; //no purchases in exiting store yet
-
 
         //main action
         ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
@@ -201,8 +199,7 @@ public class PurchaseTest extends MarketTests {
 
         ATResponseObj<List<String>> res = market.getHistoryPurchase(uuid, existing_storeID);
         List<String> recipes = res.value;
-        assertEquals(numOfRecipes,recipes.size());
-        assertTrue(recipes.contains(recipe));
+        assertEquals(1,recipes.size());
 
 
     }
