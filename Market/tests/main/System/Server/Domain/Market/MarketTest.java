@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,6 +54,95 @@ class MarketTest {
         int rate=store.getValue().getRate().getValue();
         assertEquals(i,rate);
     }
+
+    @DisplayName("filterByName -  successful")
+    @ParameterizedTest
+    @ValueSource(strings = {"product","","pr","duct"})
+    @Test
+    void filterByName(String name) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(9,market.filterByName(list,name).getValue().size());
+        assertEquals(list,market.filterByName(list,name).getValue());
+    }
+
+    @DisplayName("filterByName -  failure")
+    @ParameterizedTest
+    @ValueSource(strings = {"Product","!"," ","123456"})
+    @Test
+    void filterByName2(String name) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(0,market.filterByName(list,name).getValue().size());
+    }
+
+    @DisplayName("filterByCategory -  successful")
+    @Test
+    void filterByCategory() {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=10; i++)
+            list.add(i);
+        assertEquals(5,market.filterByCategory(list,1).getValue().size());
+    }
+
+    @DisplayName("filterByCategory -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,6,7,8,9,10})
+    @Test
+    void filterByCategory2(int cat) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=10; i++)
+            list.add(i);
+        assertNotEquals(cat,market.filterByCategory(list,2).getValue().size());
+    }
+
+    @DisplayName("filterByDesc -  successful")
+    @ParameterizedTest
+    @ValueSource(strings = {"hello","","o","ell"})
+    @Test
+    void filterByDesc(String desc) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(9,market.filterByDesc(list,desc).getValue().size());
+        assertEquals(list,market.filterByDesc(list,desc).getValue());
+    }
+
+    @DisplayName("filterByDesc -  failure")
+    @ParameterizedTest
+    @ValueSource(strings = {"H","HELLO"," ","!","2"})
+    @Test
+    void filterByDesc2(String desc) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<10; i++)
+            list.add(i);
+        assertEquals(0,market.filterByDesc(list,desc).getValue().size());
+    }
+
+    @DisplayName("filterByRate -  successful")
+    @ParameterizedTest
+    @ValueSource(ints = {0,1,2,3,4,5,6,7,8,9})
+    @Test
+    void filterByRate(int rate) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=10; i++)
+            list.add(i);
+        assertEquals(10-rate,market.filterByRate(list,rate).getValue().size());
+    }
+
+    @DisplayName("filterByRate -  failure")
+    @ParameterizedTest
+    @ValueSource(ints = {1,2,3,4,5,6,7,8,9})
+    @Test
+    void filterByRate2(int rate) {
+        List<Integer> list = new ArrayList<>();
+        for (int i=1; i<=rate; i++)
+            list.add(i);
+        assertTrue(rate > market.filterByRate(list,rate).getValue().size());
+    }
+
 
 
     @DisplayName("getStore  -  failure for 10")
