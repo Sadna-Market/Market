@@ -223,13 +223,6 @@ class MarketTest {
         assertNotNull(market.searchProductByRangePrices(1,101,150));
     }
 
-    @DisplayName("order ")
-    @Test
-    void order() {
-        assertFalse(market.order(UUID.randomUUID(), "", "",5,"123","123","123").errorOccurred());
-    }
-
-
 
     @DisplayName("searchProductByCategory  -  successful")
     @ParameterizedTest
