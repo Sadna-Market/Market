@@ -6,6 +6,7 @@ import main.ExternalService.ExternalService;
 import main.ExternalService.PaymentService;
 import main.ExternalService.SupplyService;
 import main.System.Server.Domain.Market.Market;
+import main.System.Server.Domain.Market.PermissionManager;
 import main.System.Server.Domain.Response.DResponseObj;
 import main.System.Server.Domain.StoreModel.Inventory;
 import main.System.Server.Domain.StoreModel.Store;
@@ -35,6 +36,10 @@ public class TestableFacade extends Facade {
          * @documentation:
 
          * */
+        ExternalService.getInstance().reset();
+        PaymentService.getInstance().reset();
+        SupplyService.getInstance().reset();
+        PermissionManager.getInstance().reset();
         this.userManager = new UserManager();
         this.market = new Market(this.userManager);
         this.market.init();

@@ -30,6 +30,15 @@ public class UserManagerStab extends UserManager {
     }
 
 
+    @Override
+    public DResponseObj<User> getLoggedUser(UUID uuid) {
+        return new DResponseObj<>(new User("yaki@gmail.com","",""));
+    }
+
+    @Override
+    public DResponseObj<Boolean> isMember(String email) {
+        return new DResponseObj<>(true);
+    }
 
     public DResponseObj<UUID> GuestVisit() {return new DResponseObj<>(UUID.randomUUID());
 

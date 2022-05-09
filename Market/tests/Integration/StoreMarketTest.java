@@ -101,10 +101,10 @@ public class StoreMarketTest {
 
     @DisplayName("searchProductByRate  -  successful")
     @ParameterizedTest
-    @ValueSource(ints = {1,2,3,4,5,6,7,8,9,0})
+    @ValueSource(ints = {1,2,3,4,5,6,7,8,9})
     @Test
     void searchProductByRate(int i) {
-        assertEquals(10-i,market.searchProductByRate(i).getValue().size());
+        assertEquals(10-i+1,market.searchProductByRate(i).getValue().size());
     }
 
     @DisplayName("searchProductByRate  -  failure")
@@ -162,7 +162,7 @@ public class StoreMarketTest {
     @ValueSource(ints = {1,2,0})
     @Test
     void searchProductByCategory(int i) {
-        assertEquals(i==0? 4:3,market.searchProductByCategory(i).value.size());
+        assertEquals(i==1? 4:3,market.searchProductByCategory(i).value.size());
     }
     @DisplayName("searchProductByCategory  -  failure")
     @ParameterizedTest
