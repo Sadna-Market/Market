@@ -44,7 +44,7 @@ public class ConcurrentAssignOwnerTest extends MarketTests {
         //action
         Thread owner1 = new Thread(() -> {
             ATResponseObj<String> id = market.login(market.guestVisit(), member);
-            owner1Success = market.assignNewOwner(id.value, existing_storeID, toBeOwner);
+            owner1Success = market.assignNewManager(id.value, existing_storeID, toBeOwner);
         });
         Thread owner2 = new Thread(() -> {
             ATResponseObj<String> id = market.login(market.guestVisit(), anotherOwner);
