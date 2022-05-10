@@ -62,7 +62,7 @@ public class ShoppingCart {
     }
 
     public DResponseObj<ConcurrentHashMap<Integer, ShoppingBag>> getHashShoppingCart(){
-        return new DResponseObj<>( shoppingBagHash);
+        return new DResponseObj<>( shoppingBagHash,-1);
     }
 
 

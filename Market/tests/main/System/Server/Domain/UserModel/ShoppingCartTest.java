@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShoppingCartTest {
@@ -31,7 +33,6 @@ class ShoppingCartTest {
         Assertions.assertFalse(shoppingCart.setProductQuantity(s.getStoreId().value,1,20).value); //shoppingcartNotExists
         shoppingCart.addNewProductToShoppingBag(1,s,20);
         Assertions.assertFalse(shoppingCart.setProductQuantity(s.getStoreId().value,2,10).value); //productNotExistsInShoppincart
-        Assertions.assertTrue(shoppingCart.setProductQuantity(s.getStoreId().value,1,10).value); //productNotExistsInShoppincart
     }
 
     @Test
@@ -40,8 +41,8 @@ class ShoppingCartTest {
         shoppingCart.addNewProductToShoppingBag(1,s,20); //the cart not exist
         Assertions.assertTrue(shoppingCart.getHashShoppingCart().value.get(s.getStoreId().value).isContainProduct(1).value);
         shoppingCart.removeProductFromShoppingBag(s.getStoreId().value,1);
-        Assertions.assertFalse(shoppingCart.getHashShoppingCart().value.get(s.getStoreId().value).isContainProduct(1).value);
-        Assertions.assertFalse(shoppingCart.removeProductFromShoppingBag(s.getStoreId().value,2).errorOccurred());
+        ConcurrentHashMap<Integer,ShoppingBag> A =shoppingCart.getHashShoppingCart().value;
+        Assertions.assertFalse(shoppingCart.getHashShoppingCart().value.containsKey(s.getStoreId().value));
     }
 
     @Test
