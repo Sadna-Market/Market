@@ -28,7 +28,7 @@ class MarketTest {
     void setUP() {
         market =new Market(new UserManager());
         //logger.info("new test will run right now");
-        market.setForTesting();
+        market.setForIntegrationTestingWithUserManager();
     }
 
 
@@ -228,7 +228,7 @@ class MarketTest {
     @ParameterizedTest
     @ValueSource(ints = {1,2,0})
     void searchProductByCategory(int i) {
-        assertEquals(i==0? 4:3,market.searchProductByCategory(i).value.size());
+        assertEquals(i>0? 5:0,market.searchProductByCategory(i).value.size());
     }
     @DisplayName("searchProductByCategory  -  failure")
     @ParameterizedTest
