@@ -20,11 +20,11 @@ public class ShoppingBag {
     }
 
     public DResponseObj<Boolean> isContainProduct(int pid) {
-        return new DResponseObj<>(productQuantity.containsKey(pid));
+        return new DResponseObj<>(productQuantity.containsKey(pid),-1);
     }
 
     public DResponseObj<Integer> getProductQuantity(int pid) {
-        return new DResponseObj<>(productQuantity.get(pid));
+        return new DResponseObj<>(productQuantity.get(pid),-1);
     }
 
     public DResponseObj<Store> getStore() {
@@ -53,10 +53,10 @@ public class ShoppingBag {
     public DResponseObj<Boolean> removeProductFromShoppingBag(int productId) {
         logger.debug("ShoppingBag removeProductFromShoppingBag");
         if (!productQuantity.containsKey(productId)) {
-            return new DResponseObj<>(false);
+            return new DResponseObj<>(false,-1);
         } else {
             productQuantity.remove(productId);
-            return new DResponseObj<>(true);
+            return new DResponseObj<>(true,-1);
         }
     }
 
