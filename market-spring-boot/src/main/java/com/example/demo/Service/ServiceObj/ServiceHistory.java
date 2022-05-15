@@ -1,5 +1,7 @@
-package com.example.demo.service;
+package com.example.demo.Service.ServiceObj;
 
+
+import com.example.demo.Domain.StoreModel.History;
 
 import java.util.List;
 
@@ -14,6 +16,13 @@ public class ServiceHistory {
         this.finalPrice = finalPrice;
         this.products = products;
         this.user = user;
+    }
+
+    public ServiceHistory(History history){
+        this.TID = history.getTID();
+        this.finalPrice = history.getFinalPrice();
+        this.products = history.getProducts();
+        this.user = history.getUser();
     }
 
     public int getTID() {

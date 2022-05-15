@@ -1,7 +1,10 @@
-package main.Service;
+package com.example.demo.Service;
 
 
-import main.System.Server.Domain.StoreModel.*;
+
+
+import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +16,9 @@ public interface IMarket {
 
 
 
-    //todo i just declare all the funcs, in the futer we will change the passing args and the return value acording to the drishot.
 
     // 2.1.1 when a user enter to the system he recognized us a guest visitor
     public SLResponseOBJ<String> guestVisit();
-
 
 
     //2.1.2
@@ -32,7 +33,7 @@ public interface IMarket {
     //2.2.1
     public SLResponseOBJ<ServiceStore> getStore(int StoreID);
 
-    public SLResponseOBJ<ServiceItem> getInfoProductInStore(int storeID, int productID);
+    public SLResponseOBJ<ServiceProductStore> getInfoProductInStore(int storeID, int productID);
 
     //2.2.2
     public SLResponseOBJ<List<Integer>> searchProductByName(String productName);
@@ -65,15 +66,12 @@ public interface IMarket {
     //2.2.3
     public SLResponseOBJ<Boolean> addProductToShoppingBag(String userId, int storeId, int productId, int quantity);
 
-    //todo in the use case we write that the func does not takes any args. but i think it mast have user id/email to identife the correct user.
     //2.2.4.1
-    public SLResponseOBJ<ServiceShoppingCard> getShoppingCart(String userId);
+    public SLResponseOBJ<ServiceShoppingCart> getShoppingCart(String userId);
 
     //2.2.4.2
-    //todo update the id of use case in the pdf its not correct, and change the description its shopping bag !not cart!
     public SLResponseOBJ<Boolean> removeProductFromShoppingBag(String userId, int storeId, int productId);    //2.2.4.3
 
-    //todo soppingbag/sopping cart??
     public SLResponseOBJ<Boolean> setProductQuantityShoppingBag(String userId, int productId, int storeId, int quantity);
 
     //2.2.5
@@ -86,7 +84,7 @@ public interface IMarket {
 
 
     //2.3.2
-    public SLResponseOBJ<Integer> openNewStore(String userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy);
+    public SLResponseOBJ<Integer> openNewStore(String userId, String name, String founder, ServiceDiscountPolicy discountPolicy, ServiceBuyPolicy buyPolicy, ServiceBuyStrategy buyStrategy);
 
 
     //2.4.1.1
@@ -125,10 +123,6 @@ public interface IMarket {
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
 
     public SLResponseOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email);
-
-
-
-    //todo 2.5 use case
 
 
 }

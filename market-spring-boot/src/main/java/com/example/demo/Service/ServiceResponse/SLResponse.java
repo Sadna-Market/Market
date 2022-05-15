@@ -1,18 +1,18 @@
-package com.example.demo.service.ServiceResponse;
+package com.example.demo.Service.ServiceResponse;
 
-import com.example.demo.domain.Response.DResponse;
+import com.example.demo.Domain.Response.DResponse;
 
-public class SLRespons {
+public class SLResponse {
     public int errorMsg=-1;
 
-    public SLRespons() {
+    public SLResponse() {
     }
 
-    public SLRespons(int msg) {
+    public SLResponse(int msg) {
         errorMsg = msg;
     }
 
-    public SLRespons(DResponse drResponse) {
+    public SLResponse(DResponse drResponse) {
         this.errorMsg = drResponse.errorMsg;
     }
 
