@@ -1,4 +1,4 @@
-package com.example.demo.domain.Response;
+package com.example.demo.Domain.Response;
 
 
 public class DResponse {

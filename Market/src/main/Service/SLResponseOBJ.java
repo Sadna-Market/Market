@@ -2,30 +2,30 @@ package main.Service;
 
 import main.System.Server.Domain.Response.DResponseObj;
 
-public class SLResponsOBJ<T> extends SLRespons {
+public class SLResponseOBJ<T> extends SLRespons {
     public T value;
 
-    public SLResponsOBJ(int msg) {
+    public SLResponseOBJ(int msg) {
         super(msg);
     }
 
-    public SLResponsOBJ(T value) {
+    public SLResponseOBJ(T value) {
         super();
         this.value = value;
     }
 
 
 
-    public SLResponsOBJ(T value, int msg) {
+    public SLResponseOBJ(T value, int msg) {
         super(msg);
         this.value = value;
     }
 
-    public SLResponsOBJ() {
+    public SLResponseOBJ() {
         super();
     }
 
-    public SLResponsOBJ(DResponseObj<T> drResponse) {
+    public SLResponseOBJ(DResponseObj<T> drResponse) {
         this.value = drResponse.getValue();
         this.errorMsg = drResponse.errorMsg;
     }
