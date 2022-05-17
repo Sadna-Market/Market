@@ -13,7 +13,7 @@ export const createApiClientHttp = () => {
                 phoneNumber:phoneNumber
             }
               };
-             return await axios.get(path,body).then((res)=>{
+             return await axios.post(path,body).then((res)=>{
                  return res.data;
              })
         },
@@ -23,7 +23,7 @@ export const createApiClientHttp = () => {
         guestVisit:async ()=>
         {
             let path = apiUrl.concat("guestVisit");
-             return await axios.get(path).then((res)=>{
+             return await axios.post(path).then((res)=>{
                  return res.data;
              })
         },
@@ -33,7 +33,7 @@ export const createApiClientHttp = () => {
         guestLeave:async(uuid)=>{
             let path = apiUrl.concat("guestLeave");
             path = apiUrl.concat("/"+uuid)
-             return await axios.get(path).then((res)=>{
+             return await axios.post(path).then((res)=>{
                  return res.data;
              })
         },
@@ -49,7 +49,7 @@ export const createApiClientHttp = () => {
                 phoneNumber:phonenumber
             }
         }
-             return await axios.get(path,body).then((res)=>{
+             return await axios.post(path,body).then((res)=>{
                  return res.data;
              })
         },
@@ -64,7 +64,7 @@ export const createApiClientHttp = () => {
                 Password: password,
             }
         }
-        return await axios.get(path,body).then((res)=>{
+        return await axios.post(path,body).then((res)=>{
             return res.data;
         })
 
@@ -235,7 +235,7 @@ export const createApiClientHttp = () => {
                     category:categoryp
                 }
             }
-            return await axios.get(path,body).then((res)=>{
+            return await axios.post(path,body).then((res)=>{
                 return res.data;
             })
 
@@ -343,5 +343,16 @@ export const createApiClientHttp = () => {
     }
 }
 
-createApiClientHttp().initMarket("aaa","bbb","xssssxx")
-createApiClientHttp().guestVisit()
+
+async function test (){
+    let res = createApiClientHttp();
+
+    let json =await res.guestVisit();
+    if(json.errorMsg==-1){
+        console.log(json.value)
+    }
+    
+
+}
+
+test()
