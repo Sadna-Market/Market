@@ -241,100 +241,265 @@ export const createApiClientHttp = () => {
 
         },
 
-        addProductToShoppingBag : ()=>{
+        addProductToShoppingBag : (uuid,storeid,productid,quantity)=>{
+            let path = apiUrl.concat("addProductToShoppingBag");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+productid)
+            path = apiUrl.concat("/"+quantity)
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
 
         },
  
 
-        getShoppingCart : ()=>{
+        getShoppingCart : (uuid)=>{
+            let path = apiUrl.concat("getShoppingCart");
+            path = apiUrl.concat("/"+uuid)
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
 
         },
 
 
-        removeProductFromShoppingBag : ()=>{
-
+        removeProductFromShoppingBag : (uuid,storeid,productid)=>{
+            let path = apiUrl.concat("removeProductFromShoppingBag");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+productid)
+            return await axios.delete(path).then((res)=>{
+                return res.data;
+            })
         },
 
 
-        setProductQuantityShoppingBag : ()=>{
+        setProductQuantityShoppingBag : (uuid,productId,storeid,quantity)=>{
+            let path = apiUrl.concat("setProductQuantityShoppingBag");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+productId)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+quantity)
 
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
         },
 
+    
 
-        orderShoppingCart: ()=>{
+
+        orderShoppingCart: (uuid,city,adress,apartment,CreditCard,CreditDate,pin)=>{
+            let path = apiUrl.concat("orderShoppingCart");
+            path = apiUrl.concat("/"+uuid)
+            body = { 
+                data : {
+                    city:city,
+                    adress:adress,
+                    apartment:apartment,
+                    CreditCard:CreditCard,
+                    CreditDate:CreditDate,
+                    pin:pin
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
 
         },
 
         logout: ()=>{
-
-
-        },
-
-        changePassword:()=>{
-
-        },
-
-
-        openNewStore: ()=>{
-
+            let path = apiUrl.concat("logout");
+            path = apiUrl.concat("/"+uuid)
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
 
         },
 
+        changePassword:(uuid,email,Password,newPassword)=>{
+            let path = apiUrl.concat("logout");
+            path = apiUrl.concat("/"+uuid)
+            body = { 
+                data : {
+                  email:email,
+                  Password,Password,
+                  newPassword:newPassword
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
 
-        addNewProductToStore:()=>{
+        },
 
+
+        openNewStore: (uuid,name,founder)=>{
+            let path = apiUrl.concat("openNewStore");
+            path = apiUrl.concat("/"+uuid)
+            body = { 
+                data : {
+                  name:name,
+                  founder,founder,
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
+        },
+
+
+        addNewProductToStore:(uuid,storeid,productId,price,quantity)=>{
+            let path = apiUrl.concat("addNewProductToStore");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+productId)
+            body = { 
+                data : {
+                    price:price,
+                    quantity,quantity,
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
         },
     
 
-        deleteProductFromStore:()=>{
+        deleteProductFromStore:(uuid,storeid,productId)=>{
+            let path = apiUrl.concat("deleteProductFromStore");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+productId)
+            return await axios.delete(path).then((res)=>{
+                return res.data;
+            })
 
         },
 
 
-        setProductPriceInStore:()=>{
+        setProductPriceInStore:(uuid,storeid,productId,price)=>{
+            let path = apiUrl.concat("setProductPriceInStore");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+productId)
+            body = { 
+                data : {
+                    price:price,
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
 
         },
 
 
-        setProductQuantityInStore:()=>{
+        setProductQuantityInStore:(uuid,storeid,productId,quantity)=>{
+            let path = apiUrl.concat("setProductQuantityInStore");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeid)
+            path = apiUrl.concat("/"+productId)
+            body = { 
+                data : {
+                    quantity:quantity,
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
 
         },
 
 
 
-        addNewStoreOwner:()=>{
+        addNewStoreOwner:(uuid, storeId,OwnerEmail)=>{
+            let path = apiUrl.concat("addNewStoreOwner");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeId)
+            body = { 
+                data : {
+                    OwnerEmail:OwnerEmail,
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
 
         },
 
 
 
-        addNewStoreManger:()=>{
-
+        addNewStoreManger:(uuid, storeId,mangerEmail)=>{
+            let path = apiUrl.concat("addNewStoreManger");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeId)
+            body = { 
+                data : {
+                    mangerEmail:mangerEmail,
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
         },
 
 
 
-        setManagerPermissions:()=>{
-
+        setManagerPermissions:(uuid, storeId,mangerEmail,per,onof)=>{
+            let path = apiUrl.concat("addNewStoreManger");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeId)
+            body = { 
+                data : {
+                    mangerEmail:mangerEmail,
+                    per:per,
+                    onof:onof
+                }
+            }
+            return await axios.post(path,body).then((res)=>{
+                return res.data;
+            })
         },
 
 
 
-        closeStore:()=>{
+        closeStore:(uuid, storeId)=>{
+            let path = apiUrl.concat("closeStore");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeId)
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
 
         },
 
-        getStoreRoles:()=>{
-
+        getStoreRoles:(uuid, storeId)=>{
+            let path = apiUrl.concat("getStoreRoles");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeId)
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
         },
 
-        getStoreOrderHistory:()=>{
-
+        getStoreOrderHistory:(uuid, storeId)=>{
+            let path = apiUrl.concat("getStoreOrderHistory");
+            path = apiUrl.concat("/"+uuid)
+            path = apiUrl.concat("/"+storeId)
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
         },
 
 
-        getUserInfo:()=>{
-
+        getUserInfo:(uuid)=>{
+            let path = apiUrl.concat("getUserInfo");
+            path = apiUrl.concat("/"+uuid)
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
         }
 
      

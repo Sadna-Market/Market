@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.api.apiObjects.apiProductType;
+import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
 import com.example.demo.api.apiObjects.bridge.proxy;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
@@ -186,42 +187,43 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("removeProductFromShoppingBag/{uuid}/{storeId}/{productId}")
+    @DeleteMapping("removeProductFromShoppingBag/{uuid}/{storeId}/{productId}")
     public SLResponseOBJ<Boolean> removeProductFromShoppingBag(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId,@PathVariable("productId") int productId) {
         return iMarket.removeProductFromShoppingBag(uuid,storeId,productId);
     }
 
     @Override
-    @GetMapping("setProductQuantityShoppingBag/{uuid}/{productId}/{storeId}/{quantity}")
+    @PostMapping("setProductQuantityShoppingBag/{uuid}/{productId}/{storeId}/{quantity}")
     public SLResponseOBJ<Boolean> setProductQuantityShoppingBag(@PathVariable("uuid") String uuid,@PathVariable("productId")  int productId,@PathVariable("storeId")  int storeId,@PathVariable("quantity") int quantity) {
         return iMarket.setProductQuantityShoppingBag(uuid, productId, storeId, quantity);
     }
 
     @Override
-    @GetMapping("orderShoppingCart/{uuid}")
+    @PostMapping("orderShoppingCart/{uuid}")
     public SLResponseOBJ<String> orderShoppingCart(@PathVariable("uuid") String uuid,@RequestBody apiUser apiUser) {
         return iMarket.orderShoppingCart(uuid,apiUser.city,apiUser.adress,apiUser.apartment,new ServiceCreditCard(apiUser.CreditCard,apiUser.CreditDate,apiUser.pin));
     }
 
     @Override
-    @GetMapping("logout/{uuid}")
+    @PostMapping("logout/{uuid}")
     public SLResponseOBJ<String> logout(@PathVariable("uuid") String uuid) {
         return iMarket.logout(uuid);
     }
 
     @Override
-    @GetMapping("changePassword/{uuid}")
+    @PostMapping("changePassword/{uuid}")
     public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid,@RequestBody apiUser apiUser ,@RequestBody Map<String,Object> OBJ){
         return iMarket.changePassword(uuid,apiUser.email,apiUser.Password,(String)OBJ.get("newPassword"));
     }
 
     @Override
-    public SLResponseOBJ<Integer> openNewStore(String userId, String name, String founder, ServiceDiscountPolicy discountPolicy, ServiceBuyPolicy buyPolicy, ServiceBuyStrategy buyStrategy) {
-        return null;
+    @PostMapping("openNewStore/{uuid}")
+    public SLResponseOBJ<Integer> openNewStore(@PathVariable("uuid")String userId,@RequestBody apiStore apiStore) {
+        return iMarket.openNewStore(userId,apiStore.name,apiStore.founder,new ServiceDiscountPolicy(),new ServiceBuyPolicy(),new ServiceBuyStrategy());
     }
 
     @Override
-    @GetMapping("addNewProductToStore/{uuid}/{storeId}/{productId}")
+    @PostMapping("addNewProductToStore/{uuid}/{storeId}/{productId}")
     public SLResponseOBJ<Boolean> addNewProductToStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId, @PathVariable("productId") int productId,@RequestBody Map<String,Object> obj) {
         return iMarket.addNewProductToStore(uuid,storeId,productId,(double)obj.get("price"),(int)obj.get("quantity"));
     }
@@ -253,13 +255,13 @@ public class api implements Iapi {
     @Override
     @PostMapping("addNewStoreManger/{uuid}/{storeId}")
     public SLResponseOBJ<Boolean> addNewStoreManger(@PathVariable("uuid") String uuid,@PathVariable("StoreId") int StoreId,@RequestBody Map<String,Object> obj) {
-        return iMarket.addNewStoreManger(uuid, StoreId,(String)obj.get("mangerEmil"));
+        return iMarket.addNewStoreManger(uuid, StoreId,(String)obj.get("mangerEmail"));
     }
 
     @Override
     @PostMapping("setManagerPermissions/{uuid}/{storeId}")
     public SLResponseOBJ<Boolean> setManagerPermissions(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> obj) {
-        return iMarket.setManagerPermissions(uuid, storeId,(String)obj.get("mangerEmil"),(String)obj.get("per"),(boolean)obj.get( "onof"));
+        return iMarket.setManagerPermissions(uuid, storeId,(String)obj.get("mangerEmail"),(String)obj.get("per"),(boolean)obj.get( "onof"));
     }
 
     @Override
