@@ -643,8 +643,8 @@ public class Facade implements IMarket {
          */
         if (userId == null || userId.equals(""))
             return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
-        UUID uid = userManager.Logout(UUID.fromString(userId)).value;
-        return new SLResponseOBJ<>(uid.toString(), -1);
+        DResponseObj<UUID> a = userManager.Logout(UUID.fromString(userId));
+        return a.errorOccurred()? new SLResponseOBJ<>(a.errorMsg) : new SLResponseOBJ<>(a.value.toString(), -1);
     }
 
     @Override
