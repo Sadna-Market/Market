@@ -16,20 +16,21 @@ import java.util.Map;
 public class api implements Iapi {
     proxy iMarket = new proxy();
 
+
     @Override
-    @GetMapping("initMarket")
+    @PostMapping("initMarket")
     public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber);
     }
 
     @Override
-    @GetMapping("guestVisit")
+    @PostMapping("guestVisit")
     public SLResponseOBJ<String> guestVisit() {
         return iMarket.guestVisit();
     }
 
     @Override
-    @GetMapping("guestLeve/{uuid}")
+    @PostMapping("guestLeve/{uuid}")
     public SLResponseOBJ<Boolean> guestLeave(@PathVariable String uuid) {
         return iMarket.guestLeave(uuid);
     }
@@ -167,13 +168,13 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("addNewProductType/{uuid}")
+    @PostMapping("addNewProductType/{uuid}")
     public SLResponseOBJ<Integer> addNewProductType(@PathVariable("uuid") String uuid,@RequestBody apiProductType apt) {
         return iMarket.addNewProductType(uuid,apt.name,apt.description,apt.category);
     }
 
     @Override
-    @GetMapping("addProductToShoppingBag/{uuid}/{storeId}/{productId}/{quantity}")
+    @PostMapping("addProductToShoppingBag/{uuid}/{storeId}/{productId}/{quantity}")
     public SLResponseOBJ<Boolean> addProductToShoppingBag(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId,@PathVariable("productId") int productId,@PathVariable("quantity") int quantity) {
         return iMarket.addProductToShoppingBag(uuid, storeId, productId, quantity);
     }
