@@ -7,6 +7,7 @@ import NewExpense from "./components/NewExpense/NewExpense";
 import Market from "./components/Market/Market";
 import SignUp from "./components/Bar/SignUp";
 import InitMarket from "./components/Bar/InitMarket";
+import SignUpManager from "./components/Manager/SignUpManager";
 
 function App(props) {
   const items = [
@@ -52,27 +53,18 @@ function App(props) {
   const [command, setCommand] = useState(<Market uuid="6" />);
 
   const [updateMarket, b] = useState("");
-  // useEffect(() => {
-  //   b(UUID);
-  //   console.log(updateMarket);
-  // });
 
-  // console.log(updateMarket);
   const loginHandler = (newUUID) => {
-    // setUUID((a) => {
-    //   return newUUID;
-    // });
     UUID = newUUID;
-    //setCommand(<Market uuid={newUUID} />);
     setCommand(<Market uuid={UUID} />);
-    //setCommand(<Market uuid={updateMarket} />);
   };
 
   const logoutHandler = () => {
-    // setUUID((a) => {
-    //   return 6;
-    // });
     UUID = 6;
+    setCommand(<Market uuid={UUID} />);
+  };
+
+  const newMarketHandler = () => {
     setCommand(<Market uuid={UUID} />);
   };
 
@@ -80,7 +72,9 @@ function App(props) {
     setCommand((pre) => {
       return (
         <InitMarket
-          onInit={() => setCommand(<Market uuid={UUID} />)}
+          onInit={() =>
+            setCommand(<SignUpManager onSaveData={newMarketHandler} />)
+          }
           onCencel={() => setCommand(<Market uuid={UUID} />)}
         />
       );
@@ -89,7 +83,6 @@ function App(props) {
 
   const signUpHandler = () => {
     setCommand((pre) => {
-      //return <NewExpense onAddExpense={addExpenseHandler} />;
       return (
         <SignUp
           onSaveExpenseData={(data) => setCommand(<Market uuid={UUID} />)}
