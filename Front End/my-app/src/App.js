@@ -64,8 +64,8 @@ function App(props) {
     setCommand(<Market uuid={UUID} />);
   };
 
-  const newMarketHandler = () => {
-    setCommand(<Market uuid={UUID} />);
+  const newMarketHandler = data => {
+    setCommand(<Market uuid={data} />);
   };
 
   const InitMarketHendler = () => {

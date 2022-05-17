@@ -31,10 +31,12 @@ const SignUpManager = (props) => {
       name: enteredName,
       email: enteredEmail,
       password: enteredPassword,
-      //phone
+      Phone: enteredPhone,
     };
 
-    props.onSaveData();
+    //login
+    //return uuid
+    props.onSaveData(7);
   };
 
   const cancelHandler = () => {
