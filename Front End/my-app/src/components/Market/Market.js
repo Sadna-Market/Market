@@ -55,7 +55,6 @@ const Market = (props) => {
           </div>
         </div>
         {command}
-      <div></div>
     </Card>
   );
 };
