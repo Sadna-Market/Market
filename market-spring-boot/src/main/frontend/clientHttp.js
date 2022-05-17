@@ -343,5 +343,16 @@ export const createApiClientHttp = () => {
     }
 }
 
-createApiClientHttp().initMarket("aaa","bbb","xssssxx")
-createApiClientHttp().guestVisit()
+
+async function test (){
+    let res = createApiClientHttp();
+
+    let json =await res.guestVisit();
+    if(json.errorMsg==-1){
+        console.log(json.value)
+    }
+    
+
+}
+
+test()

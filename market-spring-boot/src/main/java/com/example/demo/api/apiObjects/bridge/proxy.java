@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class proxy implements IMarket {
-    IMarket REAL=null;
+    IMarket REAL=new Facade();
     @Override
     public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber) {
         if(REAL==null){
