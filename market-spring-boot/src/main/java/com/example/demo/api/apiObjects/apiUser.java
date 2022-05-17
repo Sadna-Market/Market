@@ -12,12 +12,14 @@ public class apiUser {
         public String CreditCard;
         public String CreditDate;
         public String pin;
+        public String newPassword;
 
         public apiUser( String email, String Password, String phoneNumber,String city, String adress
                 , int apartment
                 , String CreditCard
                 , String CreditDate
-                , String pin){
+                , String pin,
+            String newPassword){
             this.email=email;
             this.Password=Password;
             this.phoneNumber=phoneNumber;
@@ -27,5 +29,6 @@ public class apiUser {
             this.CreditCard=CreditCard;
             this.CreditDate=CreditDate;
             this.pin=pin;
+            this.newPassword=newPassword;
         }
     }

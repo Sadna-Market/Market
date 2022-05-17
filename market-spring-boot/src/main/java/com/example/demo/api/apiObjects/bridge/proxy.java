@@ -374,7 +374,7 @@ public class proxy implements IMarket {
             System.out.println(quantity);
             return new SLResponseOBJ<>(null,-1);
         }
-        return setProductQuantityInStore(userId,storeId,productId,quantity);
+        return REAL.setProductQuantityInStore(userId,storeId,productId,quantity);
     }
 
     @Override
@@ -385,7 +385,7 @@ public class proxy implements IMarket {
             System.out.println(OwnerEmail);
             return new SLResponseOBJ<>(null,-1);
         }
-        return addNewStoreOwner(UserId,StoreId,OwnerEmail);
+        return REAL.addNewStoreOwner(UserId,StoreId,OwnerEmail);
     }
 
     @Override

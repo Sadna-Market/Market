@@ -20,7 +20,7 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("initMarket")
-    public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
+    public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {;
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber);
     }
 
@@ -31,8 +31,8 @@ public class api implements Iapi {
     }
 
     @Override
-    @PostMapping("guestLeve/{uuid}")
-    public SLResponseOBJ<Boolean> guestLeave(@PathVariable String uuid) {
+    @PostMapping("guestLeave/{uuid}")
+    public SLResponseOBJ<Boolean> guestLeave(@PathVariable("uuid") String uuid) {
         return iMarket.guestLeave(uuid);
     }
 
@@ -49,9 +49,9 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("storeid/{sid}")
-    public SLResponseOBJ<ServiceStore> getStore(@PathVariable int sid) {
-        return iMarket.getStore(sid);
+    @GetMapping("getStore/{sid}")
+    public SLResponseOBJ<ServiceStore> getStore(@PathVariable("sid") String sid) {
+        return iMarket.getStore(Integer.parseInt(sid));
     }
 
     @Override
@@ -212,8 +212,8 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("changePassword/{uuid}")
-    public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid,@RequestBody apiUser apiUser ,@RequestBody Map<String,Object> OBJ){
-        return iMarket.changePassword(uuid,apiUser.email,apiUser.Password,(String)OBJ.get("newPassword"));
+    public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid ,@RequestBody Map<String,Object> OBJ){
+        return iMarket.changePassword(uuid,(String)OBJ.get("email"),(String)OBJ.get("Password"),(String)OBJ.get("newPassword"));
     }
 
     @Override
@@ -224,12 +224,14 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("addNewProductToStore/{uuid}/{storeId}/{productId}")
-    public SLResponseOBJ<Boolean> addNewProductToStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId, @PathVariable("productId") int productId,@RequestBody Map<String,Object> obj) {
-        return iMarket.addNewProductToStore(uuid,storeId,productId,(double)obj.get("price"),(int)obj.get("quantity"));
+    public SLResponseOBJ<Boolean> addNewProductToStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId, @PathVariable("productId") int productId,@RequestBody Map<String,Object> obj)
+    {
+        System.out.println(obj.toString());
+        return iMarket.addNewProductToStore(uuid,storeId,productId,(double) obj.get("price"),(int)obj.get("quantity"));
     }
 
     @Override
-    @DeleteMapping("deleteProductFromStore/{uuid}/{storeId}/{productId}")
+    @PostMapping("deleteProductFromStore/{uuid}/{storeId}/{productId}")
     public SLResponseOBJ<Boolean> deleteProductFromStore(@PathVariable("uuid") String uuid,@PathVariable("storeId")  int storeId,@PathVariable("productId")  int productId) {
         return iMarket.deleteProductFromStore(uuid,storeId,productId);
     }
@@ -237,24 +239,25 @@ public class api implements Iapi {
     @Override
     @PostMapping("setProductPriceInStore/{uuid}/{storeId}/{productId}")
     public SLResponseOBJ<Boolean> setProductPriceInStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId,@PathVariable("productId") int productId,@RequestBody Map<String,Object> obj) {
-        return iMarket.setProductPriceInStore(uuid, storeId, productId, (double) obj.get("price"));
+        return iMarket.setProductPriceInStore(uuid, storeId, productId, (double)obj.get("price"));
     }
 
     @Override
     @PostMapping("setProductQuantityInStore/{uuid}/{storeId}/{productId}")
     public SLResponseOBJ<Boolean> setProductQuantityInStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId,@PathVariable("productId") int productId,@RequestBody Map<String,Object> obj) {
-        return iMarket.setProductQuantityInStore(uuid,storeId,productId,(int) obj.get("quantity"));
+        System.out.println(obj);
+        return iMarket.setProductQuantityInStore(uuid,storeId,productId,(int)obj.get("quantity"));
     }
 
     @Override
     @PostMapping("addNewStoreOwner/{uuid}/{storeId}")
-    public SLResponseOBJ<Boolean> addNewStoreOwner(@PathVariable("uuid") String uuid,@PathVariable("uuid") int StoreId,@RequestBody Map<String,Object> obj) {
+    public SLResponseOBJ<Boolean> addNewStoreOwner(@PathVariable("uuid") String uuid,@PathVariable("storeId") int StoreId,@RequestBody Map<String,Object> obj) {
         return iMarket.addNewStoreOwner(uuid, StoreId,(String) obj.get("OwnerEmail"));
     }
 
     @Override
     @PostMapping("addNewStoreManger/{uuid}/{storeId}")
-    public SLResponseOBJ<Boolean> addNewStoreManger(@PathVariable("uuid") String uuid,@PathVariable("StoreId") int StoreId,@RequestBody Map<String,Object> obj) {
+    public SLResponseOBJ<Boolean> addNewStoreManger(@PathVariable("uuid") String uuid,@PathVariable("storeId") int StoreId,@RequestBody Map<String,Object> obj) {
         return iMarket.addNewStoreManger(uuid, StoreId,(String)obj.get("mangerEmail"));
     }
 
@@ -266,19 +269,19 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("closeStore/{uuid}/{storeId}")
-    public SLResponseOBJ<Boolean> closeStore(@PathVariable("uuid") String uuid,@PathVariable("StoreId") int StoreId) {
+    public SLResponseOBJ<Boolean> closeStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int StoreId) {
         return iMarket.closeStore(uuid, StoreId);
     }
 
     @Override
     @GetMapping("getStoreRoles/{uuid}/{storeId}")
-    public SLResponseOBJ<HashMap<String, List<String>>> getStoreRoles(@PathVariable("uuid") String uuid,@PathVariable("StoreId") int StoreId) {
+    public SLResponseOBJ<HashMap<String, List<String>>> getStoreRoles(@PathVariable("uuid") String uuid,@PathVariable("storeId") int StoreId) {
         return iMarket.getStoreRoles(uuid, StoreId);
     }
 
     @Override
     @GetMapping("getStoreOrderHistory/{uuid}/{storeId}")
-    public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(@PathVariable("uuid") String uuid,@PathVariable("StoreId") int StoreId) {
+    public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(@PathVariable("uuid") String uuid,@PathVariable("storeId") int StoreId) {
 
         return iMarket.getStoreOrderHistory(uuid, StoreId);
     }

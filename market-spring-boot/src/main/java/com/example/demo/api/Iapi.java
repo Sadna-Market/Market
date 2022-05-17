@@ -34,7 +34,7 @@ public interface Iapi {
     public SLResponseOBJ<String> login( String uuid, apiUser user);
 
     //2.2.1
-    public SLResponseOBJ<ServiceStore> getStore(int StoreID);
+    public SLResponseOBJ<ServiceStore> getStore(@PathVariable("sid") String sid) ;
 
     public SLResponseOBJ<ServiceProductStore> getInfoProductInStore(int storeID, int productID);
 
@@ -83,7 +83,7 @@ public interface Iapi {
     //2.3.1
     public SLResponseOBJ<String> logout(String userId);
 
-    public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid,@RequestBody apiUser apiUser ,@RequestBody Map<String,Object> OBJ);
+    public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid ,@RequestBody Map<String,Object> OBJ);
 
 
     //2.3.2
