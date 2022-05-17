@@ -643,8 +643,8 @@ public class Facade implements IMarket {
          */
         if (userId == null || userId.equals(""))
             return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
-        DResponseObj<UUID> uid = userManager.Logout(UUID.fromString(userId));
-        return uid.errorOccurred()? new SLResponseOBJ<>(uid.errorMsg): new SLResponseOBJ<>(uid.toString(), -1);
+        DResponseObj<UUID> a = userManager.Logout(UUID.fromString(userId));
+        return a.errorOccurred()? new SLResponseOBJ<>(a.errorMsg) : new SLResponseOBJ<>(a.value.toString(), -1);
     }
 
     @Override
@@ -741,7 +741,6 @@ public class Facade implements IMarket {
         if (quantity < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         DResponseObj<Boolean> res = market.addNewProductToStore(UUID.fromString(userId), storeId, productId, price, quantity);
-        System.out.println(res);
         return new SLResponseOBJ<>(res);
     }
 
