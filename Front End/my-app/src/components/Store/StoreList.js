@@ -24,7 +24,7 @@ const StoreList = (props) => {
     <StoreID id={expense.id} name={expense.name} />
   ));
 
-  const [searchStore, setStore] = useState("");
+  // const [searchStore, setStore] = useState("");
 
 
   return (

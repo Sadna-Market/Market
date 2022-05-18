@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 //import logo from "./logo.svg";
 import "./App.css";
-import Bar from "./components/Bar/Bar";
+import Bar from "./components/Bar/Bar.js";
 import Expenses from "./components/Expenses/Expenses";
 import NewExpense from "./components/NewExpense/NewExpense";
 import Market from "./components/Market/Market";
 import SignUp from "./components/Bar/SignUp";
 import InitMarket from "./components/Bar/InitMarket";
 import SignUpManager from "./components/Manager/SignUpManager";
-
+import {createApiClientHttp} from "../../my-app/src/client/clientHttp";
+let apiClientHttp = createApiClientHttp();
 function App(props) {
   const items = [
     {
