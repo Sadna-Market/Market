@@ -62,7 +62,7 @@ public class MemberBuyTests extends MarketTests{
     @DisplayName("req: #2.3.2 - success test")
     void createStore_Success() {
         User user = generateUser();
-        assertTrue(market.register(uuid, user.username, user.password));
+        assertTrue(market.register(uuid, user.username, user.password,user.dateOfBirth));
         assertTrue(market.isMember(user));
         ATResponseObj<String> memberID = market.login(uuid, user);
         assertFalse(memberID.errorOccurred());

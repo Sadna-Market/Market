@@ -57,7 +57,7 @@ public class GuestGeneralTests extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         User newUser = generateUser();
-        assertTrue(market.register(uuid, newUser.username, newUser.password));
+        assertTrue(market.register(uuid, newUser.username, newUser.password,newUser.dateOfBirth));
         assertTrue(market.isMember(newUser));
     }
 
@@ -67,7 +67,7 @@ public class GuestGeneralTests extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         User newUser = generateUser();
-        assertFalse(market.register(uuid, newUser.username, ""));
+        assertFalse(market.register(uuid, newUser.username, "",newUser.dateOfBirth));
         assertFalse(market.isMember(newUser));
     }
 
@@ -77,17 +77,17 @@ public class GuestGeneralTests extends MarketTests {
         assertTrue(market.cartExists(uuid));
         assertTrue(market.guestOnline(uuid));
         User newUser = generateUser();
-        assertTrue(market.register(uuid, newUser.username, newUser.password));
+        assertTrue(market.register(uuid, newUser.username, newUser.password,newUser.dateOfBirth));
         assertTrue(market.isMember(newUser));
-        assertFalse(market.register(uuid, newUser.username, newUser.password));
+        assertFalse(market.register(uuid, newUser.username, newUser.password,newUser.dateOfBirth));
     }
 
     @Test
     @DisplayName("req: #2.1.3 - fail test [invalid inputs]")
     void registration_Fail3() {
         User newUser = generateUser();
-        assertFalse(market.register(uuid, null, newUser.password));
-        assertFalse(market.register(uuid, newUser.username, null));
+        assertFalse(market.register(uuid, null, newUser.password,newUser.dateOfBirth));
+        assertFalse(market.register(uuid, newUser.username, null,newUser.dateOfBirth));
     }
 
     /**

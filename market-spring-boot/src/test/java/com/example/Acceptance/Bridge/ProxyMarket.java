@@ -127,8 +127,8 @@ public class ProxyMarket implements MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    public boolean register(String uuid, String username, String password) {
-        return realMarket.register(uuid, username, password);
+    public boolean register(String uuid, String username, String password, String dateOfBirth) {
+        return realMarket.register(uuid, username, password,dateOfBirth);
     }
 
     /**

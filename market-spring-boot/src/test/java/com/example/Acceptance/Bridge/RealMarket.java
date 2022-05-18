@@ -23,7 +23,7 @@ public class RealMarket implements MarketBridge {
      * @return true if success else false
      */
     public ATResponseObj<String> initSystem(User sysManager) {
-        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number);
+        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
         return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value, null);
     }
 
@@ -109,7 +109,7 @@ public class RealMarket implements MarketBridge {
         deliver.forEach(i -> {
             lst.add(new ServiceProductStore(i.quantity, i.price, i.itemID, i.name));
         });
-        ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment);
+        ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment,user.dateOfBirth);
         SLResponseOBJ<Integer> res = market.supply(su, lst);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(String.valueOf(res.value), null);
     }
@@ -144,8 +144,8 @@ public class RealMarket implements MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    public boolean register(String uuid, String username, String password) {
-        SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222");
+    public boolean register(String uuid, String username, String password, String dateOfBirth) {
+        SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222",dateOfBirth);
         return response.value;
     }
 

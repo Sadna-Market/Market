@@ -88,7 +88,7 @@ public interface MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    boolean register(String uuid, String username, String password);
+    boolean register(String uuid, String username, String password, String dateOfBirth);
 
     /**
      * checks if newUser is registered

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +34,7 @@ class UserTest {
     @Test
     void addFounder() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
         userManager.addFounder(uuid,store);
         boolean A=userManager.isFounder(store,userManager.getOnlineUser(uuid).value.getEmail().value).getValue();
@@ -46,8 +47,8 @@ class UserTest {
     @Test
     void addNewStoreOwner() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
-        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
+        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1], LocalDate.of(1998,11,15));
         uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
         userManager.addFounder(uuid,store);
         userManager.addNewStoreOwner(uuid,store,emails[1]);
@@ -61,8 +62,8 @@ class UserTest {
 
     void addNewStoreOwnerWithUserThatNotOuner() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
-        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
+        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1], LocalDate.of(1998,11,15));
         uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
         Assertions.assertFalse(userManager.addNewStoreOwner(uuid,store,emails[1]).value);
 

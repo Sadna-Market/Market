@@ -3,6 +3,7 @@ package com.example.demo.Service;
 
 
 
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
@@ -12,7 +13,7 @@ import java.util.List;
 //Api of all
 public interface IMarket {
     //1.1
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber);
+    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth);
 
 
 
@@ -25,7 +26,7 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> guestLeave(String guestId);
 
     //2.1.3
-    public SLResponseOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber) ;
+    public SLResponseOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber,String dateOfBirth) ;
 
     //2.1.4
     public SLResponseOBJ<String> login(String userid, String email, String password);
@@ -98,6 +99,11 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> setProductPriceInStore(String userId, int storeId, int productId, double price);
 
     public SLResponseOBJ<Boolean> setProductQuantityInStore(String userId, int storeId, int productId, int quantity);
+
+    //2.4.2
+
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule);
+    public SLResponseOBJ<Boolean> removeBuyRule(String userId, int storeId, int buyRuleID);
 
 
     //2.4.4

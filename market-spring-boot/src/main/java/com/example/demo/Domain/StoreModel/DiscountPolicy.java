@@ -12,7 +12,7 @@ public class DiscountPolicy {
     public DiscountPolicy() {
     }
 
-    public DResponseObj<Double> checkShoppingBag(String user, ConcurrentHashMap<Integer, Integer> productsInBag) {
+    public DResponseObj<Double> checkShoppingBag(String user, ConcurrentHashMap<ProductStore, Integer> productsInBag) {
         return new DResponseObj<>(0.0);
     }
 }

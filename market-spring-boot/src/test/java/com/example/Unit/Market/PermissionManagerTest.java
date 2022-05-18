@@ -9,6 +9,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,12 +27,12 @@ class PermissionManagerTest {
 
     @BeforeEach
     void setUp() {
-        founder = new User("founder","abc123D!","0678987655");
-        owner1 = new User("owner1","abc123D!","0678987655");
-        owner2 = new User("owner2","abc123D!","0678987655");
-        manager = new User("manager","abc123D!","0678987655");
-        manager2 = new User("manager2","abc123D!","0678987655");
-        member = new User("member","abc123D!","0678987655");
+        founder = new User("founder","abc123D!","0678987655", LocalDate.of(1998,11,15));
+        owner1 = new User("owner1","abc123D!","0678987655", LocalDate.of(1998,11,15));
+        owner2 = new User("owner2","abc123D!","0678987655", LocalDate.of(1998,11,15));
+        manager = new User("manager","abc123D!","0678987655", LocalDate.of(1998,11,15));
+        manager2 = new User("manager2","abc123D!","0678987655", LocalDate.of(1998,11,15));
+        member = new User("member","abc123D!","0678987655", LocalDate.of(1998,11,15));
         store1 = new Store(1,null,null,null,null);
         permissionManager = PermissionManager.getInstance();
 
@@ -84,8 +86,8 @@ class PermissionManagerTest {
         //try to remove permission type but with another owner that not appointed this manager
         assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, manager2, store1, owner1).value);
 
-        User user1 = new User("user11","abc123D!","0678987655");
-        User user2 = new User("user22","abc123D!","0678987655");
+        User user1 = new User("user11","abc123D!","0678987655", LocalDate.of(1998,11,15));
+        User user2 = new User("user22","abc123D!","0678987655", LocalDate.of(1998,11,15));
 
         //try to remove permission type with users that not owner or manager in this store
         assertFalse(permissionManager.removeManagerPermissionType(permissionType.permissionEnum.addNewProductToStore, user1, store1, user2).value);
@@ -143,7 +145,7 @@ class PermissionManagerTest {
         assertEquals(permissionManager.getGranteeUserType(owner1, store1).value, userTypes.owner);
         assertEquals(permissionManager.getGranteeUserType(manager2, store1).value, userTypes.manager);
 
-        User user1 = new User("user121","abc123D!","0678987655");
+        User user1 = new User("user121","abc123D!","0678987655", LocalDate.of(1998,11,15));
         assertEquals(permissionManager.getGranteeUserType(user1, store1).value, userTypes.member);
 
 

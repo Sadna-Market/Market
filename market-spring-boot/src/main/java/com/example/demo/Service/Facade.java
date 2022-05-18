@@ -6,11 +6,19 @@ import com.example.demo.Domain.Market.PermissionManager;
 import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import org.apache.tomcat.jni.Local;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +31,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber) {
+    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
         /**
          * @requirement II. 1
          *
@@ -46,8 +54,7 @@ public class Facade implements IMarket {
          */
         SLResponseOBJ<String> guestUUID = guestVisit();
         if (guestUUID.errorOccurred()) return new SLResponseOBJ<>(guestUUID.value, guestUUID.errorMsg);
-
-        SLResponseOBJ<Boolean> addedSysManager = addNewMember(guestUUID.value, email, Password, phoneNumber);
+        SLResponseOBJ<Boolean> addedSysManager = addNewMember(guestUUID.value, email, Password, phoneNumber,dateOfBirth);
         if (addedSysManager.errorOccurred()) return new SLResponseOBJ<>(null, addedSysManager.errorMsg);
         PermissionManager permissionManager = PermissionManager.getInstance();
 
@@ -113,7 +120,7 @@ public class Facade implements IMarket {
 
     // return new DResponseObj<>(false, "grantor can be null only in case that open new store");
     @Override
-    public SLResponseOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber) {
+    public SLResponseOBJ<Boolean> addNewMember(String uuid, String email, String Password, String phoneNumber, String dateOfBirth) {
         /**
          * @requirement II. 1 . 3
          *
@@ -147,8 +154,25 @@ public class Facade implements IMarket {
 
         if (phoneNumber == null || phoneNumber.equals(""))
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
-        DResponseObj<Boolean> res = userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber);
+        LocalDate date = checkDateOfBirth(dateOfBirth);
+        if(date == null) return new SLResponseOBJ<>(false, ErrorCode.NOTLEGALDATE);
+        DResponseObj<Boolean> res = userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber, date);
         return new SLResponseOBJ<>(res.value, res.errorMsg);
+    }
+
+    private LocalDate checkDateOfBirth(String dateOfBirth) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        format.setLenient(false);
+        LocalDate date;
+        try {
+            date = (format.parse(dateOfBirth)).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();;
+        } catch (ParseException e) {
+           return null;
+        }
+        if(date.isAfter(LocalDate.now())) return null;
+        return date;
     }
 
     @Override
@@ -840,6 +864,63 @@ public class Facade implements IMarket {
         if (quantity < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         return new SLResponseOBJ<>(market.setProductQuantityInStore(UUID.fromString(userId), storeId, productId, quantity));
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule) {
+
+        /**
+         * @requirement II. 4.2
+         *
+         * @param userId: String
+         * @param storeId: int
+         * @param buyRule: BuyRule
+
+         *
+         * @return DResponseObj
+         *        {
+         *        "errorOccurred(): boolean
+         *        "errorMsg": String
+         *        "value":Boolean- Successfully completed
+         *        }
+         *
+         * @documentation: addNewBuyRule: A store owner may add new buy rule for his store. Users who are not store owners can't use this function
+         *
+         */
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        if (buyRule == null)
+            return new SLResponseOBJ<>(false, ErrorCode.BUY_RULE_IS_NULL);
+        return new SLResponseOBJ<>(market.addNewBuyRule(UUID.fromString(userId), storeId, buyRule));
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> removeBuyRule(String userId, int storeId, int buyRuleID) {
+        /**
+         * @requirement II. 4.2
+         *
+         * @param userId: String
+         * @param storeId: int
+         * @param buyRuleID: int
+
+         *
+         * @return DResponseObj
+         *        {
+         *        "errorOccurred(): boolean
+         *        "errorMsg": String
+         *        "value":Boolean- Successfully completed
+         *        }
+         *
+         * @documentation: removeBuyRule: A store owner may remove buy rule from his store. Users who are not store owners can't use this function
+         *
+         */
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0 || buyRuleID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.removeBuyRule(UUID.fromString(userId), storeId, buyRuleID));
     }
 
     // TODO  II. 4.2  שינוי סוגי וכללי )מדיניות( קניה והנחה של חנות

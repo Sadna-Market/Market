@@ -1,5 +1,7 @@
 package com.example.demo.Domain;
 
+import com.example.demo.Domain.Response.DResponseObj;
+
 public class ErrorCode {
     public static int NOTLOGGED = 10;
     public static int NOTONLINE = 11;
@@ -7,6 +9,7 @@ public class ErrorCode {
     public static int NOTVALIDINPUT = 13;
     public static int NOTSTRING = 14;
     public static int NEGATIVENUMBER = 15;
+
 
     public static int NOTUSER = 16;
     public static int GRANTEANDGRANTORSAMEUSER = 17;
@@ -16,27 +19,33 @@ public class ErrorCode {
     public static int NOPERMISSION = 21;
     public static int MISTAKEPERMISSIONTYPE = 22;
     public static int ALLREADYHAVESYSTEMMANAGER = 23;
-    public static int NOT_MANAGER = 53;
+    public static int NOTLEGALDATE = 24;
 
-
+    public static int PRODUCT_NOT_FOR_SELL_NOW = 27;
+    public static int TRY_TO_BUY_MORE_THEN_MAX_QUANTITY_TO_BUY = 28;
+    public static int NOT_PASS_THE_MIN_QUANTITY_TO_BUY = 29;
     public static int PRODUCTNOTEXIST = 30;
     public static int PRODUCTALLREADYINSTORE = 31;
     public static int PRODUCTNOTEXISTINSTORE = 32;
     public static int NOT_AVAILABLE_QUANTITY = 33;
+    public static int BUY_RULE_NOT_EXIST = 34;
+    public static int BUY_RULE_IS_NULL = 35;
+    public static int TRY_TO_BUY_TOO_MANY_FROM_CATEGORY = 36;
+    public static int BUYER_TOO_YOUNG_TO_BUY_THIS_PRODUCT = 37;
+    public static int BUYER_CAN_NOT_BUY_THIS_HOUR = 38;
+    public static int USER_CAN_NOT_BUY_IN_THIS_STORE = 39;
 
     public static int STORENOTINTHEPRODUCTTYPE = 40;
     public static int STORESTAYINTHEPRODUCTTYPE = 41;
     public static int CANNOTCLOSESTORE = 42;
     public static int ROLLBACK =43;
 
+    public static int NOT_MANAGER = 48;
     public static int SERVICEALREADYCONNECT = 50;
     public static int SERVICEALREADYDISCONNECT = 50;
     public static int EXISTEXTERNALSERVICEWITHTHISNAME =51;
     public static int NOTEXISTEXTERNALSERVICEWITHTHISNAME =52;
-
     public static int ILLEGALCARD = 53;
-
-
     public static int EXTERNAL_SERVICE_ERROR =54;
     public static int SERVICE_NOT_CONNECTED = 55;
 
