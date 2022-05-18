@@ -47,7 +47,9 @@ const Market = (props) => {
         {permissonCommand}
       </div>
       <h3>Market</h3>
-      <div className="bar__controls">
+      <h3>{props.uuid}</h3>
+
+        <div className="bar__controls">
           <div className="bar__control">
             <label>Search Store</label>
             <input type="text" value={searchStore} onChange={findStoreHandler} placeholder="store ID" />
