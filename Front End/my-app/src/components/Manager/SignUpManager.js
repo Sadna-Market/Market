@@ -23,20 +23,15 @@ const SignUpManager = (props) => {
     SetPhone(event.target.value);
   };
 
+  const [enteredDate, SetDate] = useState("");
+  const dateChangeHandler = (event) => {
+    SetDate(event.target.value);
+  };
+
+  //todo: init the market
   const submitHandler = (event) => {
     event.preventDefault();
-    //register
-
-    const userData = {
-      name: enteredName,
-      email: enteredEmail,
-      password: enteredPassword,
-      Phone: enteredPhone,
-    };
-
-    //login
-    //return uuid
-    props.onSaveData(7);
+    props.onSaveData();
   };
 
   const cancelHandler = () => {
@@ -83,10 +78,20 @@ const SignUpManager = (props) => {
               onChange={phoneChangeHandler}
             />
           </div>
+          <div className="new-expense__control">
+            <label>BirthDay</label>
+            <input
+              type="date"
+              value={enteredDate}
+              min="1879-03-14"
+              max="2004-14-04"
+              onChange={dateChangeHandler}
+            />
+          </div>
         </div>
         <div className="signUpManager__actions">
           <button type="button" onClick={cancelHandler}>
-            Cancel
+            Clean
           </button>
           <button type="submit"> confirm</button>
         </div>

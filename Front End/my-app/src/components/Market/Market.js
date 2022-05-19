@@ -2,8 +2,19 @@ import React, { useState, useEffect } from "react";
 import Card from "../UI/Card";
 import "./Market.css";
 import StoreList from "../Store/StoreList";
+import MarketButton from "./MarketButton";
+import ProductButton from "../Product/ProductButton";
+import Store from "../Store/Store";
 
 const Market = (props) => {
+  let UUID = props.uuid;
+
+  const showStoreHandler = storeID => {
+    console.log(storeID);
+    setCommand(<Store storeID={storeID} uuid={UUID}/>);
+  };
+
+  const [command, setCommand] = useState(<MarketButton onShowStore={showStoreHandler}/>);
   let permissonCommand = "";
 
   //check permission
@@ -16,45 +27,26 @@ const Market = (props) => {
       </>
     );
   }
-  let mainCommand = "";
 
   const MarketHandler = () => {
-    mainCommand = "";
+    setCommand(<MarketButton  onShowStore={showStoreHandler}/>);
   };
 
-  const [searchStore,setStore] = useState('');
+  const productHandler = ()=>{
+    setCommand(<ProductButton />);
+  }
 
-
-  const findStoreHandler = (event) => {
-    setStore(event.target.value);
-  };
-
-  const [command,setCommand] =useState(<StoreList />);
-
-  const searchButtonHolder = () =>{
-
-      //console.log(searchStore);
-      setCommand(<StoreList search={searchStore} />);
-      setStore('');
-  };
+  const [searchStore, setStore] = useState("");
 
   return (
     <Card className="market">
       <div>
         <button onClick={MarketHandler}> Market</button>
         <button> My Cart</button>
-        <button> Products</button>
+        <button onClick={productHandler}> Products</button>
         {permissonCommand}
       </div>
-      <h3>Market</h3>
-      <div className="bar__controls">
-          <div className="bar__control">
-            <label>Search Store</label>
-            <input type="text" value={searchStore} onChange={findStoreHandler} placeholder="store ID" />
-            <button onClick={searchButtonHolder}>Search</button>
-          </div>
-        </div>
-        {command}
+      <div>{command}</div>
     </Card>
   );
 };

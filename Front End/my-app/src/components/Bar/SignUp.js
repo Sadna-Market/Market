@@ -23,6 +23,12 @@ const SignUp = (props) => {
     SetPhone(event.target.value);
   };
 
+  const [enteredDate, SetDate] = useState("");
+  const dateChangeHandler = (event) => {
+    SetDate(event.target.value);
+  };
+
+  //todo:register
   const submitHandler = (event) => {
     event.preventDefault();
     //register
@@ -33,7 +39,7 @@ const SignUp = (props) => {
       password: enteredPassword,
       //phone
     };
-    props.onSaveExpenseData(userData);
+    props.onSaveExpenseData();
   };
 
   const cancelHandler = () => {
@@ -45,6 +51,7 @@ const SignUp = (props) => {
 
   return (
     <div className="signUp">
+      <h3>Registration</h3>
       <form onSubmit={submitHandler}>
         <div className="signUp__controls">
           <div className="signUp__control">
@@ -79,10 +86,20 @@ const SignUp = (props) => {
               onChange={phoneChangeHandler}
             />
           </div>
+          <div className="new-expense__control">
+            <label>BirthDay</label>
+            <input
+              type="date"
+              value={enteredDate}
+              min="1879-03-14"
+              max="2004-14-04"
+              onChange={dateChangeHandler}
+            />
+          </div>
         </div>
         <div className="signUp__actions">
           <button type="button" onClick={cancelHandler}>
-            Cancel
+            Clean
           </button>
           <button type="submit"> confirm</button>
         </div>
