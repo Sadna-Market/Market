@@ -41,13 +41,15 @@ export const createApiClientHttp = () => {
 
         addNewMember:async(uuid,email,password,phonenumber)=>{
             let path = apiUrl.concat(`addNewMember/${uuid}`);
-            console.log(path)
+            console.log(path,"kkkkk")
+        
+        
             const body = {
-                data:{
+                
                 "email": email,
                 "Password": password,
                 "phoneNumber":phonenumber
-            }
+            
         }
              return await axios.post(path,body).then((res)=>{
                  return res.data;
@@ -58,10 +60,9 @@ export const createApiClientHttp = () => {
         login:async(uuid,email,password)=>
         {   
             let path = apiUrl.concat(`login/${uuid}`);
-            const body = {data:{
+            const body = {
                 email: email,
                 Password: password,
-            }
         }
         return await axios.post(path,body).then((res)=>{
             return res.data;
@@ -531,103 +532,105 @@ async function test (){
     console.log("00000000000000000000000000000")
     let res = createApiClientHttp();
     let uuid =await res.guestVisit()
-    console.log(uuid)
-    let json =await res.initMarket();
-    console.log(json)
-    json =await res.addNewMember(uuid.value,"dfdf","Fdfd","fdfd");
-    console.log(json)
-    json =await res.login(uuid.value,"Dsds","Dsdsd");
-    console.log(json)
-    json =await res.getStore(2);
-    console.log(json)
-    json =await res.getInfoProductInStore(33,33);
-    console.log(json)
-    json =await res.searchProductByName("DSd");
-    console.log(json)
-    json =await res.searchProductByNamelist([2,3],"DSd");
-    console.log(json)
-    json =await res.filterByName([2,3],"Dsd");
-    console.log(json)
-    json =await res.searchProductByDesc("Dds");
-    console.log(json)
-    json =await res.searchProductByDescList([1,2],"Fdf");
-    console.log(json)
-    json =await res.filterByDesc([1,2],"Dsds");
-    console.log(json)
-    json =await res.searchProductByRate(33);
-    console.log(json)
-    json =await res.searchProductByRateList([1,2],33);
-    console.log(json)
-    json =await res.filterByRate([2,3],33);
-    console.log(json)
-    json =await res.searchProductByCategory(3);
-    console.log(json)
-     json =await res.searchProductByCategoryList([1],3);
-    console.log(json)
- json =await res.filterByCategory([2],3);
-    console.log(json)
- json =await res.searchProductByStoreRate(3);
-    console.log(json)
- json =await res.searchProductByStoreRateList([3],3);
-    console.log(json)
- json =await res.filterByStoreRate([3],2);
-    console.log(json)
+    let json;
+    // console.log(uuid.value)
+    // await res.guestLeave(uuid.value);
+    // let json =await res.initMarket();
+    // console.log(json)
+    //  json =await res.addNewMember(uuid.value,"dfdf","Fdfd","fdfd");
+    // console.log(json)
+    // json =await res.login(uuid.value,"Dsds","Dsdsd");
+    // console.log(json)
+    // json =await res.getStore(2);
+    // console.log(json)
+    // json =await res.getInfoProductInStore(33,33);
+    // console.log(json)
+    // json =await res.searchProductByName("DSd");
+    // console.log(json)
+    // json =await res.searchProductByNamelist([2,3],"DSd");
+    // console.log(json)
+    // json =await res.filterByName([2,3],"Dsd");
+    // console.log(json)
+    // json =await res.searchProductByDesc("Dds");
+    // console.log(json)
+    // json =await res.searchProductByDescList([1,2],"Fdf");
+    // console.log(json)
+    // json =await res.filterByDesc([1,2],"Dsds");
+    // console.log(json)
+    // json =await res.searchProductByRate(33);
+    // console.log(json)
+    // json =await res.searchProductByRateList([1,2],33);
+    // console.log(json)
+    // json =await res.filterByRate([2,3],33);
+    // console.log(json)
+    // json =await res.searchProductByCategory(3);
+    // console.log(json)
+    //  json =await res.searchProductByCategoryList([1],3);
+    // console.log(json)
+//  json =await res.filterByCategory([2],3);
+//     console.log(json)
+//  json =await res.searchProductByStoreRate(3);
+//     console.log(json)
+//  json =await res.searchProductByStoreRateList([3],3);
+//     console.log(json)
+//  json =await res.filterByStoreRate([3],2);
+//     console.log(json)
  json =await res.searchProductByRangePrices(3,3,2);
     console.log(json)
- json =await res.searchProductByRangePricesList([2],2,2,2);
-    console.log(json)
- json =await res.filterByRangePrices([2],2,2);
-    console.log(json)
- json =await res.addNewProductType(uuid.value,"dsd","Dsd",2);
-    console.log(json)
- json =await res.addProductToShoppingBag(uuid.value,3,3,3);
-    console.log(json)
-    console.log(uuid.value)
-//  json =await res.getShoppingCart(uuid.value); ///not working change in domain concurent hash
+//  json =await res.searchProductByRangePricesList([2],2,2,2);
 //     console.log(json)
-json =await res.removeProductFromShoppingBag(uuid.value,3,3,3);
-    console.log(json)
-    json =await res.setProductQuantityShoppingBag(uuid.value,3,3,3);
-    console.log(json)
-    json =await res.orderShoppingCart(uuid.value);
-    console.log(json)
-    json =await res.logout(uuid.value);
-    console.log(json)
-    json =await res.changePassword(uuid.value,"Dsd","dsds","Dsd");
-    console.log(json)
-    json =await res.openNewStore(uuid.value,"name","ds");
-    console.log(json)
+//  json =await res.filterByRangePrices([2],2,2);
+//     console.log(json)
+//  json =await res.addNewProductType(uuid.value,"dsd","Dsd",2);
+//     console.log(json)
+//  json =await res.addProductToShoppingBag(uuid.value,3,3,3);
+//     console.log(json)
+//     console.log(uuid.value)
+// //  json =await res.getShoppingCart(uuid.value); ///not working change in domain concurent hash
+// //     console.log(json)
+// json =await res.removeProductFromShoppingBag(uuid.value,3,3,3);
+//     console.log(json)
+//     json =await res.setProductQuantityShoppingBag(uuid.value,3,3,3);
+//     console.log(json)
+//     json =await res.orderShoppingCart(uuid.value);
+//     console.log(json)
+//     json =await res.logout(uuid.value);
+//     console.log(json)
+//     json =await res.changePassword(uuid.value,"Dsd","dsds","Dsd");
+//     console.log(json)
+//     json =await res.openNewStore(uuid.value,"name","ds");
+//     console.log(json)
   
-    json =await res.addNewProductToStore(uuid.value,1,1,1.1,1);
-    console.log(json)
+//     json =await res.addNewProductToStore(uuid.value,1,1,1.1,1);
+//     console.log(json)
 
-    json =await res.deleteProductFromStore(uuid.value,1,2);
-    console.log(json)
+//     json =await res.deleteProductFromStore(uuid.value,1,2);
+//     console.log(json)
 
-    json =await res.setProductPriceInStore(uuid.value,1,1,2.2);
-    console.log(json)
-    json =await res.setProductQuantityInStore(uuid.value,1,1,1);
-    console.log(json)
-    json =await res.addNewStoreOwner(uuid.value,1,"sdsdds");
-    console.log(json)
-    json =await res.addNewStoreManger(uuid.value,1,"ds");
-    console.log(json)
-    json =await res.setManagerPermissions(uuid.value,1,"name","ds",true);
-    console.log(json)
+//     json =await res.setProductPriceInStore(uuid.value,1,1,2.2);
+//     console.log(json)
+//     json =await res.setProductQuantityInStore(uuid.value,1,1,1);
+//     console.log(json)
+//     json =await res.addNewStoreOwner(uuid.value,1,"sdsdds");
+//     console.log(json)
+//     json =await res.addNewStoreManger(uuid.value,1,"ds");
+//     console.log(json)
+//     json =await res.setManagerPermissions(uuid.value,1,"name","ds",true);
+//     console.log(json)
     
-    json =await res.closeStore(uuid.value,1);
-    console.log(json)
+//     json =await res.closeStore(uuid.value,1);
+//     console.log(json)
 
-    json =await res.getStoreRoles(uuid.value,1);
-    console.log(json)
+//     json =await res.getStoreRoles(uuid.value,1);
+//     console.log(json)
 
 
-    json =await res.getStoreOrderHistory(uuid.value,1);
-    console.log(json)
+//     json =await res.getStoreOrderHistory(uuid.value,1);
+//     console.log(json)
 
     
-    json =await res.getUserInfo(uuid.value,"ff");
-    console.log(json)
+//     json =await res.getUserInfo(uuid.value,"ff");
+//     console.log(json)
 
 
 }
