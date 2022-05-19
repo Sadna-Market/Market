@@ -34,7 +34,7 @@ public interface Iapi {
     public SLResponseOBJ<String> login( String uuid, apiUser user);
 
     //2.2.1
-    public SLResponseOBJ<ServiceStore> getStore(@PathVariable("sid") String sid) ;
+    public SLResponseOBJ<ServiceStore> getStore(@PathVariable("sid") int sid) ;
 
     public SLResponseOBJ<ServiceProductStore> getInfoProductInStore(int storeID, int productID);
 
