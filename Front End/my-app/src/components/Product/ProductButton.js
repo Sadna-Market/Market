@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ProductList from "./ProductList";
 import ProductType from "./ProductType";
+import FilterProducts from "./filterProducts";
+import FilterProductList from "./FilterProductList";
 
 const ProductButton = (props) => {
   
@@ -42,6 +44,14 @@ const ProductButton = (props) => {
     setProduct("");
   };
 
+  const afterFilterHandler= data =>{
+      setCommand(<FilterProductList filter={data} onReadMore={readMoreHandler} />)
+  };
+
+  const filterHandler = ()=>{
+      setCommand(<FilterProducts onFilter={afterFilterHandler}/>);
+  };
+
   return (
     <div className="marketButton">
       <h3>Products</h3>
@@ -55,7 +65,8 @@ const ProductButton = (props) => {
             onChange={findProductHandler}
           />
           <button onClick={searchHandler}>Search</button>
-          <button onClick={backHandler}>back</button>
+          <button onClick={filterHandler}>Filter</button>
+          <button onClick={backHandler}>Back</button>
         </div>
       </div>
       {command}
