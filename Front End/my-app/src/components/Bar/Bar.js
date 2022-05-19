@@ -14,21 +14,27 @@ const Bar = (props) => {
   const emailChangeHandler = (event) => {
     setEmail(event.target.value);
   };
+  const [enteredError, SetError] = useState("");
 
   const [password, setPassword] = useState("");
   const passChangeHandler = (event) => {
     setPassword(event.target.value);
   };
 
-  const loginHandler = (event) => {
+  async function loginHandler (event) {
+    console.log(111)
+
     event.preventDefault();
+    const loginResponse = await apiClientHttp.login(props.UUID, email, password);
+    if (loginResponse.get('errorMsg') !== -1) {
+      SetError(loginResponse.get('errorMsg'))
+    } else {
+      setUserName("Yaki");//todo  remove?
+      setIsLogin(true);
+    }
+    props.onLogin(loginResponse.get('value'));
 
-    //login from service
-    setUserName("Yaki");
-
-    setIsLogin(true);
-    props.onLogin(7);
-  };
+  }
 
   const logoutHandler = (event) => {
     event.preventDefault();
