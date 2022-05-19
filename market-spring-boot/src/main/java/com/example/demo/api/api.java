@@ -1,27 +1,37 @@
 package com.example.demo.api;
 
+import com.example.demo.ExternalService.SupplyService;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.api.apiObjects.apiProductType;
 import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
 import com.example.demo.api.apiObjects.bridge.proxy;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 @RestController
 @RequestMapping(path = "api")
 public class api implements Iapi {
     proxy iMarket = new proxy();
+    static Logger logger = Logger.getLogger(SupplyService.class);
+
 
 
     @Override
     @PostMapping("initMarket")
     public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {;
+        System.out.println("1111111111111111111111111111111111111111111111111111111");
+        System.out.println(user.email+"  "+user.Password+"  "+ user.phoneNumber);
+        logger.debug("2222222222222222222222222");
+
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber);
+
     }
 
     @Override
@@ -45,18 +55,28 @@ public class api implements Iapi {
     @Override
     @PostMapping("login/{uuid}")
     public SLResponseOBJ<String> login(@PathVariable("uuid") String uuid, @RequestBody apiUser user) {
+        System.out.println("33333333333333333333333333333");
+        System.out.println(user.email+"  "+user.Password);
+
         return iMarket.login(uuid, user.email, user.Password);
     }
 
     @Override
     @GetMapping("getStore/{sid}")
     public SLResponseOBJ<ServiceStore> getStore(@PathVariable("sid") String sid) {
+        System.out.println("777777777777777777777777");
+        System.out.println(sid);
+        logger.debug("99999999999");
+
+//        System.out.println(Integer.parseInt(sid));
         return iMarket.getStore(Integer.parseInt(sid));
     }
 
     @Override
     @GetMapping("getInfoProductInStore/{StoreID}/{productID}")
     public SLResponseOBJ<ServiceProductStore> getInfoProductInStore(@PathVariable("StoreID") int storeID, @PathVariable("productID") int productID) {
+        System.out.println("55555555555555555");
+
         return iMarket.getInfoProductInStore(storeID , productID);
     }
 
@@ -183,6 +203,11 @@ public class api implements Iapi {
     @Override
     @GetMapping("getShoppingCart/{uuid}")
     public SLResponseOBJ<ServiceShoppingCart> getShoppingCart(@PathVariable("uuid") String uuid) {
+
+        System.out.println(uuid);
+        System.out.println("1010101010");
+
+        logger.debug("161616161616");
         return iMarket.getShoppingCart(uuid);
     }
 

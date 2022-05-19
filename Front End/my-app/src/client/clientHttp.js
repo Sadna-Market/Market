@@ -1,521 +1,300 @@
 import axios from "axios";
+
 export const createApiClientHttp = () => {
     const UrlBase = "http://localhost:8090/";
     const apiUrl = UrlBase.concat("api/");
+    const jsonForAll = new Map([
+        ['errorMsg', -1],
+        ['value', "absd324234bkb4kj234b2k3b423bn54b3jk6h3bjk54"],
+        ['aaa', -1],
+        ['ccc', -1],
+    ])
+    //{errorMsg: -1, value: '461182d2-0220-4d56-9aac-b880a5a86d06'}
     return {
         initMarket : async (email,password,phoneNumber) =>
         {
-            console.log(email,password,phoneNumber);
-            let path = apiUrl.concat("initMarket");
-
-            const body = {data:{
-                    email: email,
-                    Password: password,
-                    phoneNumber:phoneNumber
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
         },
 
 
 
         guestVisit:async ()=>
         {
-            let path = apiUrl.concat(`guestVisit`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
 
         guestLeave :async (uuid)=>
         {
-            let path = apiUrl.concat(`guestLeave/${uuid}`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         addNewMember:async(uuid,email,password,phonenumber)=>{
-            let path = apiUrl.concat(`addNewMember/${uuid}`);
-            console.log(path)
-            const body = {
-                data:{
-                    "email": email,
-                    "Password": password,
-                    "phoneNumber":phonenumber
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         login:async(uuid,email,password)=>
         {
-            let path = apiUrl.concat(`login/${uuid}`);
-            const body = {data:{
-                    email: email,
-                    Password: password,
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
 
 
         getStore : async (storeid)=>{
-            let path = apiUrl.concat(`getStore/${storeid}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         getInfoProductInStore :async (storid,productid)=>{
-            let path = apiUrl.concat(`getInfoProductInStore/${storid}/${productid}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         searchProductByName : async(productName)=>{
-            let path = apiUrl.concat(`searchProductByName/${productName}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
         searchProductByNamelist:async(l,productname)=>{
-            let path = apiUrl.concat(`searchProductByName/List/${productname}`);
-            let body= {data:{
-                    lst : l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
         filterByName :async (l , productName) =>{
-            let path = apiUrl.concat(`filterByName/${productName}`);
-            let body= {data:{
-                    lst : l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
         searchProductByDesc :async (desc)=>{
-            let path = apiUrl.concat(`searchProductByDesc/${desc}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
         searchProductByDescList :async (l,desc)=>{
-            let path = apiUrl.concat(`searchProductByDesc/list/${desc}`);
-            let body= {data:{
-                    lst : l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
 
         filterByDesc : async(l,desc)=>{
-            let path = apiUrl.concat(`filterByDesc/${desc}`);
-            let body= {data:{
-                    lst : l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         searchProductByRate :async (rate) =>{
-            let path = apiUrl.concat(`searchProductByRate/${rate}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
 
         },
 
 
         searchProductByRateList :async (l,rate)=>{
-            let path = apiUrl.concat(`searchProductByRate/list/${rate}`);
-            let body= {data:{
-                    lst : l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
         filterByStoreRate : async(l,minRate)=>{
-            let path = apiUrl.concat(`filterByStoreRate/${minRate}`);
-            let body= {data:{
-                    lst : l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         searchProductByRangePrices:async (productId,min,max)=>{
-            let path = apiUrl.concat(`searchProductByRangePrices/${productId}/${max}/${max}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         searchProductByRangePricesList:async (l,productId,min,max)=>{
-            let path = apiUrl.concat(`searchProductByRangePrices/list/${productId}/${max}/${max}`);
-            let body = {data:{
-                    lst :l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         filterByRangePrices: async(l,min,max)=>{
-            let path = apiUrl.concat(`filterByRangePrices/${min}/${max}`);
-            let  body = {data:{
-                    lst :l
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         addNewProductType :async (uuid,namep,descriptionp,categoryp)=>{
-            let path = apiUrl.concat(`addNewProductType/${uuid}`);
-            let body = {
-                data : {
-                    name:namep,
-                    description:descriptionp,
-                    category:categoryp
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         addProductToShoppingBag :async (uuid,storeid,productid,quantity)=>{
-            let path = apiUrl.concat(`addProductToShoppingBag/${uuid}/${storeid}/${productid}/${quantity}`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
 
         },
 
 
         getShoppingCart :async (uuid)=>{
-            let path = apiUrl.concat(`getShoppingCart/${uuid}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
 
         removeProductFromShoppingBag :async (uuid,storeid,productid)=>{
-            let path = apiUrl.concat(`removeProductFromShoppingBag/${uuid}/${storeid}/${productid}`);
-            return await axios.delete(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         setProductQuantityShoppingBag :async (uuid,productId,storeid,quantity)=>{
-            let path = apiUrl.concat(`setProductQuantityShoppingBag/${uuid}/${productId}/${storeid}/${quantity}`);
+            return jsonForAll;
 
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
         },
 
 
 
 
         orderShoppingCart: async (uuid,city,adress,apartment,CreditCard,CreditDate,pin)=>{
-            let path = apiUrl.concat(`orderShoppingCart/${uuid}`);
-            let body = {
-                data : {
-                    city:city,
-                    adress:adress,
-                    apartment:apartment,
-                    CreditCard:CreditCard,
-                    CreditDate:CreditDate,
-                    pin:pin
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         logout:async (uuid)=>{
-            let path = apiUrl.concat(`logout/${uuid}`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         changePassword:async (uuid,email,Password,newPassword)=>{
-            let path = apiUrl.concat(`changePassword/${uuid}`);
-            let  body = {
-                data : {
-                    email:email,
-                    Password:Password,
-                    newPassword:newPassword
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
 
         openNewStore: async (uuid,name,founder)=>{
-            let path = apiUrl.concat(`openNewStore/${uuid}`);
-            let body = {
-                data : {
-                    "name":name,
-                    "founder":founder,
-                }
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         addNewProductToStore: async(uuid,storeid,productId,price,quantity)=>{
-            let path = apiUrl.concat(`addNewProductToStore/${uuid}/${storeid}/${productId}`);
-            let body = {
+            return jsonForAll;
 
-                "price":price,
-                "quantity":quantity,
-
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
         },
 
 
         deleteProductFromStore: async(uuid,storeId,productId)=>{
-            let path = apiUrl.concat(`deleteProductFromStore/${uuid}/${storeId}/${productId}`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
 
         setProductPriceInStore: async(uuid,storeid,productId,price)=>{
-            let path = apiUrl.concat(`setProductPriceInStore/${uuid}/${storeid}/${productId}`);
-            let body = {
+            return jsonForAll;
 
-                "price":price
-
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
 
         },
 
 
         setProductQuantityInStore: async(uuid,storeid,productId,quantity)=>{
-            let path = apiUrl.concat(`setProductQuantityInStore/${uuid}/${storeid}/${productId}`);
-            let body = {
+            return jsonForAll;
 
-                "quantity" :quantity,
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
 
         },
 
 
 
         addNewStoreOwner: async(uuid, storeId,OwnerEmail)=>{
-            let path = apiUrl.concat(`addNewStoreOwner/${uuid}/${storeId}`);
-            let body = {
+            return jsonForAll;
 
-                OwnerEmail:OwnerEmail,
-
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
 
         },
 
 
 
         addNewStoreManger: async(uuid, storeId,mangerEmail)=>{
-            let path = apiUrl.concat(`addNewStoreManger/${uuid}/${storeId}`);
-            let body = {
+            return jsonForAll;
 
-                mangerEmail:mangerEmail,
-
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
         },
 
 
 
         setManagerPermissions: async(uuid, storeId,mangerEmail,per,onof)=>{
-            let path = apiUrl.concat(`setManagerPermissions/${uuid}/${storeId}`);
-            let body = {
+            return jsonForAll;
 
-                mangerEmail:mangerEmail,
-                per:per,
-                onof:onof
-
-            }
-            return await axios.post(path,body).then((res)=>{
-                return res.data;
-            })
         },
 
 
 
         closeStore: async(uuid, storeId)=>{
-            let path = apiUrl.concat(`closeStore/${uuid}/${storeId}`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         getStoreRoles:async(uuid, storeId)=>{
-            let path = apiUrl.concat(`getStoreRoles/${uuid}/${storeId}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
         getStoreOrderHistory: async(uuid, storeId)=>{
-            let path = apiUrl.concat(`getStoreOrderHistory/${uuid}/${storeId}`);
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         },
 
 
         getUserInfo: async(uuid,email)=>{
-            let path = apiUrl.concat(`getUserInfo/${uuid}`);
-            let body = {
-                data:{
-                    email :email
-                }}
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
         }
         ,
 
         filterByRate :async(l,minRate)=>
         {
-            let path = apiUrl.concat(`filterByRate/${minRate}`);
-            let body={
-                data:{
-                    lst:l
-                }
-            }
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
 
         },
 
         searchProductByCategory:async(category)=>
-        {
-            let path = apiUrl.concat(`searchProductByCategory/${category}`);
+        {            return jsonForAll;
 
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
 
         },
         searchProductByCategoryList:async(l,category)=>
         {
-            let path = apiUrl.concat(`searchProductByCategory/list/${category}`);
-            let body={
-                data:{
-                    lst:l
-                }
-            }
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         filterByCategory:async(l,category)=>
         {
-            let path = apiUrl.concat(`filterByCategory/${category}`);
-            let body={
-                data:{
-                    lst:l
-                }
-            }
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
         searchProductByStoreRate:async(rate)=>
         {
-            let path = apiUrl.concat(`searchProductByStoreRate/${rate}`);
+            return jsonForAll;
 
-            return await axios.get(path).then((res)=>{
-                return res.data;
-            })
 
         },
 
         searchProductByStoreRateList:async(l,rate)=>
         {
-            let path = apiUrl.concat(`searchProductByStoreRate/list/${rate}`);
-            let body={
-                data:{
-                    lst:l
-                }
-            }
-            return await axios.get(path,body).then((res)=>{
-                return res.data;
-            })
+            return jsonForAll;
+
 
         },
 
@@ -530,114 +309,110 @@ export const createApiClientHttp = () => {
 async function test (){
     console.log("00000000000000000000000000000")
     let res = createApiClientHttp();
-    let uuid =await res.guestVisit()
-    console.log(uuid)
+    // let uuid =await res.guestVisit()
 
-    console.log(uuid.value)
-    console.log(uuid.errorMsg)
-
-    let json =await res.initMarket();
+    let json =await res.initMarket("daniel@gmail.com","123abcA!","0526464201");
     console.log("initMarket")
-
-    console.log(json)
-    json =await res.addNewMember(uuid.value,"dfdf","Fdfd","fdfd");
-    console.log(json)
-    json =await res.login(uuid.value,"Dsds","Dsdsd");
-    console.log(json)
-    json =await res.getStore(2);
-    console.log(json)
-    json =await res.getInfoProductInStore(33,33);
-    console.log(json)
-    json =await res.searchProductByName("DSd");
-    console.log(json)
-    json =await res.searchProductByNamelist([2,3],"DSd");
-    console.log(json)
-    json =await res.filterByName([2,3],"Dsd");
-    console.log(json)
-    json =await res.searchProductByDesc("Dds");
-    console.log(json)
-    json =await res.searchProductByDescList([1,2],"Fdf");
-    console.log(json)
-    json =await res.filterByDesc([1,2],"Dsds");
-    console.log(json)
-    json =await res.searchProductByRate(33);
-    console.log(json)
-    json =await res.searchProductByRateList([1,2],33);
-    console.log(json)
-    json =await res.filterByRate([2,3],33);
-    console.log(json)
-    json =await res.searchProductByCategory(3);
-    console.log(json)
-    json =await res.searchProductByCategoryList([1],3);
-    console.log(json)
-    json =await res.filterByCategory([2],3);
-    console.log(json)
-    json =await res.searchProductByStoreRate(3);
-    console.log(json)
-    json =await res.searchProductByStoreRateList([3],3);
-    console.log(json)
-    json =await res.filterByStoreRate([3],2);
-    console.log(json)
-    json =await res.searchProductByRangePrices(3,3,2);
-    console.log(json)
-    json =await res.searchProductByRangePricesList([2],2,2,2);
-    console.log(json)
-    json =await res.filterByRangePrices([2],2,2);
-    console.log(json)
-    json =await res.addNewProductType(uuid.value,"dsd","Dsd",2);
-    console.log(json)
-    json =await res.addProductToShoppingBag(uuid.value,3,3,3);
-    console.log(json)
-    console.log(uuid.value)
-//  json =await res.getShoppingCart(uuid.value); ///not working change in domain concurent hash
+     console.log(json)
+    // json =await res.login(uuid.value,"Dsds","Dsdsd");
+    // console.log(json)
+//     json =await res.addNewMember(uuid.value,"dfdf","Fdfd","fdfd");
 //     console.log(json)
-    json =await res.removeProductFromShoppingBag(uuid.value,3,3,3);
-    console.log(json)
-    json =await res.setProductQuantityShoppingBag(uuid.value,3,3,3);
-    console.log(json)
-    json =await res.orderShoppingCart(uuid.value);
-    console.log(json)
-    json =await res.logout(uuid.value);
-    console.log(json)
-    json =await res.changePassword(uuid.value,"Dsd","dsds","Dsd");
-    console.log(json)
-    json =await res.openNewStore(uuid.value,"name","ds");
-    console.log(json)
 
-    json =await res.addNewProductToStore(uuid.value,1,1,1.1,1);
-    console.log(json)
-
-    json =await res.deleteProductFromStore(uuid.value,1,2);
-    console.log(json)
-
-    json =await res.setProductPriceInStore(uuid.value,1,1,2.2);
-    console.log(json)
-    json =await res.setProductQuantityInStore(uuid.value,1,1,1);
-    console.log(json)
-    json =await res.addNewStoreOwner(uuid.value,1,"sdsdds");
-    console.log(json)
-    json =await res.addNewStoreManger(uuid.value,1,"ds");
-    console.log(json)
-    json =await res.setManagerPermissions(uuid.value,1,"name","ds",true);
-    console.log(json)
-
-    json =await res.closeStore(uuid.value,1);
-    console.log(json)
-
-    json =await res.getStoreRoles(uuid.value,1);
-    console.log(json)
-
-
-    json =await res.getStoreOrderHistory(uuid.value,1);
-    console.log(json)
-
-
-    json =await res.getUserInfo(uuid.value,"ff");
-    console.log(json)
+//     json =await res.getStore(2);
+//     console.log(json)
+//     json =await res.getInfoProductInStore(33,33);
+//     console.log(json)
+//     json =await res.searchProductByName("DSd");
+//     console.log(json)
+//     json =await res.searchProductByNamelist([2,3],"DSd");
+//     console.log(json)
+//     json =await res.filterByName([2,3],"Dsd");
+//     console.log(json)
+//     json =await res.searchProductByDesc("Dds");
+//     console.log(json)
+//     json =await res.searchProductByDescList([1,2],"Fdf");
+//     console.log(json)
+//     json =await res.filterByDesc([1,2],"Dsds");
+//     console.log(json)
+//     json =await res.searchProductByRate(33);
+//     console.log(json)
+//     json =await res.searchProductByRateList([1,2],33);
+//     console.log(json)
+//     json =await res.filterByRate([2,3],33);
+//     console.log(json)
+//     json =await res.searchProductByCategory(3);
+//     console.log(json)
+//     json =await res.searchProductByCategoryList([1],3);
+//     console.log(json)
+//     json =await res.filterByCategory([2],3);
+//     console.log(json)
+//     json =await res.searchProductByStoreRate(3);
+//     console.log(json)
+//     json =await res.searchProductByStoreRateList([3],3);
+//     console.log(json)
+//     json =await res.filterByStoreRate([3],2);
+//     console.log(json)
+//     json =await res.searchProductByRangePrices(3,3,2);
+//     console.log(json)
+//     json =await res.searchProductByRangePricesList([2],2,2,2);
+//     console.log(json)
+//     json =await res.filterByRangePrices([2],2,2);
+//     console.log(json)
+//     json =await res.addNewProductType(uuid.value,"dsd","Dsd",2);
+//     console.log(json)
+//     json =await res.addProductToShoppingBag(uuid.value,3,3,3);
+//     console.log(json)
+//     console.log(uuid.value)
+// //  json =await res.getShoppingCart(uuid.value); ///not working change in domain concurent hash
+// //     console.log(json)
+//     json =await res.removeProductFromShoppingBag(uuid.value,3,3,3);
+//     console.log(json)
+//     json =await res.setProductQuantityShoppingBag(uuid.value,3,3,3);
+//     console.log(json)
+//     json =await res.orderShoppingCart(uuid.value);
+//     console.log(json)
+//     json =await res.logout(uuid.value);
+//     console.log(json)
+//     json =await res.changePassword(uuid.value,"Dsd","dsds","Dsd");
+//     console.log(json)
+//     json =await res.openNewStore(uuid.value,"name","ds");
+//     console.log(json)
+//
+//     json =await res.addNewProductToStore(uuid.value,1,1,1.1,1);
+//     console.log(json)
+//
+//     json =await res.deleteProductFromStore(uuid.value,1,2);
+//     console.log(json)
+//
+//     json =await res.setProductPriceInStore(uuid.value,1,1,2.2);
+//     console.log(json)
+//     json =await res.setProductQuantityInStore(uuid.value,1,1,1);
+//     console.log(json)
+//     json =await res.addNewStoreOwner(uuid.value,1,"sdsdds");
+//     console.log(json)
+//     json =await res.addNewStoreManger(uuid.value,1,"ds");
+//     console.log(json)
+//     json =await res.setManagerPermissions(uuid.value,1,"name","ds",true);
+//     console.log(json)
+//
+//     json =await res.closeStore(uuid.value,1);
+//     console.log(json)
+//
+//     json =await res.getStoreRoles(uuid.value,1);
+//     console.log(json)
+//
+//
+//     json =await res.getStoreOrderHistory(uuid.value,1);
+//     console.log(json)
+//
+//
+//     json =await res.getUserInfo(uuid.value,"ff");
+//     console.log(json)
 
 
 }
- // test()
+//test()
 
 export default createApiClientHttp;
 

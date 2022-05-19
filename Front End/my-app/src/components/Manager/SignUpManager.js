@@ -30,86 +30,22 @@ const SignUpManager = (props) => {
     };
 
     async function submitHandler(event) {
-        // props.preventDefault();
         event.preventDefault();
+        console.log(4444)
+        const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone);
+        if (initResponse.get('errorMsg') !== -1) {
+            SetError(initResponse.get('errorMsg'))
+        } else {
+            const loginResponse = await apiClientHttp.login("5db620f6-16c4-4f67-bf24-1f54b60cdd04 ", "liel@gmail.com", "12334abcA!");
+            if (loginResponse.get('errorMsg') !== -1) {
+                SetError(loginResponse.get('errorMsg'))
+            } else {
+                props.onSaveData(loginResponse.get('value'));
+                console.log(222222222222)
 
-        console.log(66666666666)
-         const initResponse = await apiClientHttp.initMarket("liel@gmail.com", "123456", "0526565201");
-
-        // const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone);
-        // const initResponse = await apiClientHttp.guestVisit();
-
-        console.log(initResponse)
-
-        props.onSaveData(8888);
-
-        //5
-        // if (initResponse.errorMsg===1) {
-        //     props.onSaveData(22222222222);
-        // } else {
-        //     props.onSaveData(33333333333);
-        //     props.onSaveData(initResponse.errorMsg);
-        //
-        // }
-
-        // if (json.errorMsg === -1) {
-        //     const json2 = await apiClientHttp.login(json.value, enteredEmail, enteredPassword)
-        //     if (json2.errorMsg === -1) {
-        //         props.onSaveData(1);
-        //         // props.onSaveData(json2.value);
-        //
-        //     } else {
-        //         props.onSaveData(3);
-        //
-        //         SetError(json2.value);
-        //         // cancelHandler();
-        //     }
-        // } else {
-        //     SetError(json.value);
-        //     props.onSaveData(2);
-        //
-        // }
-            // const userData = {
-            //     name: enteredName,
-            //     email: enteredEmail,
-            //     password: enteredPassword,
-            //     Phone: enteredPhone,
-            // };
-
-            //return uuid
-            // let json = await apiClientHttp.initMarket(userData.email, userData.password, userData.Phone);
-
-            // props.onSaveData(7);
-
+            }
+        }
     }
-    // async function submitHandler(event) {
-    //     event.preventDefault();
-    //     const userData = {
-    //         name: enteredName,
-    //         email: enteredEmail,
-    //         password: enteredPassword,
-    //         Phone: enteredPhone,
-    //     };
-    //
-    //     let json = await apiClientHttp.initMarket(userData.email, userData.password, userData.Phone);
-    //     if (json.errorMsg === -1) {
-    //         json = await apiClientHttp.login(json.value, userData.email, userData.password)
-    //         if (json.errorMsg === -1) {
-    //             props.onSaveData(json.value);
-    //         } else {
-    //             console.log(json.value)
-    //             SetError(json.value);
-    //             cancelHandler();
-    //         }
-    //     }
-    //     else {
-    //         console.log(json.value)
-    //         SetError(json.value);
-    //         cancelHandler();
-    //     }
-    // }
-    // console.log(uuid.value)
-    // console.log(uuid.errorMsg)
 
     const cancelHandler = () => {
         SetName("");
@@ -122,7 +58,6 @@ const SignUpManager = (props) => {
         <div className="signUpManager">
             <h3>Manager System</h3>
             <h3>{enteredError}</h3>
-
             <form onSubmit={submitHandler}>
                 <div className="signUpManager__controls">
                     <div className="signUpManager__control">
