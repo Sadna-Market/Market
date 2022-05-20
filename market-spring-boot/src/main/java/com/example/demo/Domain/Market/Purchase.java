@@ -12,6 +12,8 @@ import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,7 +67,9 @@ public class Purchase {
                 }
 
                 //check price and policy
-                DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email, crrAmount);
+
+                int age = Period.between(user.getDateOfBirth().getValue(), LocalDate.now()).getYears();
+                DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email,age, crrAmount);
                 if (Dprice.errorOccurred()) continue;
                 Double price = Dprice.getValue();
 
@@ -141,18 +145,18 @@ public class Purchase {
     }
 
     //target: to get the price after all the process with store.
-    private DResponseObj<Double> getPriceAfterDiscount(Store store,String email,
+    private DResponseObj<Double> getPriceAfterDiscount(Store store,String email, int age,
                                                        ConcurrentHashMap<Integer, Integer> crrAmount) {
         //check about Discount in the Store.
-        DResponseObj<ConcurrentHashMap<Integer, Integer>> DRpolicy = store.checkBuyPolicy(email, crrAmount);
         Double discount = 0.;
+        DResponseObj<Double> DRpolicy = store.checkBuyAndDiscountPolicy(email,age, crrAmount);
+
         if (DRpolicy.errorOccurred()) {
             logger.warn("the policy of this store didnt work");
+            rollBack(store, crrAmount);
             return new DResponseObj<>(DRpolicy.getErrorMsg());
         }
-
-        DResponseObj<Double> DRdiscount = store.checkDiscountPolicy(email, DRpolicy.getValue());
-        if (!DRdiscount.errorOccurred()) discount = DRdiscount.getValue();
+         discount = DRpolicy.getValue();
 
         DResponseObj<Double> price = store.calculateBagPrice(crrAmount);
         if (price.errorOccurred()) {

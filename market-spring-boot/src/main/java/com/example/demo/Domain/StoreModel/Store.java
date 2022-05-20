@@ -5,10 +5,11 @@ import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Market.userTypes;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
 
 public class Store {
@@ -181,21 +182,27 @@ public class Store {
     }
 
     //requirement II.2.5
-    //productsInBag <productID,quantity>
-    public DResponseObj<ConcurrentHashMap<Integer, Integer>> checkBuyPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+    //productsInBag <Product,quantity>
+    public DResponseObj<Double> checkBuyAndDiscountPolicy(String user, int age, ConcurrentHashMap<Integer, Integer> productsInBag){
+        ConcurrentHashMap<ProductStore, Integer> productsInBag2 = new ConcurrentHashMap<>();
+        for (Map.Entry<Integer, Integer> e : productsInBag.entrySet())
+            productsInBag2.put(inventory.getProductInfo(e.getKey()).getValue(), e.getValue());
         if(buyPolicy == null)
-            return new DResponseObj<>(productsInBag);
-        else
-            return buyPolicy.checkShoppingBag(user,productsInBag);
+            return checkDiscountPolicy(user,age,productsInBag2);
+        else {
+            DResponseObj<Boolean> passBuyPolicy = buyPolicy.checkBuyPolicyShoppingBag(user, age, productsInBag2);
+            if(!passBuyPolicy.getValue()) return new DResponseObj<>(passBuyPolicy.getErrorMsg());
+            return checkDiscountPolicy(user,age,productsInBag2);
+        }
     }
 
     //requirement II.2.5
     //productsInBag <productID,quantity>
-    public DResponseObj<Double> checkDiscountPolicy(String user,  ConcurrentHashMap<Integer, Integer> productsInBag){
+    private DResponseObj<Double> checkDiscountPolicy(String user, int age, ConcurrentHashMap<ProductStore, Integer> productsInBag){
         if(discountPolicy == null)
             return new DResponseObj<>(0.0);
         else
-            return discountPolicy.checkShoppingBag(user,productsInBag);
+            return discountPolicy.checkDiscountPolicyShoppingBag(user,age,productsInBag);
     }
 
 
@@ -278,6 +285,35 @@ public class Store {
         return new DResponseObj<>(roles);
     }
 
+    //requirement II.4.2
+    public DResponseObj<Boolean> addNewBuyRule(BuyRule buyRule) {
+        if(buyPolicy == null)
+            buyPolicy = new BuyPolicy();
+        return buyPolicy.addNewBuyRule(buyRule);
+    }
+
+    //requirement II.4.2
+    public DResponseObj<Boolean> removeBuyRule(int buyRuleID) {
+        if(buyPolicy == null)
+            buyPolicy = new BuyPolicy();
+        return buyPolicy.removeBuyRule(buyRuleID);
+    }
+
+    //requirement II.4.2
+    public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule) {
+        if(discountPolicy == null)
+            discountPolicy = new DiscountPolicy();
+        return discountPolicy.addNewDiscountRule(discountRule);
+    }
+
+    //requirement II.4.2
+    public DResponseObj<Boolean> removeDiscountRule(int discountRuleID) {
+        if(discountPolicy == null)
+            discountPolicy = new DiscountPolicy();
+        return discountPolicy.removeDiscountRule(discountRuleID);
+    }
+
+
 
     //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
     public void addPermission(Permission p){
@@ -291,6 +327,7 @@ public class Store {
     public DResponseObj<List<Permission>> getPermission(){
         return new DResponseObj<>(safePermission);
     }
+
 
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
@@ -322,6 +359,13 @@ public class Store {
         return new DResponseObj<>(safePermission);
     }
 
+    public int getBuyRulesSize(){
+        return buyPolicy.rulesSize();
+    }
+    public int getDiscountRulesSize(){
+        return discountPolicy.rulesSize();
+    }
+
     public void setHistory(ConcurrentHashMap<Integer,History> history) {
         this.history = history;
     }
@@ -347,6 +391,8 @@ public class Store {
     public void openStoreAgain() {
         isOpen = true;
     }
+
+
 
 }
 

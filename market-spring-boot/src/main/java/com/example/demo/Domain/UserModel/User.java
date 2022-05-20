@@ -9,6 +9,7 @@ import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.History;
 import com.example.demo.Domain.StoreModel.Store;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -21,6 +22,7 @@ public class User  {
     String Password;
     String email;
     String phoneNumber;
+    LocalDate dateOfBirth;
     private List<History> histories = Collections.synchronizedList(new LinkedList<>());
 
 
@@ -32,12 +34,13 @@ public class User  {
     private List<Permission> safeAccessPermission = Collections.synchronizedList(accessPermission);
     private List<Permission> safeGrantorPermission = Collections.synchronizedList(grantorPermission);
 
-    public User(String email, String password, String phoneNumber) {
+    public User(String email, String password, String phoneNumber, LocalDate dateOfBirth) {
         shoppingCart = new ShoppingCart();
         this.email = email;
         this.Password = password;
         this.phoneNumber = phoneNumber;
         shoppingCart=new ShoppingCart();
+        this.dateOfBirth = dateOfBirth;
 
 
     }
@@ -46,6 +49,7 @@ public class User  {
         email = "guest";
         this.Password="guest";
         this.phoneNumber="0000000000";
+        dateOfBirth = LocalDate.of(1999,4,13);
 
     }
     public DResponseObj<Boolean> addAccessPermission(Permission p) {
@@ -138,6 +142,10 @@ public class User  {
 
     public DResponseObj<ShoppingCart> GetSShoppingCart() {
         return new DResponseObj<>( this.shoppingCart);
+    }
+
+    public DResponseObj<LocalDate> getDateOfBirth() {
+        return new DResponseObj<>( this.dateOfBirth);
     }
 
     public DResponseObj<Boolean> addHistoies(List<History> histories) {

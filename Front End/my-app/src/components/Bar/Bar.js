@@ -3,11 +3,12 @@ import Card from "../UI/Card";
 import "./Bar.css";
 import SignUp from "./SignUp";
 import SignIn from "./Login";
-
+//import {createApiClientHttp} from "../../client/clientHttp";
 const Bar = (props) => {
   const [isLogin, setIsLogin] = useState(false);
 
   const [userName, setUserName] = useState("");
+
 
   const [email, setEmail] = useState("");
   const emailChangeHandler = (event) => {
@@ -19,16 +20,16 @@ const Bar = (props) => {
     setPassword(event.target.value);
   };
 
+
+  //todo: login after that the UUID put on onLogin(<UUID>)
   const loginHandler = (event) => {
     event.preventDefault();
-
-    //login from service
-    setUserName("Yaki");
-
+    setUserName(email);
     setIsLogin(true);
     props.onLogin(7);
   };
 
+  //todo:logout
   const logoutHandler = (event) => {
     event.preventDefault();
     setEmail("");
@@ -37,16 +38,16 @@ const Bar = (props) => {
     setIsLogin(false);
   };
 
-  const initHandler= ()=>{
-      props.onInitMarket();
+  const initHandler = () => {
+    props.onInitMarket();
   };
 
   const singUpHandler = () => {
     props.onSignUp();
   };
-  
-  const newUserHolder = userData=>{
-      console.log(userData);
+
+  const newUserHolder = (userData) => {
+    console.log(userData);
   };
 
   let command = "";
@@ -65,10 +66,17 @@ const Bar = (props) => {
           <button className="bar__button" onClick={loginHandler} type="submit">
             Login
           </button>
-          <button className="signUp__button" onClick={singUpHandler} onUserData={newUserHolder}>
+          <button
+            className="signUp__button"
+            onClick={singUpHandler}
+            onUserData={newUserHolder}
+          >
             Sign-Up
           </button>
-          <button className="bar__button" onClick={initHandler}> Init-Market</button>
+          <button className="bar__button" onClick={initHandler}>
+            {" "}
+            Init-Market
+          </button>
         </div>
       </div>
     );
@@ -77,7 +85,11 @@ const Bar = (props) => {
       <div>
         <label>welcome {userName}</label>
         <div className="bar__actions">
-          <button className="signUp__button" onClick={logoutHandler} onUserData={newUserHolder}>
+          <button
+            className="signUp__button"
+            onClick={logoutHandler}
+            onUserData={newUserHolder}
+          >
             LogOut
           </button>
         </div>

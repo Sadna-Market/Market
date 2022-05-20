@@ -31,7 +31,7 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - success test")
     void managerAction_Success() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -47,7 +47,7 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - fail test [no permission]")
     void managerAction_Fail1() {
         User user = generateUser();
-        assertTrue(market.register(uuid, user.username, user.password));
+        assertTrue(market.register(uuid, user.username, user.password,user.dateOfBirth));
         assertTrue(market.isMember(user));
         ATResponseObj<String> memberID = market.login(uuid, user);
         assertFalse(memberID.errorOccurred());

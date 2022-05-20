@@ -8,6 +8,7 @@ import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
@@ -134,7 +135,7 @@ public class UserManager {
     }
 
 
-    public DResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber) {
+    public DResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber, LocalDate dateOfBirth) {
 
         long stamp= LockUsers.writeLock();
         try {
@@ -162,7 +163,7 @@ public class UserManager {
                 return new DResponseObj<>(ErrorCode.NOT_VALID_PHONE);
             }
 
-            User user = new User(email, Password,phoneNumber);
+            User user = new User(email, Password,phoneNumber,dateOfBirth);
             members.put(email, user);
             return new DResponseObj<>(true);
         }finally {

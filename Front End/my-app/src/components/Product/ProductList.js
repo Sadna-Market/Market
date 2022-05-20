@@ -1,8 +1,8 @@
 import React, {useState} from "react";
+import ProductID from "./ProductID";
 
 
-
-const ProductList = ()=>{
+const ProductList = props=>{
     const [UUID, setUUID] = useState(props.uuid);
     let products = [
       { id: 1, name: "a product" },
@@ -13,19 +13,23 @@ const ProductList = ()=>{
       { id: 6, name: "f product" },
       { id: 7, name: "g product" },
     ];
-    if (product.length === 0) {
+    if (products.length === 0) {
       return <h2 className="stores-list__fallback">Found No expenses</h2>;
     }
-  
-    // if (props.search != null && props.search != "") {
-    //   stores = stores.filter((x) => x.id === props.search);
-    // }
+
+    if (props.search != "") {
+      products = products.filter((product) => product.id === parseInt(props.search));
+    }
+
+    const readMoreHandler = productID =>{
+      props.onReadMore(productID);
+    };
   
     let expensesContent = products.map((expense) => (
-      <ProductID id={expense.id} name={expense.name} />
+      <ProductID id={expense.id} name={expense.name} onReadMore={readMoreHandler} />
     ));
   
-    const [searchStore, setStore] = useState("");
+   // const [searchStore, setStore] = useState("");
   
   
     return (

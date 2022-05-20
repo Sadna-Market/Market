@@ -31,8 +31,8 @@ public class ConcurrentAssignOwnerTest extends MarketTests {
     public void assignSameTime() throws InterruptedException {
         User anotherOwner = generateUser();
         User toBeOwner = generateUser();
-        assertTrue(market.register(uuid, anotherOwner.username, anotherOwner.password));
-        assertTrue(market.register(uuid, toBeOwner.username, toBeOwner.password));
+        assertTrue(market.register(uuid, anotherOwner.username, anotherOwner.password,anotherOwner.dateOfBirth));
+        assertTrue(market.register(uuid, toBeOwner.username, toBeOwner.password,toBeOwner.dateOfBirth));
 
         //login as member
         ATResponseObj<String> memberID = market.login(uuid, member);

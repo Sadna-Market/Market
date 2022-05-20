@@ -9,6 +9,7 @@ import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
@@ -35,7 +36,7 @@ public class UserManagerStab extends UserManager {
 
     @Override
     public DResponseObj<User> getLoggedUser(UUID uuid) {
-        return new DResponseObj<>(new User("yaki@gmail.com","",""));
+        return new DResponseObj<>(new User("yaki@gmail.com","","", LocalDate.of(2000,2,14)));
     }
 
     @Override
@@ -142,6 +143,6 @@ public class UserManagerStab extends UserManager {
 
     //UUID
     public DResponseObj<User> getOnlineUser(UUID uuid){
-        return new DResponseObj<>(new User("yaki@gmail.com","",""));
+        return new DResponseObj<>(new User("yaki@gmail.com","","",LocalDate.of(2000,2,15)));
     }
 }
