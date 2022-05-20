@@ -28,7 +28,7 @@ public class ConditioningBuyRule extends CompositionBuyRule {
         DResponseObj<Boolean> ifPass = predIf.passRule(user,age,shoppingBag);
         DResponseObj<Boolean> thenPass = predThen.passRule(user,age,shoppingBag);
         if(ifPass.getValue() && !thenPass.getValue())
-            return thenPass;
+            return new DResponseObj<>(false,thenPass.errorMsg);
         return new DResponseObj<>(true);
 
         /*if(!condition.item1.passRule(user,shoppingBag)) return false;

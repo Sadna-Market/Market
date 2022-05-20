@@ -20,6 +20,7 @@ public class ErrorCode {
     public static int MISTAKEPERMISSIONTYPE = 22;
     public static int ALLREADYHAVESYSTEMMANAGER = 23;
     public static int NOTLEGALDATE = 24;
+    public static int NOT_MOVED_PRICE_FOR_DISCOUNT =25;
 
     public static int PRODUCT_NOT_FOR_SELL_NOW = 27;
     public static int TRY_TO_BUY_MORE_THEN_MAX_QUANTITY_TO_BUY = 28;
@@ -39,6 +40,7 @@ public class ErrorCode {
     public static int STORESTAYINTHEPRODUCTTYPE = 41;
     public static int CANNOTCLOSESTORE = 42;
     public static int ROLLBACK =43;
+    public static int DISCOUNT_RULE_NOT_EXIST = 44;
 
     public static int NOT_MANAGER = 48;
     public static int SERVICEALREADYCONNECT = 50;

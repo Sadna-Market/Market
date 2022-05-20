@@ -2,6 +2,7 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 
 import java.util.List;
 
@@ -518,5 +519,16 @@ public class ProxyMarket implements MarketBridge {
      */
     public boolean connectExternalService(String payment) {
         return realMarket.connectExternalService(payment);
+    }
+
+    /**
+     * add buy rule to store
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule) {
+        return realMarket.addNewBuyRule(uuid,storeId,buyRule);
     }
 }

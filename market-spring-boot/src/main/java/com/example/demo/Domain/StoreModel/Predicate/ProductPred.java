@@ -20,6 +20,14 @@ public class ProductPred implements Predicate{
         this.canBuy = canBuy;
     }
 
+    //for discount rules
+    public ProductPred(int productID,int minQuantity,int maxQuantity){
+        this.productID = productID;
+        this.minQuantity = minQuantity;
+        this.maxQuantity = maxQuantity;
+        this.canBuy = true;
+    }
+
     @Override
     public DResponseObj<Boolean> passRule(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
         for(Map.Entry<ProductStore,Integer> e : shoppingBag.entrySet()){

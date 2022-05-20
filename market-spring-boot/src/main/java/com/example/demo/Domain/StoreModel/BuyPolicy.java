@@ -40,4 +40,8 @@ public class BuyPolicy {
         }
         return new DResponseObj<>(true);
     }
+
+    public int rulesSize(){
+        return rules.size();
+    }
 }

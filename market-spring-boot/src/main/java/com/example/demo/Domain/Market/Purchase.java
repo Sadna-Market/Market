@@ -70,8 +70,7 @@ public class Purchase {
 
                 int age = Period.between(user.getDateOfBirth().getValue(), LocalDate.now()).getYears();
                 DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email,age, crrAmount);
-                /*if (Dprice.errorOccurred()) continue;*/
-                if (Dprice.errorOccurred()) return new DResponseObj<>(Dprice.getErrorMsg()); //TODO maybe rollback?
+                if (Dprice.errorOccurred()) continue;
                 Double price = Dprice.getValue();
 
                 //check supply
@@ -154,6 +153,7 @@ public class Purchase {
 
         if (DRpolicy.errorOccurred()) {
             logger.warn("the policy of this store didnt work");
+            rollBack(store, crrAmount);
             return new DResponseObj<>(DRpolicy.getErrorMsg());
         }
          discount = DRpolicy.getValue();

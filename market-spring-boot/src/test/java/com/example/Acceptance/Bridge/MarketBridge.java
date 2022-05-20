@@ -2,6 +2,7 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 
 import java.util.List;
 
@@ -390,4 +391,13 @@ public interface MarketBridge {
      * @return
      */
     boolean connectExternalService(String payment);
+
+    /**
+     * add buy rule to this store
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule);
 }

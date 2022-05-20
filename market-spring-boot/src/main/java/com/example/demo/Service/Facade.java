@@ -7,6 +7,7 @@ import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
@@ -923,7 +924,44 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.removeBuyRule(UUID.fromString(userId), storeId, buyRuleID));
     }
 
-    // TODO  II. 4.2  שינוי סוגי וכללי )מדיניות( קניה והנחה של חנות
+    /**
+     *  @requirement II. 4.2
+     * @param userId
+     * @param storeId
+     * @param discountRule
+     * @return
+     * @documentation:  A store owner may add discount rule from his store. Users who are not store owners can't use this function
+     */
+
+    @Override
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule){
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        if (discountRule == null)
+            return new SLResponseOBJ<>(false, ErrorCode.BUY_RULE_IS_NULL);
+        return new SLResponseOBJ<>(market.addNewDiscountRule(UUID.fromString(userId), storeId, discountRule));
+    }
+
+    /**
+     *  @requirement II. 4.2
+     * @param userId
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     * @documentation:  A store owner may remove discount rule from his store. Users who are not store owners can't use this function
+
+     */
+    @Override
+    public SLResponseOBJ<Boolean> removeDiscountRule(String userId, int storeId, int discountRuleID){
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0 || discountRuleID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.removeDiscountRule(UUID.fromString(userId), storeId, discountRuleID));
+    }
+
 
 
     @Override

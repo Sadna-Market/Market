@@ -18,7 +18,7 @@ public class permissionType {
     static public List<permissionEnum> ownerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory,permissionEnum.addNewProductToStore,permissionEnum.deleteProductFromStore,
                     permissionEnum.setProductPriceInStore,permissionEnum.setProductQuantityInStore, permissionEnum.addNewStoreOwner,
-                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles));
+                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles,permissionEnum.addNewBuyRule,permissionEnum.removeBuyRule,permissionEnum.addNewDiscountRule,permissionEnum.removeDiscountRule));
 
     static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory, permissionEnum.getUserInfo));
@@ -78,7 +78,11 @@ public class permissionType {
 //        AddNewStoreOwner,
 //        AddNewStoreManger,
 
-        //TODO 2.שינוי סוגי וכללי )מדיניות( קניה והנחה של חנות
+        addNewBuyRule,
+        removeBuyRule,
+        addNewDiscountRule,
+        removeDiscountRule,
+
         //3 .קביעת אילוצי עקיבות עבור חנות://next versions
         addNewStoreOwner, //4 .מינוי בעל-חנות:
 

@@ -7,6 +7,7 @@ import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
@@ -593,38 +594,40 @@ public class Market {
     //pre: the store exist in the system.
     //post: buy rule added to this store
     public DResponseObj<Boolean> addNewBuyRule(UUID userId, int storeId, BuyRule buyRule) {
-        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
-        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
-        DResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        PermissionManager permissionManager = PermissionManager.getInstance();
- /*       DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionEnum, logIN.getValue(), s.getValue());
-        if (hasPer.errorOccurred()) return new DResponseObj<>(hasPer.getErrorMsg());
-        if (!hasPer.getValue()) {
-            logger.warn("this user does not have permission to " + permissionEnum.name() + "in the store #" + storeId);
-            return new DResponseObj<>(ErrorCode.NOPERMISSION);
-        }*/
-        //need to check user is login and has permission;
-        return s.getValue().addNewBuyRule(buyRule);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewBuyRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.addNewBuyRule(buyRule);
     }
 
     //2.4.2
     //pre: the store exist in the system.
     //post: buy rule removed from this store
     public DResponseObj<Boolean> removeBuyRule(UUID userId, int storeId, int buyRuleID) {
-        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
-        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
-        DResponseObj<Store> s = getStore(storeId);
-        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        PermissionManager permissionManager = PermissionManager.getInstance();
- /*       DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionEnum, logIN.getValue(), s.getValue());
-        if (hasPer.errorOccurred()) return new DResponseObj<>(hasPer.getErrorMsg());
-        if (!hasPer.getValue()) {
-            logger.warn("this user does not have permission to " + permissionEnum.name() + "in the store #" + storeId);
-            return new DResponseObj<>(ErrorCode.NOPERMISSION);
-        }*/
-        //need to check user is login and has permission;
-        return s.getValue().removeBuyRule(buyRuleID);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeBuyRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.removeBuyRule(buyRuleID);
+    }
+
+    //2.4.2
+    //pre: the store exist in the system.
+    //post: discount rule added to this store
+    public DResponseObj<Boolean> addNewDiscountRule(UUID userId, int storeId, DiscountRule discountRule) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.addNewDiscountRule(discountRule);
+    }
+
+    //2.4.2
+    //pre: the store exist in the system.
+    //post: discount rule removed from this store
+    public DResponseObj<Boolean> removeDiscountRule(UUID userId, int storeId, int discountRuleID) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.removeDiscountRule(discountRuleID);
     }
 
     //2.4.4
@@ -826,6 +829,22 @@ public class Market {
         if (p.errorOccurred()) return new DResponseObj<>(p.getErrorMsg());
 
         return new DResponseObj<>(new Tuple(s.getValue(), p.getValue()));
+    }
+
+    private DResponseObj<Store> checkValidRules(UUID userId, int storeId, permissionType.permissionEnum permissionEnum) {
+        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionEnum, logIN.getValue(), s.getValue());
+        if (hasPer.errorOccurred()) return new DResponseObj<>(hasPer.getErrorMsg());
+        if (!hasPer.getValue()) {
+            logger.warn("this user does not have permission to " + permissionEnum.name() + "in the store #" + storeId);
+            return new DResponseObj<>(ErrorCode.NOPERMISSION);
+        }
+
+        return new DResponseObj<>(s.getValue());
     }
 
 

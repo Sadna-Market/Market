@@ -2,6 +2,7 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.*;
 import com.example.demo.Service.TestableFacade;
@@ -631,6 +632,13 @@ public class RealMarket implements MarketBridge {
         SLResponseOBJ<Boolean> res = market.connectService(payment);
         return !res.errorOccurred();
     }
+
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule){
+        SLResponseOBJ<Boolean> res = market.addNewBuyRule(uuid,storeId,buyRule);
+        return !res.errorOccurred();
+    }
+
+
 
 
 }
