@@ -2,6 +2,8 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.*;
 import com.example.demo.Service.TestableFacade;
@@ -23,7 +25,7 @@ public class RealMarket implements MarketBridge {
      * @return true if success else false
      */
     public ATResponseObj<String> initSystem(User sysManager) {
-        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number);
+        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
         return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value, null);
     }
 
@@ -109,7 +111,7 @@ public class RealMarket implements MarketBridge {
         deliver.forEach(i -> {
             lst.add(new ServiceProductStore(i.quantity, i.price, i.itemID, i.name));
         });
-        ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment);
+        ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment,user.dateOfBirth);
         SLResponseOBJ<Integer> res = market.supply(su, lst);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(String.valueOf(res.value), null);
     }
@@ -144,8 +146,8 @@ public class RealMarket implements MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    public boolean register(String uuid, String username, String password) {
-        SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222");
+    public boolean register(String uuid, String username, String password, String dateOfBirth) {
+        SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222",dateOfBirth);
         return response.value;
     }
 
@@ -629,6 +631,62 @@ public class RealMarket implements MarketBridge {
      */
     public boolean connectExternalService(String payment) {
         SLResponseOBJ<Boolean> res = market.connectService(payment);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * add buy rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    @Override
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule) {
+        SLResponseOBJ<Boolean> res = market.addNewBuyRule(uuid, storeId, buyRule);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * remove buy rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    @Override
+    public boolean removeBuyRule(String uuid, int storeId, int buyRuleID) {
+        SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, buyRuleID);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * add discount rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    @Override
+    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRule discountRule) {
+        SLResponseOBJ<Boolean> res = market.addNewDiscountRule(uuid, storeId, discountRule);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * remove discount rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    @Override
+    public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
+        SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, discountRuleID);
         return !res.errorOccurred();
     }
 

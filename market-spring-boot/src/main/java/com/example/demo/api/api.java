@@ -26,13 +26,9 @@ public class api implements Iapi {
 
 
     @Override
-    @PostMapping("initMarket")
-    public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {;
-        System.out.println("1111111111111111111111111111111111111111111111111111111");
-        System.out.println(user.email+"  "+user.Password+"  "+ user.phoneNumber);
-        logger.debug("2222222222222222222222222");
-
-        return iMarket.initMarket(user.email, user.Password, user.phoneNumber);
+    @GetMapping("initMarket")
+    public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
+        return iMarket.initMarket(user.email, user.Password, user.phoneNumber,"10/4/1994");
 
     }
 
@@ -52,9 +48,9 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("addNewMember/{uuid}")
-    public SLResponseOBJ<Boolean> addNewMember(@PathVariable("uuid") String uuid, @RequestBody apiUser user) { //ok
-        System.out.println(uuid+" "+user.email+" "+ user.Password+ " "+ user.phoneNumber);
-        return iMarket.addNewMember(uuid, user.email, user.Password, user.phoneNumber);
+    public SLResponseOBJ<Boolean> addNewMember(@PathVariable("uuid") String uuid, @RequestBody apiUser user) {
+        return iMarket.addNewMember(uuid, user.email, user.Password, user.phoneNumber,"10/4/1994");
+
     }
 
     @Override

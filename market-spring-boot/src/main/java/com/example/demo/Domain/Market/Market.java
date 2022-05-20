@@ -6,6 +6,8 @@ import Stabs.UserManagerStab;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
@@ -576,6 +578,7 @@ public class Market {
         return store.setProductPrice(productId, price);
     }
 
+
     //2.4.1.3
     //pre: user is Owner of the store
     //post: the quantity of this product in this store changed.
@@ -585,6 +588,46 @@ public class Market {
         Store store = result.getValue().item1;
 
         return store.setProductQuantity(productId, quantity);
+    }
+
+    //2.4.2
+    //pre: the store exist in the system.
+    //post: buy rule added to this store
+    public DResponseObj<Boolean> addNewBuyRule(UUID userId, int storeId, BuyRule buyRule) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewBuyRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.addNewBuyRule(buyRule);
+    }
+
+    //2.4.2
+    //pre: the store exist in the system.
+    //post: buy rule removed from this store
+    public DResponseObj<Boolean> removeBuyRule(UUID userId, int storeId, int buyRuleID) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeBuyRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.removeBuyRule(buyRuleID);
+    }
+
+    //2.4.2
+    //pre: the store exist in the system.
+    //post: discount rule added to this store
+    public DResponseObj<Boolean> addNewDiscountRule(UUID userId, int storeId, DiscountRule discountRule) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.addNewDiscountRule(discountRule);
+    }
+
+    //2.4.2
+    //pre: the store exist in the system.
+    //post: discount rule removed from this store
+    public DResponseObj<Boolean> removeDiscountRule(UUID userId, int storeId, int discountRuleID) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.removeDiscountRule(discountRuleID);
     }
 
     //2.4.4
@@ -788,6 +831,22 @@ public class Market {
         return new DResponseObj<>(new Tuple(s.getValue(), p.getValue()));
     }
 
+    private DResponseObj<Store> checkValidRules(UUID userId, int storeId, permissionType.permissionEnum permissionEnum) {
+        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        DResponseObj<Boolean> hasPer = permissionManager.hasPermission(permissionEnum, logIN.getValue(), s.getValue());
+        if (hasPer.errorOccurred()) return new DResponseObj<>(hasPer.getErrorMsg());
+        if (!hasPer.getValue()) {
+            logger.warn("this user does not have permission to " + permissionEnum.name() + "in the store #" + storeId);
+            return new DResponseObj<>(ErrorCode.NOPERMISSION);
+        }
+
+        return new DResponseObj<>(s.getValue());
+    }
+
 
     private DResponseObj<ProductType> getProductType(int productID) {
         if (productID < 0) {
@@ -894,6 +953,8 @@ public class Market {
         }
         return new DResponseObj<>(true);
     }
+
+
 
     class Tuple<E, T> {
         E item1;

@@ -22,7 +22,7 @@ public class SystemManagerTests extends MarketTests{
         CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         buyer = generateUser();
-        market.register(uuid, buyer.username, buyer.password);
+        market.register(uuid, buyer.username, buyer.password,buyer.dateOfBirth);
         uuid = market.login(uuid, buyer).value;
         market.addToCart(uuid, existing_storeID, item1);
         market.purchaseCart(uuid, creditCard, address);

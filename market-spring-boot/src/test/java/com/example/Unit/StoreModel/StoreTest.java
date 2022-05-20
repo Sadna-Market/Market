@@ -3,7 +3,9 @@ package com.example.Unit.StoreModel;
 import Stabs.ProductTypeStab;
 
 import com.example.demo.Domain.Market.ProductType;
+import com.example.demo.Domain.StoreModel.BuyRules.UserBuyRule;
 import com.example.demo.Domain.StoreModel.History;
+import com.example.demo.Domain.StoreModel.Predicate.UserPred;
 import com.example.demo.Domain.StoreModel.Store;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +24,10 @@ class StoreTest {
     ProductType productType1 = new ProductTypeStab(1, "milk", "good milk",1);
     ProductType productType2 = new ProductTypeStab(2, "table", "good table",1);
     String user = "dor@gmail.com";
+    UserBuyRule uRule;
     @BeforeEach
     void setUp() {
+        uRule = new UserBuyRule(new UserPred("dor"));
         store = new Store(1,"Best Store", null, null, "dor@gmail.com");
         productType1 = new ProductTypeStab(1, "milk", "good milk",1);
         productType2 = new ProductTypeStab(2, "table", "good table",1);
@@ -35,6 +39,44 @@ class StoreTest {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    @DisplayName("addNewBuyRule  -  successful")
+    void addNewBuyRule() {
+        assertTrue(store.addNewBuyRule(uRule).getValue());
+        assertEquals(1,store.getBuyRulesSize());
+    }
+
+    @Test
+    @DisplayName("removeBuyRule  -  successful")
+    void removeBuyRule() {
+        assertTrue(store.addNewBuyRule(uRule).getValue());
+        assertEquals(1,store.getBuyRulesSize());
+        assertTrue(store.removeBuyRule(1).getValue());
+        assertEquals(0,store.getBuyRulesSize());
+    }
+
+    @Test
+    @DisplayName("checkBuyRule  -  successful")
+    void checkBuyPolicyS() {
+        assertTrue(store.addNewProduct(productType1,10,2.0).value);
+        ConcurrentHashMap<Integer,Integer> bag = new ConcurrentHashMap<>();
+        bag.put(productType1.getProductID().getValue(),3);
+        assertTrue(store.addNewBuyRule(uRule).getValue());
+        assertEquals(1,store.getBuyRulesSize());
+        assertEquals(0.0,store.checkBuyAndDiscountPolicy("niv",20,bag).getValue()); //when discount work cange expected
+    }
+
+    @Test
+    @DisplayName("checkBuyRule  -  failure")
+    void checkBuyPolicyF() {
+        assertTrue(store.addNewProduct(productType1,10,2.0).value);
+        ConcurrentHashMap<Integer,Integer> bag = new ConcurrentHashMap<>();
+        bag.put(productType1.getProductID().getValue(),3);
+        assertTrue(store.addNewBuyRule(uRule).getValue());
+        assertEquals(1,store.getBuyRulesSize());
+        assertTrue(store.checkBuyAndDiscountPolicy("dor",20,bag).errorOccurred());
+    }
 
     @Test
     @DisplayName("addNewProduct  -  successful")

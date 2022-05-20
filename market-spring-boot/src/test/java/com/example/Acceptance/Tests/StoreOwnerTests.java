@@ -280,7 +280,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.4 - success test")
     void assignStoreOwner_Success() {
         User newOwner = generateUser();
-        assertTrue(market.register(uuid, newOwner.username, newOwner.password));
+        assertTrue(market.register(uuid, newOwner.username, newOwner.password,newOwner.dateOfBirth));
         assertTrue(market.isMember(newOwner));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
@@ -330,7 +330,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.4 - fail test [store id doesnt exist]")
     void assignStoreOwner_Fail3() {
         User newOwner = generateUser();
-        assertTrue(market.register(uuid, newOwner.username, newOwner.password));
+        assertTrue(market.register(uuid, newOwner.username, newOwner.password,newOwner.dateOfBirth));
         assertTrue(market.isMember(newOwner));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
@@ -366,7 +366,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.6 - success test")
     void assignStoreManager_Success() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(newManager));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
@@ -414,7 +414,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.6 - fail test [new manager already is manager of store]")
     void assignStoreManager_Fail3() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(newManager));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
@@ -435,7 +435,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.6 - fail test [store id doesnt exist]")
     void assignStoreManager_Fail4() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(newManager));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
@@ -470,7 +470,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.7 - success test")
     void managerPermissionChange_Success() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -497,7 +497,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.7 - fail test [invalid store id]")
     void managerPermissionChange_Fail1() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -515,7 +515,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.7 - fail test [user is not owner of store]")
     void managerPermissionChange_Fail2() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         ATResponseObj<String> res = market.login(uuid,newManager);
         assertFalse(res.errorOccurred());
         uuid = res.value;
@@ -527,8 +527,8 @@ public class StoreOwnerTests extends MarketTests{
     void managerPermissionChange_Fail3() {
         User newManager = generateUser();
         User user = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
-        assertTrue(market.register(uuid, user.username, user.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
+        assertTrue(market.register(uuid, user.username, user.password, user.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -600,7 +600,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.9 - fail test [user doesnt have permission]")
     void closeStore_Fail3() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -654,7 +654,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.11 - fail test [invalid permission]")
     void getRoleInfo_Fail2() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -715,7 +715,7 @@ public class StoreOwnerTests extends MarketTests{
     @DisplayName("req: #2.4.13 - fail test [no permission]")
     void purchaseHistory_Fail2() {
         User user = generateUser();
-        assertTrue(market.register(uuid, user.username, user.password));
+        assertTrue(market.register(uuid, user.username, user.password,user.dateOfBirth));
         ATResponseObj<String> memberID = market.login(uuid, user); //member is contributor
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
