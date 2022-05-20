@@ -19,7 +19,7 @@ public class api implements Iapi {
     @Override
     @GetMapping("initMarket")
     public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
-        return iMarket.initMarket(user.email, user.Password, user.phoneNumber);
+        return iMarket.initMarket(user.email, user.Password, user.phoneNumber,"10/4/1994");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class api implements Iapi {
     @Override
     @PostMapping("addNewMember/{uuid}")
     public SLResponseOBJ<Boolean> addNewMember(@PathVariable("uuid") String uuid, @RequestBody apiUser user) {
-        return iMarket.addNewMember(uuid, user.email, user.Password, user.phoneNumber);
+        return iMarket.addNewMember(uuid, user.email, user.Password, user.phoneNumber,"10/4/1994");
     }
 
     @Override

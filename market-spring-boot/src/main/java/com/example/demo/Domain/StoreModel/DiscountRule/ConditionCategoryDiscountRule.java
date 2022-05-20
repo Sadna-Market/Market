@@ -17,9 +17,10 @@ public class ConditionCategoryDiscountRule extends SimpleCategoryDiscountRule{
 
     @Override
     public DResponseObj<Double> howMuchDiscount(String username,int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
-        if(!pred.passRule(username,age,shoppingBag).errorOccurred()){
+        DResponseObj<Boolean> res = pred.passRule(username,age,shoppingBag);
+        if(!res.errorOccurred()){
             return super.howMuchDiscount(username,age,shoppingBag);
         }
-        return new DResponseObj<>(0.0);
+        return new DResponseObj<>(0.0, res.getErrorMsg());
     }
 }

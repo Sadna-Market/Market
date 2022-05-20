@@ -30,7 +30,7 @@ public class MarketTests {
                 "user" + suffix + "@gmail.com",
                 PasswordGenerator.generateStrongPassword(),
                 new Address("Tel-Aviv", "Nordau", suffix),
-                "052311111" + suffix,"25/10/198" + suffix);
+                "052311111" + suffix,"25/10/1984");
     }
 
     protected void populateItemsAndStore() {

@@ -2,12 +2,11 @@ package com.example.Integration;
 
 import Stabs.ProductTypeStab;
 import com.example.demo.Domain.Market.ProductType;
-import com.example.demo.Domain.StoreModel.BuyPolicy;
+import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.StoreModel.BuyRules.UserBuyRule;
-import com.example.demo.Domain.StoreModel.History;
+import com.example.demo.Domain.StoreModel.DiscountRule.SimpleStoreDiscountRule;
+import com.example.demo.Domain.StoreModel.Predicate.ShoppingBagPred;
 import com.example.demo.Domain.StoreModel.Predicate.UserPred;
-import com.example.demo.Domain.StoreModel.ProductStore;
-import com.example.demo.Domain.StoreModel.Store;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,20 +18,24 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class StoreAndBuyPolicy {
+public class StoreAndPolicies {
 
         BuyPolicy buyPolicy;
+        DiscountPolicy discountPolicy;
         Store store;
         ProductType productType1 = new ProductTypeStab(1, "milk", "good milk", 1);
         ProductType productType2 = new ProductTypeStab(2, "table", "good table", 1);
         String user = "dor@gmail.com";
         UserBuyRule uRule;
+        SimpleStoreDiscountRule sRule;
 
         @BeforeEach
         void setUp() {
             buyPolicy = new BuyPolicy();
+            discountPolicy = new DiscountPolicy();
             uRule = new UserBuyRule(new UserPred("dor"));
-            store = new Store(1, "Best Store", null, buyPolicy, "dor@gmail.com");
+            sRule = new SimpleStoreDiscountRule(30);
+            store = new Store(1, "Best Store", discountPolicy, buyPolicy, "dor@gmail.com");
             productType1 = new ProductTypeStab(1, "milk", "good milk", 1);
             productType2 = new ProductTypeStab(2, "table", "good table", 1);
         }
@@ -86,6 +89,36 @@ public class StoreAndBuyPolicy {
             assertTrue(store.checkBuyAndDiscountPolicy("dor",20,bag).errorOccurred());
         }
 
+
+    @Test
+    @DisplayName("addNewDiscountRule  -  successful")
+    void addNewDiscountRule() {
+        assertEquals(0,store.getDiscountRulesSize());
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(1,store.getDiscountRulesSize());
+    }
+
+    @Test
+    @DisplayName("removeDiscountRule  -  successful")
+    void removeDiscountRule() {
+        assertEquals(0,store.getDiscountRulesSize());
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(1,store.getDiscountRulesSize());
+        assertTrue(store.removeDiscountRule(1).getValue());
+        assertEquals(0,store.getDiscountRulesSize());
+    }
+
+    @Test
+    @DisplayName("checkDiscountRule  -  successful")
+    void checkDiscountPolicyS() {
+        assertTrue(store.addNewProduct(productType1,10,2.0).value);
+        ConcurrentHashMap<Integer,Integer> bag = new ConcurrentHashMap<>();
+        bag.put(productType1.getProductID().getValue(),3);
+        assertEquals(0,store.getDiscountRulesSize());
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(1,store.getDiscountRulesSize());
+        assertEquals(3*2*0.3,store.checkBuyAndDiscountPolicy("niv",20,bag).getValue()); //when discount work cange expected
+    }
 
 
     @Test

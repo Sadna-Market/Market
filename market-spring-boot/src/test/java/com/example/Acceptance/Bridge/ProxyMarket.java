@@ -3,6 +3,7 @@ package com.example.Acceptance.Bridge;
 
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 
 import java.util.List;
 
@@ -530,5 +531,41 @@ public class ProxyMarket implements MarketBridge {
      */
     public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule) {
         return realMarket.addNewBuyRule(uuid,storeId,buyRule);
+    }
+
+    /**
+     * remove buy rule from store
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    @Override
+    public boolean removeBuyRule(String uuid, int storeId, int buyRuleID) {
+        return realMarket.removeBuyRule(uuid,storeId,buyRuleID);
+    }
+
+    /**
+     * add discount rule to store
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    @Override
+    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRule discountRule) {
+        return realMarket.addNewDiscountRule(uuid,storeId,discountRule);
+    }
+
+    /**
+     * remove discount rule from store
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    @Override
+    public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
+        return realMarket.removeDiscountRule(uuid,storeId,discountRuleID);
     }
 }

@@ -28,6 +28,7 @@ public class ProductPred implements Predicate{
         this.canBuy = true;
     }
 
+
     @Override
     public DResponseObj<Boolean> passRule(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
         for(Map.Entry<ProductStore,Integer> e : shoppingBag.entrySet()){

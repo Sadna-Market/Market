@@ -362,6 +362,9 @@ public class Store {
     public int getBuyRulesSize(){
         return buyPolicy.rulesSize();
     }
+    public int getDiscountRulesSize(){
+        return discountPolicy.rulesSize();
+    }
 
     public void setHistory(ConcurrentHashMap<Integer,History> history) {
         this.history = history;

@@ -3,6 +3,7 @@ package com.example.Acceptance.Bridge;
 
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.*;
 import com.example.demo.Service.TestableFacade;
@@ -633,12 +634,61 @@ public class RealMarket implements MarketBridge {
         return !res.errorOccurred();
     }
 
-    public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule){
-        SLResponseOBJ<Boolean> res = market.addNewBuyRule(uuid,storeId,buyRule);
+    /**
+     * add buy rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    @Override
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule) {
+        SLResponseOBJ<Boolean> res = market.addNewBuyRule(uuid, storeId, buyRule);
         return !res.errorOccurred();
     }
 
+    /**
+     * remove buy rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    @Override
+    public boolean removeBuyRule(String uuid, int storeId, int buyRuleID) {
+        SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, buyRuleID);
+        return !res.errorOccurred();
+    }
 
+    /**
+     * add discount rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    @Override
+    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRule discountRule) {
+        SLResponseOBJ<Boolean> res = market.addNewDiscountRule(uuid, storeId, discountRule);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * remove discount rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    @Override
+    public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
+        SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, discountRuleID);
+        return !res.errorOccurred();
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.example.Acceptance.Bridge;
 
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 
 import java.util.List;
 
@@ -400,4 +401,32 @@ public interface MarketBridge {
      * @return
      */
     boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule);
+
+    /**
+     * remove buy rule to this store
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    boolean removeBuyRule(String uuid, int storeId, int buyRuleID);
+
+
+    /**
+     * add discount rule to this store
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    boolean addNewDiscountRule(String uuid, int storeId, DiscountRule discountRule);
+
+    /**
+     * remove discount rule to this store
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    boolean removeDiscountRule(String uuid, int storeId, int discountRuleID);
 }
