@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import StoreID from "./StoreID";
 
 const StoreList = (props) => {
-  let stores = [
+    let stores = [
     { id: 1, name: "a store", open: "Open" },
     { id: 2, name: "b store", open: "Open" },
     { id: 3, name: "c store", open: "Close" },

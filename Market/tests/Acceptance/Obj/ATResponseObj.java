@@ -1,8 +1,5 @@
 package Acceptance.Obj;
 
-import main.Service.SLResponsOBJ;
-import main.Service.ServiceStore;
-
 public class ATResponseObj<T> extends  ATResponse {
     public T value;
 

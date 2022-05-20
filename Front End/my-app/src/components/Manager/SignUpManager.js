@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./SignUpManager.css";
 import Card from "../UI/Card";
+//import createApiClientHttp from "../../client/clientHttp.js";
+
 
 const SignUpManager = (props) => {
-  const [enteredName, SetName] = useState("");
+    const [enteredName, SetName] = useState("");
   const nameChangeHandler = (event) => {
     SetName(event.target.value);
   };
