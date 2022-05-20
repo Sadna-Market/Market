@@ -10,10 +10,12 @@ import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Service
 public class Facade implements IMarket {
     UserManager userManager;
     Market market;
