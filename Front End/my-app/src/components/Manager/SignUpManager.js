@@ -1,9 +1,10 @@
 import React, {useState} from "react";
-import "./SignUp.css";
+import "./SignUpManager.css";
 import Card from "../UI/Card";
 //import createApiClientHttp from "../../client/clientHttp.js";
 
-const SignUp = (props) => {
+
+const SignUpManager = (props) => {
     const [enteredName, SetName] = useState("");
   const nameChangeHandler = (event) => {
     SetName(event.target.value);
@@ -29,18 +30,10 @@ const SignUp = (props) => {
     SetDate(event.target.value);
   };
 
-  //todo:register
+  //todo: init the market
   const submitHandler = (event) => {
     event.preventDefault();
-    //register
-
-    const userData = {
-      name: enteredName,
-      email: enteredEmail,
-      password: enteredPassword,
-      //phone
-    };
-    props.onSaveExpenseData();
+    props.onSaveData();
   };
 
   const cancelHandler = () => {
@@ -51,11 +44,11 @@ const SignUp = (props) => {
   };
 
   return (
-    <div className="signUp">
-      <h3>Registration</h3>
+    <div className="signUpManager">
+      <h3>Manager System</h3>
       <form onSubmit={submitHandler}>
-        <div className="signUp__controls">
-          <div className="signUp__control">
+        <div className="signUpManager__controls">
+          <div className="signUpManager__control">
             <label>Name</label>
             <input
               type="text"
@@ -63,7 +56,7 @@ const SignUp = (props) => {
               onChange={nameChangeHandler}
             />
           </div>
-          <div className="signUp__control">
+          <div className="signUpManager__control">
             <label>Email</label>
             <input
               type="text"
@@ -71,7 +64,7 @@ const SignUp = (props) => {
               onChange={emailChangeHandler}
             />
           </div>
-          <div className="signUp__control">
+          <div className="signUpManager__control">
             <label>Password</label>
             <input
               type="text"
@@ -79,7 +72,7 @@ const SignUp = (props) => {
               onChange={passChangeHandler}
             />
           </div>
-          <div className="signUp__control">
+          <div className="signUpManager__control">
             <label>Phone</label>
             <input
               type="number"
@@ -98,7 +91,7 @@ const SignUp = (props) => {
             />
           </div>
         </div>
-        <div className="signUp__actions">
+        <div className="signUpManager__actions">
           <button type="button" onClick={cancelHandler}>
             Clean
           </button>
@@ -109,4 +102,4 @@ const SignUp = (props) => {
   );
 };
 
-export default SignUp;
+export default SignUpManager;

@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.api.apiObjects.apiProductType;
+import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ public interface Iapi {
     public SLResponseOBJ<String> login( String uuid, apiUser user);
 
     //2.2.1
-    public SLResponseOBJ<ServiceStore> getStore(int StoreID);
+    public SLResponseOBJ<ServiceStore> getStore(@PathVariable("sid") int sid) ;
 
     public SLResponseOBJ<ServiceProductStore> getInfoProductInStore(int storeID, int productID);
 
@@ -82,11 +83,11 @@ public interface Iapi {
     //2.3.1
     public SLResponseOBJ<String> logout(String userId);
 
-    public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid,@RequestBody apiUser apiUser ,@RequestBody Map<String,Object> OBJ);
+    public SLResponseOBJ<Boolean> changePassword(@PathVariable("uuid") String uuid ,@RequestBody Map<String,Object> OBJ);
 
 
     //2.3.2
-    public SLResponseOBJ<Integer> openNewStore(String userId, String name, String founder, ServiceDiscountPolicy discountPolicy, ServiceBuyPolicy buyPolicy, ServiceBuyStrategy buyStrategy);
+    public SLResponseOBJ<Integer> openNewStore(@PathVariable("uuid")String userId,@RequestBody apiStore apiStore) ;
 
 
     //2.4.1.1
