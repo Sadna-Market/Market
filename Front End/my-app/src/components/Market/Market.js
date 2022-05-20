@@ -7,13 +7,17 @@ import ProductButton from "../Product/ProductButton";
 import Store from "../Store/Store";
 import MyCart from "../Cart/MyCart";
 import ManagerButton from "../Manager/ManagerButton";
+import NewStore from "../Store/newStore";
+import Profile from "./Profile";
 
 const Market = (props) => {
   let UUID = props.uuid;
 
   const showStoreHandler = (storeID) => {
     console.log(storeID);
-    setCommand(<Store storeID={storeID} uuid={UUID} />);
+    setCommand(
+      <Store storeID={storeID} uuid={UUID} onMarket={onMarketHandler} />
+    );
   };
 
   const [command, setCommand] = useState(
@@ -25,12 +29,29 @@ const Market = (props) => {
     setCommand(<ManagerButton uuid={UUID} />);
   };
 
+  const openStoreHandler = () => {
+    setCommand(
+      <NewStore
+        uuid={UUID}
+        onMarket={() => {
+          setCommand(
+            <MarketButton uuid={UUID} onShowStore={showStoreHandler} />
+          );
+        }}
+      />
+    );
+  };
+
+  const profileHandler = () => {
+    setCommand(<Profile uuid={UUID} />);
+  };
+
   //todo: check permission if login
   if (props.uuid === 7) {
     permissonCommand = (
       <>
-        <button> Open New Store</button>
-        <button> My Stores</button>
+        <button onClick={openStoreHandler}> Open New Store</button>
+        <button onClick={profileHandler}>Profile</button>
       </>
     );
   }
@@ -45,8 +66,12 @@ const Market = (props) => {
     );
   }
 
+  const onMarketHandler = () => {
+    setCommand(<MarketButton uuid={UUID} onShowStore={showStoreHandler} />);
+  };
+
   const MarketHandler = () => {
-    setCommand(<MarketButton onShowStore={showStoreHandler} />);
+    setCommand(<MarketButton uuid={UUID} onShowStore={showStoreHandler} />);
   };
 
   const productHandler = () => {
