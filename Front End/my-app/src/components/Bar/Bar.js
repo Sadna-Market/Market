@@ -3,8 +3,11 @@ import Card from "../UI/Card";
 import "./Bar.css";
 import SignUp from "./SignUp";
 import SignIn from "./Login";
-//import {createApiClientHttp} from "../../client/clientHttp";
+import {createApiClientHttp} from "../../client/clientHttp";
 const Bar = (props) => {
+  let apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+
   const [isLogin, setIsLogin] = useState(false);
 
   const [userName, setUserName] = useState("");
@@ -22,12 +25,23 @@ const Bar = (props) => {
 
 
   //todo: login after that the UUID put on onLogin(<UUID>)
-  const loginHandler = (event) => {
+  async function loginHandler(event) {
     event.preventDefault();
-    setUserName(email);
-    setIsLogin(true);
-    props.onLogin(7);
-  };
+    console.log(132123132)
+
+    const loginResponse = await apiClientHttp.login(props.UUID, email, password);
+    console.log(222)
+
+    if (loginResponse.errorMsg!== -1) {
+      SetError(loginResponse.errorMsg)
+    } else {
+      setUserName(email);
+      setIsLogin(true);
+      props.onLogin(loginResponse.value);
+    }
+    console.log(loginResponse)
+
+  }
 
   //todo:logout
   const logoutHandler = (event) => {
