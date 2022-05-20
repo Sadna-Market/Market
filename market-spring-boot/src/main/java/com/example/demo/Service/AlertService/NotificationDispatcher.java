@@ -1,18 +1,16 @@
 package com.example.demo.Service.AlertService;
 
 import org.apache.log4j.Logger;
-import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
+@Component
 public class NotificationDispatcher {
 
     private static final Logger logger = Logger.getLogger(NotificationDispatcher.class);

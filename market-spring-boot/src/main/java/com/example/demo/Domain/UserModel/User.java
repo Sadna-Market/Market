@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class User  {
+public class User {
     ShoppingCart shoppingCart;
     String Password;
     String email;
     String phoneNumber;
     LocalDate dateOfBirth;
     private List<History> histories = Collections.synchronizedList(new LinkedList<>());
-
 
 
     private List<Permission> accessPermission = new LinkedList<>();
@@ -35,23 +34,24 @@ public class User  {
     private List<Permission> safeGrantorPermission = Collections.synchronizedList(grantorPermission);
 
     public User(String email, String password, String phoneNumber, LocalDate dateOfBirth) {
-        shoppingCart = new ShoppingCart();
         this.email = email;
         this.Password = password;
         this.phoneNumber = phoneNumber;
-        shoppingCart=new ShoppingCart();
+        shoppingCart = new ShoppingCart();
         this.dateOfBirth = dateOfBirth;
 
 
     }
-    public User(){
-        shoppingCart=new ShoppingCart();
+
+    public User() {
+        shoppingCart = new ShoppingCart();
         email = "guest";
-        this.Password="guest";
-        this.phoneNumber="0000000000";
-        dateOfBirth = LocalDate.of(1999,4,13);
+        this.Password = "guest";
+        this.phoneNumber = "0000000000";
+        dateOfBirth = LocalDate.of(1999, 4, 13);
 
     }
+
     public DResponseObj<Boolean> addAccessPermission(Permission p) {
         accessPermission.add(p);
         return new DResponseObj<>(true);
@@ -62,14 +62,14 @@ public class User  {
         return new DResponseObj<>(true);
     }
 
-    public DResponseObj<Boolean> addHistoriy(History history){
+    public DResponseObj<Boolean> addHistoriy(History history) {
         histories.add(history);
-        return new DResponseObj<>(true,-1);
+        return new DResponseObj<>(true, -1);
     }
 
 
-    public DResponseObj<List<History>> getAllHistories(){
-        return new DResponseObj<List<History>>(histories,-1);
+    public DResponseObj<List<History>> getAllHistories() {
+        return new DResponseObj<List<History>>(histories, -1);
     }
 
 
@@ -84,25 +84,25 @@ public class User  {
     }
 
     public DResponseObj<String> getEmail() {
-        return new DResponseObj<>( email);
+        return new DResponseObj<>(email);
     }
 
     public DResponseObj<List<Permission>> getAccessPermission() {
-        return new DResponseObj<>( accessPermission);
+        return new DResponseObj<>(accessPermission);
     }
 
     public DResponseObj<List<Permission>> getGrantorPermission() {
-        return new DResponseObj<>( grantorPermission);
+        return new DResponseObj<>(grantorPermission);
     }
 
 
     //all the store that i have a permission
-    public DResponseObj< List<Store>> granteeStores() {
+    public DResponseObj<List<Store>> granteeStores() {
         List<Store> granteeStores = new LinkedList<>();
         for (Permission permission : accessPermission) {
             granteeStores.add(permission.getStore().value);
         }
-        return new DResponseObj<>( granteeStores);
+        return new DResponseObj<>(granteeStores);
     }
 
     public DResponseObj<Boolean> addFounder(Store store) {
@@ -120,38 +120,35 @@ public class User  {
     }
 
     public DResponseObj<Boolean> setManagerPermissions(User user, Store store, permissionType.permissionEnum perm, boolean onOf) {
-        if(onOf) {
-            PermissionManager permissionManager = PermissionManager.getInstance();
-            DResponseObj<Boolean> b = permissionManager.addManagerPermissionType(perm, user, store, this);
-            return b;
-        }else {
-            PermissionManager permissionManager = PermissionManager.getInstance();
-            DResponseObj<Boolean> b = permissionManager.removeManagerPermissionType(perm, user, store, this);
-            return b;
+        PermissionManager permissionManager = PermissionManager.getInstance();
+        if (onOf) {
+            return permissionManager.addManagerPermissionType(perm, user, store, this);
+        } else {
+            return permissionManager.removeManagerPermissionType(perm, user, store, this);
         }
     }
 
-    public DResponseObj<Boolean> changePassword(String password){
-        this.Password=password;
+    public DResponseObj<Boolean> changePassword(String password) {
+        this.Password = password;
         return new DResponseObj<>(true);
     }
 
-    public DResponseObj< Boolean > isPasswordEquals(String password) {
-        return new DResponseObj<>( this.Password.equals(password));
+    public DResponseObj<Boolean> isPasswordEquals(String password) {
+        return new DResponseObj<>(this.Password.equals(password));
     }
 
     public DResponseObj<ShoppingCart> GetSShoppingCart() {
-        return new DResponseObj<>( this.shoppingCart);
+        return new DResponseObj<>(this.shoppingCart);
     }
 
     public DResponseObj<LocalDate> getDateOfBirth() {
-        return new DResponseObj<>( this.dateOfBirth);
+        return new DResponseObj<>(this.dateOfBirth);
     }
 
     public DResponseObj<Boolean> addHistoies(List<History> histories) {
-        for(History h :histories){
+        for (History h : histories) {
             this.histories.add(h);
         }
-        return new DResponseObj<>(true,-1);
+        return new DResponseObj<>(true, -1);
     }
 }

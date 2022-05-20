@@ -148,7 +148,7 @@ public class RealMarket implements MarketBridge {
      */
     public boolean register(String uuid, String username, String password, String dateOfBirth) {
         SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222",dateOfBirth);
-        return response.value;
+        return !response.errorOccurred();
     }
 
     /**

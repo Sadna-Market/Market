@@ -28,6 +28,7 @@ public class UserManagerStab extends UserManager {
     static Logger logger= Logger.getLogger(ShoppingBag.class);
 
     public UserManagerStab(){
+        super();
         members = new ConcurrentHashMap<>();
         GuestVisitors = new ConcurrentHashMap<>();
         LoginUsers = new ConcurrentHashMap<>();
