@@ -690,6 +690,38 @@ public class RealMarket implements MarketBridge {
         return !res.errorOccurred();
     }
 
+    /**
+     * gets all logged in members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedInMembers(String uuid) {
+        SLResponseOBJ<List<ServiceUser>> res = market.getloggedInMembers(uuid);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        List<User> users = new ArrayList<>();
+        res.value.forEach(serviceUser -> {
+            users.add(new User(serviceUser));
+        });
+        return new ATResponseObj<>(users);
+    }
+
+    /**
+     * gets all logged out members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedOutMembers(String uuid) {
+        SLResponseOBJ<List<ServiceUser>> res = market.getloggedOutMembers(uuid);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        List<User> users = new ArrayList<>();
+        res.value.forEach(serviceUser -> {
+            users.add(new User(serviceUser));
+        });
+        return new ATResponseObj<>(users);
+    }
+
 
 }
 

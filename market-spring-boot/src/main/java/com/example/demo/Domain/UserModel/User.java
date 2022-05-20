@@ -151,4 +151,8 @@ public class User {
         }
         return new DResponseObj<>(true, -1);
     }
+
+    public DResponseObj<String> getPhoneNumber() {
+        return new DResponseObj<>(phoneNumber,-1);
+    }
 }

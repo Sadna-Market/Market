@@ -95,4 +95,51 @@ public class SystemManagerTests extends MarketTests{
         assertTrue(res.errorOccurred());
     }
 
+
+
+    /**
+     * Requirement: get info of all members  - #2.6.6
+     */
+    @Test
+    @DisplayName("req: ##2.6.6 - success test")
+    void getLoggedInMembers_Success1() {
+        ATResponseObj<String> res = market.login(uuid,sysManager);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        ATResponseObj<List<User>> lst = market.getLoggedInMembers(uuid);
+        assertFalse(lst.errorOccurred());
+        assertFalse(lst.value.isEmpty());
+    }
+    @Test
+    @DisplayName("req: ##2.6.6 - success test")
+    void getLoggedOutMembers_Success2() {
+        ATResponseObj<String> res = market.login(uuid,sysManager);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        ATResponseObj<List<User>> lst = market.getLoggedOutMembers(uuid);
+        assertFalse(lst.errorOccurred());
+        assertFalse(lst.value.isEmpty());
+    }
+
+    @Test
+    @DisplayName("req: ##2.6.6 - fail test [no permission]")
+    void getMembers_Fail1() {
+        ATResponseObj<String> res = market.login(uuid,member);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        ATResponseObj<List<User>> lst = market.getLoggedOutMembers(uuid);
+        assertTrue(lst.errorOccurred());
+    }
+
+    @Test
+    @DisplayName("req: ##2.6.6 - fail test [invalid input]")
+    void getMembers_Fail2() {
+        ATResponseObj<String> res = market.login(uuid,sysManager);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        ATResponseObj<List<User>> lst = market.getLoggedOutMembers("");
+        assertTrue(lst.errorOccurred());
+    }
+
+
 }

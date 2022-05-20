@@ -132,5 +132,9 @@ public interface IMarket {
 
     public SLResponseOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email);
 
+    //2.6.6
+    public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid);
+    public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid);
 
+    public SLResponseOBJ<List<ServiceStore>> getAllStores();
 }

@@ -423,4 +423,21 @@ public class UserManager {
     }
 
 
+    public  DResponseObj<ConcurrentHashMap<UUID, User>> getloggedInMembers(UUID uuid) {
+        logger.debug("UserManager getloggedInMembers");
+        DResponseObj<User> logIN = getLoggedUser(uuid);
+        if (logIN.errorOccurred()) return new DResponseObj<>(null,logIN.errorMsg);
+        DResponseObj<Boolean> result = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.getAllLoggedInUsers, logIN.value, null);
+        if (result.errorOccurred()) return new DResponseObj<>(null, result.errorMsg);
+        return new DResponseObj<>(LoginUsers, -1);
+    }
+
+    public DResponseObj<ConcurrentHashMap<String, User>> getloggedOutMembers(UUID uuid) {
+        logger.debug("UserManager getloggedOutMembers");
+        DResponseObj<User> logIN = getLoggedUser(uuid);
+        if (logIN.errorOccurred()) return new DResponseObj<>(null,logIN.errorMsg);
+        DResponseObj<Boolean> result = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.getAllLoggedOutUsers, logIN.value, null);
+        if (result.errorOccurred()) return new DResponseObj<>(null, result.errorMsg);
+        return new DResponseObj<>(members, -1);
+    }
 }

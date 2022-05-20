@@ -976,6 +976,17 @@ public class Market {
         return new DResponseObj<>(true);
     }
 
+    public DResponseObj<List<Store>> getAllStores(){
+        List<Store> allStores = new ArrayList<>();
+        stores.forEach((storeID, store) -> {
+            allStores.add(store);
+        });
+        closeStores.forEach((integer, store) -> {
+            allStores.add(store);
+        });
+        return new DResponseObj<>(allStores,-1);
+    }
+
 
     class Tuple<E, T> {
         E item1;

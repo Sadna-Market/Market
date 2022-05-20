@@ -24,6 +24,11 @@ public class ServiceUser {
         this.apartment = apartment;
         this.dateOfBirth = dateOfBirth;
     }
+    public ServiceUser(User user){
+        this.email = user.getEmail().value;
+        this.phone = user.getPhoneNumber().value;
+        this.dateOfBirth = user.getDateOfBirth().value.toString();
+    }
 
     public User getUser(){
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

@@ -1,5 +1,7 @@
 package com.example.Acceptance.Obj;
 
+import com.example.demo.Service.ServiceObj.ServiceUser;
+
 public class User {
     public String username;
     public  String password;
@@ -14,6 +16,13 @@ public class User {
         phone_number = num;
         this.dateOfBirth = dateOfBirth;
         addr = adr;
-
+    }
+    public User(ServiceUser user){
+        this.username = user.email;
+        this.password = user.password;
+        this.name = "";
+        this.phone_number = user.phone;
+        this.addr = new Address(user.city,user.Street,user.apartment);
+        this.dateOfBirth = user.dateOfBirth;
     }
 }
