@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Market;
 import com.example.demo.Domain.Market.PermissionManager;
+import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
@@ -1227,6 +1228,28 @@ public class Facade implements IMarket {
         });
         return new SLResponseOBJ<>(all, -1);
     }
+
+    @Override
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts() {
+        List<ProductType> lst = market.getAllProductTypes().value;
+        List<ServiceProductType> out = new ArrayList<>();
+        lst.forEach(productType -> {
+            out.add(new ServiceProductType(productType));
+        });
+        return new SLResponseOBJ<>(out,-1);
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID) {
+        DResponseObj<List<ProductStore>> products = market.getAllProductsInStore(storeID);
+        if(products.errorOccurred()) return new SLResponseOBJ<>(null,products.errorMsg);
+        List<ServiceProductStore> lst = new ArrayList<>();
+        products.value.forEach(productStore -> {
+            lst.add(new ServiceProductStore(productStore));
+        });
+        return new SLResponseOBJ<>(lst,-1);
+    }
+
 
     public SLResponseOBJ<Integer> addNewProductType(String uuid, String name, String description, int category) {
         if (name == null || name.equals("") || description == null || description.equals("") || category < 0) {

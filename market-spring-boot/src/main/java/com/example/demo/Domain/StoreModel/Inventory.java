@@ -5,6 +5,7 @@ import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -229,6 +230,14 @@ public class Inventory {
 
 
     ////////////////////////////////////////// Getters and Setters //////////////////////////////////////////////////
+
+    public DResponseObj<List<ProductStore>> getAllProducts(){
+        List<ProductStore> lst = new ArrayList<>();
+        products.forEach((pid, productStore) -> {
+            lst.add(productStore);
+        });
+        return new DResponseObj<>(lst,-1);
+    }
 
     public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> getProducts() {
         return new DResponseObj<>(products);

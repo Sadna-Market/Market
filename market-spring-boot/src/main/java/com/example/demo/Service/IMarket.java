@@ -5,6 +5,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
@@ -137,4 +138,6 @@ public interface IMarket {
     public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid);
 
     public SLResponseOBJ<List<ServiceStore>> getAllStores();
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts();
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID);
 }

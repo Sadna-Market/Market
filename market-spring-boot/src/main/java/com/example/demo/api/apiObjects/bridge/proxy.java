@@ -514,4 +514,14 @@ public class proxy implements IMarket {
     public SLResponseOBJ<List<ServiceStore>> getAllStores() {
         return null;
     }
+
+    @Override
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts() {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID) {
+        return null;
+    }
 }

@@ -987,6 +987,19 @@ public class Market {
         return new DResponseObj<>(allStores,-1);
     }
 
+    public DResponseObj<List<ProductType>> getAllProductTypes(){
+        List<ProductType> lst = new ArrayList<>();
+        productTypes.forEach((ptid,pt)->{
+            lst.add(pt);
+        });
+        return new DResponseObj<>(lst);
+    }
+
+    public DResponseObj<List<ProductStore>> getAllProductsInStore(int storeID) {
+        Store store = stores.get(storeID);
+        return store.getInventory().value.getAllProducts();
+    }
+
 
     class Tuple<E, T> {
         E item1;
