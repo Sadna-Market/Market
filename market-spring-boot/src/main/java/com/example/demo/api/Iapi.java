@@ -127,4 +127,16 @@ public interface Iapi {
 
     public SLResponseOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, apiUser user);
 
-}
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID) ;
+
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts() ;
+
+    public SLResponseOBJ<List<ServiceStore>> getAllStores() ;
+
+    public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid) ;
+
+    public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid) ;
+
+
+
+    }
