@@ -413,6 +413,21 @@ public class ProxyMarket implements MarketBridge {
         return realMarket.assignNewOwner(uuid, storeID, newOwner);
     }
 
+
+    /**
+     * remove store owner and the permission that this owner is grantor
+     *
+     * @param userId
+     * @param storeId
+     * @param ownerEmail
+     * @return true if success, else false
+     */
+    @Override
+    public boolean removeStoreOwner(String userId, int storeId, String ownerEmail) {
+        return realMarket.removeStoreOwner(userId,storeId,ownerEmail);
+    }
+
+
     /**
      * checks if user is manager in store
      *

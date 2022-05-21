@@ -3,7 +3,8 @@ package com.example.demo.Domain;
 import com.example.demo.Domain.Response.DResponseObj;
 
 public class ErrorCode {
-
+    public static int STORE_IS_CLOSED = 8;
+    public static int CAN_NOT_REMOVE_FOUNDER_PERMISSION = 9;
     public static int NOTLOGGED = 10;
     public static int NOTONLINE = 11;
     public static int NOTMEMBER = 12;

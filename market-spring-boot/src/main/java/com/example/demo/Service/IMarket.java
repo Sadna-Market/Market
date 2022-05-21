@@ -112,6 +112,8 @@ public interface IMarket {
     //2.4.4
     public SLResponseOBJ<Boolean> addNewStoreOwner(String UserId, int StoreId, String OwnerEmail);
 
+    //2.4.5
+    public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
 
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil);

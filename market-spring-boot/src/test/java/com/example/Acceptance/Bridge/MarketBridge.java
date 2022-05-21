@@ -309,6 +309,17 @@ public interface MarketBridge {
      */
     boolean assignNewOwner(String uuid, int storeID, User newOwner);
 
+
+    /**
+     * remove store owner and the permission that this owner is grantor
+     * @param UserId
+     * @param StoreId
+     * @param OwnerEmail
+     * @return true if success, else false
+     */
+    boolean removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+
+
     /**
      * checks if user is manager in store
      * @param storeID id of store

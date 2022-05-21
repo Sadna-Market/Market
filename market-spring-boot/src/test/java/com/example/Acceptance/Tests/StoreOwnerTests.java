@@ -359,6 +359,104 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(market.isOwner(existing_storeID, member));
     }
 
+
+    /**
+     * Requirement: remove store owner - #2.4.5
+     */
+
+    @Test
+    @DisplayName("req: #2.4.5 - success test")
+    void removeStoreOwner_Success() {
+        User newOwner = generateUser();
+        assertTrue(market.register(uuid, newOwner.username, newOwner.password,newOwner.dateOfBirth));
+        assertTrue(market.isMember(newOwner));
+        assertTrue(market.isMember(member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+
+        assertTrue(market.assignNewOwner(uuid, existing_storeID, newOwner));
+
+        assertTrue(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+
+        assertTrue(market.removeStoreOwner(uuid,existing_storeID,newOwner.username));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+
+    @Test
+    @DisplayName("req: #2.4.5 - fail test")
+    void removeStoreOwner_Fail1() {
+        User newOwner = generateUser();
+        assertTrue(market.register(uuid, newOwner.username, newOwner.password,newOwner.dateOfBirth));
+        assertTrue(market.isMember(newOwner));
+        assertTrue(market.isMember(member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+
+        assertFalse(market.removeStoreOwner(uuid,existing_storeID,newOwner.username));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+
+    @Test
+    @DisplayName("req: #2.4.5 - fail test")
+    void removeStoreOwner_Fail2() {
+        User newOwner = generateUser();
+        assertTrue(market.register(uuid, newOwner.username, newOwner.password,newOwner.dateOfBirth));
+        User newOwner2 = generateUser();
+        assertTrue(market.register(uuid, newOwner2.username, newOwner2.password,newOwner2.dateOfBirth));
+        assertTrue(market.isMember(newOwner2));
+        assertTrue(market.isMember(newOwner));
+        assertTrue(market.isMember(member));
+
+
+        //founder give permission for owner1
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.isOwner(existing_storeID, member));
+        assertFalse(market.isOwner(existing_storeID, newOwner));
+
+        assertTrue(market.assignNewOwner(uuid, existing_storeID, newOwner));
+
+        assertTrue(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+
+
+        ATResponseObj<String> ownerID = market.logout(uuid);
+        assertFalse(ownerID.errorOccurred());
+        uuid = ownerID.value;
+        ownerID = market.login(uuid, newOwner);
+
+        //owner1 give permission for owner2
+
+        assertTrue(market.assignNewOwner(ownerID.value, existing_storeID, newOwner2));
+
+        assertTrue(market.isOwner(existing_storeID, newOwner2));
+        assertTrue(market.isOwner(existing_storeID, newOwner));
+
+        ATResponseObj<String> founderID = market.logout(ownerID.value);
+        assertFalse(founderID.errorOccurred());
+        uuid = founderID.value;
+        founderID = market.login(uuid, member);
+
+        // founder remove owner1 permission and need rec to remove owner2
+        assertFalse(market.removeStoreOwner(founderID.value,existing_storeID,newOwner2.username));
+        assertTrue(market.isOwner(existing_storeID, newOwner2));
+        assertTrue(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, member));
+    }
+
+
     /**
      * Requirement: assign store manager - #2.4.6
      */

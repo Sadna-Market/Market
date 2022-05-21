@@ -992,6 +992,27 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.addNewStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
+
+    /**
+     * remove store owner from store
+     * @param userId
+     * @param storeId
+     * @param ownerEmail
+     * @return
+     */
+    @Override
+    public SLResponseOBJ<Boolean> removeStoreOwner(String userId, int storeId, String ownerEmail) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (ownerEmail == null || ownerEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.removeStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
+    }
+
+
+
     @Override
     public SLResponseOBJ<Boolean> addNewStoreManger(String userId, int storeId, String mangerEmil) {
 

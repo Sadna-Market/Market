@@ -213,6 +213,21 @@ public class UserManager {
         return a;
     }
 
+    public DResponseObj<Boolean> removeStoreOwner(UUID userId, Store store, String ownerEmail) {
+        logger.debug("UserManager removeStoreOwner");
+        if (isLogged(userId).value) {
+            User loggedUser = LoginUsers.get(userId);
+            if (isOwner(userId, store).value) {
+                User ownerToRemove = members.get(ownerEmail);
+                return PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove,store,loggedUser);
+            }
+        }
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
+        a.errorMsg = ErrorCode.NOTLOGGED;
+        return a;
+    }
+
+
     public DResponseObj<Boolean> isCartExist(UUID uuid) {
         if (GuestVisitors.containsKey(uuid)) {
             return new DResponseObj<>(true);

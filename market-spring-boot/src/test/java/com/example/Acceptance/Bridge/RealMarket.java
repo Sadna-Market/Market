@@ -500,6 +500,22 @@ public class RealMarket implements MarketBridge {
         return !res.errorOccurred();
     }
 
+
+    /**
+     * remove store owner and the permission that this owner is grantor
+     *
+     * @param UserId
+     * @param StoreId
+     * @param OwnerEmail
+     * @return true if success, else false
+     */
+    @Override
+    public boolean removeStoreOwner(String UserId, int StoreId, String OwnerEmail) {
+        SLResponseOBJ<Boolean> res = market.removeStoreOwner(UserId, StoreId, OwnerEmail);
+        return !res.errorOccurred();
+    }
+
+
     /**
      * checks if user is manager in store
      *
