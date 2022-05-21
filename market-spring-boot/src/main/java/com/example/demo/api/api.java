@@ -26,7 +26,7 @@ public class api implements Iapi {
 
 
     @Override
-    @GetMapping("initMarket")
+    @PostMapping("initMarket")
     public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber,user.datofbirth);
 

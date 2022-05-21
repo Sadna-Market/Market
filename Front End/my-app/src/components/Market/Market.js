@@ -31,9 +31,11 @@ const Market = (props) => {
   };
 
   const openStoreHandler = () => {
+    console.log("openStoreHandler UUID: " +UUID)
     setCommand(
       <NewStore
         uuid={UUID}
+        useremail={props.useremail}
         onMarket={() => {
           setCommand(
             <MarketButton uuid={UUID} onShowStore={showStoreHandler} />

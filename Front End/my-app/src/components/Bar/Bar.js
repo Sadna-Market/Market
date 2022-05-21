@@ -27,36 +27,23 @@ const Bar = (props) => {
   //todo: login after that the UUID put on onLogin(<UUID>)
   async function loginHandler(event) {
     event.preventDefault();
-    console.log(132123132)
-    console.log(props.uuid)
     const guestVisitResponse = await apiClientHttp.guestVisit();
-
     const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
-    console.log(222)
 
     if (loginResponse.errorMsg!== -1) {
       SetError(loginResponse.errorMsg)
     } else {
       setUserName(email);
       setIsLogin(true);
-      props.onLogin(loginResponse.value);
+      props.onLogin(loginResponse.value,email);
     }
     console.log(loginResponse)
 
   }
-  // liel
-  // liel@gmail.com
-  // aA123123!
-  //     0523434201
-  //todo:logout
+
   async function logoutHandler(event) {
     event.preventDefault();
-
-    console.log(132123132)
-    console.log(props.uuid)
-
     const logoutResponse = await apiClientHttp.logout(props.uuid);
-    console.log(222)
 
     if (logoutResponse.errorMsg!== -1) {
       SetError(logoutResponse.errorMsg)

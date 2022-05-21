@@ -4,13 +4,16 @@ export const createApiClientHttp = () => {
     const UrlBase = "http://localhost:8090/";
     const apiUrl = UrlBase.concat("api/");
     return {
-        initMarket : async (email,password,phoneNumber) =>
+        initMarket : async (email,password,phoneNumber,datofbirth) =>
         {
+            
             let path = apiUrl.concat("initMarket");
             const body = {
+                    datofbirth:datofbirth,
                     email: email,
                     Password: password,
                     phoneNumber:phoneNumber
+
             }
             return await axios.post(path,body).then((res)=>{
                 return res.data;
@@ -38,13 +41,12 @@ export const createApiClientHttp = () => {
         },
 
 
-        addNewMember:async(uuid,email,password,phonenumber)=>{
+        addNewMember:async(uuid,email,password,phonenumber,datofbirth)=>{
             let path = apiUrl.concat(`addNewMember/${uuid}`);
             console.log(path,"kkkkk")
-
-
+            console.log(path,'datofbirth  '+datofbirth)
             const body = {
-
+                "datofbirth":datofbirth,
                 "email": email,
                 "Password": password,
                 "phoneNumber":phonenumber
@@ -299,12 +301,14 @@ export const createApiClientHttp = () => {
 
 
         openNewStore: async (uuid,name,founder)=>{
+            console.log("openNewStore "+uuid);
+            console.log(name);
+            console.log(founder);
+
             let path = apiUrl.concat(`openNewStore/${uuid}`);
             let body = {
-                data : {
                     "name":name,
                     "founder":founder,
-                }
             }
             return await axios.post(path,body).then((res)=>{
                 return res.data;
@@ -518,6 +522,43 @@ export const createApiClientHttp = () => {
 
         },
 
+
+        getloggedInMembers:async(uuid)=>{
+            let path = apiUrl.concat(`getloggedInMembers/${uuid}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
+
+        getloggedOutMembers:async(uuid)=>{
+            let path = apiUrl.concat(`getloggedOutMembers/${uuid}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
+
+        getAllStores:async()=>{
+            console.log(" client getAllStores");
+
+            let path = apiUrl.concat(`getAllStores`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
+
+        getAllProducts:async()=>{
+            let path = apiUrl.concat(`getAllProducts`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
+
+        getAllProductsInStore:async(storeID)=>{
+            let path = apiUrl.concat(`getAllProductsInStore/${storeID}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
 
 
 

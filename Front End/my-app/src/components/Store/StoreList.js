@@ -7,10 +7,10 @@ const StoreList = (props) => {
     const [enteredError, SetError] = useState("");
     let stores = [{ id: 1, name: "a store", open: "Open" }];
     console.log("check1")
+    console.log("3")
 
-    async function getAllStores(event) {
-        event.preventDefault();
-        console.log("check1222")
+    async function getAllStores() {
+        console.log("check111111111111111")
 
         const getAllStoresResponse = await apiClientHttp.getAllStores();
         console.log(getAllStoresResponse)
@@ -29,7 +29,7 @@ const StoreList = (props) => {
                 { id: 7, name: "g store", open: "Open" },]
         }
     }
-   //getAllStores();
+    getAllStores();
     console.log("check12223333")
 
     if (stores.length === 0) {

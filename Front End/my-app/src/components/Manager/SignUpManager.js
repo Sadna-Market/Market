@@ -27,7 +27,7 @@ const SignUpManager = (props) => {
     SetPhone(event.target.value);
   };
 
-  const [enteredDate, SetDate] = useState("");
+  const [enteredDate, SetDate] = useState("");// need to chang to 10/01/1996
   const dateChangeHandler = (event) => {
     SetDate(event.target.value);
   };
@@ -35,18 +35,15 @@ const SignUpManager = (props) => {
   //todo: init the market
   async function submitHandler (event) {
     event.preventDefault();
+    console.log("sad")
 
-    //const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone);
-    const initResponse={errorMsg: -1, value: 'ec789685-fca1-4749-aa4e-0ea423f759f6'}
+    const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone, '10/01/1996');
+    console.log("222")
 
     if (initResponse.errorMsg !== -1) {
       SetError(initResponse.errorMsg)
     } else {
-      console.log("initResponse.value  "+initResponse.value)
-//initResponse.value
       props.onSaveData(initResponse.value);
-      console.log("check")
-
     }
     console.log(initResponse)
 

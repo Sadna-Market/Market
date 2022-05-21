@@ -26,27 +26,22 @@ const SignUp = (props) => {
     SetPhone(event.target.value);
   };
 
-  const [enteredDate, SetDate] = useState("");
+  const [enteredDate, SetDate] = useState("");// need to chang to 10/01/1996
   const dateChangeHandler = (event) => {
     SetDate(event.target.value);
   };
 
   async function submitHandler(event) {
     event.preventDefault();
-
     const guestVisitResponse = await apiClientHttp.guestVisit();
-    //const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone);
-    const addNewMemberResponse={errorMsg: -1, value: 'ec789685-fca1-4749-aa4e-0ea423f759f6'}
-    console.log("addNewMemberResponse.value  "+addNewMemberResponse.value)
+    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,'10/01/1996');
 
     if (addNewMemberResponse.errorMsg !== -1) {
       SetError(SetError.errorMsg)
     } else {
-      console.log("addNewMemberResponse.value  "+addNewMemberResponse.value,enteredEmail,enteredPassword)
-      props.onSaveExpenseData(addNewMemberResponse.value,enteredEmail,enteredPassword);
-
+      props.onSaveExpenseData();
     }
-
+    console.log(addNewMemberResponse)
 
   }
 
