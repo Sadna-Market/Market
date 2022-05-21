@@ -1,7 +1,6 @@
 package com.example.demo.Domain.UserModel;
 
 import com.example.demo.Domain.ErrorCode;
-import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.PermissionManager;
 import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Market.userTypes;
@@ -113,7 +112,7 @@ public class UserManager {
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
             GuestVisitors.remove(userID);
-            alertService.modifyDelayIfExist(LogUser.email, newMemberUUid);
+            alertService.modifyDelayIfExist(LogUser.email,newMemberUUid);
             return new DResponseObj<>(newMemberUUid);
         } else {
             DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
@@ -213,6 +212,20 @@ public class UserManager {
         return a;
     }
 
+    public DResponseObj<Boolean> removeStoreOwner(UUID userId, Store store, String ownerEmail) {
+        logger.debug("UserManager removeStoreOwner");
+        if (isLogged(userId).value) {
+            User loggedUser = LoginUsers.get(userId);
+            if (isOwner(userId, store).value) {
+                User ownerToRemove = members.get(ownerEmail);
+                return PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove,store,loggedUser);
+            }
+        }
+        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
+        a.errorMsg = ErrorCode.NOTLOGGED;
+        return a;
+    }
+
     public DResponseObj<Boolean> isCartExist(UUID uuid) {
         if (GuestVisitors.containsKey(uuid)) {
             return new DResponseObj<>(true);
@@ -257,12 +270,12 @@ public class UserManager {
             User loggedUser = LoginUsers.get(userId);
             if (isOwner(userId, store).value) {
                 User Manager = members.get(email);
-                DResponseObj<Boolean> res = loggedUser.setManagerPermissions(Manager, store, perm, onof);
-                if (res.errorOccurred()) return res;
+                DResponseObj<Boolean> res =  loggedUser.setManagerPermissions(Manager, store, perm, onof);
+                if(res.errorOccurred()) return res;
                 logger.info(String.format("notifying %s for his permission setup", Manager.email));
                 String msg = String.format("Your permission %s was %s store %d by %s", perm.toString(),
                         onof ? "added to" : "removed from", store.getStoreId().value, loggedUser.email);
-                notifyUsers(List.of(Manager), msg);
+                notifyUsers(List.of(Manager),msg);
                 return res;
             }
         }
@@ -286,20 +299,18 @@ public class UserManager {
             return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         }
     }
-
     /**
      * return true if existing member is logged in the system
-     *
      * @param username
      * @return boolean
      */
     public DResponseObj<UUID> isLogged(String username) {
         logger.debug("UserManager isLogged");
-        for (Map.Entry<UUID, User> entry : LoginUsers.entrySet()) {
-            if (entry.getValue().email.equals(username))
-                return new DResponseObj<>(entry.getKey(), -1);
+        for(Map.Entry<UUID,User> entry : LoginUsers.entrySet()){
+            if(entry.getValue().email.equals(username))
+                return new DResponseObj<>(entry.getKey(),-1);
         }
-        return new DResponseObj<>(null, ErrorCode.NOTLOGGED);
+        return new DResponseObj<>(null,ErrorCode.NOTLOGGED);
     }
 
     public DResponseObj<ShoppingCart> getUserShoppingCart(UUID userId) {
@@ -394,46 +405,37 @@ public class UserManager {
         return new DResponseObj<>(ErrorCode.NOTONLINE);
     }
 
-    public DResponseObj<User> getMember(String email) {
-        if (members.containsKey(email)) {
-            logger.info(String.format("member %s is present, returning the member", email));
-            return new DResponseObj<>(members.get(email), -1);
-        }
-        logger.warn(String.format("member %s not found in members", email));
-        return new DResponseObj<>(null, ErrorCode.NOTMEMBER);
-    }
-
     /**
      * get list of users to notify them of the message.
      * Note: if the users are not logged in
-     *
      * @param userList list of members in the market
-     * @param msg      the msg to notify them
+     * @param msg the msg to notify them
      */
-    public void notifyUsers(List<User> userList, String msg) {
+    public void notifyUsers(List<User> userList, String msg){
         List<UUID> loggedInUsers = new ArrayList<>();
         List<String> notLoggedInUsers = new ArrayList<>();
         userList.forEach(user -> {
             DResponseObj<UUID> usersIsLoggedIn = isLogged(user.getEmail().value);
             if (!usersIsLoggedIn.errorOccurred()) {
                 loggedInUsers.add(usersIsLoggedIn.value);
-            } else {
+            }
+            else {
                 notLoggedInUsers.add(user.getEmail().value);
             }
         });
         loggedInUsers.forEach(uuid -> {
-            alertService.notifyUser(uuid, msg);
+            alertService.notifyUser(uuid,msg);
         });
-        notLoggedInUsers.forEach(username -> {
-            alertService.notifyUser(username, msg);
+        notLoggedInUsers.forEach(username->{
+            alertService.notifyUser(username,msg);
         });
     }
 
 
-    public DResponseObj<ConcurrentHashMap<UUID, User>> getloggedInMembers(UUID uuid) {
+    public  DResponseObj<ConcurrentHashMap<UUID, User>> getloggedInMembers(UUID uuid) {
         logger.debug("UserManager getloggedInMembers");
         DResponseObj<User> logIN = getLoggedUser(uuid);
-        if (logIN.errorOccurred()) return new DResponseObj<>(null, logIN.errorMsg);
+        if (logIN.errorOccurred()) return new DResponseObj<>(null,logIN.errorMsg);
         DResponseObj<Boolean> result = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.getAllLoggedInUsers, logIN.value, null);
         if (result.errorOccurred()) return new DResponseObj<>(null, result.errorMsg);
         return new DResponseObj<>(LoginUsers, -1);
@@ -442,59 +444,12 @@ public class UserManager {
     public DResponseObj<ConcurrentHashMap<String, User>> getloggedOutMembers(UUID uuid) {
         logger.debug("UserManager getloggedOutMembers");
         DResponseObj<User> logIN = getLoggedUser(uuid);
-        if (logIN.errorOccurred()) return new DResponseObj<>(null, logIN.errorMsg);
+        if (logIN.errorOccurred()) return new DResponseObj<>(null,logIN.errorMsg);
         DResponseObj<Boolean> result = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.getAllLoggedOutUsers, logIN.value, null);
         if (result.errorOccurred()) return new DResponseObj<>(null, result.errorMsg);
         return new DResponseObj<>(members, -1);
     }
 
-    /**
-     * gets all stores that the user is the founder of this store.
-     * clears all users permissions
-     *
-     * @param uuid
-     * @param cancelMemberUsername
-     * @return list of the stores that the user was the founder to cancel
-     */
-    public DResponseObj<List<Store>> cancelMembership(UUID uuid, String cancelMemberUsername) {
-        //check if the username is a member
-        DResponseObj<Boolean> isMember = isMember(cancelMemberUsername);
-        if (isMember.errorOccurred()) return new DResponseObj<>(null, isMember.errorMsg);
-        //get the user object
-        DResponseObj<User> getUser = getLoggedUser(uuid);
-        if (getUser.errorOccurred()) return new DResponseObj<>(null, getUser.errorMsg);
-        User sysManager = getUser.value;
-        //check if uuid (System manager) permission to cancel membership
-        DResponseObj<Boolean> hasPermission = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.cancelMembership, sysManager, null);
-        if (hasPermission.errorOccurred()) return new DResponseObj<>(null, hasPermission.errorMsg);
 
-        DResponseObj<User> getCancel = getMember(cancelMemberUsername);
-        if (getCancel.errorOccurred()) return new DResponseObj<>(null, getCancel.errorMsg);
-
-        User toCancelUser = getCancel.value;
-        DResponseObj<List<Store>> listOfStoreToDelete = PermissionManager.getInstance().removeAllPermissions(toCancelUser);
-        if (listOfStoreToDelete.errorOccurred()) return listOfStoreToDelete;
-
-        //change all permission grantor to the founder (because we delete the grantor user)
-        for (Permission permission : toCancelUser.getGrantorPermission().value) {
-            Store store = permission.getStore().value;
-            String founder = store.getFounder().value;
-            if (!founder.equals(toCancelUser.email)) {
-                User founderUser = getMember(founder).value;
-                permission.setGrantor(founderUser);
-                founderUser.addGrantorPermission(permission);
-            }
-        }
-        //remove instance of member for good
-        deleteMemberPermanently(toCancelUser);
-        return listOfStoreToDelete;
-    }
-
-    private void deleteMemberPermanently(User toCancelUser) {
-        logger.info(String.format("deleting %s from market permanently", toCancelUser.email));
-        User s = members.remove(toCancelUser.email);
-        if (s == null)
-            logger.warn(String.format("failed to delete. %s is not a member already", toCancelUser.email));
-    }
 
 }

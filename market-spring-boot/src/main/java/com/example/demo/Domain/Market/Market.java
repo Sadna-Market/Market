@@ -15,7 +15,6 @@ import com.example.demo.Domain.UserModel.Validator;
 import com.example.demo.ExternalService.ExternalService;
 import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
-import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.apache.log4j.Logger;
 
 
@@ -500,12 +499,12 @@ public class Market {
     private void notifyOwnersPurchase(User buyer, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> stores) {
         //in the future we can make a message factory. for now lets keep it simple.
         logger.info("notifying all stores that had a purchase.");
-        String msg = String.format("User: %s has purchased items from your store", buyer.getEmail().value);
+        String msg = String.format("User: %s has purchased items from your store",buyer.getEmail().value);
         stores.forEach((storeID, purchaseMap) -> {
-            logger.info(String.format("notifying store[%d] owners of purchase", storeID));
+            logger.info(String.format("notifying store[%d] owners of purchase",storeID));
             Store store = this.stores.get(storeID);
             List<User> owners = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
-            userManager.notifyUsers(owners, msg);
+            userManager.notifyUsers(owners,msg);
         });
     }
 
@@ -654,6 +653,16 @@ public class Market {
         return userManager.addNewStoreOwner(userId, store, newOnerEmail);
     }
 
+    //2.4.5
+    //pre: the store exist in the system and uuid is grantor of owner
+    //post: the owner is not owner.
+    public DResponseObj<Boolean> removeStoreOwner(UUID userId, int storeId, String ownerEmail) {
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return userManager.removeStoreOwner(userId, store, ownerEmail);
+    }
+
     //2.4.6
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
@@ -699,19 +708,20 @@ public class Market {
             logger.info("market update that Store #" + storeId + " close");
             notifyOwnersAndManagersStoreClosed(s);
             return new DResponseObj<>(true);
-        } finally {
+        }
+        finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released WriteLock");
         }
     }
 
     private void notifyOwnersAndManagersStoreClosed(Store store) {
-        logger.info(String.format("notifying owners/managers of closing store %d", store.getStoreId().value));
-        String msg = String.format("Store [%d] was closed by %s.", store.getStoreId().value, store.getFounder().value);
-        List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
-        List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
+        logger.info(String.format("notifying owners/managers of closing store %d",store.getStoreId().value));
+        String msg = String.format("Store [%d] was closed by %s.",store.getStoreId().value,store.getFounder().value);
+        List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store,userTypes.owner).value;
+        List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store,userTypes.manager).value;
         ownersAndManagers.addAll(managersOfStore);
-        userManager.notifyUsers(ownersAndManagers, msg);
+        userManager.notifyUsers(ownersAndManagers,msg);
     }
 
     //2.4.11
@@ -976,7 +986,7 @@ public class Market {
         return new DResponseObj<>(true);
     }
 
-    public DResponseObj<List<Store>> getAllStores() {
+    public DResponseObj<List<Store>> getAllStores(){
         List<Store> allStores = new ArrayList<>();
         stores.forEach((storeID, store) -> {
             allStores.add(store);
@@ -984,12 +994,12 @@ public class Market {
         closeStores.forEach((integer, store) -> {
             allStores.add(store);
         });
-        return new DResponseObj<>(allStores, -1);
+        return new DResponseObj<>(allStores,-1);
     }
 
-    public DResponseObj<List<ProductType>> getAllProductTypes() {
+    public DResponseObj<List<ProductType>> getAllProductTypes(){
         List<ProductType> lst = new ArrayList<>();
-        productTypes.forEach((ptid, pt) -> {
+        productTypes.forEach((ptid,pt)->{
             lst.add(pt);
         });
         return new DResponseObj<>(lst);
@@ -1000,41 +1010,7 @@ public class Market {
         return store.getInventory().value.getAllProducts();
     }
 
-    /**
-     * before the call of this function - all permissions know that this store will be deleted for good
-     *
-     * @param storesToDelete
-     * @return
-     */
-    public SLResponseOBJ<Boolean> deleteStoresFromMarket(List<Store> storesToDelete) {
-        logger.info("deleting stores from the market");
-        boolean b = true;
-        long stamp = lock_stores.writeLock();
-        for (Store store : storesToDelete) { //delete from memory for good
-            Store s = stores.remove(store.getStoreId().value);
-            b = b & (s != null);
-            if (s == null) {
-                logger.warn(String.format("store %d is not in stores map", store.getStoreId().value));
-            }
-        }
-        if(!b) return new SLResponseOBJ<>(false, ErrorCode.FAIL_DELETE_STORE);
-        //notify the owners/managers that has permissions in those stores that the store is deleted.
-        notifyOwnersAndManagersStoreDeleted(storesToDelete);
-        lock_stores.unlockWrite(stamp);
-        return new SLResponseOBJ<>(true,-1);
-    }
 
-    private void notifyOwnersAndManagersStoreDeleted(List<Store> storesToDelete) {
-        storesToDelete.forEach(store -> {
-            logger.info(String.format("notifying owners/managers of deletion of store %d", store.getStoreId().value));
-            String msg = "Store [%d] was deleted permanently by System Manager";
-            List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
-            List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
-            ownersAndManagers.addAll(managersOfStore);
-            userManager.notifyUsers(ownersAndManagers, msg);
-        });
-
-    }
 
 
     class Tuple<E, T> {

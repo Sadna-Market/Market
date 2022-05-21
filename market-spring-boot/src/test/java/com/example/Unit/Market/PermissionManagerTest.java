@@ -112,6 +112,34 @@ class PermissionManagerTest {
 
 
     @Test
+    void removeOwnerPermissionCompletely() {
+        permissionManager.createPermission(founder, store1, null, userTypes.owner, userTypes.system);//open new store
+        permissionManager.createPermission(owner1, store1, founder, userTypes.owner, userTypes.owner);//owner->owner
+
+        //delete manager permission
+        assertTrue(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
+
+        //delete manager permission that not already manager in this store
+        assertFalse(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
+
+    }
+
+    @Test
+    void removeOwnerPermissionCompletelyRec() {
+        assertFalse(permissionManager.createPermission(founder, store1, null, userTypes.owner, userTypes.system).errorOccurred());//open new store
+        assertFalse(permissionManager.createPermission(owner1, store1, founder, userTypes.owner, userTypes.owner).errorOccurred());//owner->owner
+        assertFalse(permissionManager.createPermission(owner2, store1, owner1, userTypes.owner, userTypes.owner).errorOccurred());//owner->owner
+
+        //delete manager permission
+        assertTrue(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
+
+        //delete manager permission that not already manager in this store
+        assertFalse(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
+        assertFalse(permissionManager.removeOwnerPermissionCompletely(owner2, store1, owner1).value);
+
+    }
+
+    @Test
     void hasPermission() {
         permissionManager.createPermission(founder, store1, null, userTypes.owner, userTypes.system);//open new store
         permissionManager.createPermission(manager2, store1, founder, userTypes.manager, userTypes.owner);//owner->manager

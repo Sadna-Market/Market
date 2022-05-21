@@ -992,6 +992,24 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.addNewStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
+    /**
+     * remove store owner from store
+     * @param userId
+     * @param storeId
+     * @param ownerEmail
+     * @return
+     */
+    @Override
+    public SLResponseOBJ<Boolean> removeStoreOwner(String userId, int storeId, String ownerEmail) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (ownerEmail == null || ownerEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.removeStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
+    }
+
     @Override
     public SLResponseOBJ<Boolean> addNewStoreManger(String userId, int storeId, String mangerEmil) {
 
@@ -1115,20 +1133,6 @@ public class Facade implements IMarket {
         //need to chang -1 to UUID.fromString(userId)  after yaki fix his code
         return new SLResponseOBJ<>(market.getStoreRoles(UUID.fromString(userId), storeId));
 
-    }
-    /**
-     * Cancel a membership in the market
-     * This can only be done by the System manager
-     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
-     * @param uuid the uuid of the System manager
-     * @param cancelMemberUsername the user to cancel
-     * @return true if success, else false
-     */
-    @Override
-    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
-        DResponseObj<List<Store>> res = userManager.cancelMembership(UUID.fromString(uuid),cancelMemberUsername);
-        if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
-        return market.deleteStoresFromMarket(res.value);
     }
 
     @Override

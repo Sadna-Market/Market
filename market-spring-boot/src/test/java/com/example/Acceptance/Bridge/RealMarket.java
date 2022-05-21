@@ -501,6 +501,20 @@ public class RealMarket implements MarketBridge {
     }
 
     /**
+     * remove store owner and the permission that this owner is grantor
+     *
+     * @param UserId
+     * @param StoreId
+     * @param OwnerEmail
+     * @return true if success, else false
+     */
+    @Override
+    public boolean removeStoreOwner(String UserId, int StoreId, String OwnerEmail) {
+        SLResponseOBJ<Boolean> res = market.removeStoreOwner(UserId, StoreId, OwnerEmail);
+        return !res.errorOccurred();
+    }
+
+    /**
      * checks if user is manager in store
      *
      * @param storeID id of store
@@ -720,26 +734,6 @@ public class RealMarket implements MarketBridge {
             users.add(new User(serviceUser));
         });
         return new ATResponseObj<>(users);
-    }
-
-    /**
-     * Cancel a membership in the market
-     * This can only be done by the System manager
-     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
-     *
-     * @param uuid       the uuid of the System manager
-     * @param cancelUser the user to cancel
-     * @return true if success, else false
-     */
-    public boolean cancelMembership(String uuid, User cancelUser) {
-        SLResponseOBJ<Boolean> res = market.cancelMembership(uuid,cancelUser.username);
-        return !res.errorOccurred();
-    }
-
-    public ATResponseObj<List<ServiceStore>> getAllStores() {
-        SLResponseOBJ<List<ServiceStore>> res = market.getAllStores();
-        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
-        return new ATResponseObj<>(res.value,null);
     }
 
 

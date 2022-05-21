@@ -3,7 +3,7 @@ package com.example.demo.Domain;
 import com.example.demo.Domain.Response.DResponseObj;
 
 public class ErrorCode {
-
+    public static int CAN_NOT_REMOVE_FOUNDER_PERMISSION = 9;
     public static int NOTLOGGED = 10;
     public static int NOTONLINE = 11;
     public static int NOTMEMBER = 12;
@@ -66,5 +66,4 @@ public class ErrorCode {
     public static int NOT_VALID_EMILE = 101;
     public static int NOT_VALID_PHONE = 102;
     public static int INVALID_PERMISSION_TYPE = 103;
-    public static final int FAIL_DELETE_STORE = 104;
 }

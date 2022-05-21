@@ -112,6 +112,9 @@ public interface IMarket {
     //2.4.4
     public SLResponseOBJ<Boolean> addNewStoreOwner(String UserId, int StoreId, String OwnerEmail);
 
+    //2.4.5
+    public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+
 
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil);
@@ -126,8 +129,7 @@ public interface IMarket {
     //2.4.11
     public SLResponseOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
 
-    //2.6.2
-    SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername);
+
 
     //2.6.5 && //2.4.13
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
