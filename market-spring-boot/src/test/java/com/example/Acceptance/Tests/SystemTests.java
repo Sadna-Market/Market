@@ -3,24 +3,14 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
-import com.example.demo.Domain.UserModel.UserManager;
-import com.example.demo.Service.AlertService.AlertService;
-import com.example.demo.Service.AlertService.Notification;
-import com.example.demo.Service.AlertService.NotificationDispatcher;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("System Tests - AT")

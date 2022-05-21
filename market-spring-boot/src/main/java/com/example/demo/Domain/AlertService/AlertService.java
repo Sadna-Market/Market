@@ -1,4 +1,4 @@
-package com.example.demo.Service.AlertService;
+package com.example.demo.Domain.AlertService;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.example.demo.Service.AlertService;
+package com.example.demo.Domain.AlertService;
 
 import org.apache.log4j.Logger;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;

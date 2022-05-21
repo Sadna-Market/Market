@@ -1,4 +1,4 @@
-package com.example.demo.Service.AlertService;
+package com.example.demo.Domain.AlertService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

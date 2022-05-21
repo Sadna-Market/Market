@@ -1,4 +1,4 @@
-package com.example.demo.Service.AlertService;
+package com.example.demo.Domain.AlertService;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -6,14 +6,9 @@ import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Market.userTypes;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
-import com.example.demo.Service.AlertService.AlertService;
+import com.example.demo.Domain.AlertService.AlertService;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
