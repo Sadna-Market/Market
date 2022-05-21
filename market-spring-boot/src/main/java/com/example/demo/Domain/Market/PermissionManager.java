@@ -242,6 +242,22 @@ public class PermissionManager {
         return new DResponseObj<>(true);
     }
 
+    public DResponseObj<List<Store>> removeAllPermissions(User toCancelUser) {
+        List<Store> deleteStore = new ArrayList<>();
+        List<Permission> allPermissions = toCancelUser.getAccessPermission().value;
+        allPermissions.forEach(permission -> {
+            if(permission.getGrantor().value == null){  //means that the user is a founder of the store
+                //add to close the store
+                deleteStore.add(permission.getStore().value);
+            }
+            else{ //if the toCancelUser is not a founder only update the store and the grantor permissions
+                permission.getStore().value.removePermission(permission);
+                permission.getGrantor().value.removeGrantorPermission(permission);
+            }
+        });
+        return new DResponseObj<>(deleteStore,-1);
+    }
+
     //requirement II.4.11 a
     public DResponseObj<List<User>> getOwnerAndManagerUsersInStore(User grantor, Store store) {
         /**
@@ -425,6 +441,7 @@ public class PermissionManager {
         }
         return null;
     }
+
 }
 
 //   disjunctionPermissions = grantee.accessPers ^ store.accessPers = nothing;

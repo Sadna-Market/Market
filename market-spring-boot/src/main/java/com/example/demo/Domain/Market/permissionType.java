@@ -23,7 +23,8 @@ public class permissionType {
     static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory, permissionEnum.getUserInfo,
                     permissionEnum.getAllLoggedInUsers,
-                    permissionEnum.getAllLoggedOutUsers));
+                    permissionEnum.getAllLoggedOutUsers,
+                    permissionEnum.cancelMembership));
 
     public enum permissionEnum {
 
@@ -100,9 +101,9 @@ public class permissionType {
         // system manager
             getUserInfo,
             getAllLoggedInUsers,
-            getAllLoggedOutUsers
+            getAllLoggedOutUsers,
+            cancelMembership
         //1 .סגירת חנות לצמיתות://next versions:
-        //2 .ביטול )הסרת( מנוי של השוק://next versions
         //next versions3// .קבלת מידע ומתן תגובה:
         //4 .קבלת מידע על היסטוריית רכישות בחנות:
         //next versions// 5 .קבלת מידע על התנהלות המערכת:

@@ -480,6 +480,11 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
+        return null;
+    }
+
+    @Override
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId) {
         if(REAL==null){
             System.out.println(UserId);
