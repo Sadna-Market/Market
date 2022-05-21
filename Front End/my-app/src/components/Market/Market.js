@@ -31,9 +31,11 @@ const Market = (props) => {
   };
 
   const openStoreHandler = () => {
+    console.log("openStoreHandler UUID: " +UUID)
     setCommand(
       <NewStore
         uuid={UUID}
+        useremail={props.useremail}
         onMarket={() => {
           setCommand(
             <MarketButton uuid={UUID} onShowStore={showStoreHandler} />
@@ -48,7 +50,7 @@ const Market = (props) => {
   };
 
   //todo: check permission if login
-  if (props.uuid === 7) {
+  if (props.uuid != -1) {
     permissonCommand = (
       <>
         <button onClick={openStoreHandler}> Open New Store</button>

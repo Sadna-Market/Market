@@ -10,36 +10,26 @@ import {createApiClientHttp} from "../../my-app/src/client/clientHttp";
 
 
 function App(props) {
-    // constructor()
-    // {
-    //
-    // let ui='-1'
-    //     console.log(ui)
-    //
-    // };
     let apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
     let UUID='-1'
-    //const [UUID, setUUID] = useState("-2");
 
+    // async function guestVisit(event) {
+    //     const guestVisitResponse = await apiClientHttp.guestVisit();
+    //     if (guestVisitResponse.errorMsg !== -1) {
+    //         SetError(guestVisitResponse.errorMsg)
+    //     } else {
+    //         console.log(guestVisitResponse)
+    //         UUID=guestVisitResponse.value
+    //     }
+    // }
 
-    async function guestVisit(event) {
-        const guestVisitResponse = await apiClientHttp.guestVisit();
-        if (guestVisitResponse.errorMsg !== -1) {
-            SetError(guestVisitResponse.errorMsg)
-        } else {
-            console.log(guestVisitResponse)
-            UUID=guestVisitResponse.value
-        }
-    }
-   // console.log(UUID)
-
-    const [command, setCommand] = useState(<Market uuid="6"/>);
+    const [command, setCommand] = useState(<Market uuid="-1"/>);
 
     const [updateMarket, b] = useState("");
 
 
-    const loginHandler = (newUUID) => {
+    const loginHandler = (newUUID,email) => {
         UUID=newUUID
        setBarcommand(
             <Bar
@@ -50,12 +40,13 @@ function App(props) {
                 onInitMarket={InitMarketHendler}
             />
         );
-        setCommand(<Market uuid={newUUID}/>);
+        setCommand(<Market uuid={newUUID} useremail={email}/>);
     };
 
     //todo: generate UUId of GUEST
     const logoutHandler = (uuid1) => {
-        UUID=uuid1
+        // UUID=uuid1
+        UUID='-1';
         setBarcommand(
             <Bar
                 uuid={uuid1}
@@ -65,20 +56,16 @@ function App(props) {
                 onInitMarket={InitMarketHendler}
             />
         );
-        setCommand(<Market uuid={uuid1}/>);
+        setCommand(<Market uuid='-1'/>);
     };
 
     //todo: generate UUId of GUEST
     async function newMarketHandler(uuid1) {
-       // uuid.preventDefault();
-
-        //const initResponse = await setUUID(uuid);
-        UUID=uuid1
+        // UUID=uuid1
         //props.UUID
         console.log("uuid: " +uuid1)
-        console.log("UUID: " +UUID)
-
-        setCommand(<Market uuid={uuid1}/>);
+        UUID='-1;'
+        setCommand(<Market uuid='-1'/>);
     }
 
 
@@ -91,15 +78,15 @@ function App(props) {
                         setCommand(<SignUpManager onSaveData={newMarketHandler}/>)
                     }
                     onCencel={
-                    () => setCommand(<Market uuid={UUID}/>)
+                    () => setCommand(<Market uuid='-1'/>)
                 }
                 />
             );
         });
     };
 
-    const loginAfterRegisterHolder = (uuid1) => {
-        setCommand(<Market uuid={uuid1}/>);
+    const loginAfterRegisterHolder = () => {
+        setCommand(<Market uuid='-1'/>);
     };
 
     const signUpHandler = () => {

@@ -26,7 +26,7 @@ const SignUp = (props) => {
     SetPhone(event.target.value);
   };
 
-  const [enteredDate, SetDate] = useState("");
+  const [enteredDate, SetDate] = useState("");// need to chang to 10/01/1996
   const dateChangeHandler = (event) => {
     SetDate(event.target.value);
   };
@@ -34,15 +34,14 @@ const SignUp = (props) => {
   async function submitHandler(event) {
     event.preventDefault();
     const guestVisitResponse = await apiClientHttp.guestVisit();
-    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone);
+    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,'10/01/1996');
+
     if (addNewMemberResponse.errorMsg !== -1) {
       SetError(SetError.errorMsg)
     } else {
-      console.log("addNewMemberResponse.value  "+addNewMemberResponse.value)
-      props.onSaveExpenseData(addNewMemberResponse.value);
-
+      props.onSaveExpenseData();
     }
-
+    console.log(addNewMemberResponse)
 
   }
 

@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class proxy implements IMarket {
-    IMarket REAL=null;
+    IMarket REAL=new Facade();
     @Override
     public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber,String dateOfBirth) {
+
         if(REAL==null){
             return new SLResponseOBJ<>(email+" "+Password+" "+phoneNumber,-1);
         }
