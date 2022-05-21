@@ -33,13 +33,17 @@ const SignUp = (props) => {
 
   async function submitHandler(event) {
     event.preventDefault();
+
     const guestVisitResponse = await apiClientHttp.guestVisit();
-    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone);
+    //const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone);
+    const addNewMemberResponse={errorMsg: -1, value: 'ec789685-fca1-4749-aa4e-0ea423f759f6'}
+    console.log("addNewMemberResponse.value  "+addNewMemberResponse.value)
+
     if (addNewMemberResponse.errorMsg !== -1) {
       SetError(SetError.errorMsg)
     } else {
-      console.log("addNewMemberResponse.value  "+addNewMemberResponse.value)
-      props.onSaveExpenseData(addNewMemberResponse.value);
+      console.log("addNewMemberResponse.value  "+addNewMemberResponse.value,enteredEmail,enteredPassword)
+      props.onSaveExpenseData(addNewMemberResponse.value,enteredEmail,enteredPassword);
 
     }
 

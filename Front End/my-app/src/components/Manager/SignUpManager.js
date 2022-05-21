@@ -35,7 +35,10 @@ const SignUpManager = (props) => {
   //todo: init the market
   async function submitHandler (event) {
     event.preventDefault();
-    const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone);
+
+    //const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone);
+    const initResponse={errorMsg: -1, value: 'ec789685-fca1-4749-aa4e-0ea423f759f6'}
+
     if (initResponse.errorMsg !== -1) {
       SetError(initResponse.errorMsg)
     } else {

@@ -48,7 +48,7 @@ const Market = (props) => {
   };
 
   //todo: check permission if login
-  if (props.uuid === 7) {
+  if (props.uuid != -1) {
     permissonCommand = (
       <>
         <button onClick={openStoreHandler}> Open New Store</button>
