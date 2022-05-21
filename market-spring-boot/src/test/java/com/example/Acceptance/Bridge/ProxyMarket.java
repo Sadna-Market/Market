@@ -4,6 +4,7 @@ package com.example.Acceptance.Bridge;
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 
 import java.util.List;
 
@@ -587,5 +588,22 @@ public class ProxyMarket implements MarketBridge {
      */
     public ATResponseObj<List<User>> getLoggedOutMembers(String uuid) {
         return realMarket.getLoggedOutMembers(uuid);
+    }
+
+    /**
+     * Cancel a membership in the market
+     * This can only be done by the System manager
+     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
+     *
+     * @param uuid       the uuid of the System manager
+     * @param cancelUser the user to cancel
+     * @return true if success, else false
+     */
+    public boolean cancelMembership(String uuid, User cancelUser) {
+        return realMarket.cancelMembership(uuid,cancelUser);
+    }
+
+    public ATResponseObj<List<ServiceStore>> getAllStores() {
+        return realMarket.getAllStores();
     }
 }

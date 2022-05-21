@@ -4,6 +4,7 @@ package com.example.Acceptance.Bridge;
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 
 import java.util.List;
 
@@ -446,4 +447,16 @@ public interface MarketBridge {
      * @return
      */
     ATResponseObj<List<User>> getLoggedOutMembers(String uuid);
+
+    /**
+     * Cancel a membership in the market
+     * This can only be done by the System manager
+     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
+     * @param uuid the uuid of the System manager
+     * @param cancelUser the user to cancel
+     * @return true if success, else false
+     */
+    boolean cancelMembership(String uuid, User cancelUser);
+
+    ATResponseObj<List<ServiceStore>> getAllStores();
 }

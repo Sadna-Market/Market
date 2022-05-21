@@ -1116,6 +1116,20 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.getStoreRoles(UUID.fromString(userId), storeId));
 
     }
+    /**
+     * Cancel a membership in the market
+     * This can only be done by the System manager
+     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
+     * @param uuid the uuid of the System manager
+     * @param cancelMemberUsername the user to cancel
+     * @return true if success, else false
+     */
+    @Override
+    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
+        DResponseObj<List<Store>> res = userManager.cancelMembership(UUID.fromString(uuid),cancelMemberUsername);
+        if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
+        return market.deleteStoresFromMarket(res.value);
+    }
 
     @Override
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String userId, int storeId) {

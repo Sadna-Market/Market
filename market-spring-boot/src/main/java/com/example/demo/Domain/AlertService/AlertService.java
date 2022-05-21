@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -73,7 +74,9 @@ public class AlertService {
         if (delayedNotification.containsKey(username)) {
             delayedNotification.get(username).add(notification);
         } else {
-            delayedNotification.put(username, List.of(notification));
+            List<Notification> lst = new ArrayList<>();
+            lst.add(notification);
+            delayedNotification.put(username, lst);
         }
     }
 

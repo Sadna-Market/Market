@@ -126,7 +126,8 @@ public interface IMarket {
     //2.4.11
     public SLResponseOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
 
-
+    //2.6.2
+    SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername);
 
     //2.6.5 && //2.4.13
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
