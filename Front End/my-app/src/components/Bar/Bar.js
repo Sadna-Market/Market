@@ -28,8 +28,10 @@ const Bar = (props) => {
   async function loginHandler(event) {
     event.preventDefault();
     console.log(132123132)
+    console.log(props.uuid)
+    const guestVisitResponse = await apiClientHttp.guestVisit();
 
-    const loginResponse = await apiClientHttp.login(props.UUID, email, password);
+    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
     console.log(222)
 
     if (loginResponse.errorMsg!== -1) {
@@ -42,15 +44,32 @@ const Bar = (props) => {
     console.log(loginResponse)
 
   }
-
+  // liel
+  // liel@gmail.com
+  // aA123123!
+  //     0523434201
   //todo:logout
-  const logoutHandler = (event) => {
+  async function logoutHandler(event) {
     event.preventDefault();
-    setEmail("");
-    setPassword("");
-    props.onLogout();
-    setIsLogin(false);
-  };
+
+    console.log(132123132)
+    console.log(props.uuid)
+
+    const logoutResponse = await apiClientHttp.logout(props.uuid);
+    console.log(222)
+
+    if (logoutResponse.errorMsg!== -1) {
+      SetError(logoutResponse.errorMsg)
+    } else {
+      setEmail("");
+      setPassword("");
+      props.onLogout(logoutResponse.value);
+      setIsLogin(false);
+    }
+    console.log(logoutResponse)
+
+  }
+
 
   const initHandler = () => {
     props.onInitMarket();

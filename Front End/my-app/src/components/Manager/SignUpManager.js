@@ -39,16 +39,11 @@ const SignUpManager = (props) => {
     if (initResponse.errorMsg !== -1) {
       SetError(initResponse.errorMsg)
     } else {
-      const loginResponse = await apiClientHttp.login(initResponse.value, enteredEmail, enteredPassword);
-      console.log(loginResponse)
-      if (loginResponse.errorMsg !== -1) {
-        SetError(loginResponse.errorMsg)
-        console.log(loginResponse)
-      } else {
-        // props.onSaveData(loginResponse.value);
-        props.onSaveData();
+      console.log("initResponse.value  "+initResponse.value)
+//initResponse.value
+      props.onSaveData(initResponse.value);
+      console.log("check")
 
-      }
     }
     console.log(initResponse)
 

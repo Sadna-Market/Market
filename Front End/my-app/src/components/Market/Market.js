@@ -12,6 +12,7 @@ import Profile from "./Profile";
 
 const Market = (props) => {
   let UUID = props.uuid;
+  console.log("UUID: " +UUID)
 
   const showStoreHandler = (storeID) => {
     console.log(storeID);
