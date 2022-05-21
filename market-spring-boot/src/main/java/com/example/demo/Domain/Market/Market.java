@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
-import java.util.function.DoubleToIntFunction;
 
 public class Market {
     /*************************************************fields************************************************************/
@@ -120,23 +119,23 @@ public class Market {
     //2.2.2
     //pre: -
     //post: get all the open stores that the arg is apart of their names
-    public DResponseObj<List<Integer>> filterByName(List<Integer> list,String name) {
-        if (name==null){
+    public DResponseObj<List<Integer>> filterByName(List<Integer> list, String name) {
+        if (name == null) {
             logger.warn("the name is null");
-            DResponseObj<List<Integer>> output=new DResponseObj<>();
+            DResponseObj<List<Integer>> output = new DResponseObj<>();
             output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
-        List<Integer> output=new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
 
-        for (Integer productID: list){
+        for (Integer productID : list) {
             DResponseObj<ProductType> productDR = getProductType(productID);
             if (productDR.errorOccurred()) {
                 continue;
             }
             DResponseObj<Boolean> containName = productDR.getValue().containName(name);
             if (containName.errorOccurred()) continue;
-            if (!containName.getValue()){
+            if (!containName.getValue()) {
                 logger.debug("this product not contain the name");
                 continue;
             }
@@ -179,23 +178,23 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
-    public DResponseObj<List<Integer>> filterByDesc(List<Integer> list,String desc) {
-        if (desc==null){
+    public DResponseObj<List<Integer>> filterByDesc(List<Integer> list, String desc) {
+        if (desc == null) {
             logger.warn("the name is null");
-            DResponseObj<List<Integer>> output=new DResponseObj<>();
+            DResponseObj<List<Integer>> output = new DResponseObj<>();
             output.setErrorMsg(ErrorCode.NOTVALIDINPUT);
             return output;
         }
-        List<Integer> output=new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
 
-        for (Integer productID: list){
+        for (Integer productID : list) {
             DResponseObj<ProductType> productDR = getProductType(productID);
             if (productDR.errorOccurred()) {
                 continue;
             }
             DResponseObj<Boolean> containDesc = productDR.getValue().containDesc(desc);
             if (containDesc.errorOccurred()) continue;
-            if (!containDesc.getValue()){
+            if (!containDesc.getValue()) {
                 logger.debug("this product not contain the name");
                 continue;
             }
@@ -234,21 +233,21 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
-    public DResponseObj<List<Integer>> filterByRate(List<Integer> list,int minRate) {
+    public DResponseObj<List<Integer>> filterByRate(List<Integer> list, int minRate) {
         if (minRate < 0 || minRate > 10) {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        List<Integer> output=new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
 
-        for (Integer productID: list){
+        for (Integer productID : list) {
             DResponseObj<ProductType> productDR = getProductType(productID);
             if (productDR.errorOccurred()) {
                 continue;
             }
             DResponseObj<Integer> isRate = productDR.getValue().getRate();
             if (isRate.errorOccurred()) continue;
-            if (isRate.getValue()< minRate){
+            if (isRate.getValue() < minRate) {
                 logger.debug("this product not pass the min Rate");
                 continue;
             }
@@ -288,22 +287,22 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
-    public DResponseObj<List<Integer>> filterByStoreRate(List<Integer> list,int minRate) {
+    public DResponseObj<List<Integer>> filterByStoreRate(List<Integer> list, int minRate) {
         if (minRate < 0 || minRate > 10) {
             logger.warn("rate is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        List<Integer> output=new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
 
 
-        for (Integer productID: list){
+        for (Integer productID : list) {
             DResponseObj<List<Integer>> storePassRate = searchProductByStoreRate(minRate);
-            for (Integer storeID : storePassRate.getValue()){
+            for (Integer storeID : storePassRate.getValue()) {
                 DResponseObj<Store> getStore = getStore(storeID);
                 if (getStore.errorOccurred()) continue;
-                DResponseObj<Boolean> isExist = getStore.getValue().isProductExistInStock(productID,1);
-                if (!isExist.errorOccurred() && !isExist.getValue()){
-                    logger.debug("Store #"+storeID+ " include product #"+productID);
+                DResponseObj<Boolean> isExist = getStore.getValue().isProductExistInStock(productID, 1);
+                if (!isExist.errorOccurred() && !isExist.getValue()) {
+                    logger.debug("Store #" + storeID + " include product #" + productID);
                     output.add(productID);
                     break;
                 }
@@ -353,12 +352,12 @@ public class Market {
             logger.warn("min bigger then max - invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        List<Integer> output=new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
 
         List<Integer> storesID = getStoreIDs(getStores());
-        for (Integer productID: list){
-            DResponseObj<List<Integer>> storePassRate = searchProductByRangePrices(storesID,productID,min,max);
-            if (!storePassRate.errorOccurred() && storePassRate.getValue().size()>0){
+        for (Integer productID : list) {
+            DResponseObj<List<Integer>> storePassRate = searchProductByRangePrices(storesID, productID, min, max);
+            if (!storePassRate.errorOccurred() && storePassRate.getValue().size() > 0) {
                 logger.debug("found store that contain this product");
                 output.add(productID);
             }
@@ -405,22 +404,22 @@ public class Market {
         return new DResponseObj<>(output);
     }
 
-    public DResponseObj<List<Integer>> filterByCategory(List<Integer> list,int category) {
+    public DResponseObj<List<Integer>> filterByCategory(List<Integer> list, int category) {
         if (category < 0 || category > 10) {
             logger.warn("category is invalid");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
-        List<Integer> output=new ArrayList<>();
+        List<Integer> output = new ArrayList<>();
 
-        for (Integer productID: list){
+        for (Integer productID : list) {
             DResponseObj<ProductType> productDR = getProductType(productID);
             if (productDR.errorOccurred()) {
                 continue;
             }
             DResponseObj<Integer> isCategory = productDR.getValue().getCategory();
             if (isCategory.errorOccurred()) continue;
-            if (isCategory.getValue() != category){
-                logger.debug("this product #"+productID + " from category #"+isCategory.getValue() + ".");
+            if (isCategory.getValue() != category) {
+                logger.debug("this product #" + productID + " from category #" + isCategory.getValue() + ".");
                 continue;
             }
             output.add(productID);
@@ -492,8 +491,21 @@ public class Market {
         if (shoppingCart.value.getHashShoppingCart().value.isEmpty())
             return new DResponseObj<>(null, ErrorCode.EMPTY_CART);
         DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = purchase.order(user.getValue(), City, Street, apartment, cardNumber, exp, pin);
-        if (res.errorOccurred()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
-        return res.value.isEmpty() ? new DResponseObj<>(null, ErrorCode.ORDER_FAIL) : res;
+        if (res.errorOccurred() || res.value.isEmpty()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
+        notifyOwnersPurchase(user.value, res.value);
+        return res;
+    }
+
+    private void notifyOwnersPurchase(User buyer, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> stores) {
+        //in the future we can make a message factory. for now lets keep it simple.
+        logger.info("notifying all stores that had a purchase.");
+        String msg = String.format("User: %s has purchased items from your store",buyer.getEmail().value);
+        stores.forEach((storeID, purchaseMap) -> {
+            logger.info(String.format("notifying store[%d] owners of purchase",storeID));
+            Store store = this.stores.get(storeID);
+            List<User> owners = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
+            userManager.notifyUsers(owners,msg);
+        });
     }
 
 
@@ -659,7 +671,6 @@ public class Market {
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setManagerPermissions, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
-
         return userManager.setManagerPermissions(userId, store, mangerMail, perm, onof);
     }
 
@@ -682,14 +693,25 @@ public class Market {
         long stamp = lock_stores.writeLock();
         logger.debug("catch WriteLock");
         try {
-            stores.remove(store);
+            Store s = stores.remove(getStoreID.value);
             closeStores.put(getStoreID.getValue(), store);
             logger.info("market update that Store #" + storeId + " close");
+            notifyOwnersAndManagersStoreClosed(s);
             return new DResponseObj<>(true);
-        } finally {
+        }
+        finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released WriteLock");
         }
+    }
+
+    private void notifyOwnersAndManagersStoreClosed(Store store) {
+        logger.info(String.format("notifying owners/managers of closing store %d",store.getStoreId().value));
+        String msg = String.format("Store [%d] was closed by %s.",store.getStoreId().value,store.getFounder().value);
+        List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store,userTypes.owner).value;
+        List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store,userTypes.manager).value;
+        ownersAndManagers.addAll(managersOfStore);
+        userManager.notifyUsers(ownersAndManagers,msg);
     }
 
     //2.4.11
@@ -719,12 +741,12 @@ public class Market {
     //pre: this store exist in the system.
     //post: market ask the store about that with USerEmail.
     public DResponseObj<List<List<History>>> getUserInfo(String userID, String email) {
-        DResponseObj<Boolean> isMem  = userManager.isMember(email);
-        if(isMem.errorOccurred()) return new DResponseObj<>(null,isMem.errorMsg);
+        DResponseObj<Boolean> isMem = userManager.isMember(email);
+        if (isMem.errorOccurred()) return new DResponseObj<>(null, isMem.errorMsg);
         DResponseObj<User> logIN = userManager.getLoggedUser(UUID.fromString(userID));
-        if(logIN.errorOccurred()) return new DResponseObj<>(null,ErrorCode.NOTLOGGED);
-        DResponseObj<Boolean> result = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.getUserInfo,logIN.value,null);
-        if(result.errorOccurred()) return new DResponseObj<>(null,result.errorMsg);
+        if (logIN.errorOccurred()) return new DResponseObj<>(null, ErrorCode.NOTLOGGED);
+        DResponseObj<Boolean> result = PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.getUserInfo, logIN.value, null);
+        if (result.errorOccurred()) return new DResponseObj<>(null, result.errorMsg);
         DResponseObj<Boolean> isOnline = userManager.isOnline(UUID.fromString(userID));
         if (isOnline.errorOccurred()) return new DResponseObj<>(isOnline.getErrorMsg());
         List<List<History>> res = new LinkedList<>();
@@ -954,6 +976,29 @@ public class Market {
         return new DResponseObj<>(true);
     }
 
+    public DResponseObj<List<Store>> getAllStores(){
+        List<Store> allStores = new ArrayList<>();
+        stores.forEach((storeID, store) -> {
+            allStores.add(store);
+        });
+        closeStores.forEach((integer, store) -> {
+            allStores.add(store);
+        });
+        return new DResponseObj<>(allStores,-1);
+    }
+
+    public DResponseObj<List<ProductType>> getAllProductTypes(){
+        List<ProductType> lst = new ArrayList<>();
+        productTypes.forEach((ptid,pt)->{
+            lst.add(pt);
+        });
+        return new DResponseObj<>(lst);
+    }
+
+    public DResponseObj<List<ProductStore>> getAllProductsInStore(int storeID) {
+        Store store = stores.get(storeID);
+        return store.getInventory().value.getAllProducts();
+    }
 
 
     class Tuple<E, T> {
@@ -994,11 +1039,10 @@ public class Market {
         for (int i = 0; i < 10; i++) {
             Store store = OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy(), new BuyStrategy());
             for (ProductType product : productTypes.values()) {
-                store.addNewProduct(product,5,10.2);
+                store.addNewProduct(product, 5, 10.2);
             }
-            store.newStoreRate(i+1);
+            store.newStoreRate(i + 1);
         }
-
 
 
     }
@@ -1009,7 +1053,7 @@ public class Market {
         for (int i = 0; i < 10; i++) {
             ProductType p = new ProductType(productCounter, "product" + i, "hello", 3);
             p.setRate(i);
-            p.setCategory(i%2==0 ? 2 : 1);
+            p.setCategory(i % 2 == 0 ? 2 : 1);
             productTypes.put(productCounter++, p);
         }
         for (int i = 0; i < 10; i++) {

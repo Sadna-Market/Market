@@ -5,11 +5,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.example.Acceptance.Obj.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("System Tests - AT")
-public class SystemTests extends MarketTests{
+public class SystemTests extends MarketTests {
     String uuid;
+
     @BeforeEach
     public void setUp() {
         initMarketWithSysManagerAndItems();
@@ -41,7 +48,7 @@ public class SystemTests extends MarketTests{
     void InitSystem_Fail2() {
         market.disconnectExternalService("Payment");
         assertFalse(market.serviceIsAlive("Payment"));
-        ATResponseObj<String> res = market.pay(new CreditCard("1111222233334444","123","111"),100);
+        ATResponseObj<String> res = market.pay(new CreditCard("1111222233334444", "123", "111"), 100);
         assertTrue(res.errorOccurred());
     }
 
@@ -149,21 +156,13 @@ public class SystemTests extends MarketTests{
     @Test
     @DisplayName("req: #1.5 - success test")
     void RealAlert_Success() {
-        //TODO: req: #1.5 - success test (next version)
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.closeStore(uuid, existing_storeID));
+        String read = readFile(uuid);
+        assertFalse(read.isEmpty());
     }
-
-    @Test
-    @DisplayName("req: #1.5 - fail test [...]")
-    void RealAlert_Fail1() {
-        //TODO: req: #1.5 - fail test (next version)
-    }
-
-    @Test
-    @DisplayName("req: #1.5 - fail test [invalid input]")
-    void RealAlert_Fail2() {
-        //TODO: req: #1.5 - fail test (next version)
-    }
-
 
     /**
      * Requirement: alert - #1.6
@@ -171,21 +170,39 @@ public class SystemTests extends MarketTests{
     @Test
     @DisplayName("req: #1.6 - success test")
     void Alert_Success() {
-        //TODO: req: #1.6 - success test (next version)
+        User newManager = generateUser();
+        assertTrue(market.register(uuid,newManager.username,newManager.password,newManager.dateOfBirth));
+
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertTrue(market.assignNewManager(uuid,existing_storeID,newManager));
+        assertTrue(market.updatePermission(uuid,Permission.SET_MANAGER_PERMISSIONS,false,newManager,existing_storeID));
+        ATResponseObj<String> res = market.logout(uuid);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        res = market.login(uuid,newManager);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+
+        String read = readFile(uuid);
+        assertFalse(read.isEmpty());
     }
 
-    @Test
-    @DisplayName("req: #1.6 - fail test [...]")
-    void Alert_Fail1() {
-        //TODO: req: #1.6 - fail test (next version)
+    /**
+     * for testing
+     * @param uuid
+     * @return
+     */
+    private String readFile(String uuid) {
+        String path = System.getProperty("user.dir").concat("\\src\\main\\Alerts\\").concat(uuid).concat(".txt");
+        try {
+            return Files.readString(Path.of(path));
+        } catch (Exception e) {
+            return "";
+        }
     }
-
-    @Test
-    @DisplayName("req: #1.6 - fail test [invalid input]")
-    void Alert_Fail2() {
-        //TODO: req: #1.6 - fail test (next version)
-    }
-
 
 
 }

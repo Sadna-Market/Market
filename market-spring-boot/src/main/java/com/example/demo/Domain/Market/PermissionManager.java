@@ -356,6 +356,24 @@ public class PermissionManager {
         return new DResponseObj<>(false);
     }
 
+
+    /**
+     * gets all owners of this store including the contributor of the store.
+     * @param store
+     * @param type
+     * @return list of user of type in store
+     */
+    public DResponseObj<List<User>> getAllUserByTypeInStore(Store store,userTypes type) {
+        List<User> users = new ArrayList<>();
+        List<Permission> accessPermissionStore = store.getSafePermission().value;
+        for (Permission p : accessPermissionStore) {
+            if(p.getGranteeType().value.equals(type))
+                users.add(p.getGrantee().value);
+        }
+        return new DResponseObj<>(users);
+    }
+
+
     public void reset(){
         allDeletedPermissions = new ArrayList<>();
         systemManagerEmail = null;

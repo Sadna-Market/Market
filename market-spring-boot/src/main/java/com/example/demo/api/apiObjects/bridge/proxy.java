@@ -498,4 +498,30 @@ public class proxy implements IMarket {
         }
         return REAL.getUserInfo(userID,email);
     }
+
+    //TODO: daniel
+    @Override
+    public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceStore>> getAllStores() {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts() {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID) {
+        return null;
+    }
 }

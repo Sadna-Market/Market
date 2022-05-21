@@ -412,6 +412,9 @@ public interface MarketBridge {
     boolean removeBuyRule(String uuid, int storeId, int buyRuleID);
 
 
+
+
+
     /**
      * add discount rule to this store
      * @param uuid
@@ -429,4 +432,18 @@ public interface MarketBridge {
      * @return
      */
     boolean removeDiscountRule(String uuid, int storeId, int discountRuleID);
+
+    /**
+     * gets all logged in members info in the market
+     * @param uuid
+     * @return
+     */
+    ATResponseObj<List<User>> getLoggedInMembers(String uuid);
+
+    /**
+     * gets all logged out members info in the market
+     * @param uuid
+     * @return
+     */
+    ATResponseObj<List<User>> getLoggedOutMembers(String uuid);
 }

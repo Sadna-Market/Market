@@ -568,4 +568,24 @@ public class ProxyMarket implements MarketBridge {
     public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
         return realMarket.removeDiscountRule(uuid,storeId,discountRuleID);
     }
+
+    /**
+     * gets all logged in members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedInMembers(String uuid) {
+        return realMarket.getLoggedInMembers(uuid);
+    }
+
+    /**
+     * gets all logged out members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedOutMembers(String uuid) {
+        return realMarket.getLoggedOutMembers(uuid);
+    }
 }
