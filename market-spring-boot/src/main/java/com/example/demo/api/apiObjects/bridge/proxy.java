@@ -502,26 +502,42 @@ public class proxy implements IMarket {
     //TODO: daniel
     @Override
     public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid) {
-        return null;
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getloggedInMembers(uuid);
     }
 
     @Override
     public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid) {
-        return null;
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getloggedOutMembers(uuid);
     }
 
     @Override
     public SLResponseOBJ<List<ServiceStore>> getAllStores() {
-        return null;
-    }
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllStores();   }
 
     @Override
     public SLResponseOBJ<List<ServiceProductType>> getAllProducts() {
-        return null;
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllProducts();
     }
 
     @Override
     public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID) {
-        return null;
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllProductsInStore(storeID);
     }
 }

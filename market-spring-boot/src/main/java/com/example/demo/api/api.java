@@ -28,7 +28,7 @@ public class api implements Iapi {
     @Override
     @GetMapping("initMarket")
     public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
-        return iMarket.initMarket(user.email, user.Password, user.phoneNumber,"10/4/1994");
+        return iMarket.initMarket(user.email, user.Password, user.phoneNumber,user.datofbirth);
 
     }
 
@@ -49,7 +49,7 @@ public class api implements Iapi {
     @Override
     @PostMapping("addNewMember/{uuid}")
     public SLResponseOBJ<Boolean> addNewMember(@PathVariable("uuid") String uuid, @RequestBody apiUser user) {
-        return iMarket.addNewMember(uuid, user.email, user.Password, user.phoneNumber,"10/4/1994");
+        return iMarket.addNewMember(uuid, user.email, user.Password, user.phoneNumber,user.datofbirth);
 
     }
 
@@ -416,5 +416,33 @@ public class api implements Iapi {
         return iMarket.getUserInfo(userID,user.email);
     }
 
+    @Override
+    @GetMapping("getAllProductsInStore/{storeID}")
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(@PathVariable("storeID") int storeID) {
+        return iMarket.getAllProductsInStore(storeID);
+    }
 
+    @Override
+    @GetMapping("getAllProducts")
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts() {
+        return iMarket.getAllProducts();
+    }
+
+    @Override
+    @GetMapping("getAllStores")
+    public SLResponseOBJ<List<ServiceStore>> getAllStores() {
+        return iMarket.getAllStores();
+    }
+
+    @Override
+    @GetMapping("getloggedOutMembers/{uuid}")
+    public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(@PathVariable("uuid") String uuid) {
+        return iMarket.getloggedInMembers(uuid);
+    }
+
+    @Override
+    @GetMapping("getloggedInMembers/{uuid}")
+    public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(@PathVariable("uuid") String uuid) {
+        return iMarket.getloggedInMembers(uuid);
+    }
 }
