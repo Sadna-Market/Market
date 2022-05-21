@@ -731,9 +731,15 @@ public class RealMarket implements MarketBridge {
      * @param cancelUser the user to cancel
      * @return true if success, else false
      */
-    public ATResponseObj<Boolean> cancelMembership(String uuid, User cancelUser) {
+    public boolean cancelMembership(String uuid, User cancelUser) {
         SLResponseOBJ<Boolean> res = market.cancelMembership(uuid,cancelUser.username);
-        return new ATResponseObj<>(res.value,String.valueOf(res.errorMsg));
+        return !res.errorOccurred();
+    }
+
+    public ATResponseObj<List<ServiceStore>> getAllStores() {
+        SLResponseOBJ<List<ServiceStore>> res = market.getAllStores();
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value,null);
     }
 
 

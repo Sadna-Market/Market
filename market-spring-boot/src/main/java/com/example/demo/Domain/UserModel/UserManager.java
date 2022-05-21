@@ -1,6 +1,7 @@
 package com.example.demo.Domain.UserModel;
 
 import com.example.demo.Domain.ErrorCode;
+import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.PermissionManager;
 import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Market.userTypes;
@@ -472,16 +473,18 @@ public class UserManager {
 
         User toCancelUser = getCancel.value;
         DResponseObj<List<Store>> listOfStoreToDelete = PermissionManager.getInstance().removeAllPermissions(toCancelUser);
-        if(listOfStoreToDelete.errorOccurred()) return listOfStoreToDelete;
+        if (listOfStoreToDelete.errorOccurred()) return listOfStoreToDelete;
 
         //change all permission grantor to the founder (because we delete the grantor user)
-        toCancelUser.getGrantorPermission().value.forEach(permission -> {
+        for (Permission permission : toCancelUser.getGrantorPermission().value) {
             Store store = permission.getStore().value;
             String founder = store.getFounder().value;
-            User founderUser = getMember(founder).value;
-            permission.setGrantor(founderUser);
-            founderUser.addGrantorPermission(permission);
-        });
+            if (!founder.equals(toCancelUser.email)) {
+                User founderUser = getMember(founder).value;
+                permission.setGrantor(founderUser);
+                founderUser.addGrantorPermission(permission);
+            }
+        }
         //remove instance of member for good
         deleteMemberPermanently(toCancelUser);
         return listOfStoreToDelete;

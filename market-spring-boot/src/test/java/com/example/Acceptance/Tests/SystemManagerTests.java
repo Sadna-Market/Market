@@ -3,6 +3,7 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -34,6 +35,57 @@ public class SystemManagerTests extends MarketTests{
         market.resetMemory();
         market = null; //for garbage collector
     }
+
+
+    /**
+     * Requirement: cancel a member from the market  - #2.6.2
+     */
+    @Test
+    @DisplayName("req: ##2.6.4 - success test")
+    void cancelMember_Success() {
+        User newManager = generateUser();
+        assertTrue(market.register(uuid, newManager.username, newManager.password,newManager.dateOfBirth));
+        ATResponseObj<String> res  = market.login(uuid,member);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        assertTrue(market.assignNewManager(uuid,existing_storeID,newManager));
+        assertTrue(market.isManager(existing_storeID,newManager));
+        res = market.logout(uuid);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+
+        res = market.login(uuid,sysManager);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        assertTrue(market.cancelMembership(uuid,member));
+        ATResponseObj<List<ServiceStore>> stores = market.getAllStores();
+        assertFalse(stores.errorOccurred());
+        assertTrue(stores.value.isEmpty());
+    }
+
+    @Test
+    @DisplayName("req: ##2.6.2 - fail test [user doesnt exist in system]")
+    void cancelMember_Fail1() {
+        User newManager = generateUser();
+
+        ATResponseObj<String> res = market.login(uuid,sysManager);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        assertFalse(market.cancelMembership(uuid,newManager));
+    }
+    @Test
+    @DisplayName("req: ##2.6.2 - fail test [user not system manager]")
+    void cancelMember_Fail2() {
+        User newManager = generateUser();
+
+        ATResponseObj<String> res = market.login(uuid,member);
+        assertFalse(res.errorOccurred());
+        uuid = res.value;
+        assertFalse(market.cancelMembership(uuid,newManager));
+    }
+
+
+
 
     /**
      * Requirement: get purchase info of any store or buyer  - #2.6.4

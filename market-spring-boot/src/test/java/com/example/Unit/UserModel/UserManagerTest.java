@@ -1,12 +1,21 @@
 package com.example.Unit.UserModel;
 
 
+import com.example.demo.Domain.Market.PermissionManager;
+import com.example.demo.Domain.Market.permissionType;
+import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.Store;
+import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 class UserManagerTest {

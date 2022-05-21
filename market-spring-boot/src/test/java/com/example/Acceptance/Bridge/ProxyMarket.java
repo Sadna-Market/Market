@@ -4,6 +4,7 @@ package com.example.Acceptance.Bridge;
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 
 import java.util.List;
 
@@ -598,7 +599,11 @@ public class ProxyMarket implements MarketBridge {
      * @param cancelUser the user to cancel
      * @return true if success, else false
      */
-    public ATResponseObj<Boolean> cancelMembership(String uuid, User cancelUser) {
+    public boolean cancelMembership(String uuid, User cancelUser) {
         return realMarket.cancelMembership(uuid,cancelUser);
+    }
+
+    public ATResponseObj<List<ServiceStore>> getAllStores() {
+        return realMarket.getAllStores();
     }
 }
