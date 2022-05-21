@@ -3,8 +3,11 @@ import Card from "../UI/Card";
 import "./Bar.css";
 import SignUp from "./SignUp";
 import SignIn from "./Login";
-//import {createApiClientHttp} from "../../client/clientHttp";
+import {createApiClientHttp} from "../../client/clientHttp";
 const Bar = (props) => {
+  let apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+
   const [isLogin, setIsLogin] = useState(false);
 
   const [userName, setUserName] = useState("");
@@ -22,21 +25,51 @@ const Bar = (props) => {
 
 
   //todo: login after that the UUID put on onLogin(<UUID>)
-  const loginHandler = (event) => {
+  async function loginHandler(event) {
     event.preventDefault();
-    setUserName(email);
-    setIsLogin(true);
-    props.onLogin(7);
-  };
+    console.log(132123132)
+    console.log(props.uuid)
+    const guestVisitResponse = await apiClientHttp.guestVisit();
 
+    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
+    console.log(222)
+
+    if (loginResponse.errorMsg!== -1) {
+      SetError(loginResponse.errorMsg)
+    } else {
+      setUserName(email);
+      setIsLogin(true);
+      props.onLogin(loginResponse.value);
+    }
+    console.log(loginResponse)
+
+  }
+  // liel
+  // liel@gmail.com
+  // aA123123!
+  //     0523434201
   //todo:logout
-  const logoutHandler = (event) => {
+  async function logoutHandler(event) {
     event.preventDefault();
-    setEmail("");
-    setPassword("");
-    props.onLogout();
-    setIsLogin(false);
-  };
+
+    console.log(132123132)
+    console.log(props.uuid)
+
+    const logoutResponse = await apiClientHttp.logout(props.uuid);
+    console.log(222)
+
+    if (logoutResponse.errorMsg!== -1) {
+      SetError(logoutResponse.errorMsg)
+    } else {
+      setEmail("");
+      setPassword("");
+      props.onLogout(logoutResponse.value);
+      setIsLogin(false);
+    }
+    console.log(logoutResponse)
+
+  }
+
 
   const initHandler = () => {
     props.onInitMarket();

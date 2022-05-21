@@ -1,10 +1,12 @@
 import React, {useState} from "react";
 import "./SignUp.css";
 import Card from "../UI/Card";
-//import createApiClientHttp from "../../client/clientHttp.js";
+import createApiClientHttp from "../../client/clientHttp.js";
 
 const SignUp = (props) => {
-    const [enteredName, SetName] = useState("");
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  const [enteredName, SetName] = useState("");
   const nameChangeHandler = (event) => {
     SetName(event.target.value);
   };
@@ -29,19 +31,20 @@ const SignUp = (props) => {
     SetDate(event.target.value);
   };
 
-  //todo:register
-  const submitHandler = (event) => {
+  async function submitHandler(event) {
     event.preventDefault();
-    //register
+    const guestVisitResponse = await apiClientHttp.guestVisit();
+    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone);
+    if (addNewMemberResponse.errorMsg !== -1) {
+      SetError(SetError.errorMsg)
+    } else {
+      console.log("addNewMemberResponse.value  "+addNewMemberResponse.value)
+      props.onSaveExpenseData(addNewMemberResponse.value);
 
-    const userData = {
-      name: enteredName,
-      email: enteredEmail,
-      password: enteredPassword,
-      //phone
-    };
-    props.onSaveExpenseData();
-  };
+    }
+
+
+  }
 
   const cancelHandler = () => {
     SetName("");
@@ -53,6 +56,8 @@ const SignUp = (props) => {
   return (
     <div className="signUp">
       <h3>Registration</h3>
+      <h3>{enteredError}</h3>
+
       <form onSubmit={submitHandler}>
         <div className="signUp__controls">
           <div className="signUp__control">
