@@ -62,6 +62,7 @@ public class Market {
     //pre: -
     //post: get info from valid store and product.
     public DResponseObj<ProductStore> getInfoProductInStore(int storeID, int productID) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<ProductType> p = getProductType(productID);
 
         if (p.errorOccurred()) {
@@ -433,6 +434,8 @@ public class Market {
     //pre: user is online
     //post: add <quantity> times this product from this store
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
+        if(isStoreClosed(StoreId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+
         //get user
         DResponseObj<User> user = userManager.getOnlineUser(userId);
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
@@ -535,6 +538,7 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
     public DResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewProductToStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -569,6 +573,7 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType  exist in the market, not exist anymore in this store.
     public DResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.deleteProductFromStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -584,6 +589,7 @@ public class Market {
     //pre: user is Owner of the store
     //post: the price of this product in this store changed.
     public DResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -596,6 +602,7 @@ public class Market {
     //pre: user is Owner of the store
     //post: the quantity of this product in this store changed.
     public DResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -607,6 +614,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: buy rule added to this store
     public DResponseObj<Boolean> addNewBuyRule(UUID userId, int storeId, BuyRule buyRule) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewBuyRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -617,6 +625,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: buy rule removed from this store
     public DResponseObj<Boolean> removeBuyRule(UUID userId, int storeId, int buyRuleID) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeBuyRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -627,6 +636,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: discount rule added to this store
     public DResponseObj<Boolean> addNewDiscountRule(UUID userId, int storeId, DiscountRule discountRule) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -637,6 +647,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: discount rule removed from this store
     public DResponseObj<Boolean> removeDiscountRule(UUID userId, int storeId, int discountRuleID) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeDiscountRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -647,6 +658,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreOwner, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -654,10 +666,22 @@ public class Market {
         return userManager.addNewStoreOwner(userId, store, newOnerEmail);
     }
 
+    //2.4.5
+    //pre: the store exist in the system and uuid is grantor of owner
+    //post: the owner is not owner.
+    public DResponseObj<Boolean> removeStoreOwner(UUID userId, int storeId, String ownerEmail) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return userManager.removeStoreOwner(userId, store, ownerEmail);
+    }
+
     //2.4.6
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
     public DResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreManager, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -669,6 +693,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm, boolean onof) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setManagerPermissions, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -679,6 +704,7 @@ public class Market {
     //pre: the store exist in the system, the user is owner of this store.
     //post: the market move this store to the closeStores, users can not see this store again(until she will be open).
     public DResponseObj<Boolean> closeStore(UUID userId, int storeId) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.closeStore, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -996,6 +1022,7 @@ public class Market {
     }
 
     public DResponseObj<List<ProductStore>> getAllProductsInStore(int storeID) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         Store store = stores.get(storeID);
         return store.getInventory().value.getAllProducts();
     }

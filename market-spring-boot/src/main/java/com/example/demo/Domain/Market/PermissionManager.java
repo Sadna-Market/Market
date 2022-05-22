@@ -145,6 +145,46 @@ public class PermissionManager {
 
     }
 
+    //requirement II.4.5
+    public DResponseObj<Boolean> removeOwnerPermissionCompletely(User grantee, Store store, User grantor) {
+        /**
+         documentation:
+         remove the owner permission that the grantor Appointed to the grantee in this store
+         If there is no such permission, return false
+         */
+        Permission ownerPermission = getPermission(grantee, store, grantor);
+        if (ownerPermission == null) {
+            logger.warn("Their is no permission That the Grantor gives to the Grantee in this store\n");
+            return new DResponseObj<>(false, ErrorCode.NOPERMISSION);
+        }
+        if (!verifyPermissionType(ownerPermission, userTypes.owner, userTypes.owner)) {
+            logger.warn("Their is no owner - owner connection to the grantee and grantor in this store\n");
+            return new DResponseObj<>(false, ErrorCode.MISTAKEPERMISSIONTYPE);
+        }
+        if (isFounder(grantee,store).value) {
+            logger.warn("can't remove permission founder\n");
+            return new DResponseObj<>(false, ErrorCode.CAN_NOT_REMOVE_FOUNDER_PERMISSION);
+        }
+        allDeletedPermissions.add(ownerPermission);
+        grantee.removeAccessPermission(ownerPermission);
+        grantor.removeGrantorPermission(ownerPermission);
+        store.removePermission(ownerPermission);
+        return new DResponseObj<>(true);
+    }
+
+/*
+    private DResponseObj<Boolean> removeOwnerRecursive(User ownerThatRemoved,Store store){
+        List<Permission> needToDelete = getPermission(ownerThatRemoved,store);
+        DResponseObj<Boolean> res = null;
+        for(Permission p :needToDelete){
+            res = removeOwnerPermissionCompletely(p.getGrantee().value,p.getStore().value,p.getGrantor().value);
+            if(res.errorOccurred()) return res;
+        }
+        return res == null ? new DResponseObj<>(true) : res;
+    }
+*/
+
+
     //requirement II.4.7
     public DResponseObj<Boolean> addManagerPermissionType(permissionType.permissionEnum permissionType, User grantee, Store store, User grantor) {
 
@@ -442,6 +482,16 @@ public class PermissionManager {
         return null;
     }
 
+/*    private List<Permission> getPermission(User grantee, Store store) {
+        List<Permission> permissionsOfGrantee = new ArrayList<>();
+        List<Permission> accessPermissionStore = store.getPermission().value;
+        for (Permission p : accessPermissionStore) {
+            if (p.getGrantor().value != null && p.getGrantor().value.getEmail().value.equals(grantee.getEmail().value)) {
+                permissionsOfGrantee.add(p);
+            }
+        }
+        return permissionsOfGrantee;
+    }*/
 }
 
 //   disjunctionPermissions = grantee.accessPers ^ store.accessPers = nothing;

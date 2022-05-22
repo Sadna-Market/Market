@@ -33,7 +33,7 @@ class PermissionManagerTest {
         manager = new User("manager","abc123D!","0678987655", LocalDate.of(1998,11,15));
         manager2 = new User("manager2","abc123D!","0678987655", LocalDate.of(1998,11,15));
         member = new User("member","abc123D!","0678987655", LocalDate.of(1998,11,15));
-        store1 = new Store(1,null,null,null,null);
+        store1 = new Store(1,"rami",null,null,null);
         permissionManager = PermissionManager.getInstance();
 
     }
@@ -109,6 +109,21 @@ class PermissionManagerTest {
         assertFalse(permissionManager.removeManagerPermissionCompletely(manager2, store1, founder).value);
 
     }
+
+    @Test
+    void removeOwnerPermissionCompletely() {
+        permissionManager.createPermission(founder, store1, null, userTypes.owner, userTypes.system);//open new store
+        permissionManager.createPermission(owner1, store1, founder, userTypes.owner, userTypes.owner);//owner->owner
+
+        //delete manager permission
+        assertTrue(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
+
+        //delete manager permission that not already manager in this store
+        assertFalse(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
+
+    }
+
+
 
 
     @Test
