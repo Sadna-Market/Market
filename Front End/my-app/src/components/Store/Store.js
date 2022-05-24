@@ -12,6 +12,7 @@ import HistoryInStore from "./HistoryInStore";
 const Store = (props) => {
   let storeID = props.storeID;
   let UUID = props.uuid;
+    console.log("Store storeID: "+storeID +" UUID: "+UUID )
 
   const addProductHandler = () => {
     setCommand(
@@ -58,7 +59,8 @@ const Store = (props) => {
     );
   };
 
-  //todo: check that hasParmission!!!!!
+  //todo: check that hasParmission!!!! to like in the storlist eith refresh ..
+    // check if uuid is pwner
   const closeStoreHandler = () => {
     setCommand(
       <CloseStore
@@ -75,7 +77,8 @@ const Store = (props) => {
 
   // const [permission, setPermission] = useState("");
   let permission = "";
-  if (UUID == 7) {
+  //check ig uuid is manager in this store
+  if (UUID != 7) {
     permission = (
       <>
         <button onClick={addProductHandler}> Add Product</button>
@@ -91,6 +94,7 @@ const Store = (props) => {
   }
 
   //todo: get info
+    // call to func that take store id and return all this
   let name = "Amazing Store";
   let founder = "Alvis Presly";
   let isOpen = "Open";

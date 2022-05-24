@@ -12,10 +12,10 @@ import Profile from "./Profile";
 
 const Market = (props) => {
   let UUID = props.uuid;
-  console.log("UUID: " +UUID)
+  console.log("Market UUID: " +UUID)
 
   const showStoreHandler = (storeID) => {
-    console.log(storeID);
+    console.log("showStoreHandler  storeID:"+storeID);
     setCommand(
       <Store storeID={storeID} uuid={UUID} onMarket={onMarketHandler} />
     );
@@ -99,6 +99,7 @@ const Market = (props) => {
   return (
     <Card className="market">
       <div>
+        
         <button onClick={MarketHandler}> Market</button>
         <button onClick={myCartHandler}> My Cart</button>
         <button onClick={productHandler}> Products</button>

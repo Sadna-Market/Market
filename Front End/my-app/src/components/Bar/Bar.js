@@ -4,7 +4,10 @@ import "./Bar.css";
 import SignUp from "./SignUp";
 import SignIn from "./Login";
 import {createApiClientHttp} from "../../client/clientHttp";
+import {errorCode} from "../../ErrorCodeGui"
 const Bar = (props) => {
+  console.log("Bar")
+
   let apiClientHttp = createApiClientHttp();
   const [enteredError, SetError] = useState("");
 
@@ -27,11 +30,14 @@ const Bar = (props) => {
   //todo: login after that the UUID put on onLogin(<UUID>)
   async function loginHandler(event) {
     event.preventDefault();
+    // const Response = await apiClientHttp.getAllStores();
+
     const guestVisitResponse = await apiClientHttp.guestVisit();
     const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
 
+
     if (loginResponse.errorMsg!== -1) {
-      SetError(loginResponse.errorMsg)
+      SetError(errorCode.get(loginResponse.errorMsg))
     } else {
       setUserName(email);
       setIsLogin(true);
@@ -46,7 +52,7 @@ const Bar = (props) => {
     const logoutResponse = await apiClientHttp.logout(props.uuid);
 
     if (logoutResponse.errorMsg!== -1) {
-      SetError(logoutResponse.errorMsg)
+      SetError(errorCode.get(logoutResponse.errorMsg))
     } else {
       setEmail("");
       setPassword("");
@@ -74,6 +80,7 @@ const Bar = (props) => {
   if (isLogin === false) {
     command = (
       <div className="bar__controls">
+        <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
         <div className="bar__control">
           <label>User's Email</label>
           <input type="text" value={email} onChange={emailChangeHandler} />
@@ -89,7 +96,7 @@ const Bar = (props) => {
           <button
             className="signUp__button"
             onClick={singUpHandler}
-            onUserData={newUserHolder}
+            // onUserData={newUserHolder}
           >
             Sign-Up
           </button>
@@ -97,6 +104,7 @@ const Bar = (props) => {
             {" "}
             Init-Market
           </button>
+
         </div>
       </div>
     );
@@ -108,7 +116,7 @@ const Bar = (props) => {
           <button
             className="signUp__button"
             onClick={logoutHandler}
-            onUserData={newUserHolder}
+            // onUserData={newUserHolder}
           >
             LogOut
           </button>

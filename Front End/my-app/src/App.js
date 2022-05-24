@@ -10,6 +10,8 @@ import {createApiClientHttp} from "../../my-app/src/client/clientHttp";
 
 
 function App(props) {
+    console.log("App")
+
     let apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
     let UUID='-1'

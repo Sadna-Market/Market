@@ -287,11 +287,10 @@ export const createApiClientHttp = () => {
         changePassword:async (uuid,email,Password,newPassword)=>{
             let path = apiUrl.concat(`changePassword/${uuid}`);
             let  body = {
-                data : {
                     email:email,
                     Password,Password,
                     newPassword:newPassword
-                }
+
             }
             return await axios.post(path,body).then((res)=>{
                 return res.data;
@@ -317,6 +316,8 @@ export const createApiClientHttp = () => {
 
 
         addNewProductToStore: async(uuid,storeid,productId,price,quantity)=>{
+            console.log("addNewProductToStore  client "+storeid+" "+productId+" "+ price+" "+quantity )
+
             let path = apiUrl.concat(`addNewProductToStore/${uuid}/${storeid}/${productId}`);
             let body = {
 
@@ -428,6 +429,8 @@ export const createApiClientHttp = () => {
         },
 
         getStoreOrderHistory: async(uuid, storeId)=>{
+            console.log("getStoreOrderHistory client http  "+uuid +""+ storeId)
+
             let path = apiUrl.concat(`getStoreOrderHistory/${uuid}/${storeId}`);
             return await axios.get(path).then((res)=>{
                 return res.data;

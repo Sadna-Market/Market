@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const NewProductInStore = (props) => {
+  console.log("NewProductInStore")
+
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
   let UUID = props.uuid;
   let storeID = props.storeID;
 
@@ -24,10 +30,21 @@ const NewProductInStore = (props) => {
   };
 
   //todo: add new product type to store
-  const addHandler = () => {
-    cleanHandler();
-    props.onStore();
-  };
+  async function addHandler() {
+    console.log("start func addHandler addNewProductToStore")
+
+    const addNewProductToStoreResponse = await apiClientHttp.addNewProductToStore(UUID,storeID,productID,price,quantity);
+    console.log(addNewProductToStoreResponse)
+
+    if (addNewProductToStoreResponse.errorMsg !== -1) {
+      SetError(errorCode.get(addNewProductToStoreResponse.errorMsg))
+    } else {
+      cleanHandler();
+      props.onStore();
+
+    }
+
+  }
 
   return (
     <div>

@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import "./SignUp.css";
 import Card from "../UI/Card";
 import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const SignUp = (props) => {
   const apiClientHttp = createApiClientHttp();
@@ -37,7 +38,7 @@ const SignUp = (props) => {
     const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,'10/01/1996');
 
     if (addNewMemberResponse.errorMsg !== -1) {
-      SetError(SetError.errorMsg)
+      SetError(errorCode.get(SetError.errorMsg))
     } else {
       props.onSaveExpenseData();
     }
