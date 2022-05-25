@@ -2,9 +2,12 @@ import React, {useState} from "react";
 import "./SignUpManager.css";
 import Card from "../UI/Card";
 import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 
 const SignUpManager = (props) => {
+  console.log("SignUpManager UUID:")
+
   const apiClientHttp = createApiClientHttp();
   const [enteredError, SetError] = useState("");
   const [enteredName, SetName] = useState("");
@@ -35,13 +38,10 @@ const SignUpManager = (props) => {
   //todo: init the market
   async function submitHandler (event) {
     event.preventDefault();
-    console.log("sad")
 
     const initResponse = await apiClientHttp.initMarket(enteredEmail, enteredPassword, enteredPhone, '10/01/1996');
-    console.log("222")
-
     if (initResponse.errorMsg !== -1) {
-      SetError(initResponse.errorMsg)
+      SetError(errorCode.get(initResponse.errorMsg))
     } else {
       props.onSaveData(initResponse.value);
     }
@@ -59,8 +59,7 @@ const SignUpManager = (props) => {
   return (
       <div className="signUpManager">
         <h3>Manager System</h3>
-        <h3>{enteredError}</h3>
-
+        <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
         <form onSubmit={submitHandler}>
           <div className="signUpManager__controls">
             <div className="signUpManager__control">

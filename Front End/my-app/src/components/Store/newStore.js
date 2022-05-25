@@ -1,7 +1,10 @@
 import React, {useState} from "react";
 import {createApiClientHttp} from "../../client/clientHttp";
+import {errorCode} from "../../ErrorCodeGui"
 
 const NewStore = (props) => {
+    console.log("NewStore UUID:"+props.uuid )
+
     let apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
     let UUID = props.uuid;
@@ -27,7 +30,7 @@ const NewStore = (props) => {
         const openNewStoreResponse = await apiClientHttp.openNewStore(props.uuid, name,founder);
 
         if (openNewStoreResponse.errorMsg !== -1) {
-            SetError(openNewStoreResponse.errorMsg)
+            SetError(errorCode.get(openNewStoreResponse.errorMsg))
         } else {
             props.onMarket(openNewStoreResponse.value);
         }

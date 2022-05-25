@@ -10,6 +10,7 @@ const Profile = (props) => {
 
   //todo History of User
   const historyHander = () => {
+
     setCommand("History Bla bla bla");
   };
 

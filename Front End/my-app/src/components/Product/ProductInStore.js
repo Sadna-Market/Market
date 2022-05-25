@@ -4,9 +4,11 @@ import Card from "../UI/Card";
 const ProductInStore = (props) => {
   const [add, setAdd] = useState("");
   let UUID = props.UUID;
-  let productID = props.productID;
+  let productID = props.id;
   let storeID = props.storeID;
+  let productName = props.name;
 
+//      <ProductInStore id={expense.id} UUID={props.uuid} storeID={props.storeID} />
   //todo get the info
   let name = "name "+props.storeID;
   let price = Math.random() * 100;
