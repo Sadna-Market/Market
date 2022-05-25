@@ -17,7 +17,7 @@ const UserList = (props) => {
   }
 
   if (props.search != "") {
-    users = users.filter((store) => store.id === parseInt(props.search));
+    users = users.filter((user) => user.email === props.search);
   }
 
   const enterToStoreHandler = (storeID) => {

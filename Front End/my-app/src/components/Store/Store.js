@@ -8,6 +8,7 @@ import EditPermission from "./EditPermission";
 import CloseStore from "./closeStore";
 import Rules from "./Rules";
 import HistoryInStore from "./HistoryInStore";
+import RemoveManager from "./RemoveManager";
 
 const Store = (props) => {
   let storeID = props.storeID;
@@ -52,6 +53,12 @@ const Store = (props) => {
     );
   };
 
+  const removeManagerHandler = () => {
+    setCommand(
+      <RemoveManager uuid={UUID} storeID={storeID} onStore={returnToStore} />
+    );
+  };
+
   const editPermissionHandler = () => {
     setCommand(
       <EditPermission uuid={UUID} storeID={storeID} onStore={returnToStore} />
@@ -81,7 +88,8 @@ const Store = (props) => {
         <button onClick={addProductHandler}> Add Product</button>
         <button onClick={removeProductHandler}> Remove Product</button>
         <button onClick={editProductHandler}> Edit Product</button>
-        <button onClick={addManagerHandler}> Add Managerr</button>
+        <button onClick={addManagerHandler}> Add Manager</button>
+        <button onClick={removeManagerHandler}> Remove Manager</button>
         <button onClick={editPermissionHandler}> Edit Permission</button>
         <h2></h2>
         <button onClick={closeStoreHandler}> Close Store</button>
