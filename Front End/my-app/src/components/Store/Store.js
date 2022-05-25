@@ -8,6 +8,10 @@ import EditPermission from "./EditPermission";
 import CloseStore from "./closeStore";
 import Rules from "./Rules";
 import HistoryInStore from "./HistoryInStore";
+import RemoveManager from "./RemoveManager";
+import PolicyStore from "./DiscountPolicy";
+import BuyingPolicy from "./BuyingPolicy";
+import DiscountPolicy from "./DiscountPolicy";
 
 const Store = (props) => {
   let storeID = props.storeID;
@@ -52,6 +56,12 @@ const Store = (props) => {
     );
   };
 
+  const removeManagerHandler = () => {
+    setCommand(
+      <RemoveManager uuid={UUID} storeID={storeID} onStore={returnToStore} />
+    );
+  };
+
   const editPermissionHandler = () => {
     setCommand(
       <EditPermission uuid={UUID} storeID={storeID} onStore={returnToStore} />
@@ -73,6 +83,14 @@ const Store = (props) => {
     setCommand(<HistoryInStore uuid={UUID} storeID={storeID} />);
   };
 
+  const policyHandler = () => {
+    setCommand(<DiscountPolicy uuid={UUID} storeID={storeID} />);
+  };
+
+  const buyingHandler = () => {
+    setCommand(<BuyingPolicy uuid={UUID} storeID={storeID} />);
+  };
+
   // const [permission, setPermission] = useState("");
   let permission = "";
   if (UUID == 7) {
@@ -81,11 +99,14 @@ const Store = (props) => {
         <button onClick={addProductHandler}> Add Product</button>
         <button onClick={removeProductHandler}> Remove Product</button>
         <button onClick={editProductHandler}> Edit Product</button>
-        <button onClick={addManagerHandler}> Add Managerr</button>
+        <button onClick={addManagerHandler}> Add Manager</button>
+        <button onClick={removeManagerHandler}> Remove Manager</button>
         <button onClick={editPermissionHandler}> Edit Permission</button>
         <h2></h2>
         <button onClick={closeStoreHandler}> Close Store</button>
         <button onClick={historyHandler}> History </button>
+        <button onClick={policyHandler}> Policy </button>
+        <button onClick={buyingHandler}> Buying Strategy </button>
       </>
     );
   }

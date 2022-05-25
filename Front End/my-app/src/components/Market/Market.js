@@ -9,6 +9,7 @@ import MyCart from "../Cart/MyCart";
 import ManagerButton from "../Manager/ManagerButton";
 import NewStore from "../Store/newStore";
 import Profile from "./Profile";
+import Help from "./Help";
 
 const Market = (props) => {
   let UUID = props.uuid;
@@ -24,6 +25,8 @@ const Market = (props) => {
   const [command, setCommand] = useState(
     <MarketButton onShowStore={showStoreHandler} />
   );
+
+  const [notification, setNotification] = useState("Notification");
   let permissonCommand = "";
 
   const managerHandler = () => {
@@ -81,6 +84,10 @@ const Market = (props) => {
     setCommand(<ProductButton />);
   };
 
+  const helpHandler = () => {
+    setCommand(<Help uuid={UUID} onHelp={(text) => setNotification(text)} />);
+  };
+
   const myCartHandler = () => {
     setCommand(
       <MyCart
@@ -94,15 +101,16 @@ const Market = (props) => {
     );
   };
 
-  const [searchStore, setStore] = useState("");
-
   return (
     <Card className="market">
+      <h2>Notification:</h2>
+      {notification}
       <div>
         <button onClick={MarketHandler}> Market</button>
         <button onClick={myCartHandler}> My Cart</button>
         <button onClick={productHandler}> Products</button>
         {permissonCommand}
+        <button onClick={helpHandler}> Help!</button>
       </div>
       <div>{command}</div>
     </Card>
