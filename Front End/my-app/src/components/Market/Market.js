@@ -23,6 +23,8 @@ const Market = (props) => {
   const [command, setCommand] = useState(
     <MarketButton onShowStore={showStoreHandler} />
   );
+
+  const [notification, setNotification] = useState("Notification");
   let permissonCommand = "";
 
   const managerHandler = () => {
@@ -91,10 +93,10 @@ const Market = (props) => {
     );
   };
 
-  const [searchStore, setStore] = useState("");
-
   return (
     <Card className="market">
+      <h2>Notification:</h2>
+      {notification}
       <div>
         <button onClick={MarketHandler}> Market</button>
         <button onClick={myCartHandler}> My Cart</button>
