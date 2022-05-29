@@ -621,4 +621,16 @@ public class ProxyMarket implements MarketBridge {
     public ATResponseObj<List<ServiceStore>> getAllStores() {
         return realMarket.getAllStores();
     }
+
+    public boolean isOwnerUUID(String uuid, int storeID) {
+        return realMarket.isOwnerUUID(uuid,storeID);
+    }
+
+    public boolean isSysManagerUUID(String uuid) {
+        return realMarket.isSysManagerUUID(uuid);
+    }
+
+    public boolean isManagerUUID(String uuid, int storeID) {
+        return realMarket.isManagerUUID(uuid,storeID);
+    }
 }

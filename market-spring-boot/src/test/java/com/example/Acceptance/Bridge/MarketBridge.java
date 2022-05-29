@@ -470,4 +470,8 @@ public interface MarketBridge {
     boolean cancelMembership(String uuid, User cancelUser);
 
     ATResponseObj<List<ServiceStore>> getAllStores();
+
+    boolean isOwnerUUID(String uuid, int storeID);
+    boolean isSysManagerUUID(String uuid);
+    boolean isManagerUUID(String uuid, int storeID);
 }
