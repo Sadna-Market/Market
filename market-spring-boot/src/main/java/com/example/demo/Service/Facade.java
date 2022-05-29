@@ -1291,7 +1291,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(-1, ErrorCode.NOTVALIDINPUT);
         }
         DResponseObj<Integer> res = market.addNewProductType(UUID.fromString(uuid), name, description, category);
-        return new SLResponseOBJ<>(res.value, -1);
+        return new SLResponseOBJ<>(res);
     }
 
     @Override //TODO way search product ? if you return stores ??
