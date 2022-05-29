@@ -341,10 +341,11 @@ public class RealMarket implements MarketBridge {
      */
     public ATResponseObj<Integer> addStore(String uuid, User owner) {
         SLResponseOBJ<Integer> res;
+        String storeName = owner == null ? "null" : owner.name;
         if (owner == null)
-            res = market.openNewStore(uuid, String.format("store of %s",owner.name), null, null, null, null);
+            res = market.openNewStore(uuid, String.format("store of %s",storeName), null, null, null, null);
         else
-            res = market.openNewStore(uuid, String.format("store of %s",owner.name), owner.username, null, null, null);
+            res = market.openNewStore(uuid, String.format("store of %s",storeName), owner.username, null, null, null);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
 
