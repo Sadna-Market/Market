@@ -143,4 +143,7 @@ public interface IMarket {
     public SLResponseOBJ<List<ServiceStore>> getAllStores();
     public SLResponseOBJ<List<ServiceProductType>> getAllProducts();
     public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID);
+    public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
+    public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
 }

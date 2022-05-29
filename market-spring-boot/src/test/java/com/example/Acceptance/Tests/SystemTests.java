@@ -3,6 +3,7 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -188,6 +189,49 @@ public class SystemTests extends MarketTests {
 
         String read = readFile(uuid);
         assertFalse(read.isEmpty());
+    }
+
+    //Tests for UI usage functions
+    @Test
+    @DisplayName("GetAllStores")
+    public void getAllStore(){
+        for (int i = 0; i <5 ; i++) {
+            String id = market.guestVisit();
+            User u = generateUser();
+            market.register(id,u.username,u.password,u.dateOfBirth);
+            id = market.login(id,u).value;
+            market.addStore(id, u);
+            market.logout(id);
+        }
+        ATResponseObj<List<ServiceStore>> lst = market.getAllStores();
+        assertFalse(lst.errorOccurred());
+        lst.value.forEach(System.out::println);
+    }
+
+    @Test
+    @DisplayName("isOwner-isManager-isSysManager")
+    public void isOwner_isManager_isSysManager(){
+        User manager = generateUser();
+        assertTrue(market.register(uuid,manager.username,manager.password,manager.dateOfBirth));
+        ATResponseObj<String> owner = market.login(uuid,member);
+        assertFalse(owner.errorOccurred());
+        uuid = owner.value;
+        assertTrue(market.isOwnerUUID(uuid,existing_storeID));
+        assertTrue(market.assignNewManager(uuid,existing_storeID,manager));
+        ATResponseObj<String> id = market.logout(uuid);
+        assertFalse(id.errorOccurred());
+        uuid = id.value;
+        id = market.login(uuid,manager);
+        assertFalse(id.errorOccurred());
+        uuid = id.value;
+        assertTrue(market.isManagerUUID(uuid,existing_storeID));
+        id = market.logout(uuid);
+        assertFalse(id.errorOccurred());
+        uuid = id.value;
+        id = market.login(uuid,sysManager);
+        assertFalse(id.errorOccurred());
+        uuid = id.value;
+        assertTrue(market.isSysManagerUUID(uuid));
     }
 
     /**

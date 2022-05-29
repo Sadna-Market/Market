@@ -557,4 +557,19 @@ public class proxy implements IMarket {
         }
         return REAL.getAllProductsInStore(storeID);
     }
+
+    @Override
+    public SLResponseOBJ<Boolean> isOwnerUUID(String uuid, int storeId) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isManagerUUID(String uuid, int storeId) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid) {
+        return null;
+    }
 }

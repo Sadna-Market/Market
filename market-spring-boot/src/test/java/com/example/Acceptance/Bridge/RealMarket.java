@@ -342,9 +342,9 @@ public class RealMarket implements MarketBridge {
     public ATResponseObj<Integer> addStore(String uuid, User owner) {
         SLResponseOBJ<Integer> res;
         if (owner == null)
-            res = market.openNewStore(uuid, "moshe", null, null, null, null);
+            res = market.openNewStore(uuid, String.format("store of %s",owner.name), null, null, null, null);
         else
-            res = market.openNewStore(uuid, "moshe", owner.username, null, null, null);
+            res = market.openNewStore(uuid, String.format("store of %s",owner.name), owner.username, null, null, null);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
 
@@ -756,6 +756,21 @@ public class RealMarket implements MarketBridge {
         SLResponseOBJ<List<ServiceStore>> res = market.getAllStores();
         if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
         return new ATResponseObj<>(res.value,null);
+    }
+
+    public boolean isOwnerUUID(String uuid, int storeID) {
+        SLResponseOBJ<Boolean> res = market.isOwnerUUID(uuid,storeID);
+        return !res.errorOccurred();
+    }
+
+    public boolean isSysManagerUUID(String uuid) {
+        SLResponseOBJ<Boolean> res = market.isSystemManagerUUID(uuid);
+        return !res.errorOccurred();
+    }
+
+    public boolean isManagerUUID(String uuid, int storeID) {
+        SLResponseOBJ<Boolean> res = market.isManagerUUID(uuid,storeID);
+        return !res.errorOccurred();
     }
 
 

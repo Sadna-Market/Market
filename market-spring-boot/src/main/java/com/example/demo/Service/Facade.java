@@ -1286,6 +1286,8 @@ public class Facade implements IMarket {
     }
 
 
+
+
     public SLResponseOBJ<Integer> addNewProductType(String uuid, String name, String description, int category) {
         if (name == null || name.equals("") || description == null || description.equals("") || category < 0) {
             return new SLResponseOBJ<>(-1, ErrorCode.NOTVALIDINPUT);
@@ -1334,5 +1336,48 @@ public class Facade implements IMarket {
         if (minRate < 0 || list == null)
             return new SLResponseOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         return new SLResponseOBJ<>(market.filterByStoreRate(list, minRate));
+    }
+
+
+    public SLResponseOBJ<Boolean> isOwner(String email , int storeId){
+        DResponseObj<Store> s = market.getStore(storeId);
+        if (s.errorOccurred()){
+            return new SLResponseOBJ<>(false,s.errorMsg);
+        }
+        DResponseObj<Boolean> res =  userManager.isOwner(email,s.value);
+        return new SLResponseOBJ<>(res);
+    }
+
+    public SLResponseOBJ<Boolean> isManager(String email , int storeId){
+        DResponseObj<Store> s = market.getStore(storeId);
+        if (s.errorOccurred()){
+            return new SLResponseOBJ<>(false,s.errorMsg);
+        }
+        DResponseObj<Boolean> res =  userManager.isManager(email,s.value);
+        return new SLResponseOBJ<>(res);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isOwnerUUID(String uuid, int storeId) {
+        DResponseObj<User> res = userManager.getOnlineUser(UUID.fromString(uuid));
+        if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
+        User user = res.value;
+        return isOwner(user.getEmail().value,storeId);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isManagerUUID(String uuid, int storeId) {
+        DResponseObj<User> res = userManager.getOnlineUser(UUID.fromString(uuid));
+        if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
+        User user = res.value;
+        return isManager(user.getEmail().value,storeId);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid) {
+        DResponseObj<User> res = userManager.getOnlineUser(UUID.fromString(uuid));
+        if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
+        User user = res.value;
+        return new SLResponseOBJ<>(PermissionManager.getInstance().isSystemManager(user.getEmail().value));
     }
 }
