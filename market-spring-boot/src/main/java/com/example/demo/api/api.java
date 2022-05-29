@@ -447,4 +447,22 @@ public class api implements Iapi {
     public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(@PathVariable("uuid") String uuid) {
         return iMarket.getloggedInMembers(uuid);
     }
+
+    @Override
+    @GetMapping("isOwnerUUID/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> isOwnerUUID(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId) {
+        return iMarket.isOwnerUUID(uuid,storeId);
+    }
+
+    @Override
+    @GetMapping("isManagerUUID/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> isManagerUUID(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId) {
+        return iMarket.isManagerUUID(uuid,storeId);
+    }
+
+    @Override
+    @GetMapping("isSystemManagerUUID/{uuid}")
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(@PathVariable("uuid")String uuid) {
+        return iMarket.isSystemManagerUUID(uuid);
+    }
 }

@@ -1207,6 +1207,7 @@ public class Facade implements IMarket {
         List<List<ServiceHistory>> ServiceHistoryList = new ArrayList<>();
         List<List<History>> HistoryList = h.getValue();
 
+
         for (List<History> historyList : HistoryList) {
             List<ServiceHistory> s = new LinkedList<>();
             for (History history : historyList) {

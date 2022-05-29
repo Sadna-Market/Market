@@ -136,6 +136,11 @@ public interface Iapi {
     public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid) ;
 
     public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid) ;
+    public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
+    public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
+
+
 
 
 
