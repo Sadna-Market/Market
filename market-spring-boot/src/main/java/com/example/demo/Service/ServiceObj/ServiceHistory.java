@@ -6,10 +6,10 @@ import com.example.demo.Domain.StoreModel.History;
 import java.util.List;
 
 public class ServiceHistory {
-    private final int TID;
-    private final double finalPrice;
-    private final List<ServiceProductStore> products;
-    private final String user;
+    public final int TID;
+    public final double finalPrice;
+    public final List<ServiceProductStore> products;
+    public final String user;
 
     public ServiceHistory(int tid, double finalPrice, List<ServiceProductStore> products, String user) {
         TID = tid;

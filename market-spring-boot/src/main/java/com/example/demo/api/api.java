@@ -248,6 +248,7 @@ public class api implements Iapi {
         System.out.println(uuid);
 
         logger.debug("161616161616");
+        System.out.println(iMarket.getShoppingCart(uuid).value.shoppingBagHash);
         return iMarket.getShoppingCart(uuid);
     }
 
@@ -313,13 +314,14 @@ public class api implements Iapi {
     @PostMapping("addNewProductToStore/{uuid}/{storeId}/{productId}")
     public SLResponseOBJ<Boolean> addNewProductToStore(@PathVariable("uuid") String uuid,@PathVariable("storeId") int storeId, @PathVariable("productId") int productId,@RequestBody Map<String,Object> obj)
     {
+        System.out.println(obj);
         System.out.println(uuid);
         System.out.println(storeId);
         System.out.println(productId);
-        System.out.println((double) obj.get("price"));
+        System.out.println( Double.valueOf((String) obj.get("price")));
         System.out.println((int)obj.get("quantity"));
 
-        return iMarket.addNewProductToStore(uuid,storeId,productId,(double) obj.get("price"),(int)obj.get("quantity"));
+        return iMarket.addNewProductToStore(uuid,storeId,productId, Double.valueOf((String) obj.get("price")),(int)obj.get("quantity"));
     }
 
     @Override
@@ -337,8 +339,8 @@ public class api implements Iapi {
         System.out.println(uuid);
         System.out.println(storeId);
         System.out.println(productId);
-        System.out.println( (double)obj.get("price"));
-        return iMarket.setProductPriceInStore(uuid, storeId, productId, (double)obj.get("price"));
+        System.out.println( Double.valueOf((String) obj.get("price")));
+        return iMarket.setProductPriceInStore(uuid, storeId, productId, Double.valueOf((String) obj.get("price")));
     }
 
     @Override
@@ -380,8 +382,8 @@ public class api implements Iapi {
         System.out.println(storeId);
         System.out.println((String)obj.get("mangerEmail"));
         System.out.println((String)obj.get("per"));
-        System.out.println((boolean)obj.get( "onof"));
-        return iMarket.setManagerPermissions(uuid, storeId,(String)obj.get("mangerEmail"),(String)obj.get("per"),(boolean)obj.get( "onof"));
+        System.out.println(Boolean.getBoolean((String) obj.get( "onof")));
+        return iMarket.setManagerPermissions(uuid, storeId,(String)obj.get("mangerEmail"),(String)obj.get("per"),Boolean.getBoolean((String) obj.get( "onof")));
     }
 
     @Override
@@ -444,5 +446,23 @@ public class api implements Iapi {
     @GetMapping("getloggedInMembers/{uuid}")
     public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(@PathVariable("uuid") String uuid) {
         return iMarket.getloggedInMembers(uuid);
+    }
+
+    @Override
+    @GetMapping("isOwnerUUID/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> isOwnerUUID(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId) {
+        return iMarket.isOwnerUUID(uuid,storeId);
+    }
+
+    @Override
+    @GetMapping("isManagerUUID/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> isManagerUUID(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId) {
+        return iMarket.isManagerUUID(uuid,storeId);
+    }
+
+    @Override
+    @GetMapping("isSystemManagerUUID/{uuid}")
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(@PathVariable("uuid")String uuid) {
+        return iMarket.isSystemManagerUUID(uuid);
     }
 }

@@ -560,16 +560,27 @@ public class proxy implements IMarket {
 
     @Override
     public SLResponseOBJ<Boolean> isOwnerUUID(String uuid, int storeId) {
-        return null;
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.isOwnerUUID(uuid,storeId);
     }
 
     @Override
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid, int storeId) {
-        return null;
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.isManagerUUID(uuid,storeId);
     }
 
     @Override
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid) {
-        return null;
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.isSystemManagerUUID(uuid);
     }
 }
