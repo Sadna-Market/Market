@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class CompositionDiscountRule implements DiscountRule{
     protected List<DiscountRule> rules;
     protected double discount;
+    protected int id;
+
     public CompositionDiscountRule(List<DiscountRule> rules,double dis){
         if(rules != null)
             this.rules = Collections.synchronizedList(rules);
@@ -20,5 +22,10 @@ public abstract class CompositionDiscountRule implements DiscountRule{
     }
     public abstract DResponseObj<Double> howMuchDiscount(String username,int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag);
 
+    public abstract DResponseObj<String> getDiscountRule();
+
+    public void setID(int id){
+        this.id = id;
+    }
 
 }

@@ -25,4 +25,12 @@ public class SimpleCategoryDiscountRule extends LeafDiscountRule{
         return new DResponseObj<>(dis);
     }
 
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        String stringRule = "";
+        if(id != 0)
+            stringRule += "Simple Category Discount Rule #"+id + ":\n\t";
+        stringRule += "All products in the category "+categoryId+ " have a "+percentDiscount+"% discount";
+        return new DResponseObj<>(stringRule);
+    }
 }

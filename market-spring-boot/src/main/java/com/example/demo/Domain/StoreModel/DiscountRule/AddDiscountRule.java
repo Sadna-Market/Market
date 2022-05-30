@@ -22,4 +22,18 @@ public class AddDiscountRule extends CompositionDiscountRule{
         return new DResponseObj<>(totalDiscount);
 
     }
+
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        StringBuilder stringRule = new StringBuilder();
+        if (id != 0)
+            stringRule.append("Add Discount Rule #").append(id).append(":\n\t");
+        stringRule.append(rules.get(0).getDiscountRule().value).append(" ADD\n\t");
+        for (int i = 1; i < rules.size() - 1; i++) {
+            stringRule.append(rules.get(i).getDiscountRule().value).append(" ADD\n\t");
+        }
+        stringRule.append(rules.get(rules.size()-1).getDiscountRule().value);
+        return new DResponseObj<>(stringRule.toString());
+    }
+
 }

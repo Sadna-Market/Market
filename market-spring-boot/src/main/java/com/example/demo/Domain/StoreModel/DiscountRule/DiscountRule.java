@@ -8,4 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public interface DiscountRule {
 
     DResponseObj<Double> howMuchDiscount(String username, int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag);
+    DResponseObj<String> getDiscountRule();
+    void setID(int id);
 }

@@ -23,9 +23,11 @@ public class BuyPolicy {
         this.rules = new ConcurrentHashMap<>();
     }
 
+
     public DResponseObj<Boolean> addNewBuyRule(BuyRule buyRule){
         int id = idCounter.getAndIncrement();
         rules.put(id,buyRule);
+        buyRule.setID(id);
         return new DResponseObj<>(true);
     }
 

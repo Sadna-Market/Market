@@ -96,7 +96,7 @@ public class DiscountPoilicyTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, 2, 9, 100})
     void checkDiscountPolicyShoppingBagProductRule3(int i) {
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps, i);
         assertEquals(0, discountPolicy.rulesSize());
         assertFalse(discountPolicy.addNewDiscountRule(pcRule).errorOccurred());
@@ -108,7 +108,7 @@ public class DiscountPoilicyTest {
     @ParameterizedTest
     @ValueSource(ints = {3, 5, 6, 7})
     void checkDiscountPolicyShoppingBagProductRule4(int i) {
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps, i);
         assertEquals(0, discountPolicy.rulesSize());
         assertFalse(discountPolicy.addNewDiscountRule(pcRule).errorOccurred());
@@ -160,7 +160,7 @@ public class DiscountPoilicyTest {
     @Test
     @DisplayName("checkDiscountPolicyShoppingBagRule2  -  successful")
     void checkDiscountPolicyCategoryRule2() {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
         assertEquals(0, discountPolicy.rulesSize());
         assertFalse(discountPolicy.addNewDiscountRule(ccRule).errorOccurred());
         products.put(new ProductStore(new ProductType(2, "milk", "", 2), 25, 3.5), 6);
@@ -171,7 +171,7 @@ public class DiscountPoilicyTest {
     @Test
     @DisplayName("checkDiscountPolicyShoppingBagRule3- not pass category condition - fail")
     void checkDiscountPolicyCategoryRule3() {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
         assertEquals(0, discountPolicy.rulesSize());
         assertFalse(discountPolicy.addNewDiscountRule(ccRule).errorOccurred());
         products.put(new ProductStore(new ProductType(2, "milk", "", 2), 25, 3.5), 6);
@@ -183,8 +183,8 @@ public class DiscountPoilicyTest {
     @Test
     @DisplayName("checkDiscountPolicyShoppingBagAndRule2  -  successful")
     void checkDiscountPolicyShoppingBagAndRule2() {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
@@ -197,8 +197,8 @@ public class DiscountPoilicyTest {
     @ValueSource(ints = {0,10,17})
     @DisplayName("checkDiscountPolicyShoppingBagAndRule3 - too young - fail")
     void checkDiscountPolicyShoppingBagAndRule3(int i) {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
@@ -211,8 +211,8 @@ public class DiscountPoilicyTest {
     @Test
     @DisplayName("checkDiscountPolicyShoppingBagOrRule1  -  successful")
     void checkDiscountPolicyShoppingBagOrRule1() {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
@@ -225,8 +225,8 @@ public class DiscountPoilicyTest {
     @ValueSource(ints = {0,10,17})
     @DisplayName("checkDiscountPolicyShoppingBagOrRule3 - - successful")
     void checkDiscountPolicyShoppingBagOrRule3(int i) {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
@@ -239,8 +239,8 @@ public class DiscountPoilicyTest {
     @ValueSource(ints = {0,10,17})
     @DisplayName("checkDiscountPolicyShoppingBagOrRule4 - failure")
     void checkDiscountPolicyShoppingBagOrRule4(int i) {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps,9);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
@@ -254,12 +254,12 @@ public class DiscountPoilicyTest {
     @Test
     @DisplayName("checkDiscountPolicyShoppingBagXOrRule1  - TT  successful")
     void checkDiscountPolicyShoppingBagXOrRule1() {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
-        XorDiscountRule xor = new XorDiscountRule(discountRuleList,5,"Big Discount");
+        XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
         assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
         assertEquals(8.75,discountPolicy.checkDiscountPolicyShoppingBag("niv", 20, products).value);
     }
@@ -268,12 +268,12 @@ public class DiscountPoilicyTest {
     @ValueSource(ints = {0,10,17})
     @DisplayName("checkDiscountPolicyShoppingBagXOrRule3 - TF successful")
     void checkDiscountPolicyShoppingBagXOrRule3(int i) {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
-        XorDiscountRule xor = new XorDiscountRule(discountRuleList,5,"Big Discount");
+        XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
         assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
         assertEquals(3.5*5*(0.4),discountPolicy.checkDiscountPolicyShoppingBag("niv", i, products).value);
     }
@@ -282,13 +282,13 @@ public class DiscountPoilicyTest {
     @ValueSource(ints = {2,9,17})
     @DisplayName("checkDiscountPolicyShoppingBagXOrRule4 - FT successful")
     void checkDiscountPolicyShoppingBagXOrRule4(int i) {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps,i);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
-        XorDiscountRule xor = new XorDiscountRule(discountRuleList,5,"Big Discount");
+        XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
         assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
         assertEquals(i*3.5*(0.5),discountPolicy.checkDiscountPolicyShoppingBag("niv", 20, products).value);
     }
@@ -297,13 +297,13 @@ public class DiscountPoilicyTest {
     @ValueSource(ints = {2,9,17})
     @DisplayName("checkDiscountPolicyShoppingBagXOrRule5 - FF failure")
     void checkDiscountPolicyShoppingBagXOrRule5(int i) {
-        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50,5);
-        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40,1);
+        ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
+        pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps,i);
         List<DiscountRule> discountRuleList = new ArrayList<>();
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
-        XorDiscountRule xor = new XorDiscountRule(discountRuleList,5,"Big Discount");
+        XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
         assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
         assertEquals(0.0,discountPolicy.checkDiscountPolicyShoppingBag("niv", 15, products).value);
     }

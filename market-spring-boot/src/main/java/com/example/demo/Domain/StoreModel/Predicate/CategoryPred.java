@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CategoryPred implements Predicate{
+
     private final int category;
     private final int minAge;
     private final int minHour;  // for example 6 is like 6:00
@@ -50,8 +51,22 @@ public class CategoryPred implements Predicate{
         return new DResponseObj<>(true);
     }
 
+    @Override
+    public String getPredicateBuyRule() {
+        String s = "categoryID " + category +" : the minimum age to buy is "+ minAge;
+        if(minHour != 0 || maxHour !=24) s+= " and no one can buy products from this category between " + maxHour+":00 to "+ minHour +":00";
+        return s;
+    }
 
+    @Override
+    public String getPredicateDiscountRule() {
+        String s = "If you buy from category "+category+" and your age is at least "+minAge;
+        if(minHour != 0 || maxHour !=24) s+=  " and time is between " + minHour+":00 to "+ maxHour +":00";
+        return s;
+    }
 
-
+    public int getCategory() {
+        return category;
+    }
 
 }
