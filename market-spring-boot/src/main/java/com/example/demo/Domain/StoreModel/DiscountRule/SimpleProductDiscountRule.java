@@ -26,4 +26,14 @@ public class SimpleProductDiscountRule extends LeafDiscountRule{
         return new DResponseObj<>(0.0);
     }
 
+
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        String stringRule = "";
+        if(id != 0)
+            stringRule += "Simple Product Discount Rule #"+id + ":\n\t";
+        stringRule += "productID "+productId +" have a "+percentDiscount+"% discount";
+        return new DResponseObj<>(stringRule);
+    }
+
 }

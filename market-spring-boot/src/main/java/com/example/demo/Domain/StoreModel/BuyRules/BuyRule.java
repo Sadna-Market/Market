@@ -7,4 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public interface BuyRule {
     DResponseObj<Boolean> passRule(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag);
+    DResponseObj<String> getBuyRule();
+    void setID(int id);
 }

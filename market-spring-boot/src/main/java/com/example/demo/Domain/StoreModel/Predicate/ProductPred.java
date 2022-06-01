@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ProductPred implements Predicate{
-    int productID;
-    int minQuantity;
-    int maxQuantity;
-    boolean canBuy;
+    private final int productID;
+    private final int minQuantity;
+    private final int maxQuantity;
+    private final boolean canBuy;
 
     public ProductPred(int productID,int minQuantity,int maxQuantity, boolean canBuy){
         this.productID = productID;
@@ -43,5 +43,21 @@ public class ProductPred implements Predicate{
             return new DResponseObj<>(true);
         }
         return new DResponseObj<>(true);
+    }
+
+    @Override
+    public String getPredicateBuyRule() {
+        String s = "productID " + productID +" : the minimum quantity to buy is "+ minQuantity + " ,the maximum quantity is "+maxQuantity;
+        if(!canBuy) s+= " and no one can buy this product";
+        return s;
+    }
+
+    @Override
+    public String getPredicateDiscountRule() {
+        return "If you buy from product "+productID+" at least "+minQuantity+" and at most "+maxQuantity;
+    }
+
+    public int getProductID(){
+        return productID;
     }
 }

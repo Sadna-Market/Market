@@ -2,6 +2,7 @@ package com.example.demo.Domain.StoreModel.DiscountRule;
 
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.ProductStore;
 
 import java.util.List;
@@ -35,4 +36,20 @@ public class OrDiscountRule extends CompositionDiscountRule {
         }
         return new DResponseObj<>(dis);
     }
+
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        StringBuilder stringRule = new StringBuilder();
+        if (id != 0)
+            stringRule.append("Or Discount Rule #").append(id).append(":\n\t");
+        stringRule.append(rules.get(0).getDiscountRule().value).append(" OR\n\t");
+        for (int i = 1; i < rules.size() - 1; i++) {
+            stringRule.append(rules.get(i).getDiscountRule().value).append(" OR\n\t");
+        }
+        stringRule.append(rules.get(rules.size()-1).getDiscountRule().value);
+        if (id != 0)
+            stringRule.append("\n\tSo all products from Category ").append(category).append(" have a ").append(discount).append("% discount");
+        return new DResponseObj<>(stringRule.toString());
+    }
+
 }

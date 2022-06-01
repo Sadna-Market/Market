@@ -23,4 +23,16 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
         }
         return new DResponseObj<>(0.0, res.getErrorMsg());
     }
+
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        String stringRule = "";
+        if (id == 0) stringRule += pred.getPredicateDiscountRule();
+        else {
+            stringRule += "Conditional Store Discount Rule #" + id + ":\n\t";
+            stringRule += pred.getPredicateDiscountRule();
+            stringRule += " so all products in store have a " + percentDiscount + "% discount";
+        }
+        return new DResponseObj<>(stringRule);
+    }
 }

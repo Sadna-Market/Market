@@ -22,4 +22,14 @@ public class AndBuyRule extends CompositionBuyRule {
         }
         return new DResponseObj<>(true); //passes all rules
     }
+
+    @Override
+    public DResponseObj<String> getBuyRule() {
+        StringBuilder stringRule = new StringBuilder();
+        if(id != 0)
+            stringRule.append("And Buy Rule #").append(id).append(":\n\t");
+        for(BuyRule rule : rules)
+            stringRule.append(rule.getBuyRule().value).append("\n\t");
+        return new DResponseObj<>(stringRule.toString());
+    }
 }

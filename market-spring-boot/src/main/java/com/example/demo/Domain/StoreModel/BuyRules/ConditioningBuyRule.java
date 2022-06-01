@@ -11,9 +11,11 @@ public class ConditioningBuyRule extends CompositionBuyRule {
     private BuyRule predIf;
     private BuyRule predThen;
 
+/*
     public ConditioningBuyRule(List<BuyRule> rules) {
         super(rules);
     }
+*/
 
     public ConditioningBuyRule(BuyRule predIf , BuyRule predThen) {
         super(null);
@@ -37,6 +39,16 @@ public class ConditioningBuyRule extends CompositionBuyRule {
             if(!condition.item1.passRule(user,shoppingBag)) return false;
         }
         return true; // pass all conditions*/
+    }
+
+    @Override
+    public DResponseObj<String> getBuyRule() {
+        String stringRule = "";
+        if(id != 0)
+            stringRule += "Conditioning Buy Rule #"+id+":\n\t";
+        stringRule += "if: " + predIf.getBuyRule().value +"\n\t";
+        stringRule += "then: " + predThen.getBuyRule().value;
+        return new DResponseObj<>(stringRule);
     }
 
     /*class Tuple<E, T> {

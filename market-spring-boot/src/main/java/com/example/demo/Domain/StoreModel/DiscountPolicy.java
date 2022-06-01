@@ -27,6 +27,7 @@ public class DiscountPolicy {
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule){
         int id = idCounter.getAndIncrement();
         rules.put(id,discountRule);
+        discountRule.setID(id);
         return new DResponseObj<>(true);
     }
 
