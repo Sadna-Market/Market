@@ -215,16 +215,24 @@ public class UserManager {
 
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, Store store, String ownerEmail) {
         logger.debug("UserManager removeStoreOwner");
-        if (isLogged(userId).value) {
-            User loggedUser = LoginUsers.get(userId);
-            if (isOwner(userId, store).value) {
-                User ownerToRemove = members.get(ownerEmail);
-                return PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove,store,loggedUser);
+        if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false,ErrorCode.NOTLOGGED);
+        User loggedUser = LoginUsers.get(userId);
+        if (!isOwner(userId, store).value) return new DResponseObj<>(false,ErrorCode.NOTOWNER);
+        User ownerToRemove = members.get(ownerEmail);
+        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove,store,loggedUser);
+        if(!removePermission.errorOccurred()){
+            //change all permission grantor to the founder (because we delete the grantor user)
+            String founder = store.getFounder().value;
+            User founderUser = getMember(founder).value;
+            for (Permission permission : ownerToRemove.getGrantorPermission().value) {
+                if(permission.getStore().value.getStoreId().value.equals(store.getStoreId().value)) {
+                    permission.setGrantor(founderUser);
+                    founderUser.addGrantorPermission(permission);
+                    ownerToRemove.removeGrantorPermission(permission);
+                }
             }
         }
-        DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
-        a.errorMsg = ErrorCode.NOTLOGGED;
-        return a;
+        return removePermission;
     }
 
 
