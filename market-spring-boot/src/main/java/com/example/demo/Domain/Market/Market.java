@@ -1051,6 +1051,10 @@ public class Market {
         return new SLResponseOBJ<>(true,-1);
     }
 
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
     private void notifyOwnersAndManagersStoreDeleted(List<Store> storesToDelete) {
         storesToDelete.forEach(store -> {
             logger.info(String.format("notifying owners/managers of deletion of store %d", store.getStoreId().value));

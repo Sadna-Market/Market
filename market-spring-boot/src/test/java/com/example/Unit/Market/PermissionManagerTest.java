@@ -115,16 +115,13 @@ class PermissionManagerTest {
         permissionManager.createPermission(founder, store1, null, userTypes.owner, userTypes.system);//open new store
         permissionManager.createPermission(owner1, store1, founder, userTypes.owner, userTypes.owner);//owner->owner
 
-        //delete manager permission
+        //delete owner permission
         assertTrue(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
 
-        //delete manager permission that not already manager in this store
+        //delete owner permission that not already owner in this store
         assertFalse(permissionManager.removeOwnerPermissionCompletely(owner1, store1, founder).value);
 
     }
-
-
-
 
     @Test
     void hasPermission() {

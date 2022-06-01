@@ -297,9 +297,9 @@ public class PurchaseTest extends MarketTests {
         assertTrue(recipes.contains("1"));
     }
 
-    /**
+/*    *//**
      * Requirement: purchase cart  - #2.4.2
-     */
+     *//*
     @Test
     @DisplayName("req: #2.2.5 with buy rule - failure test")
     void purchaseCartWithBuyRule_failure() {
@@ -338,5 +338,5 @@ public class PurchaseTest extends MarketTests {
         assertEquals(1,amountItem1);
         assertEquals(3,amountItem2);
 
-    }
+    }*/
 }
