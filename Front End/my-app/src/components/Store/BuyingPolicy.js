@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import AddSimpleRule from "../Policy/AddSimpleRule";
-import AllRules from "../Policy/buyingPolicy";
-import AddComposeRule from "../Policy/ComposeRules/AddComposeRule";
-import SimpleComposeRule from "../Policy/SimpleCompose/AddSimpleCompose";
+import AddSimpleRule from "../BuyingPolicy/AddSimpleRule";
+import AllRules from "../BuyingPolicy/buyingPolicy";
+import AddComposeRule from "../BuyingPolicy/ComposeRules/AddComposeRule";
+import SimpleComposeRule from "../BuyingPolicy/SimpleCompose/AddSimpleCompose";
 
 const BuyingPolicy = (props) => {
   let UUID = props.uuid;
