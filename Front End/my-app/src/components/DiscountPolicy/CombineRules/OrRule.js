@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ComposeRuleList from "./ComposeRuleList";
+import CombineRuleList from "./CombineRuleList";
 
 const OrRule = (props) => {
   let UUID = props.uuid;
@@ -29,7 +29,12 @@ const OrRule = (props) => {
       <h2>Sign the rules to Combile with Or, when you finish press</h2>
       <button onClick={confirmHandler}>Confirm</button>
       <div>
-        <ComposeRuleList uuid={UUID} storeID={storeID} onChangeList={changeList} checkbox={true} />
+        <CombineRuleList
+          uuid={UUID}
+          storeID={storeID}
+          onChangeList={changeList}
+          checkbox={true}
+        />
       </div>
     </div>
   );

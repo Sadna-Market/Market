@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import ComposeRuleList from "./ComposeRuleList";
+import CombineRuleList from "./CombineRuleList";
 
-const OrRule = (props) => {
+const AndRule = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
@@ -16,7 +16,7 @@ const OrRule = (props) => {
     }
   };
 
-  //todo: AddRule
+  //todo: AndRULE
   const confirmHandler = () => {
     //do..... with the list
     props.onRule();
@@ -25,14 +25,19 @@ const OrRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div>
-      <h3>Or Rule</h3>
-      <h2>Sign the rules to Combile with Or, when you finish press</h2>
+      <h3>AND Rule</h3>
+      <h2>Sign the rules to Combile with AND, when you finish press</h2>
       <button onClick={confirmHandler}>Confirm</button>
       <div>
-        <ComposeRuleList uuid={UUID} storeID={storeID} onChangeList={changeList} checkbox={true} />
+        <CombineRuleList
+          uuid={UUID}
+          storeID={storeID}
+          onChangeList={changeList}
+          checkbox={true}
+        />
       </div>
     </div>
   );
 };
 
-export default OrRule;
+export default AndRule;

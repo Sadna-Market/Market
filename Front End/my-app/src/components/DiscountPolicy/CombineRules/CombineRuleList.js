@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import ComposeRuleID from "./ComposeRuleID";
+import CombineRuleID from "./CombineRuleID";
 
-const ComposeRuleList = (props) => {
+const CombineRuleList = (props) => {
   let rules = [
-    { id: 1, kind: "AND" },
-    { id: 2, kind: "OR" },
+    { id: 1, kind: "ADD" },
+    { id: 2, kind: "XOR" },
     { id: 3, kind: "Simple" },
-    { id: 4, kind: "Simple" },
-    { id: 5, kind: "AND" },
+    { id: 4, kind: "AND" },
+    { id: 5, kind: "Add" },
     { id: 6, kind: "Simple" },
-    { id: 7, kind: "Condition" },
+    { id: 7, kind: "Simple" },
   ];
   if (rules.length === 0) {
     return <h2 className="stores-list__fallback">This store without Rules</h2>;
@@ -24,7 +24,7 @@ const ComposeRuleList = (props) => {
   };
 
   let expensesContent = rules.map((expense) => (
-    <ComposeRuleID
+    <CombineRuleID
       id={expense.id}
       kind={expense.kind}
       onInfo={infoHandler}
@@ -42,4 +42,4 @@ const ComposeRuleList = (props) => {
   );
 };
 
-export default ComposeRuleList;
+export default CombineRuleList;
