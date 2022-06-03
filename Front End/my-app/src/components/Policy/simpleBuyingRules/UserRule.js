@@ -16,7 +16,8 @@ const UserRule = (props) => {
   //todo: add new user Rule to store
   const addHandler = () => {
     cleanHandler();
-    props.onRule();
+    //return the ruleId in onRule insead of 10/11/12/13
+    props.onRule(13);
   };
 
   return (

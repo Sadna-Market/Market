@@ -3,7 +3,7 @@ import AddRule from "./AddRule";
 import ConditionRule from "./ConditionRule";
 import OrRule from "./OrRule";
 
-const ComposeRule = (props) => {
+const SimpleComposeRule = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
   const addHandler = () => {
@@ -18,7 +18,11 @@ const ComposeRule = (props) => {
   };
   const conditionHandler = () => {
     setCommand(
-      <ConditionRule uuid={UUID} storeID={storeID} onRule={() => props.onRule()} />
+      <ConditionRule
+        uuid={UUID}
+        storeID={storeID}
+        onRule={() => props.onRule()}
+      />
     );
   };
   let besicPage = (
@@ -39,4 +43,4 @@ const ComposeRule = (props) => {
   );
 };
 
-export default ComposeRule;
+export default SimpleComposeRule;

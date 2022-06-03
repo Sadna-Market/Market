@@ -7,10 +7,15 @@ import UserRule from "./simpleBuyingRules/UserRule";
 const AddSimpleRule = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
-  const [command, setCommand] = useState("");
-  return (
-    <div>
-      <h3>Simple Rules</h3>
+  let basicPage = (
+    <>
+      {props.simplePage ? (
+        <div>
+          <h3>Simple Rules</h3>
+        </div>
+      ) : (
+        <></>
+      )}
       <div>
         <button
           onClick={() => {
@@ -18,7 +23,8 @@ const AddSimpleRule = (props) => {
               <ShoppingBagRule
                 uuid={UUID}
                 storeID={storeID}
-                onRule={() => props.onRule()}
+                onRule={(res) => props.onRule(res)}
+                simplePage = {true}
               />
             );
           }}
@@ -31,7 +37,8 @@ const AddSimpleRule = (props) => {
               <ProductRule
                 uuid={UUID}
                 storeID={storeID}
-                onRule={() => props.onRule()}
+                onRule={(res) => props.onRule(res)}
+                simplePage = {true}
               />
             );
           }}
@@ -44,7 +51,8 @@ const AddSimpleRule = (props) => {
               <CategoryRule
                 uuid={UUID}
                 storeID={storeID}
-                onRule={() => props.onRule()}
+                onRule={(res) => props.onRule(res)}
+                simplePage = {true}
               />
             );
           }}
@@ -57,7 +65,8 @@ const AddSimpleRule = (props) => {
               <UserRule
                 uuid={UUID}
                 storeID={storeID}
-                onRule={() => props.onRule()}
+                onRule={(res) => props.onRule(res)}
+                simplePage = {true}
               />
             );
           }}
@@ -65,9 +74,11 @@ const AddSimpleRule = (props) => {
           User
         </button>
       </div>
-      <div>{command}</div>
-    </div>
+    </>
   );
+
+  const [command, setCommand] = useState(basicPage);
+  return <div>{command}</div>;
 };
 
 export default AddSimpleRule;

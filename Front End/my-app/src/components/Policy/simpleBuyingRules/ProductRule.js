@@ -6,7 +6,7 @@ const ProductRule = (props) => {
 
   const [minQuantity, setminQuantity] = useState("");
 
-  const changeQuantityHandler = (event) => {
+  const changeMinQuantityHandler = (event) => {
     setminQuantity(event.target.value);
   };
 
@@ -29,7 +29,8 @@ const ProductRule = (props) => {
   //todo: add new ShoppingBag Rule to store
   const addHandler = () => {
     cleanHandler();
-    props.onRule();
+    //return the ruleId in onRule insead of 10/11/12/13
+    props.onRule(11);
   };
 
   return (
@@ -41,7 +42,7 @@ const ProductRule = (props) => {
           <input
             type="number"
             min="0"
-            value={minQuantity}
+            value={productID}
             placeholder="Write PRoduct ID"
             onChange={changeProductHandler}
           />
@@ -53,7 +54,7 @@ const ProductRule = (props) => {
             min="0"
             value={minQuantity}
             placeholder="Write Minmum Quantity"
-            onChange={changeQuantityHandler}
+            onChange={changeMinQuantityHandler}
           />
         </div>
         <div className="products__control">

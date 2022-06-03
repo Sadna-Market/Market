@@ -5,11 +5,11 @@ const ShoppingBagRule = (props) => {
   let storeID = props.storeID;
 
   const [minQuantity, setminQuantity] = useState("");
-  const changeProductTypeHandler = (event) => {
+  const changeQuantityHandler = (event) => {
     setminQuantity(event.target.value);
   };
   const [minProductTypes, setminProductTypes] = useState("");
-  const changeQuantityHandler = (event) => {
+  const changeProductTypeHandler = (event) => {
     setminProductTypes(event.target.value);
   };
 
@@ -21,7 +21,8 @@ const ShoppingBagRule = (props) => {
   //todo: add new ShoppingBag Rule to store
   const addHandler = () => {
     cleanHandler();
-    props.onRule();
+    //return the ruleId in onRule insead of 10/11/12/13
+    props.onRule(12);
   };
 
   return (

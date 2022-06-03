@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import Card from "../UI/Card";
+import RuleInfo from "./RuleInfo";
 const RuleID = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
   let ruleID = props.ruleID;
   let kind = props.kind;
+
+  const [info, setInfo] = useState("");
 
   //todo: remove Rule
   const removeHandler = () => {
@@ -12,7 +15,12 @@ const RuleID = (props) => {
   };
 
   const infoHandler = () => {
-    props.onInfo(ruleID);
+    if (info == "") {
+      setInfo(<RuleInfo ruleID={ruleID} />);
+    } else {
+      setInfo("");
+    }
+    //props.onInfo(ruleID);
   };
 
   return (
@@ -26,6 +34,7 @@ const RuleID = (props) => {
           <button onClick={removeHandler}>remove Rule</button>
         </div>
       </Card>
+      <div>{info}</div>
     </li>
   );
 };

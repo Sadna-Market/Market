@@ -34,7 +34,8 @@ const CategoryRule = (props) => {
   //todo: add new ShoppingBag Rule to store
   const addHandler = () => {
     cleanHandler();
-    props.onRule();
+    //return the ruleId in onRule insead of 10/11/12/13
+    props.onRule(10);
   };
 
   return (

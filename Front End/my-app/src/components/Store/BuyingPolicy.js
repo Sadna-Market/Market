@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AddSimpleRule from "../Policy/AddSimpleRule";
 import AllRules from "../Policy/buyingPolicy";
 import AddComposeRule from "../Policy/ComposeRules/AddComposeRule";
+import SimpleComposeRule from "../Policy/SimpleCompose/AddSimpleCompose";
 
 const BuyingPolicy = (props) => {
   let UUID = props.uuid;
@@ -13,13 +14,19 @@ const BuyingPolicy = (props) => {
 
   const simpleRuleHandler = () => {
     setComaand(
-      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={allRulesHandler} />
+      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={allRulesHandler} simplePage={true}/>
     );
   };
 
   const composeRuleHandler = () => {
     setComaand(
       <AddComposeRule uuid={UUID} storeID={storeID} onRule={allRulesHandler} />
+    );
+  };
+
+  const simpleComposeRuleHandler = () => {
+    setComaand(
+      <SimpleComposeRule uuid={UUID} storeID={storeID} onRule={allRulesHandler} />
     );
   };
 
@@ -33,8 +40,8 @@ const BuyingPolicy = (props) => {
       <div>
         <button onClick={allRulesHandler}>All Rules</button>
         <button onClick={simpleRuleHandler}>Add Simple Rule</button>
-        <button onClick={composeRuleHandler}>Add Compose Rule</button>
-        <button onClick={simpleRuleHandler}>Combine Rules</button>
+        <button onClick={simpleComposeRuleHandler}>Add Compose Rule</button>
+        <button onClick={composeRuleHandler}>Combine Rules</button>
       </div>
       <div>{command}</div>
     </div>
