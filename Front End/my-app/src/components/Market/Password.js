@@ -28,7 +28,7 @@ const Password = (props) => {
 
     //todo: change thr password
     async function confirmHandler() {
-        const changePasswordResponse = await apiClientHttp.changePassword();
+        const changePasswordResponse = await apiClientHttp.changePassword(UUID,email,pass1,pass2);
         console.log("start func  confirmHandler changePasswordResponse")
         console.log(changePasswordResponse)
 

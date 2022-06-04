@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
@@ -50,15 +50,13 @@ const BuyCart = (props) => {
       SetError(errorCode.get(orderShoppingCartResponse.errorMsg))
     } else {
       SetConfirmation("The Order completed successfully!")
-      //loop just for cheking
-      for (let j = 0; j < 100; j++) {
-      }
       cleanHandler();
       props.onMarket();
     }
-
-
   }
+  // useEffect(() => {
+  //   getAllStores();
+  // }, [enteredConfirmation.refresh]);
 
   return (
     <div className="products">
