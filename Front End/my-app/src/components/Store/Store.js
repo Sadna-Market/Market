@@ -12,6 +12,7 @@ import RemoveManager from "./RemoveManager";
 import PolicyStore from "./DiscountPolicy";
 import BuyingPolicy from "./BuyingPolicy";
 import DiscountPolicy from "./DiscountPolicy";
+import "./Store.css";
 
 const Store = (props) => {
   let storeID = props.storeID;
@@ -136,7 +137,7 @@ const Store = (props) => {
   };
 
   return (
-    <div>
+    <div className="store">
       <h3>{name}</h3>
       <h3>{isOpen}</h3>
       <button onClick={rulesHandler}>Rules</button>
