@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class LeafDiscountRule implements DiscountRule{
 
     protected double percentDiscount;
+    protected int id;
 
     public LeafDiscountRule(double percentDiscount){
         this.percentDiscount = percentDiscount;
@@ -15,4 +16,9 @@ public abstract class LeafDiscountRule implements DiscountRule{
 
     public abstract DResponseObj<Double> howMuchDiscount(String username,int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag);
 
+    public abstract DResponseObj<String> getDiscountRule();
+
+    public void setID(int id){
+        this.id = id;
+    }
 }

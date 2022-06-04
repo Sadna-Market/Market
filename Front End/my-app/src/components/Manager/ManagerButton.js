@@ -4,6 +4,9 @@ import ConnectUsers from "./Users";
 // import DisConnectUsers from "./DisConnectUsers";
 import NewProductType from "./NewProductType";
 // import RemoveUser from "./RemoveUser";
+=======
+import NewProductType from "./NewProductType";
+
 import UserList from "./UserList";
 import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"

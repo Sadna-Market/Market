@@ -19,4 +19,15 @@ public class UserPred implements Predicate{
         return username.equals(user) ? new DResponseObj<>(false, ErrorCode.USER_CAN_NOT_BUY_IN_THIS_STORE) : new DResponseObj<>(true);
     }
 
+    @Override
+    public String getPredicateBuyRule() {
+        return "user email: " + username + " can't buy";
+    }
+
+    @Override
+    public String getPredicateDiscountRule() {
+        return null;
+    }
+
+
 }

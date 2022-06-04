@@ -12,8 +12,8 @@ public class XorDiscountRule extends CompositionDiscountRule {
 
     protected String decision;
 
-    public XorDiscountRule(List<DiscountRule> rules, double discount, String decision) {
-        super(rules, discount);
+    public XorDiscountRule(List<DiscountRule> rules, String decision) {
+        super(rules, 0.0);
         this.decision = decision;
     }
 
@@ -37,5 +37,25 @@ public class XorDiscountRule extends CompositionDiscountRule {
             }
             return new DResponseObj<>(0.0);
         }
+    }
+
+
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        StringBuilder stringRule = new StringBuilder();
+        if (id != 0)
+            stringRule.append("Xor Discount Rule #").append(id).append(":\n\t");
+        stringRule.append(rules.get(0).getDiscountRule().value).append(" Xor\n\t");
+        for (int i = 1; i < rules.size() - 1; i++) {
+            stringRule.append(rules.get(i).getDiscountRule().value).append(" Xor\n\t");
+        }
+        stringRule.append(rules.get(rules.size()-1).getDiscountRule().value);
+        stringRule.append("\n\tdecision rule is ");
+        if (decision.equals("Big discount")) {
+            stringRule.append(decision);
+        } else {
+            stringRule.append("first");
+        }
+        return new DResponseObj<>(stringRule.toString());
     }
 }

@@ -13,6 +13,7 @@ public abstract class CompositionBuyRule implements BuyRule {
 
 
     protected List<BuyRule> rules;
+    protected int id;
 
     public CompositionBuyRule(List<BuyRule> rules){
         if(rules != null)
@@ -31,4 +32,12 @@ public abstract class CompositionBuyRule implements BuyRule {
     }
 
     public abstract DResponseObj<Boolean> passRule(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag);
+
+    @Override
+    public void setID(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public abstract DResponseObj<String> getBuyRule();
 }

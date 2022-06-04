@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBagPred implements Predicate{
-    int minProductQuantity;
-    int minProductTypes;
-    double totalPrice;
+    private final int minProductQuantity;
+    private final int minProductTypes;
+    private final double totalPrice;
 
     //for buy rule
     public ShoppingBagPred(int minProductQuantity, int minProductTypes){
@@ -45,5 +45,15 @@ public class ShoppingBagPred implements Predicate{
         }
         return productQuantity >= minProductQuantity && numOfTypes >= minProductTypes ?
                 new DResponseObj<>(true) : new DResponseObj<>(false, ErrorCode.NOT_PASS_THE_MIN_QUANTITY_TO_BUY);
+    }
+
+    @Override
+    public String getPredicateBuyRule() {
+        return "The minimum quantity of products to buy is "+minProductQuantity + " and the minimum products types is "+minProductTypes;
+    }
+
+    @Override
+    public String getPredicateDiscountRule(){
+        return "If the shopping bag contains at least "+minProductTypes+" types of products and at least "+minProductQuantity +" quantity of products and the total price is more than "+totalPrice;
     }
 }

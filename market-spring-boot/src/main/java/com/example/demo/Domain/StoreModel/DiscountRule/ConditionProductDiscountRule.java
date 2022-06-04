@@ -13,8 +13,8 @@ public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
     protected ProductPred pred;
 
 
-    public ConditionProductDiscountRule(ProductPred pred,double percentDiscount, int productId) {
-        super(percentDiscount, productId);
+    public ConditionProductDiscountRule(ProductPred pred,double percentDiscount) {
+        super(percentDiscount,pred.getProductID());
         this.pred = pred;
     }
 
@@ -25,6 +25,18 @@ public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
             return super.howMuchDiscount(username,age,shoppingBag);
         }
         return new DResponseObj<>(0.0, res.getErrorMsg());
+    }
+
+    @Override
+    public DResponseObj<String> getDiscountRule() {
+        String stringRule = "";
+        if (id == 0) stringRule += pred.getPredicateDiscountRule();
+        else {
+            stringRule += "Conditional Product Discount Rule #" + id + ":\n\t";
+            stringRule += pred.getPredicateDiscountRule();
+            stringRule += " so productID " + productId + " have a " + percentDiscount + "% discount";
+        }
+        return new DResponseObj<>(stringRule);
     }
 
 
