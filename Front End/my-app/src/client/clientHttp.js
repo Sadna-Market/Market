@@ -6,13 +6,13 @@ export const createApiClientHttp = () => {
     return {
         initMarket : async (email,password,phoneNumber,datofbirth) =>
         {
-            
+
             let path = apiUrl.concat("initMarket");
             const body = {
-                    datofbirth:datofbirth,
-                    email: email,
-                    Password: password,
-                    phoneNumber:phoneNumber
+                datofbirth:datofbirth,
+                email: email,
+                Password: password,
+                phoneNumber:phoneNumber
 
             }
             return await axios.post(path,body).then((res)=>{
@@ -207,13 +207,18 @@ export const createApiClientHttp = () => {
 
 
         addNewProductType :async (uuid,namep,descriptionp,categoryp)=>{
+            console.log("addNewProductType client");
+            console.log(uuid);
+            console.log(namep);
+            console.log(descriptionp);
+            console.log(categoryp);
             let path = apiUrl.concat(`addNewProductType/${uuid}`);
             let body = {
-                data : {
-                    name:namep,
-                    description:descriptionp,
-                    category:categoryp
-                }
+
+                name:namep,
+                description:descriptionp,
+                category:categoryp
+
             }
             return await axios.post(path,body).then((res)=>{
                 return res.data;
@@ -261,14 +266,14 @@ export const createApiClientHttp = () => {
         orderShoppingCart: async (uuid,city,adress,apartment,CreditCard,CreditDate,pin)=>{
             let path = apiUrl.concat(`orderShoppingCart/${uuid}`);
             let body = {
-                data : {
-                    city:city,
-                    adress:adress,
-                    apartment:apartment,
-                    CreditCard:CreditCard,
-                    CreditDate:CreditDate,
-                    pin:pin
-                }
+
+                city:city,
+                adress:adress,
+                apartment:apartment,
+                CreditCard:CreditCard,
+                CreditDate:CreditDate,
+                pin:pin
+
             }
             return await axios.post(path,body).then((res)=>{
                 return res.data;
@@ -285,11 +290,17 @@ export const createApiClientHttp = () => {
         },
 
         changePassword:async (uuid,email,Password,newPassword)=>{
+            console.log("uuid");
+            console.log(uuid);
+            console.log(email);
+            console.log(Password);
+            console.log(newPassword);
+
             let path = apiUrl.concat(`changePassword/${uuid}`);
             let  body = {
-                    email:email,
-                    Password,Password,
-                    newPassword:newPassword
+                email:email,
+                Password,Password,
+                newPassword:newPassword
 
             }
             return await axios.post(path,body).then((res)=>{
@@ -306,8 +317,8 @@ export const createApiClientHttp = () => {
 
             let path = apiUrl.concat(`openNewStore/${uuid}`);
             let body = {
-                    "name":name,
-                    "founder":founder,
+                "name":name,
+                "founder":founder,
             }
             return await axios.post(path,body).then((res)=>{
                 return res.data;
@@ -316,12 +327,12 @@ export const createApiClientHttp = () => {
 
 
         addNewProductToStore: async(uuid,storeid,productId,price,quantity)=>{
-            console.log("addNewProductToStore  client "+storeid+" "+productId+" "+ price+" "+quantity )
+            console.log("addNewProductToStore  client "+storeid+" "+productId+" "+(Number(price).toFixed(2))+" "+quantity )
 
-            let path = apiUrl.concat(`addNewProductToStore/${uuid}/${storeid}/${productId}`);
+            let path = apiUrl.concat(`addNewProductToStore/${uuid}/${storeid}/${productId}`)
             let body = {
 
-                "price":price,
+                "price":Number(price).toFixed(2),
                 "quantity":quantity,
 
             }
@@ -344,7 +355,7 @@ export const createApiClientHttp = () => {
             let path = apiUrl.concat(`setProductPriceInStore/${uuid}/${storeid}/${productId}`);
             let body = {
 
-                "price":price
+                "price":Number(price).toFixed(2)
 
             }
             return await axios.post(path,body).then((res)=>{
@@ -439,11 +450,13 @@ export const createApiClientHttp = () => {
 
 
         getUserInfo: async(uuid,email)=>{
+            console.log("getUserInfo client http  "+uuid +""+ email)
+
             let path = apiUrl.concat(`getUserInfo/${uuid}`);
             let body = {
-                data:{
-                    email :email
-                }}
+
+                email :email
+            }
             return await axios.get(path,body).then((res)=>{
                 return res.data;
             })
@@ -562,20 +575,92 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         },
+        isOwnerUUID:async(uuid,storeID)=>{
+            let path = apiUrl.concat(`isOwnerUUID/${uuid}/${storeID}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
 
 
 
+        isManagerUUID:async(uuid,storeID)=>{
+            let path = apiUrl.concat(`isManagerUUID/${uuid}/${storeID}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
+
+
+        isSystemManagerUUID:async(uuid)=>{
+            let path = apiUrl.concat(`isSystemManagerUUID/${uuid}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
 
 
     }
 }
 
-
+//test()
 async function test (){
     console.log("00000000000000000000000000000")
     let res = createApiClientHttp();
-    let uuid =await res.guestVisit()
     let json;
+    json =await res.initMarket("adminedanielkheyfets@gmail.com","admin123asdS!","0538265477","20/01/2001");
+    json =await res.login(json.value,"adminedanielkheyfets@gmail.com","admin123asdS!");
+    console.log(json,"Admin")
+    let uuid=json.value
+    console.log(uuid,"00000")
+    json =await res.addNewProductType(uuid,"d;;;;sd","Dsd",1);
+    console.log(json,"00000")
+    json =await res.logout(uuid)
+    console.log(json,"00000")
+
+
+
+
+
+    uuid =await res.guestVisit()
+    json =await res.addNewMember(uuid.value,"edanielkheyfets@gmail.com","123asdS!","0538265477","20/01/2001");
+    json =await res.login(uuid.value,"edanielkheyfets@gmail.com","123asdS!");
+    uuid =json.value
+    json=await res.openNewStore(uuid,"lechem","edanielkheyfets@gmail.com")
+    console.log(json,"add new store")
+    json=await res.addNewProductToStore(uuid,1,1,80,30)
+    console.log(json,"d")
+
+    json = await res.setProductPriceInStore(uuid,1,1,60)
+    console.log(json,"d")
+
+    json= await res.setProductQuantityInStore(uuid,1,1,100)
+    console.log(json,"d")
+    json =await res.changePassword(uuid,"edanielkheyfets@gmail.com","123asdS!","123as111dS!")
+    json =await res.setManagerPermissions(uuid,1,"edanielkheyfets@gmail.com","edanielkhddeyfets@gmail.com","Ds",true)
+    json =await res.getStoreOrderHistory(uuid,1);
+    json =await res.addProductToShoppingBag(uuid,1,1,10);
+    json =await res.getShoppingCart(uuid);
+
+    console.log(json.value.shoppingBagHash['1'],"d")
+    json = await res.getAllStores();
+    console.log(json)
+    json = await res.getAllProducts();
+    console.log(json)
+    json = await res.getAllProductsInStore(1);
+    console.log(json)
+
+    json = await res.isOwnerUUID(uuid,1);
+    console.log(json)
+    json = await res.isManagerUUID(uuid,1);
+    console.log(json)
+    json = await res.isSystemManagerUUID(uuid);
+    console.log(json)
+
+    json =await res.closeStore(uuid,1);
+
+    console.log(json,"d")
+
     // console.log(uuid.value)
     // await res.guestLeave(uuid.value);
     // let json =await res.initMarket();
@@ -618,8 +703,8 @@ async function test (){
 //     console.log(json)
 //  json =await res.filterByStoreRate([3],2);
 //     console.log(json)
-    json =await res.searchProductByRangePrices(3,3,2);
-    console.log(json)
+    // json =await res.searchProductByRangePrices(3,3,2);
+    // console.log(json)
 //  json =await res.searchProductByRangePricesList([2],2,2,2);
 //     console.log(json)
 //  json =await res.filterByRangePrices([2],2,2);
@@ -652,8 +737,8 @@ async function test (){
 
 //     json =await res.setProductPriceInStore(uuid.value,1,1,2.2);
 //     console.log(json)
-//     json =await res.setProductQuantityInStore(uuid.value,1,1,1);
-//     console.log(json)
+    // json =await res.setProductQuantityInStore(uuid.value,1,1,1);
+    // console.log(json)
 //     json =await res.addNewStoreOwner(uuid.value,1,"sdsdds");
 //     console.log(json)
 //     json =await res.addNewStoreManger(uuid.value,1,"ds");
