@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingBagBuyRule extends LeafBuyRule {
 
-    public ShoppingBagBuyRule(ShoppingBagPred pred) {
+    public ShoppingBagBuyRule(Predicate pred) {
         super(pred);
     }
 

@@ -1,6 +1,7 @@
 package com.example.demo.Domain.StoreModel.DiscountRule;
 
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
 import com.example.demo.Domain.StoreModel.Predicate.ShoppingBagPred;
 import com.example.demo.Domain.StoreModel.ProductStore;
@@ -8,9 +9,9 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
-    protected ShoppingBagPred pred;
+    protected Predicate pred;
 
-    public ConditionStoreDiscountRule(ShoppingBagPred pred,double percentDiscount) {
+    public ConditionStoreDiscountRule(Predicate pred,double percentDiscount) {
         super(percentDiscount);
         this.pred = pred;
     }

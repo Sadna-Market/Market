@@ -1,12 +1,9 @@
 package com.example.demo.Service;
 
 
-
-
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
-import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
-import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.HashMap;
@@ -104,9 +101,9 @@ public interface IMarket {
 
     //2.4.2
 
-    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule);
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRuleSL buyRule);
     public SLResponseOBJ<Boolean> removeBuyRule(String userId, int storeId, int buyRuleID);
-    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule);
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule);
     public SLResponseOBJ<Boolean> removeDiscountRule(String userId, int storeId, int discountRuleID);
 
     //2.4.4

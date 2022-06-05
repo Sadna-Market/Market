@@ -23,7 +23,7 @@ public class ErrorCode {
     public static int ALLREADYHAVESYSTEMMANAGER = 23;
     public static int NOTLEGALDATE = 24;
     public static int NOT_MOVED_PRICE_FOR_DISCOUNT =25;
-
+    public static int INVALID_ARGS_FOR_RULE = 26;
     public static int PRODUCT_NOT_FOR_SELL_NOW = 27;
     public static int TRY_TO_BUY_MORE_THEN_MAX_QUANTITY_TO_BUY = 28;
     public static int NOT_PASS_THE_MIN_QUANTITY_TO_BUY = 29;

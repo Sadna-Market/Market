@@ -3,6 +3,7 @@ package com.example.demo.Domain.StoreModel.DiscountRule;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Predicate.CategoryPred;
+import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
 import com.example.demo.Domain.StoreModel.ProductStore;
 
@@ -10,11 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
 
-    protected ProductPred pred;
+    protected Predicate pred;
 
 
-    public ConditionProductDiscountRule(ProductPred pred,double percentDiscount) {
-        super(percentDiscount,pred.getProductID());
+    public ConditionProductDiscountRule(Predicate pred, double percentDiscount, int productID) {
+        super(percentDiscount,productID);
         this.pred = pred;
     }
 
