@@ -10,7 +10,7 @@ public class DataProductStore {
     @Id
     @SequenceGenerator(
             name = "product_store_sequence",
-            sequenceName = "productStore_sequence",
+            sequenceName = "product_store_sequence",
             allocationSize = 1
     )
     @GeneratedValue(

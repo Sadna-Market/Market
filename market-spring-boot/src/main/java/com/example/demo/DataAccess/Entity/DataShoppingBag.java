@@ -3,6 +3,9 @@ package com.example.demo.DataAccess.Entity;
 import com.example.demo.DataAccess.CompositeKeys.ShoppingBagId;
 
 import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Entity(name = "ShoppingBags")
 @Table(name = "shopping_bags")
@@ -24,7 +27,15 @@ public class DataShoppingBag {
             ))
     private DataStore store;
 
-    //TODO: add products hashmap <productid,quantity> something like that
+
+    @ElementCollection
+    @MapKeyColumn(name = "product_id")
+    @Column(name = "quantity")
+    @CollectionTable(name = "shopping_bag_product_quantity",
+            joinColumns = {@JoinColumn(name = "username", foreignKey = @ForeignKey(name = "user_fk")),
+                    @JoinColumn(name = "store_id", foreignKey = @ForeignKey(name = "store_fk"))})
+    private Map<Integer, Integer> productQuantity = new HashMap<>();
+
     public DataShoppingCart getDataShoppingCart() {
         return dataShoppingCart;
     }

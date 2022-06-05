@@ -10,6 +10,15 @@ import java.util.Set;
 @Table(name = "product_type")
 public class DataProductType {
     @Id
+    @SequenceGenerator(
+            name = "product_type_sequence",
+            sequenceName = "product_type_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "product_type_sequence"
+    )
     @Column(name = "product_type_id", nullable = false)
     private Integer productTypeId;
 

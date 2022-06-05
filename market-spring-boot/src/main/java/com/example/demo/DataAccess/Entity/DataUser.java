@@ -6,7 +6,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "User")
-@Table(name = "users")
+@Table(name = "users",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "unique_username", columnNames = "username")
+    })
 public class DataUser {
 
     @Id
