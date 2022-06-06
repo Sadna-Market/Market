@@ -27,7 +27,7 @@ public class UserBuyRuleSL extends LeafBuyRuleSL {
     public SLResponseOBJ<BuyRule> convertToBuyRuleDL() {
         SLResponseOBJ<Predicate> predicate = pred.convertToPredicateDL();
         if(predicate.errorOccurred()) return new SLResponseOBJ<>(predicate.getErrorMsg());
-        return new SLResponseOBJ<>(new UserBuyRule(predicate.value));
+        return new SLResponseOBJ<>(new UserBuyRule((UserPred) predicate.value));
     }
 
 }

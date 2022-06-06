@@ -5,6 +5,7 @@ import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.BuyRules.ProductBuyRule;
 import com.example.demo.Domain.StoreModel.BuyRules.UserBuyRule;
 import com.example.demo.Domain.StoreModel.Predicate.Predicate;
+import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
 import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
@@ -27,6 +28,6 @@ public class ProductBuyRuleSL extends LeafBuyRuleSL {
     public SLResponseOBJ<BuyRule> convertToBuyRuleDL() {
         SLResponseOBJ<Predicate> predicate = pred.convertToPredicateDL();
         if(predicate.errorOccurred()) return new SLResponseOBJ<>(predicate.getErrorMsg());
-        return new SLResponseOBJ<>(new ProductBuyRule(predicate.value));
+        return new SLResponseOBJ<>(new ProductBuyRule((ProductPred) predicate.value));
     }
 }

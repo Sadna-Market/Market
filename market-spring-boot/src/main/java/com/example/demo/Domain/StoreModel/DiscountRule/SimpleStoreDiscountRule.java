@@ -2,6 +2,8 @@ package com.example.demo.Domain.StoreModel.DiscountRule;
 
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.SimpleStoreDiscountRuleSL;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,4 +32,11 @@ public class SimpleStoreDiscountRule extends LeafDiscountRule{
         stringRule += "All the products in store have a "+percentDiscount+"% discount";
         return new DResponseObj<>(stringRule);
     }
+
+    @Override
+    public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
+        return new DResponseObj<>(new SimpleStoreDiscountRuleSL(percentDiscount));
+    }
+
+
 }

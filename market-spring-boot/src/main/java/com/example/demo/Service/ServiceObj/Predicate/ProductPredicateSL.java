@@ -29,6 +29,13 @@ public class ProductPredicateSL implements PredicateSL {
         this.canBuy = true;
     }
 
+    public ProductPredicateSL(ProductPred pred){
+        this.productID = pred.getProductID();
+        this.minQuantity = pred.getMinQuantity();
+        this.maxQuantity = pred.getMaxQuantity();
+        this.canBuy = pred.isCanBuy();
+    }
+
 
 
     @Override

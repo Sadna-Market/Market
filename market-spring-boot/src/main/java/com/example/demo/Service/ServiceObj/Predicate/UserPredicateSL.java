@@ -13,6 +13,10 @@ public class UserPredicateSL implements PredicateSL {
         this.username = username;
     }
 
+    public UserPredicateSL(UserPred pred){
+        this.username = pred.getUsername();
+    }
+
 
     @Override
     public String getPredicateBuyRule() {

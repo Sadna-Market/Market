@@ -35,6 +35,13 @@ public class CategoryPredicateSL implements PredicateSL {
         this.maxHour = maxHour;
     }
 
+    public CategoryPredicateSL(CategoryPred pred){
+        this.category = pred.getCategory();
+        this.minAge = pred.getMinAge();
+        this.minHour = pred.getMinHour();
+        this.maxHour = pred.getMaxHour();
+    }
+
     @Override
     public String getPredicateBuyRule() {
         String s = "categoryID " + category +" : the minimum age to buy is "+ minAge;

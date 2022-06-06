@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
@@ -105,6 +106,10 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> removeBuyRule(String userId, int storeId, int buyRuleID);
     public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule);
     public SLResponseOBJ<Boolean> removeDiscountRule(String userId, int storeId, int discountRuleID);
+
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId);
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId);
+
 
     //2.4.4
     public SLResponseOBJ<Boolean> addNewStoreOwner(String UserId, int StoreId, String OwnerEmail);

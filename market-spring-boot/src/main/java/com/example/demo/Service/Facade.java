@@ -968,6 +968,52 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.removeDiscountRule(UUID.fromString(userId), storeId, discountRuleID));
     }
 
+    /**
+     * get buy policy of store (all buy rules)
+     * @param userId
+     * @param storeId
+     * @return list of buy rules or error if error occur
+     */
+    @Override
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeId < 0 )
+            return new SLResponseOBJ<>(ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<BuyRule>> buyPolicy = market.getBuyPolicy(UUID.fromString(userId), storeId);
+        if(buyPolicy.errorOccurred()) return new SLResponseOBJ<>(buyPolicy.getErrorMsg());
+        List<BuyRuleSL> converted = new ArrayList<>();
+        for(BuyRule br : buyPolicy.value){
+            DResponseObj<BuyRuleSL> brSL = br.convertToBuyRuleSL();
+            if(brSL.errorOccurred()) return new SLResponseOBJ<>(brSL.getErrorMsg());
+            converted.add(brSL.value);
+        }
+        return new SLResponseOBJ<>(converted);
+    }
+
+    /**
+     * get discount policy of store (all discount rules)
+     * @param userId
+     * @param storeId
+     * @return list of buy rules or error if error occur
+     */
+    @Override
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeId < 0 )
+            return new SLResponseOBJ<>(ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<DiscountRule>> discountPolicy = market.getDiscountPolicy(UUID.fromString(userId), storeId);
+        if(discountPolicy.errorOccurred()) return new SLResponseOBJ<>(discountPolicy.getErrorMsg());
+        List<DiscountRuleSL> converted = new ArrayList<>();
+        for(DiscountRule dr : discountPolicy.value){
+            DResponseObj<DiscountRuleSL> drSL = dr.convertToDiscountRuleSL();
+            if(drSL.errorOccurred()) return new SLResponseOBJ<>(drSL.getErrorMsg());
+            converted.add(drSL.value);
+        }
+        return new SLResponseOBJ<>(converted);
+    }
+
 
     @Override
     public SLResponseOBJ<Boolean> addNewStoreOwner(String userId, int storeId, String ownerEmail) {

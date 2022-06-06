@@ -427,6 +427,16 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
+        return null;
+    }
+
+    @Override
     public SLResponseOBJ<Boolean> addNewStoreOwner(String UserId, int StoreId, String OwnerEmail) {
         if(REAL==null){
             System.out.println(UserId);

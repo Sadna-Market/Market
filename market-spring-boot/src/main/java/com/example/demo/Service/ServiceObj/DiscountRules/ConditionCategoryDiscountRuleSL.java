@@ -3,6 +3,7 @@ package com.example.demo.Service.ServiceObj.DiscountRules;
 import com.example.demo.Domain.StoreModel.DiscountRule.ConditionCategoryDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.ConditionProductDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Domain.StoreModel.Predicate.CategoryPred;
 import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Service.ServiceObj.Predicate.CategoryPredicateSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
@@ -33,6 +34,6 @@ public class ConditionCategoryDiscountRuleSL extends SimpleCategoryDiscountRuleS
     public SLResponseOBJ<DiscountRule> convertToDiscountRuleDL() {
         SLResponseOBJ<Predicate> predicate = pred.convertToPredicateDL();
         if(predicate.errorOccurred()) return new SLResponseOBJ<>(predicate.getErrorMsg());
-        return new SLResponseOBJ<>(new ConditionCategoryDiscountRule(predicate.value,percentDiscount,pred.category));
+        return new SLResponseOBJ<>(new ConditionCategoryDiscountRule((CategoryPred) predicate.value,percentDiscount));
     }
 }

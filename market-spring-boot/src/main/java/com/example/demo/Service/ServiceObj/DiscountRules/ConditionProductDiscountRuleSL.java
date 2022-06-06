@@ -4,6 +4,7 @@ import com.example.demo.Domain.StoreModel.DiscountRule.ConditionProductDiscountR
 import com.example.demo.Domain.StoreModel.DiscountRule.ConditionStoreDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.StoreModel.Predicate.Predicate;
+import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
 import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
@@ -32,7 +33,7 @@ public class ConditionProductDiscountRuleSL extends SimpleProductDiscountRuleSL 
     public SLResponseOBJ<DiscountRule> convertToDiscountRuleDL() {
         SLResponseOBJ<Predicate> predicate = pred.convertToPredicateDL();
         if(predicate.errorOccurred()) return new SLResponseOBJ<>(predicate.getErrorMsg());
-        return new SLResponseOBJ<>(new ConditionProductDiscountRule(predicate.value,percentDiscount,pred.productID));
+        return new SLResponseOBJ<>(new ConditionProductDiscountRule((ProductPred) predicate.value,percentDiscount));
     }
 
 }

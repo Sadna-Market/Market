@@ -393,7 +393,15 @@ public class Store {
     }
 
 
+    public DResponseObj<List<BuyRule>> getBuyPolicy() {
+        return buyPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
+         new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
+    }
 
+    public DResponseObj<List<DiscountRule>> getDiscountPolicy() {
+        return discountPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
+                new DResponseObj<>(new ArrayList<>(discountPolicy.getRules().values()));
+    }
 }
 
 

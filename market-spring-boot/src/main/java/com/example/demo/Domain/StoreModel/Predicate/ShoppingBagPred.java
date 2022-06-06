@@ -56,4 +56,19 @@ public class ShoppingBagPred implements Predicate{
     public String getPredicateDiscountRule(){
         return "If the shopping bag contains at least "+minProductTypes+" types of products and at least "+minProductQuantity +" quantity of products and the total price is more than "+totalPrice;
     }
+
+
+    public int getMinProductQuantity() {
+        return minProductQuantity;
+    }
+
+    public int getMinProductTypes() {
+        return minProductTypes;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+
 }

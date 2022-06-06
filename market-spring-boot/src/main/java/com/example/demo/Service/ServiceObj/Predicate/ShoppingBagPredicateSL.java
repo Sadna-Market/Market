@@ -25,6 +25,12 @@ public class ShoppingBagPredicateSL implements PredicateSL {
         this.totalPrice = totalPrice;
     }
 
+    public ShoppingBagPredicateSL(ShoppingBagPred pred){
+        this.minProductQuantity = pred.getMinProductQuantity();
+        this.minProductTypes = pred.getMinProductTypes();
+        this.totalPrice = pred.getTotalPrice();
+    }
+
     @Override
     public String getPredicateBuyRule() {
         return "The minimum quantity of products to buy is "+minProductQuantity + " and the minimum products types is "+minProductTypes;

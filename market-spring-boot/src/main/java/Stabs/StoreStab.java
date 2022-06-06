@@ -179,16 +179,7 @@ public class StoreStab extends Store {
         return i;
     }
 
-    public DiscountPolicy getDiscountPolicy() {
-        return new DiscountPolicy();
-
-    }
-
-    public BuyPolicy getBuyPolicy() {
-        return new BuyPolicy();
-    }
-
-    public DResponseObj<String> getFounder() {
+        public DResponseObj<String> getFounder() {
         return new DResponseObj<>("Yaki");
     }
 

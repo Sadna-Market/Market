@@ -5,13 +5,17 @@ import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
 import com.example.demo.Domain.StoreModel.Predicate.ShoppingBagPred;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.DiscountRules.ConditionStoreDiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.SimpleStoreDiscountRuleSL;
+import com.example.demo.Service.ServiceObj.Predicate.ShoppingBagPredicateSL;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
-    protected Predicate pred;
+    protected ShoppingBagPred pred;
 
-    public ConditionStoreDiscountRule(Predicate pred,double percentDiscount) {
+    public ConditionStoreDiscountRule(ShoppingBagPred pred,double percentDiscount) {
         super(percentDiscount);
         this.pred = pred;
     }
@@ -35,5 +39,10 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
             stringRule += " so all products in store have a " + percentDiscount + "% discount";
         }
         return new DResponseObj<>(stringRule);
+    }
+
+    @Override
+    public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
+        return new DResponseObj<>(new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(pred),percentDiscount));
     }
 }
