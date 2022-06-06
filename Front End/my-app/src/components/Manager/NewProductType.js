@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const NewProductType = (props) => {
   let UUID = props.uuid;
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
 
   const [name, setName] = useState("");
   const changeNameHandler = (event) => {
@@ -23,13 +27,21 @@ const NewProductType = (props) => {
   };
 
   //todo: create new ProductType
-  const createHandler = () => {
-    cleanHandler();
-  };
+  //        addNewProductType :async (uuid,namep,descriptionp,categoryp)=>{
+  async function createHandler() {
+
+    const addNewProductTypeResponse = await apiClientHttp.addNewProductType(UUID, name, desc, category);
+    if (addNewProductTypeResponse.errorMsg !== -1) {
+      SetError(errorCode.get(addNewProductTypeResponse.errorMsg))
+    } else {
+      cleanHandler();
+    }
+  }
 
   return (
     <div>
       <h3>New ProductType</h3>
+      <h3>{enteredError}</h3>
       <div className="products__controls">
         <div className="products__control">
           <label>Name</label>

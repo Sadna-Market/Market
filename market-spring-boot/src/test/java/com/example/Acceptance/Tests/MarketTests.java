@@ -19,7 +19,7 @@ public class MarketTests {
     public static int GALAXY_ID;
 
     public MarketTests() {
-        market = new ProxyMarket();
+       market = new ProxyMarket();
         counter = 1;
         sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110","10/4/1994");
         member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111","16/3/2012");

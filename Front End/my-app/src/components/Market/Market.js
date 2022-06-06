@@ -49,7 +49,7 @@ const Market = (props) => {
   };
 
   const profileHandler = () => {
-    setCommand(<Profile uuid={UUID} />);
+    setCommand(<Profile uuid={UUID} useremail={props.useremail} />);
   };
 
   //todo: check permission if login
@@ -63,7 +63,7 @@ const Market = (props) => {
   }
 
   //todo: check if manager
-  if (props.uuid === 7) {
+  if (props.uuid !== 7) {
     permissonCommand = (
       <>
         {permissonCommand}

@@ -20,12 +20,12 @@ public class NotificationController {
     }
     // when the client sends a message to “/ws/start” then the start() method is invoked.
     @MessageMapping("/start/{uuid}")
-    public void start(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable String uuid) {
+    public void start(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("uuid") String uuid) {
         handler.addListener(UUID.fromString(uuid),stompHeaderAccessor.getSessionId());
     }
     //when the client sends a message to “/ws/stop” then the stop() method is invoked.
     @MessageMapping("/stop/{uuid}")
-    public void stop(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable String uuid) {
+    public void stop(StompHeaderAccessor stompHeaderAccessor, @DestinationVariable("uuid") String uuid) {
         handler.removeListener(UUID.fromString(uuid), stompHeaderAccessor.getSessionId());
     }
 

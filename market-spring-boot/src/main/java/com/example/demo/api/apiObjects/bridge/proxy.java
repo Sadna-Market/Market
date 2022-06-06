@@ -5,13 +5,21 @@ import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.*;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-
+@Component
 public class proxy implements IMarket {
-    IMarket REAL=new Facade();
+    private IMarket REAL;
+    @Autowired
+    public proxy(@Qualifier("facade") IMarket REAL) {
+        this.REAL = REAL;
+    }
+
     @Override
     public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber,String dateOfBirth) {
 

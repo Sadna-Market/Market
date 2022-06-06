@@ -6,6 +6,7 @@ const UserID = (props) => {
   //todo: remove user
   const clickHandler = () => {
     props.onEnterToStore(props.id);
+    
   };
   return (
     <li>
