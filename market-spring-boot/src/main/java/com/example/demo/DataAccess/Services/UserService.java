@@ -15,9 +15,13 @@ import java.util.List;
 public class UserService {
     private static Logger logger = Logger.getLogger(UserService.class);
 
-    @Autowired
-    UserRepository userRepository;
 
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
 
     public boolean insertUser(DataUser user) {
@@ -31,7 +35,7 @@ public class UserService {
         }
     }
 
-    public DataUser getUser(String username){
+    public DataUser getUserByUsername(String username) {
         try {
             DataUser u = userRepository.getById(username);
             logger.info(String.format("fetched %s successfully from db", u.getUsername()));
@@ -42,7 +46,7 @@ public class UserService {
         }
     }
 
-    public List<DataUser> getAllUsers(){
+    public List<DataUser> getAllUsers() {
         try {
             List<DataUser> users = userRepository.findAll();
             logger.info("fetched all users successfully from db");
