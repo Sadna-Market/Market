@@ -1,6 +1,7 @@
 package com.example.demo.Domain.AlertService;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,9 +17,9 @@ public class NotificationDispatcher {
     private static final Logger logger = Logger.getLogger(NotificationDispatcher.class);
 
     private final SimpMessagingTemplate template;
-
     private final ConcurrentHashMap<String,List<Notification>> realTimeListeners; //sessionID-notifications
 
+    @Autowired
     public NotificationDispatcher(SimpMessagingTemplate template) {
         this.template = template;
         realTimeListeners = new ConcurrentHashMap<>();
@@ -59,7 +60,7 @@ public class NotificationDispatcher {
             template.convertAndSendToUser(
                     sessionID,
                     "/notification/item",
-                    notification,
+                    notification.getText(),
                     headerAccessor.getMessageHeaders());
             }
             entry.getValue().clear(); //dispose all messages for that person ->maybe can add to history in DB

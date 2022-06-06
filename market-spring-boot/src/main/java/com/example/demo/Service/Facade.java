@@ -14,6 +14,9 @@ import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,13 +25,19 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
+@Qualifier("facade")
 public class Facade implements IMarket {
     UserManager userManager;
     Market market;
-
-    public Facade() {
+    @Autowired
+    public Facade(UserManager userManager) {
+        this.userManager = userManager;
+        this.market = new Market(userManager);
+    }
+    public Facade(){
         this.userManager = new UserManager();
-        this.market = new Market(this.userManager);
+        this.market = new Market(userManager);
     }
 
     @Override

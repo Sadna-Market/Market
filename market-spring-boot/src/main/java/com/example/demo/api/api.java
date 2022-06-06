@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.ExternalService.SupplyService;
+import com.example.demo.Service.IMarket;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.api.apiObjects.apiProductType;
 import com.example.demo.api.apiObjects.apiStore;
@@ -8,6 +9,8 @@ import com.example.demo.api.apiObjects.apiUser;
 import com.example.demo.api.apiObjects.bridge.proxy;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,9 +23,12 @@ import org.apache.log4j.Logger;
 @RestController
 @RequestMapping(path = "api")
 public class api implements Iapi {
-    proxy iMarket = new proxy();
-    static Logger logger = Logger.getLogger(SupplyService.class);
-
+    private IMarket iMarket;
+    static Logger logger = Logger.getLogger(api.class);
+    @Autowired
+    public api(@Qualifier("proxy") IMarket iMarket){
+        this.iMarket = iMarket;
+    }
 
 
     @Override

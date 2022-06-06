@@ -10,7 +10,7 @@ public class History {
     private final int TID;
     private final int supplyID;
     private final double finalPrice;
-    private final List<ServiceProductStore> products;
+    private final List<ProductStore> products;
     private final String user;
 
     static Logger logger=Logger.getLogger(History.class);
@@ -19,10 +19,7 @@ public class History {
         this.TID = TID;
         this.supplyID = supplyID;
         this.finalPrice = finalPrice;
-        this.products = new ArrayList<>();
-        for(ProductStore p: products){
-            this.products.add(new ServiceProductStore(p));
-        }
+        this.products = products;
         this.user = user;
     }
 
@@ -37,7 +34,7 @@ public class History {
         return finalPrice;
     }
 
-    public List<ServiceProductStore> getProducts() {
+    public List<ProductStore> getProducts() {
         return products;
     }
 

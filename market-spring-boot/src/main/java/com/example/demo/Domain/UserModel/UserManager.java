@@ -1,5 +1,7 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.Domain.AlertService.AlertServiceDemo;
+import com.example.demo.Domain.AlertService.IAlertService;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.PermissionManager;
@@ -7,8 +9,9 @@ import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Market.userTypes;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
-import com.example.demo.Domain.AlertService.AlertService;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,17 +29,17 @@ import java.util.concurrent.locks.StampedLock;
  * the user id is used only for manging the current online visitor : Guests , Members
  */
 
-
+@Component
 public class UserManager {
 
-    private AlertService alertService;
+    private IAlertService alertService;
 
     private StampedLock LockUsers = new StampedLock();
 
     /**
      * menage all the members that have a saved user in the system , key : Emile , value : User
      */
-    ConcurrentHashMap<String, User> members;  // menage all the members that have a saved user in the system , key : Emile , value : User
+    ConcurrentHashMap<String, User> members; // menage all the members that have a saved user in the system , key : Emile , value : User
     /**
      * menage all the Visitors in the System , Visitors is set combines a members and gusts. key : userId , value Guest
      */
@@ -48,11 +51,19 @@ public class UserManager {
 
     static Logger logger = Logger.getLogger(ShoppingBag.class);
 
-    public UserManager() {
-        members = new ConcurrentHashMap<>();
-        GuestVisitors = new ConcurrentHashMap<>();
-        LoginUsers = new ConcurrentHashMap<>();
-        alertService = new AlertService();
+    @Autowired
+    public UserManager(IAlertService alertService){ //For real application dependency injection
+        this.alertService = alertService;
+        this.members = new ConcurrentHashMap<>();
+        this.GuestVisitors = new ConcurrentHashMap<>();
+        this.LoginUsers = new ConcurrentHashMap<>();
+    }
+
+    public UserManager() { //For AT only.
+        this.alertService = new AlertServiceDemo();
+        this.members = new ConcurrentHashMap<>();
+        this.GuestVisitors = new ConcurrentHashMap<>();
+        this.LoginUsers = new ConcurrentHashMap<>();
     }
 
     public DResponseObj<Boolean> isMember(String email) {

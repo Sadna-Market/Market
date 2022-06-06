@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -15,8 +16,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-@Service
-public class AlertService {
+@Component
+public class AlertService implements IAlertService {
 
     private static final Logger logger = Logger.getLogger(AlertService.class);
 
@@ -26,14 +27,11 @@ public class AlertService {
     ConcurrentHashMap<String, List<Notification>> delayedNotification; //username-notifications
     ConcurrentHashMap<UUID, String> sessionMapper; //uuid-sessionID
 
-    public AlertService() {
+    @Autowired
+    public AlertService(NotificationDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
         delayedNotification = new ConcurrentHashMap<>();
         sessionMapper = new ConcurrentHashMap<>();
-    }
-
-    @Autowired
-    public void setDispatcher(NotificationDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
     }
 
     /**
@@ -44,11 +42,7 @@ public class AlertService {
      * @return true if success, else false
      */
     public void notifyUser(UUID uuid, String msg) {
-        //for test
-        writeToFile(uuid,msg);
-        return;
-
-       /* var notification = new Notification(msg);
+        var notification = new Notification(msg);
         if (sessionMapper.containsKey(uuid)) {
             String sessionID = sessionMapper.get(uuid);
             if (!dispatcher.addNotification(sessionID, notification)) {
@@ -56,7 +50,7 @@ public class AlertService {
                 return;
             }
         }
-        logger.error("didnt find sessionID in sessionMapper");*/
+        logger.error("didnt find sessionID in sessionMapper");
     }
 
 
@@ -110,13 +104,10 @@ public class AlertService {
      */
     public void modifyDelayIfExist(String username, UUID uuid) {
         if (delayedNotification.containsKey(username)) {
-            //for testing only
-            writeToFile(uuid,delayedNotification.get(username).get(0).text);
-            /*
             String sessionID = sessionMapper.get(uuid);
             dispatcher.importDelayedNotifications(sessionID, delayedNotification.remove(username));
             logger.info(String.format("imported all delayed notifications of %s", username));
-            return;*/
+            return;
         }
         logger.info(String.format("user %s didn't have pending notifications", username));
     }
@@ -141,26 +132,18 @@ public class AlertService {
     }
 
 
-    /**
-     * getter for test only
-     * @return
-     */
-    public ConcurrentHashMap<String, List<String>> getDelayedNotification() {
-        ConcurrentHashMap<String, List<String>> out = new ConcurrentHashMap<>();
-        for (Map.Entry<String, List<Notification>> entry : delayedNotification.entrySet()) {
-            List<String> msgs = entry.getValue().stream().map(Notification::getText).collect(Collectors.toList());
-            out.put(entry.getKey(), msgs);
-        }
-        return out;
-    }
-
-    private void writeToFile(UUID uuid, String msg) {
-        String path = System.getProperty("user.dir").concat("\\src\\main\\Alerts\\").concat(uuid.toString()).concat(".txt");
-        try(FileWriter fileWriter = new FileWriter(path)){
-            fileWriter.write(msg);
-        }catch (Exception e){
-            logger.error("couldn't write to file");
-        }
-    }
+//    /**
+//     * getter for test only
+//     *
+//     * @return
+//     */
+//    public ConcurrentHashMap<String, List<String>> getDelayedNotification() {
+//        ConcurrentHashMap<String, List<String>> out = new ConcurrentHashMap<>();
+//        for (Map.Entry<String, List<Notification>> entry : delayedNotification.entrySet()) {
+//            List<String> msgs = entry.getValue().stream().map(Notification::getText).collect(Collectors.toList());
+//            out.put(entry.getKey(), msgs);
+//        }
+//        return out;
+//    }
 
 }
