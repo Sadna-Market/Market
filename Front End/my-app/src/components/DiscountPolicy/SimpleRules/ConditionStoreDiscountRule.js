@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 const ConditionStoreDiscountRule = (props) => {
+  console.log("ConditionStoreDiscountRule")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
 

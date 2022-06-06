@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import CombineRuleList from "./CombineRuleList";
 
 const XorRule = (props) => {
-  let UUID = props.uuid;
+    console.log("XorRule")
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 

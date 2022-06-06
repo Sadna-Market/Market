@@ -4,8 +4,14 @@ import ComposeRuleList from "../ComposeRules/ComposeRuleList";
 import RuleID from "../RuleID";
 import RuleInfo from "../RuleInfo";
 import MoreRule from "./MoreRule";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/BuyingRules"
+import createApiClientHttp from "../../../client/clientHttp.js";
 
 const ConditionRule = (props) => {
+  console.log("buying policy " + "ConditionRule ")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
   let UUID = props.uuid;
   let storeID = props.storeID;
 
@@ -20,10 +26,20 @@ const ConditionRule = (props) => {
   };
 
   //todo: create Add with list
-  const finishHandler = () => {
-    //work with list
-    props.onRule();
-  };
+  async function finishHandler() {
+    let list=[];
+    list.push(ifRule)
+    list.push(ThenRule)
+    let andMap ={"condition":list}
+    const sendRulesResponse = await apiClientHttp.sendRules(andMap);
+
+    if (sendRulesResponse.errorMsg !== -1) {
+      SetError(errorCode.get(sendRulesResponse.errorMsg))
+    } else {
+      // props.onRule(sendRulesResponse.value);
+      props.onRule();
+    }
+  }
 
   const showHandler1 = (ruleID) => {
     setCommand1(<RuleInfo ruleID={ruleID} />);

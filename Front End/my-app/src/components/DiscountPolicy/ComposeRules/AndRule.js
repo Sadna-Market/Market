@@ -3,6 +3,8 @@ import AddSimpleRule from "../SimpleRules/AddSimpleRule";
 import MoreRule from "./MoreRule";
 
 const AndRule = (props) => {
+  console.log("AndRule")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];

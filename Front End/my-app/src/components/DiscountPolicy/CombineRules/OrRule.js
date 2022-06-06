@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import CombineRuleList from "./CombineRuleList";
 
 const OrRule = (props) => {
-  let UUID = props.uuid;
+    console.log("OrRule")
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 

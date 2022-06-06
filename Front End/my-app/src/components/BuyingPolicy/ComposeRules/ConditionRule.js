@@ -4,7 +4,9 @@ import ComposeRuleList from "./ComposeRuleList";
 import "./ConditionRule.css";
 
 const ConditionRule = (props) => {
-  let UUID = props.uuid;
+    console.log("ConditionRule")
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 

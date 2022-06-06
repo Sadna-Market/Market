@@ -7,7 +7,9 @@ import ProductDiscountRule from "./ProductDiscountRule";
 import SimpleDiscountRule from "./SimpleDisountRule";
 
 const AddSimpleRule = (props) => {
-  let UUID = props.uuid;
+    console.log("AddSimpleRule")
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let basicPage = (
     <>

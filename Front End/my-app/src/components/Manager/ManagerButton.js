@@ -2,9 +2,8 @@ import React, {useState} from "react";
 import Users from "./Users";
 import ConnectUsers from "./Users";
 // import DisConnectUsers from "./DisConnectUsers";
-import NewProductType from "./NewProductType";
+// import NewProductType from "./NewProductType";
 // import RemoveUser from "./RemoveUser";
-=======
 import NewProductType from "./NewProductType";
 
 import UserList from "./UserList";

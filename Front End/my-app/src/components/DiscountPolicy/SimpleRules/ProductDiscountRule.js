@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 const ProductDiscountRule = (props) => {
+  console.log("ProductDiscountRule")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
 

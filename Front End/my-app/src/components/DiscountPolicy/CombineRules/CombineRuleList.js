@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import CombineRuleID from "./CombineRuleID";
 
 const CombineRuleList = (props) => {
+  console.log("CombineRuleList")
+
+  //get all ruls
   let rules = [
     { id: 1, kind: "ADD" },
     { id: 2, kind: "XOR" },
