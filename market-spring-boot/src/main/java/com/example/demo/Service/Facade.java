@@ -14,6 +14,9 @@ import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import com.example.demo.configuration.JsonUser;
+import com.example.demo.configuration.StateInit.Initilizer;
+import com.example.demo.configuration.config;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,11 +28,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Facade implements IMarket {
     UserManager userManager;
     Market market;
-
     public Facade() {
         this.userManager = new UserManager();
         this.market = new Market(this.userManager);
-    }
+        JsonUser a= config.get_instance().getJsonInit().admin;
+        System.out.println(a.email+" "+a.password+" "+a.phoneNumber+" "+a.dateOfBirth);
+        System.out.println(config.isMakeState);
+        initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
+}
 
     @Override
     public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
@@ -69,6 +75,14 @@ public class Facade implements IMarket {
         //when you try to connect again to the conection service its throw you with message error
         //hara ahusharmuta
         //&&initiateExternalServices.errorMsg!=50 this is that i add
+        if(config.get_instance().getJsonInit().initState){
+            Initilizer I = new Initilizer(this);
+            try {
+                I.initialization(email, Password);
+            }catch (Exception e){
+                throw new IllegalArgumentException(e);
+            }
+        }
 
         return new SLResponseOBJ<>(guestUUID.value, -1);
     }
