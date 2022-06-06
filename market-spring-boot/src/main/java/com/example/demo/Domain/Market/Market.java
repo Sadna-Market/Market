@@ -17,12 +17,15 @@ import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 
+@Component
 public class Market {
     /*************************************************fields************************************************************/
     static Logger logger = Logger.getLogger(Market.class);
@@ -40,6 +43,7 @@ public class Market {
     private StampedLock lock_stores = new StampedLock(), lock_TP = new StampedLock();
 
     /*************************************************constructors******************************************************/
+    @Autowired
     public Market(UserManager userManager) {
         this.userManager = userManager;
         ExternalService.getInstance();

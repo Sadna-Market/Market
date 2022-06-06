@@ -3,13 +3,9 @@ package com.example.Acceptance.Tests;
 import com.example.Acceptance.Bridge.MarketBridge;
 import com.example.Acceptance.Bridge.ProxyMarket;
 import com.example.Acceptance.Obj.*;
-import com.example.demo.DemoApplication;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-@SpringBootTest(classes = DemoApplication.class)
+
 public class MarketTests {
     protected MarketBridge market;
     private int counter;
@@ -23,7 +19,7 @@ public class MarketTests {
     public static int GALAXY_ID;
 
     public MarketTests() {
-        market = new ProxyMarket();
+       market = new ProxyMarket();
         counter = 1;
         sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110","10/4/1994");
         member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111","16/3/2012");
