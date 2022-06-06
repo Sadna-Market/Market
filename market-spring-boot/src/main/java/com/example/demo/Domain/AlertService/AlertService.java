@@ -82,7 +82,9 @@ public class AlertService implements IAlertService {
      */
     public void addListener(UUID uuid, String sessionID) {
         sessionMapper.put(uuid, sessionID);
-        dispatcher.addNewSession(sessionID);
+        if(!dispatcher.addNewSession(sessionID)){
+            logger.error(String.format("failed to add session %s when adding to be listener",sessionID));
+        }
     }
 
     /**

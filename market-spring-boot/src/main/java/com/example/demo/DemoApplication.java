@@ -14,10 +14,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class DemoApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-//		ConfigurableApplicationContext x = SpringApplication.run(DemoApplication.class, args);
-//		IMarket facade = x.getBean(Facade.class);
-//		IMarket proxy = x.getBean(com.example.demo.api.apiObjects.bridge.proxy.class);
+//		SpringApplication.run(DemoApplication.class, args);
+		ConfigurableApplicationContext x = SpringApplication.run(DemoApplication.class, args);
+		IMarket facade = x.getBean(Facade.class);
+		IMarket proxy = x.getBean(com.example.demo.api.apiObjects.bridge.proxy.class);
 	}
 
 
