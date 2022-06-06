@@ -26,6 +26,7 @@ public class AlertService {
     ConcurrentHashMap<String, List<Notification>> delayedNotification; //username-notifications
     ConcurrentHashMap<UUID, String> sessionMapper; //uuid-sessionID
 
+    //TODO: maybe to autowire dispatcher here
     public AlertService() {
         delayedNotification = new ConcurrentHashMap<>();
         sessionMapper = new ConcurrentHashMap<>();
@@ -45,10 +46,10 @@ public class AlertService {
      */
     public void notifyUser(UUID uuid, String msg) {
         //for test
-        writeToFile(uuid,msg);
-        return;
+//        writeToFile(uuid, msg);
+//        return;
 
-       /* var notification = new Notification(msg);
+        var notification = new Notification(msg);
         if (sessionMapper.containsKey(uuid)) {
             String sessionID = sessionMapper.get(uuid);
             if (!dispatcher.addNotification(sessionID, notification)) {
@@ -56,7 +57,7 @@ public class AlertService {
                 return;
             }
         }
-        logger.error("didnt find sessionID in sessionMapper");*/
+        logger.error("didnt find sessionID in sessionMapper");
     }
 
 
@@ -111,12 +112,12 @@ public class AlertService {
     public void modifyDelayIfExist(String username, UUID uuid) {
         if (delayedNotification.containsKey(username)) {
             //for testing only
-            writeToFile(uuid,delayedNotification.get(username).get(0).text);
-            /*
+//            writeToFile(uuid,delayedNotification.get(username).get(0).text);
+
             String sessionID = sessionMapper.get(uuid);
             dispatcher.importDelayedNotifications(sessionID, delayedNotification.remove(username));
             logger.info(String.format("imported all delayed notifications of %s", username));
-            return;*/
+            return;
         }
         logger.info(String.format("user %s didn't have pending notifications", username));
     }
@@ -143,6 +144,7 @@ public class AlertService {
 
     /**
      * getter for test only
+     *
      * @return
      */
     public ConcurrentHashMap<String, List<String>> getDelayedNotification() {
@@ -156,9 +158,9 @@ public class AlertService {
 
     private void writeToFile(UUID uuid, String msg) {
         String path = System.getProperty("user.dir").concat("\\src\\main\\Alerts\\").concat(uuid.toString()).concat(".txt");
-        try(FileWriter fileWriter = new FileWriter(path)){
+        try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write(msg);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error("couldn't write to file");
         }
     }
