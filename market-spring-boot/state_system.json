@@ -1,0 +1,99 @@
+{
+  "systemItems": [{
+    "name" : "apple",
+    "description": "fruite",
+    "category": 10
+  },
+    {
+      "name" : "banana",
+      "description": "fruite",
+      "category": 10
+    },
+    {
+      "name" : "tv",
+      "description": "electronics",
+      "category": 20
+    },
+    {
+      "name" : "Iphone10",
+      "description": "electronics",
+      "category": 20
+    }],
+  "register": [
+    {
+      "email": "AVI@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "NIV@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "S@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }
+  ],
+  "stores": {
+    "AVI@gmail.com": [
+      {
+        "name": "susu1",
+        "founder": "AVI@gmail.com"
+      },
+      {
+        "name": "susu2",
+        "founder": "AVI@gmail.com"
+      }
+    ],
+    "NIV@gmail.com": [
+      {
+        "name": "go1",
+        "founder": "NIV@gmail.com"
+      },
+      {
+        "name": "go22",
+        "founder": "NIV@gmail.com"
+      }
+    ],
+    "S@gmail.com": [
+      {
+        "name": "tiltil",
+        "founder": "S@gmail.com"
+      }
+    ]
+  },
+  "add_item":
+  {
+    "S@gmail.com": {
+      "tiltil": [
+        {
+          "name": "apple",
+          "price": 22.44,
+          "quantity": 20
+        }
+      ]
+    },
+
+    "NIV@gmail.com": {
+      "go1": [
+        {
+          "name": "apple",
+          "price": 22.44,
+          "quantity": 20
+        },
+        {
+          "name": "banana",
+          "price": 22.44,
+          "quantity": 20
+        }
+      ]
+    }
+
+  }
+
+}

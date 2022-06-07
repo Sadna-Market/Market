@@ -629,6 +629,7 @@ public class RealMarket implements MarketBridge {
 
     @Override
     public ATResponseObj<Integer> addProductType(String uuid, ItemDetail item) {
+        System.out.println("ooooooo "+uuid);
         SLResponseOBJ<Integer> res = market.addNewProductType(uuid, item.name, "phone", 1); //TODO: change category to string
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
