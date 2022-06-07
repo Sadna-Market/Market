@@ -4,6 +4,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const Profile = (props) => {
+    console.log("Profile")
+
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
     let UUID = props.uuid;

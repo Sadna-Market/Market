@@ -3,7 +3,7 @@ import {createApiClientHttp} from "../../client/clientHttp";
 import {errorCode} from "../../ErrorCodeGui"
 
 const NewStore = (props) => {
-    console.log("NewStore UUID:"+props.uuid )
+    console.log("NewStore" )
 
     let apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");

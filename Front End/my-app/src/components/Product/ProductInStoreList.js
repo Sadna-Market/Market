@@ -6,6 +6,8 @@ import {errorCode} from "../../ErrorCodeGui"
 
 
 const ProductInStoreList = props =>{
+    console.log("ProductInStoreList")
+
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
 

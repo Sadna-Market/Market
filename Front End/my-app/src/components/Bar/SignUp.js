@@ -5,6 +5,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const SignUp = (props) => {
+  console.log("SignUp")
+
   const apiClientHttp = createApiClientHttp();
   const [enteredError, SetError] = useState("");
   const [enteredName, SetName] = useState("");

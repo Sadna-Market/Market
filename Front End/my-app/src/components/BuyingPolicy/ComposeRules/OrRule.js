@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import ComposeRuleList from "./ComposeRuleList";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/BuyingRules"
 
 const OrRule = (props) => {
-  let UUID = props.uuid;
+    console.log("OrRule")
+    const apiClientHttp = createApiClientHttp();
+    const [enteredError, SetError] = useState("");
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 
@@ -17,10 +24,17 @@ const OrRule = (props) => {
   };
 
   //todo: AddRule
-  const confirmHandler = () => {
-    //do..... with the list
-    props.onRule();
-  };
+    async function confirmHandler(){
+        let combineAndMap ={"combineOr":list}
+        const sendRulesResponse = await apiClientHttp.sendRules(combineAndMap);
+
+        if (sendRulesResponse.errorMsg !== -1) {
+            SetError(errorCode.get(sendRulesResponse.errorMsg))
+        } else {
+            // props.onRule(sendRulesResponse.value);
+            props.onRule();
+        }
+  }
 
   //const [command, setCommand] = useState();
   return (

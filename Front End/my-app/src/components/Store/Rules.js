@@ -1,7 +1,9 @@
 import React from "react";
 
 const Rules = (props) => {
-  let UUID = props.uuid;
+    console.log("Rules" )
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
 
   //todo: return what return from this function

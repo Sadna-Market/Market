@@ -3,6 +3,8 @@ import "./StoreID.css";
 import Card from "../UI/Card";
 
 const StoreID = (props) => {
+  console.log("StoreID" )
+
   const clickHandler = () => {
     props.onEnterToStore(props.id);
   };

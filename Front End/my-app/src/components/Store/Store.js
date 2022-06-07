@@ -15,9 +15,10 @@ import DiscountPolicy from "./DiscountPolicy";
 import "./Store.css";
 
 const Store = (props) => {
-  let storeID = props.storeID;
+    console.log("Store" )
+
+    let storeID = props.storeID;
   let UUID = props.uuid;
-    console.log("Store storeID: "+storeID +" UUID: "+UUID )
 
   const addProductHandler = () => {
     setCommand(

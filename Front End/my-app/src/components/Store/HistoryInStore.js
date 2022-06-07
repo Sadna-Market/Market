@@ -3,6 +3,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const HistoryInStore = (props) => {
+  console.log("HistoryInStore")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const apiClientHttp = createApiClientHttp();

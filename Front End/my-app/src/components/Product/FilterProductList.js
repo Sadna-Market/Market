@@ -2,6 +2,8 @@ import React from "react";
 import ProductID from "./ProductID";
 
 const FilterProductList = (props) => {
+  console.log("FilterProductList")
+
   //todo: filter : props with Name,Desc,Category,Rate,StoreRate,Min,Max
   let products = [
     { id: 13, name: "a product" },

@@ -3,6 +3,8 @@ import Card from "../UI/Card";
 import RuleInfo from "./RuleInfo";
 
 const RuleID = (props) => {
+  console.log("RuleID")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   let ruleID = props.ruleID;

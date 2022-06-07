@@ -4,6 +4,8 @@ import ConditionRule from "./ConditionRule";
 import OrRule from "./OrRule";
 
 const SimpleComposeRule = (props) => {
+  console.log("buying policy " + "SimpleComposeRule ")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const addHandler = () => {

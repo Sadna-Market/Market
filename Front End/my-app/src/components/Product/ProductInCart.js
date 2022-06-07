@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import Card from "../UI/Card";
 
 const ProductInCart = props=>{
+    console.log("ProductInCart")
+
     let UUID=props.uuid;
     let productID = props.id;
     let storeID = props.storeID;

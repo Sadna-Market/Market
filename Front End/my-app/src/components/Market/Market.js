@@ -12,6 +12,8 @@ import Profile from "./Profile";
 import Help from "./Help";
 
 const Market = (props) => {
+  console.log("Market")
+
   let UUID = props.uuid;
   console.log("Market UUID: " +UUID)
 

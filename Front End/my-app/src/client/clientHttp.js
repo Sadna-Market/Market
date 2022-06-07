@@ -29,8 +29,14 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         },
-
-
+//TODO daniel
+        sendRules:async ()=>
+        {
+            let path = apiUrl.concat(`guestVisit`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        },
 
         guestLeave :async (uuid)=>
         {

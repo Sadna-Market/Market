@@ -5,6 +5,8 @@ import OrRule from "./OrRule";
 import XorRule from "./XorRule";
 
 const AddComposeDiscount = (props) => {
+  console.log("AddComposeDiscount")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const andHandler = () => {

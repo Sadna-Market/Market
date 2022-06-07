@@ -5,7 +5,9 @@ import FilterProducts from "./filterProducts";
 import FilterProductList from "./FilterProductList";
 
 const ProductButton = (props) => {
-  
+  console.log("ProductButton")
+
+
   // const [command, setCommand] = useState(<StoreList search={searchStore} />);
   // const searchButtonHolder = () => {
   //   setCommand(<StoreList search={searchStore} />);
