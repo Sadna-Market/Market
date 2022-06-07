@@ -4,6 +4,8 @@ import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.*;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -389,7 +391,7 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule) {
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRuleSL buyRule) {
         if(REAL==null){
             System.out.println(userId);
             System.out.println(storeId);
@@ -411,7 +413,7 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule) {
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule) {
         if(REAL==null){
             System.out.println(userId);
             System.out.println(storeId);
@@ -430,6 +432,16 @@ public class proxy implements IMarket {
             return new SLResponseOBJ<>(null,-1);
         }
         return removeDiscountRule(userId,storeId,discountRuleID);
+    }
+
+    @Override
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
+        return null;
     }
 
     @Override

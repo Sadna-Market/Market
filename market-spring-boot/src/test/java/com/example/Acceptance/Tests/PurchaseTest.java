@@ -5,6 +5,8 @@ import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.AndBuyRule;
 import com.example.demo.Domain.StoreModel.BuyRules.ProductBuyRule;
 import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
+import com.example.demo.Service.ServiceObj.BuyRules.ProductBuyRuleSL;
+import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 import org.junit.jupiter.api.*;
 import java.util.List;
 @DisplayName("Purchase Cart Tests  - AT")
@@ -259,7 +261,7 @@ public class PurchaseTest extends MarketTests {
         ATResponseObj<String> ownerID = market.login(uuid,member);//need to check that really owner
         assertFalse(ownerID.errorOccurred());
         uuid = ownerID.value;
-        assertTrue(market.addNewBuyRule(uuid,existing_storeID,new ProductBuyRule(new ProductPred(1,0,10,true))));
+        assertTrue(market.addNewBuyRule(uuid,existing_storeID,new ProductBuyRuleSL(new ProductPredicateSL(1,0,10,true))));
 
         ATResponseObj<String> guestID = market.logout(uuid);
         assertFalse(guestID.errorOccurred());

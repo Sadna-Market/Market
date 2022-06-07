@@ -3,6 +3,12 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.AndBuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.ProductBuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.UserBuyRuleSL;
+import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
+import com.example.demo.Service.ServiceObj.Predicate.UserPredicateSL;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -246,14 +252,25 @@ public class StoreOwnerTests extends MarketTests{
     }
 
     /**
-     * //TODO: not in this version
+     *
      * Requirement: policies of buying and discounts  - #2.4.2
      */
-    @Test
+/*    @Test
     @DisplayName("req: #2.4.2 - success test")
-    void policy_Success() {
-        //TODO: not in this version
-    }
+    void add_buy_policy_Success() {
+        BuyRuleSL userRule = new UserBuyRuleSL(new UserPredicateSL("osnat@gmail.com"));
+        BuyRuleSL productRule = new ProductBuyRuleSL(new ProductPredicateSL(1,));
+        BuyRuleSL buyRule = new AndBuyRuleSL("iphone6", 1, 60, List.of("phone"), "phone");
+        item.itemID = 8888;
+        assertTrue(market.isMember(member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertFalse(market.removeProductFromStore(uuid, existing_storeID, item));
+
+        assertFalse(market.hasItem(existing_storeID, item.itemID));
+    }*/
 
     @Test
     @DisplayName("req: #2.4.2 - fail test [...]")

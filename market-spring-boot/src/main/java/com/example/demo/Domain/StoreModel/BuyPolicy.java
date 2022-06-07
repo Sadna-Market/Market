@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BuyPolicy {
+
     private ConcurrentHashMap<Integer,BuyRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
 
@@ -46,4 +47,10 @@ public class BuyPolicy {
     public int rulesSize(){
         return rules.size();
     }
+
+    public ConcurrentHashMap<Integer, BuyRule> getRules() {
+        return rules;
+    }
+
+
 }

@@ -2,7 +2,14 @@ package com.example.demo.Domain.StoreModel.BuyRules;
 
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Predicate.CategoryPred;
+import com.example.demo.Domain.StoreModel.Predicate.Predicate;
+import com.example.demo.Domain.StoreModel.Predicate.ShoppingBagPred;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.CategoryBuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.ShoppingBagBuyRuleSL;
+import com.example.demo.Service.ServiceObj.Predicate.CategoryPredicateSL;
+import com.example.demo.Service.ServiceObj.Predicate.ShoppingBagPredicateSL;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,5 +31,11 @@ public class CategoryBuyRule extends LeafBuyRule{
             stringRule += "Category Buy Rule #"+id + ":\n\t";
         stringRule += pred.getPredicateBuyRule();
         return new DResponseObj<>(stringRule);
+    }
+
+    @Override
+    public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
+        return new DResponseObj<>(new CategoryBuyRuleSL(new CategoryPredicateSL((CategoryPred) pred)));
+
     }
 }

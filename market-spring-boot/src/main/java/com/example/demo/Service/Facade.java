@@ -13,6 +13,8 @@ import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -878,7 +880,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule) {
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRuleSL buyRule) {
 
         /**
          * @requirement II. 4.2
@@ -904,7 +906,9 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (buyRule == null)
             return new SLResponseOBJ<>(false, ErrorCode.BUY_RULE_IS_NULL);
-        return new SLResponseOBJ<>(market.addNewBuyRule(UUID.fromString(userId), storeId, buyRule));
+        SLResponseOBJ<BuyRule> buyRuleConverted = buyRule.convertToBuyRuleDL();
+        if(buyRuleConverted.errorOccurred()) return new SLResponseOBJ<>(buyRuleConverted.getErrorMsg());
+        return new SLResponseOBJ<>(market.addNewBuyRule(UUID.fromString(userId), storeId, buyRuleConverted.value));
     }
 
     @Override
@@ -944,14 +948,16 @@ public class Facade implements IMarket {
      */
 
     @Override
-    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule) {
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule) {
         if (userId == null || userId.equals(""))
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (discountRule == null)
             return new SLResponseOBJ<>(false, ErrorCode.BUY_RULE_IS_NULL);
-        return new SLResponseOBJ<>(market.addNewDiscountRule(UUID.fromString(userId), storeId, discountRule));
+        SLResponseOBJ<DiscountRule> DiscountRuleConverted = discountRule.convertToDiscountRuleDL();
+        if(DiscountRuleConverted.errorOccurred()) return new SLResponseOBJ<>(DiscountRuleConverted.getErrorMsg());
+        return new SLResponseOBJ<>(market.addNewDiscountRule(UUID.fromString(userId), storeId, DiscountRuleConverted.value));
     }
 
     /**
@@ -969,6 +975,52 @@ public class Facade implements IMarket {
         if (storeId < 0 || discountRuleID < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         return new SLResponseOBJ<>(market.removeDiscountRule(UUID.fromString(userId), storeId, discountRuleID));
+    }
+
+    /**
+     * get buy policy of store (all buy rules)
+     * @param userId
+     * @param storeId
+     * @return list of buy rules or error if error occur
+     */
+    @Override
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeId < 0 )
+            return new SLResponseOBJ<>(ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<BuyRule>> buyPolicy = market.getBuyPolicy(UUID.fromString(userId), storeId);
+        if(buyPolicy.errorOccurred()) return new SLResponseOBJ<>(buyPolicy.getErrorMsg());
+        List<BuyRuleSL> converted = new ArrayList<>();
+        for(BuyRule br : buyPolicy.value){
+            DResponseObj<BuyRuleSL> brSL = br.convertToBuyRuleSL();
+            if(brSL.errorOccurred()) return new SLResponseOBJ<>(brSL.getErrorMsg());
+            converted.add(brSL.value);
+        }
+        return new SLResponseOBJ<>(converted);
+    }
+
+    /**
+     * get discount policy of store (all discount rules)
+     * @param userId
+     * @param storeId
+     * @return list of buy rules or error if error occur
+     */
+    @Override
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeId < 0 )
+            return new SLResponseOBJ<>(ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<DiscountRule>> discountPolicy = market.getDiscountPolicy(UUID.fromString(userId), storeId);
+        if(discountPolicy.errorOccurred()) return new SLResponseOBJ<>(discountPolicy.getErrorMsg());
+        List<DiscountRuleSL> converted = new ArrayList<>();
+        for(DiscountRule dr : discountPolicy.value){
+            DResponseObj<DiscountRuleSL> drSL = dr.convertToDiscountRuleSL();
+            if(drSL.errorOccurred()) return new SLResponseOBJ<>(drSL.getErrorMsg());
+            converted.add(drSL.value);
+        }
+        return new SLResponseOBJ<>(converted);
     }
 
 

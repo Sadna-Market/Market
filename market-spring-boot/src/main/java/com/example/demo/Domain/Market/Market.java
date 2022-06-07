@@ -658,6 +658,23 @@ public class Market {
         return store.removeDiscountRule(discountRuleID);
     }
 
+    public DResponseObj<List<BuyRule>> getBuyPolicy(UUID userId, int storeId){
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> login = userManager.getLoggedUser(userId);
+        if (login.errorOccurred()) return new DResponseObj<>(login.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        return s.value.getBuyPolicy();
+    }
+
+    public DResponseObj<List<DiscountRule>> getDiscountPolicy(UUID userId, int storeId){
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> login = userManager.getLoggedUser(userId);
+        if (login.errorOccurred()) return new DResponseObj<>(login.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        return s.value.getDiscountPolicy();
+    }
     //2.4.4
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.

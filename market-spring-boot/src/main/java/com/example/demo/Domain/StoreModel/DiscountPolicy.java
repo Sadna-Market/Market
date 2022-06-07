@@ -48,4 +48,8 @@ public class DiscountPolicy {
     public int rulesSize(){
         return rules.size();
     }
+
+    public ConcurrentHashMap<Integer,DiscountRule> getRules(){
+        return rules;
+    }
 }

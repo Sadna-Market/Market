@@ -1,8 +1,14 @@
 package com.example.demo.Domain.StoreModel.BuyRules;
 
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.BuyRules.AndBuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.AndDiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,5 +37,16 @@ public class AndBuyRule extends CompositionBuyRule {
         for(BuyRule rule : rules)
             stringRule.append(rule.getBuyRule().value).append("\n\t");
         return new DResponseObj<>(stringRule.toString());
+    }
+
+    @Override
+    public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
+        List<BuyRuleSL> rulesSL = new ArrayList<>();
+        for(BuyRule buyRule : rules){
+            DResponseObj<BuyRuleSL> buyRuleSL =  buyRule.convertToBuyRuleSL();
+            if(buyRuleSL.errorOccurred()) return buyRuleSL;
+            rulesSL.add(buyRuleSL.value);
+        }
+        return new DResponseObj<>(new AndBuyRuleSL(rulesSL));
     }
 }

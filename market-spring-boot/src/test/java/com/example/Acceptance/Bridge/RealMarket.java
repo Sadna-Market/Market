@@ -5,6 +5,8 @@ import com.example.Acceptance.Obj.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.*;
 import com.example.demo.Service.TestableFacade;
 
@@ -660,7 +662,7 @@ public class RealMarket implements MarketBridge {
      * @return
      */
     @Override
-    public boolean addNewBuyRule(String uuid, int storeId, BuyRule buyRule) {
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRuleSL buyRule) {
         SLResponseOBJ<Boolean> res = market.addNewBuyRule(uuid, storeId, buyRule);
         return !res.errorOccurred();
     }
@@ -688,7 +690,7 @@ public class RealMarket implements MarketBridge {
      * @return
      */
     @Override
-    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRule discountRule) {
+    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRuleSL discountRule) {
         SLResponseOBJ<Boolean> res = market.addNewDiscountRule(uuid, storeId, discountRule);
         return !res.errorOccurred();
     }
