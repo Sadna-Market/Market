@@ -42,7 +42,9 @@ class ShoppingRule extends Rule{
 
 // // i need "getAllRules()" return : Rule Number: 1  Kind: Add  Amount: 4
 //  apiClientHttp.sendRules(combineMap) return : value == rule id!!
-//
+
+// // i need "getAllDRules()" return : Rule Number: 1  Kind: Add  Amount: 4
+//  apiClientHttp.sendDRules(combineMap) return : value == rule id!!
 
 
 /// *************************** simple bying rull   ******************************************

@@ -3,6 +3,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const Password = (props) => {
+    console.log("Password")
+
     let UUID = props.uuid;
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");

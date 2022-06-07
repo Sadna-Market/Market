@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import CombineRuleList from "./CombineRuleList";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 const XorRule = (props) => {
     console.log("XorRule")
-
+    const [enteredError, SetError] = useState("");
+    const apiClientHttp = createApiClientHttp();
     let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
@@ -19,10 +22,17 @@ const XorRule = (props) => {
   };
 
   //todo: XOR rule
-  const confirmHandler = () => {
-    //do..... with the list
-    props.onRule();
-  };
+    async function confirmHandler(){
+      let combineAndMap ={"combineXor":list}
+      const sendRulesResponse = await apiClientHttp.sendDRules(combineAndMap);
+
+      if (sendRulesResponse.errorMsg !== -1) {
+          SetError(errorCode.get(sendRulesResponse.errorMsg))
+      } else {
+          // props.onRule(sendRulesResponse.value);
+          props.onRule();
+      }
+  }
 
   //const [command, setCommand] = useState();
   return (

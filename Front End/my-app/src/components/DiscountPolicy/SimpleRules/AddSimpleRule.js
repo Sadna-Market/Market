@@ -25,7 +25,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <SimpleDiscountRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage={true}
@@ -39,7 +40,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <ProductDiscountRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage={true}
@@ -53,7 +55,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <CategoryDiscountRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage={true}
@@ -67,7 +70,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <ConditionStoreDiscountRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage={true}
@@ -81,7 +85,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <ConditionProductDiscountRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage={true}
@@ -95,7 +100,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <ConditionCategoryDiscountRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage={true}

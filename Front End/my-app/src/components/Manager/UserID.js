@@ -4,7 +4,10 @@ import Card from "../UI/Card";
 
 const UserID = (props) => {
   //todo: remove user
+  console.log("UserID")
+
   const clickHandler = () => {
+
     props.onEnterToStore(props.id);
     
   };

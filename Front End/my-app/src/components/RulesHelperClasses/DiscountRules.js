@@ -62,18 +62,18 @@ class conditionOnCategoryDiscount extends DRule {
 
     }
 }
-let rule1 = new conditionOnCategoryDiscount("uuid","storeId","discount","minimumAge","categoryID","minimumHour","maximumHour")
-let rule2 = new conditionOnProductDiscount("uuid", "storeId","discount","productID","minQuantity","maxQuantity")
-let rule3 = new conditionOnStoreDiscount("uuid", "storeId","discount","minQuantity","maxQuantity","totalPrice")
-let rule4 = new categoryDiscount("uuid", "storeId","discount","categoryID")
-let rule5 = new ProductDiscount("uuid", "storeId","discount","productID")
-let rule6 = new FullDiscount("uuid", "storeId","discount")
-console.log(rule1)
-console.log(rule2)
-console.log(rule3)
-console.log(rule4)
-console.log(rule5)
-console.log(rule6)
+// let rule1 = new conditionOnCategoryDiscount("uuid","storeId","discount","minimumAge","categoryID","minimumHour","maximumHour")
+// let rule2 = new conditionOnProductDiscount("uuid", "storeId","discount","productID","minQuantity","maxQuantity")
+// let rule3 = new conditionOnStoreDiscount("uuid", "storeId","discount","minQuantity","maxQuantity","totalPrice")
+// let rule4 = new categoryDiscount("uuid", "storeId","discount","categoryID")
+// let rule5 = new ProductDiscount("uuid", "storeId","discount","productID")
+// let rule6 = new FullDiscount("uuid", "storeId","discount")
+// console.log(rule1)
+// console.log(rule2)
+// console.log(rule3)
+// console.log(rule4)
+// console.log(rule5)
+// console.log(rule6)
 // const list= [];
 // list.push(rule1)
 // list.push(rule2)
@@ -81,13 +81,21 @@ console.log(rule6)
 // list.push(rule4)
 // list.push(rule5)
 // list.push(rule6)
-
+//
 // let andMap ={"and":list}
 // let orMap ={"or":list}
 // let xorMap ={"xor":list}
-// let conditionMap ={"condition":list}
-
+//
+// combinelist=[1,2]
+// let conditionMap ={"conditionAdd":combinelist}
+// let combineAndMap ={"combineAnd":combinelist}
+// let combineOrMap ={"combineOr":combinelist}
+// let combineConditionMap ={"combineCondition":combinelist}
+//
 // console.log(andMap)
 // console.log(orMap)
 // console.log(xorMap)
 // console.log(conditionMap)
+// console.log(combineAndMap)
+// console.log(combineOrMap)
+// console.log(combineOrMap)

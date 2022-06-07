@@ -11,6 +11,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const ManagerButton = (props) => {
+    console.log("ManagerButton")
+
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 const RemoveManager = (props) => {
+  console.log("RemoveManager" )
+
   let UUID = props.uuid;
   let storeID = props.storeID;
 

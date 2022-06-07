@@ -16,7 +16,6 @@ const ComposeRuleList = (props) => {
   //   let rules = [];
   //
   //   const getAllRulesResponse = await apiClientHttp.getAllRules();
-  //   console.log("start func  getAllStores")
   //
   //   if (getAllRulesResponse.errorMsg !== -1) {
   //     SetError(errorCode.get(getAllRulesResponse.errorMsg))

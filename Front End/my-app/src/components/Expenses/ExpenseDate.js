@@ -1,6 +1,8 @@
 import React from "react";
 import './ExpenseDate.css';
 function ExpenseDate(props) {
+  console.log("ExpenseDate")
+
   var monthNames = [
     "January",
     "February",

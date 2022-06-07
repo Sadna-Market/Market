@@ -6,6 +6,8 @@ import {errorCode} from "../../ErrorCodeGui"
 
 
 const SignUpManager = (props) => {
+  console.log("SignUpManager")
+
   console.log("SignUpManager UUID:")
 
   const apiClientHttp = createApiClientHttp();
