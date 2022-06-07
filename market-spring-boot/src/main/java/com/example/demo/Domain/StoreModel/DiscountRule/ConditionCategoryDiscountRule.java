@@ -2,7 +2,13 @@ package com.example.demo.Domain.StoreModel.DiscountRule;
 
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Predicate.CategoryPred;
+import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.DiscountRules.ConditionCategoryDiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.ConditionProductDiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.Predicate.CategoryPredicateSL;
+import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,5 +41,10 @@ public class ConditionCategoryDiscountRule extends SimpleCategoryDiscountRule {
         }
 
         return new DResponseObj<>(stringRule);
+    }
+
+    @Override
+    public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
+        return new DResponseObj<>(new ConditionCategoryDiscountRuleSL(new CategoryPredicateSL(pred),percentDiscount));
     }
 }

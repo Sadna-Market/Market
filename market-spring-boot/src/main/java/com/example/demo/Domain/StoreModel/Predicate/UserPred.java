@@ -29,5 +29,7 @@ public class UserPred implements Predicate{
         return null;
     }
 
-
+    public String getUsername() {
+        return username;
+    }
 }
