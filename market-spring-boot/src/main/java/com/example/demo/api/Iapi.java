@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.api.apiObjects.apiProductType;
 import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
@@ -17,10 +19,16 @@ public interface Iapi {
     //1.1
     public SLResponseOBJ<String> initMarket(  apiUser user) ;
 
+    public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
+
+    public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
+    public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
 
 
+    public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
 
-    // 2.1.1 when a user enter to the system he recognized us a guest visitor
+
+        // 2.1.1 when a user enter to the system he recognized us a guest visitor
     public SLResponseOBJ<String> guestVisit();
 
 
@@ -142,6 +150,8 @@ public interface Iapi {
 
 
 
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId) ;
 
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) ;
 
     }

@@ -398,7 +398,7 @@ public class proxy implements IMarket {
             System.out.println(buyRule.toString());
             return new SLResponseOBJ<>(null,-1);
         }
-        return addNewBuyRule(userId,storeId,buyRule);
+        return REAL.addNewBuyRule(userId,storeId,buyRule);
     }
 
     @Override
@@ -409,7 +409,7 @@ public class proxy implements IMarket {
             System.out.println(buyRuleID);
             return new SLResponseOBJ<>(null,-1);
         }
-        return removeBuyRule(userId,storeId,buyRuleID);
+        return REAL.removeBuyRule(userId,storeId,buyRuleID);
     }
 
     @Override
@@ -420,7 +420,7 @@ public class proxy implements IMarket {
             System.out.println(discountRule.toString());
             return new SLResponseOBJ<>(null,-1);
         }
-        return addNewDiscountRule(userId,storeId,discountRule);
+        return REAL.addNewDiscountRule(userId,storeId,discountRule);
     }
 
     @Override
@@ -431,7 +431,7 @@ public class proxy implements IMarket {
             System.out.println(discountRuleID);
             return new SLResponseOBJ<>(null,-1);
         }
-        return removeDiscountRule(userId,storeId,discountRuleID);
+        return REAL.removeDiscountRule(userId,storeId,discountRuleID);
     }
 
     @Override
