@@ -13,5 +13,5 @@ public interface DiscountRule {
     DResponseObj<String> getDiscountRule();
     void setID(int id);
     DResponseObj<DiscountRuleSL> convertToDiscountRuleSL();
-
+    double getPercentDiscount();
 }

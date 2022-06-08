@@ -25,6 +25,7 @@ public class DiscountPolicy {
 
 
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule){
+        if(discountRule.getPercentDiscount() < 0 || discountRule.getPercentDiscount() > 100) return new DResponseObj<>(false,ErrorCode.INVALID_PERECNT_DISCOUNT);
         int id = idCounter.getAndIncrement();
         rules.put(id,discountRule);
         discountRule.setID(id);

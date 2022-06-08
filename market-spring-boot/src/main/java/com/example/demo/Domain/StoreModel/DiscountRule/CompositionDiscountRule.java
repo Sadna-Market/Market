@@ -31,5 +31,8 @@ public abstract class CompositionDiscountRule implements DiscountRule{
 
     public abstract DResponseObj<DiscountRuleSL> convertToDiscountRuleSL();
 
+    public double getPercentDiscount() {
+        return discount;
+    }
 
 }

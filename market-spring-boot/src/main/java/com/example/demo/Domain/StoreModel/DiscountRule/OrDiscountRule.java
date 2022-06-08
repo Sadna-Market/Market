@@ -27,7 +27,7 @@ public class OrDiscountRule extends CompositionDiscountRule {
         boolean needToGetDiscount = false;
         for (DiscountRule discountRule : rules) {
             DResponseObj<Double> res = discountRule.howMuchDiscount(username, age, shoppingBag);
-            if (!res.errorOccurred()) {
+            if (res.value != 0.0) {
                 needToGetDiscount = true;
                 break;
             }
