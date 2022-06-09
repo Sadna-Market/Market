@@ -24,7 +24,7 @@ public class AndDiscountRule extends CompositionDiscountRule {
     public DResponseObj<Double> howMuchDiscount(String username, int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
         for(DiscountRule discountRule : rules){
             DResponseObj<Double> res = discountRule.howMuchDiscount(username,age,shoppingBag);
-            if(res.errorOccurred()) return res;
+            if(res.value == 0.0) return res;
         }
         double dis = 0.0;
         for(Map.Entry<ProductStore,Integer> e : shoppingBag.entrySet()){

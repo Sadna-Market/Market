@@ -7,6 +7,7 @@ import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.ServiceStore;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.List;
 
@@ -246,7 +247,7 @@ public interface MarketBridge {
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID);
+    ATResponseObj<List<History>> getHistoryPurchase(String uuid, int storeID);
 
     /**
      * chechs if user is a contributor of store
@@ -446,6 +447,25 @@ public interface MarketBridge {
      * @return
      */
     boolean removeDiscountRule(String uuid, int storeId, int discountRuleID);
+
+    /**
+     * get buy rule of this store
+     * @param uuid
+     * @param storeId
+     * @return list of all buy rules
+     */
+    ATResponseObj<List<BuyRuleSL>> getBuyPolicy(String uuid, int storeId);
+
+
+    /**
+     * get discount rule of this store
+     * @param uuid
+     * @param storeId
+     * @return list of all discount rules
+     */
+    ATResponseObj<List<DiscountRuleSL>> getDiscountPolicy(String uuid, int storeId);
+
+
 
     /**
      * gets all logged in members info in the market

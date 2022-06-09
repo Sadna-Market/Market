@@ -236,7 +236,7 @@ public class DiscountPoilicyTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0,10,17})
+    @ValueSource(ints = {0,7,10,17})
     @DisplayName("checkDiscountPolicyShoppingBagOrRule4 - failure")
     void checkDiscountPolicyShoppingBagOrRule4(int i) {
         ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
