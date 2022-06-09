@@ -107,6 +107,7 @@ export const createApiClientHttp = () => {
         },
 
         filterByName :async (l , productName) =>{
+            console.log("*************filterByName******************** "+l+" "+productName)
             let path = apiUrl.concat(`filterByName/${productName}`);
             let body= {data:{
                     lst : l
@@ -136,6 +137,8 @@ export const createApiClientHttp = () => {
 
 
         filterByDesc : async(l,desc)=>{
+            console.log("*************filterByDesc******************** "+l+" "+desc)
+
             let path = apiUrl.concat(`filterByDesc/${desc}`);
             let body= {data:{
                     lst : l
@@ -166,6 +169,8 @@ export const createApiClientHttp = () => {
         },
 
         filterByStoreRate : async(l,minRate)=>{
+            console.log("*************filterByStoreRate******************** "+l+" "+minRate)
+
             let path = apiUrl.concat(`filterByStoreRate/${minRate}`);
             let body= {data:{
                     lst : l
@@ -196,6 +201,8 @@ export const createApiClientHttp = () => {
 
 
         filterByRangePrices: async(l,min,max)=>{
+            console.log("*************filterByRangePrices******************** "+l+"  min "+min+" max "+max)
+
             let path = apiUrl.concat(`filterByRangePrices/${min}/${max}`);
             let  body = {data:{
                     lst :l
@@ -352,6 +359,7 @@ export const createApiClientHttp = () => {
 
 
         setProductPriceInStore: async(uuid,storeid,productId,price)=>{
+            console.log("setProductPriceInStore uuid"+uuid+"storeid "+storeid+" productId "+ productId+"+ price"+ price)
             let path = apiUrl.concat(`setProductPriceInStore/${uuid}/${storeid}/${productId}`);
             let body = {
 
@@ -366,6 +374,7 @@ export const createApiClientHttp = () => {
 
 
         setProductQuantityInStore: async(uuid,storeid,productId,quantity)=>{
+            console.log("setProductQuantityInStore uuid,storeid,productId,quantity"+uuid+" "+storeid+" "+productId+" "+quantity)
             let path = apiUrl.concat(`setProductQuantityInStore/${uuid}/${storeid}/${productId}`);
             let body = {
 
@@ -380,6 +389,8 @@ export const createApiClientHttp = () => {
 
 
         addNewStoreOwner: async(uuid, storeId,OwnerEmail)=>{
+            console.log("addNewStoreOwnerEmail uuid, storeId,mangerEmail"+ uuid+ storeId+OwnerEmail)
+
             let path = apiUrl.concat(`addNewStoreOwner/${uuid}/${storeId}`);
             let body = {
 
@@ -395,6 +406,7 @@ export const createApiClientHttp = () => {
 
 
         addNewStoreManger: async(uuid, storeId,mangerEmail)=>{
+            console.log("addNewStoreManger uuid, storeId,mangerEmail"+ uuid+ storeId+mangerEmail)
             let path = apiUrl.concat(`addNewStoreManger/${uuid}/${storeId}`);
             let body = {
 
@@ -465,6 +477,8 @@ export const createApiClientHttp = () => {
 
         filterByRate :async(l,minRate)=>
         {
+            console.log("*************filterByRate******************** "+l+"  minRate "+minRate)
+
             let path = apiUrl.concat(`filterByRate/${minRate}`);
             let body={
                 data:{
@@ -502,6 +516,8 @@ export const createApiClientHttp = () => {
 
         filterByCategory:async(l,category)=>
         {
+            console.log("*************filterByCategory******************** "+l+"  category "+category)
+
             let path = apiUrl.concat(`filterByCategory/${category}`);
             let body={
                 data:{
