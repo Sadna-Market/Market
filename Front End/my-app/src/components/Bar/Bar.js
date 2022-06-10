@@ -33,15 +33,21 @@ const Bar = (props) => {
     // const Response = await apiClientHttp.getAllStores();
 
     const guestVisitResponse = await apiClientHttp.guestVisit();
-    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
+    // const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
+    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, "sysManager@gmail.com", "Shalom123$2");
 
-
+    let systemManager=false;
     if (loginResponse.errorMsg!== -1) {
       SetError(errorCode.get(loginResponse.errorMsg))
     } else {
+      const isSystemManagerUUIDResponse = await apiClientHttp.isSystemManagerUUID(loginResponse.value);
+
+      if (isSystemManagerUUIDResponse.errorMsg=== -1){
+        systemManager=true
+      }
       setUserName(email);
       setIsLogin(true);
-      props.onLogin(loginResponse.value,email);
+      props.onLogin(loginResponse.value,email,systemManager);
     }
     console.log(loginResponse)
 
@@ -100,10 +106,10 @@ const Bar = (props) => {
           >
             Sign-Up
           </button>
-          <button className="bar__button" onClick={initHandler}>
-            {" "}
-            Init-Market
-          </button>
+          {/*<button className="bar__button" onClick={initHandler}>*/}
+          {/*  {" "}*/}
+          {/*  Init-Market*/}
+          {/*</button>*/}
 
         </div>
       </div>
