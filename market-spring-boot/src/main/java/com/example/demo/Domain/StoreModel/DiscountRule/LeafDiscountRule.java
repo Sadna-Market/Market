@@ -25,4 +25,8 @@ public abstract class LeafDiscountRule implements DiscountRule{
     }
 
     public abstract DResponseObj<DiscountRuleSL> convertToDiscountRuleSL();
+
+    public double getPercentDiscount() {
+        return percentDiscount;
+    }
 }

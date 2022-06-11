@@ -23,7 +23,7 @@ public class ProxyMarket implements MarketBridge {
      * @param sysManager
      * @return true if success else false
      */
-    public ATResponseObj<String> initSystem(User sysManager) {
+    public ATResponseObj<Boolean> initSystem(User sysManager) {
         return realMarket.initSystem(sysManager);
     }
 
@@ -330,7 +330,7 @@ public class ProxyMarket implements MarketBridge {
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    public ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID) {
+    public ATResponseObj<List<History>> getHistoryPurchase(String uuid, int storeID) {
         return realMarket.getHistoryPurchase(uuid, storeID);
     }
 
@@ -585,6 +585,30 @@ public class ProxyMarket implements MarketBridge {
     @Override
     public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
         return realMarket.removeDiscountRule(uuid,storeId,discountRuleID);
+    }
+
+    /**
+     * get buy rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all buy rules
+     */
+    @Override
+    public ATResponseObj<List<BuyRuleSL>> getBuyPolicy(String uuid, int storeId) {
+        return realMarket.getBuyPolicy(uuid,storeId);
+    }
+
+    /**
+     * get discount rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all discount rules
+     */
+    @Override
+    public ATResponseObj<List<DiscountRuleSL>> getDiscountPolicy(String uuid, int storeId) {
+        return realMarket.getDiscountPolicy(uuid,storeId);
     }
 
     /**

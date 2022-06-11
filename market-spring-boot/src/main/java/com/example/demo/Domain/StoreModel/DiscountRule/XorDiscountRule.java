@@ -36,7 +36,7 @@ public class XorDiscountRule extends CompositionDiscountRule {
         } else {  // first discount
             for (DiscountRule discountRule : rules) {
                 DResponseObj<Double> res = discountRule.howMuchDiscount(username, age, shoppingBag);
-                if (res.errorOccurred()) continue;
+                if (res.value == 0.0) continue;
                 return new DResponseObj<>(res.getValue());
             }
             return new DResponseObj<>(0.0);

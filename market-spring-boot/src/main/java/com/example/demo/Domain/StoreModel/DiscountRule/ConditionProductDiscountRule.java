@@ -11,6 +11,7 @@ import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.SimpleStoreDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
@@ -25,11 +26,18 @@ public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
 
     @Override
     public DResponseObj<Double> howMuchDiscount(String username, int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
-        DResponseObj<Boolean> res = pred.passRule(username,age,shoppingBag);
-        if(!res.errorOccurred()){
-            return super.howMuchDiscount(username,age,shoppingBag);
+        for(Map.Entry<ProductStore,Integer> e : shoppingBag.entrySet()){
+            if(productId == e.getKey().getProductType().getProductID().value){
+                DResponseObj<Boolean> pass = pred.passRule(username,age,shoppingBag);
+                return pass.value ? super.howMuchDiscount(username,age,shoppingBag) : new DResponseObj<>(0.0);
+            }
         }
-        return new DResponseObj<>(0.0, res.getErrorMsg());
+        return new DResponseObj<>(0.0);
+//        DResponseObj<Boolean> res = pred.passRule(username,age,shoppingBag);
+//        if(!res.errorOccurred()){
+//            return super.howMuchDiscount(username,age,shoppingBag);
+//        }
+//
     }
 
     @Override

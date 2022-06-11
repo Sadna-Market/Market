@@ -26,8 +26,8 @@ public class RealMarket implements MarketBridge {
      * @param sysManager
      * @return true if success else false
      */
-    public ATResponseObj<String> initSystem(User sysManager) {
-        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
+    public ATResponseObj<Boolean> initSystem(User sysManager) {
+        SLResponseOBJ<Boolean> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
         return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value, null);
     }
 
@@ -403,11 +403,13 @@ public class RealMarket implements MarketBridge {
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    public ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID) {
+    public ATResponseObj<List<History>> getHistoryPurchase(String uuid, int storeID) {
         SLResponseOBJ<List<ServiceHistory>> res = market.getStoreOrderHistory(uuid, storeID);
         if (res.errorOccurred()) return new ATResponseObj<>("error");
-        List<String> tid = res.value.stream().map(h -> String.valueOf(h.getTID())).collect(Collectors.toList());
-        return new ATResponseObj<>(tid);
+//        List<String> tid = res.value.stream().map(h -> String.valueOf(h.getTID())).collect(Collectors.toList());
+          List<History> histories = res.value.stream().map(History::new).collect(Collectors.toList());
+
+        return new ATResponseObj<>(histories);
     }
 
     /**
@@ -678,7 +680,7 @@ public class RealMarket implements MarketBridge {
      */
     @Override
     public boolean removeBuyRule(String uuid, int storeId, int buyRuleID) {
-        SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, buyRuleID);
+        SLResponseOBJ<Boolean> res = market.removeBuyRule(uuid, storeId, buyRuleID);
         return !res.errorOccurred();
     }
 
@@ -708,6 +710,34 @@ public class RealMarket implements MarketBridge {
     public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
         SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, discountRuleID);
         return !res.errorOccurred();
+    }
+
+    /**
+     * get buy rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all buy rules
+     */
+    @Override
+    public ATResponseObj<List<BuyRuleSL>> getBuyPolicy(String uuid, int storeId) {
+        SLResponseOBJ<List<BuyRuleSL>> res = market.getBuyPolicy(uuid,storeId);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * get discount rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all discount rules
+     */
+    @Override
+    public ATResponseObj<List<DiscountRuleSL>> getDiscountPolicy(String uuid, int storeId) {
+        SLResponseOBJ<List<DiscountRuleSL>> res = market.getDiscountPolicy(uuid,storeId);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
     }
 
     /**

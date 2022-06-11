@@ -11,10 +11,9 @@ public class ErrorCode {
     public static int NOTVALIDINPUT = 13;
     public static int NOTSTRING = 14;
     public static int NEGATIVENUMBER = 15;
-
-
     public static int NOTUSER = 16;
     public static int GRANTEANDGRANTORSAMEUSER = 17;
+
     public static int ALLREADYOWNER = 18;
     public static int NOTOWNER = 19;
     public static int ALLREADYMANAGER = 20;
@@ -37,12 +36,12 @@ public class ErrorCode {
     public static int BUYER_TOO_YOUNG_TO_BUY_THIS_PRODUCT = 37;
     public static int BUYER_CAN_NOT_BUY_THIS_HOUR = 38;
     public static int USER_CAN_NOT_BUY_IN_THIS_STORE = 39;
-
     public static int STORENOTINTHEPRODUCTTYPE = 40;
     public static int STORESTAYINTHEPRODUCTTYPE = 41;
     public static int CANNOTCLOSESTORE = 42;
     public static int ROLLBACK =43;
     public static int DISCOUNT_RULE_NOT_EXIST = 44;
+    public static int INVALID_PERECNT_DISCOUNT = 45;
 
     public static int NOT_MANAGER = 48;
     public static int SERVICEALREADYCONNECT = 50;
@@ -68,4 +67,6 @@ public class ErrorCode {
     public static int NOT_VALID_PHONE = 102;
     public static int INVALID_PERMISSION_TYPE = 103;
     public static final int FAIL_DELETE_STORE = 104;
+    public static int NOTADMIN = 300;
+
 }
