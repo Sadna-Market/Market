@@ -19,6 +19,8 @@ const AddManager = (props) => {
   };
 
   async function ManHandler(){
+    console.log("addNewStoreMange UUID r "+UUID)
+
     const addNewStoreMangerResponse = await apiClientHttp.addNewStoreManger(UUID, storeID, email);
     if (addNewStoreMangerResponse.errorMsg !== -1) {
       SetError(errorCode.get(addNewStoreMangerResponse.errorMsg))

@@ -20,7 +20,7 @@ const FilterProductList = (props) => {
 
       // products.
       for (let i = 0; i < getAllProductsResponse.value.length; i++) {
-        products.push({id: getAllProductsResponse.value[i].productID})
+        products.push(getAllProductsResponse.value[i].productID)
       }
     }
 

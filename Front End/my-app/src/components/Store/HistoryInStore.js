@@ -24,7 +24,7 @@ const HistoryInStore = (props) => {
 
   //todo: search the history
   async function searchHandler(){
-    console.log("searchHandler getStoreOrderHistory")
+    console.log("searchHandler getStoreOrderHistory storeID" +storeID )
 
     const getStoreOrderHistoryResponse = await apiClientHttp.getStoreOrderHistory(UUID, storeID);
 
