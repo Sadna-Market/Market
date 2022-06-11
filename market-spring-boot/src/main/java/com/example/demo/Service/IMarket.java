@@ -106,7 +106,8 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> removeBuyRule(String userId, int storeId, int buyRuleID);
     public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule);
     public SLResponseOBJ<Boolean> removeDiscountRule(String userId, int storeId, int discountRuleID);
-
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId , int storeId,  String operator, List<Integer> rules, int category, int discount);
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId , int storeId, String decision, List<Integer> rules);
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId);
     public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId);
 

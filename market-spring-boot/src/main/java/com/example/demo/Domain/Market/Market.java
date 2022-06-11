@@ -663,6 +663,23 @@ public class Market {
         return store.removeDiscountRule(discountRuleID);
     }
 
+    public DResponseObj<Boolean> combineANDORDiscountRules(UUID userId, int storeId, String operator, List<Integer> rules, int category, int discount) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.combineANDORDiscountRules(operator,rules,category,discount);
+    }
+
+    public DResponseObj<Boolean> combineXorDiscountRules(UUID userId, int storeId, String decision, List<Integer> rules) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.combineXORDiscountRules(rules,decision);
+    }
+
+
     public DResponseObj<List<BuyRule>> getBuyPolicy(UUID userId, int storeId){
         if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> login = userManager.getLoggedUser(userId);
@@ -802,9 +819,11 @@ public class Market {
     }
 
 
+
     //2.4.13 & 2.6.4 (only system manager)
     //pre: this store exist in the system.
     //post: market ask the store about that with USerEmail.
+
     public DResponseObj<List<List<History>>> getUserInfo(String userID, String email) {
         DResponseObj<Boolean> isMem = userManager.isMember(email);
         if (isMem.errorOccurred()) return new DResponseObj<>(null, isMem.errorMsg);
@@ -824,10 +843,10 @@ public class Market {
         return new DResponseObj<>(res);
     }
 
-
     //2.2.1
     //pre: the store exist in the system.
     //post: market receive this store to the user.
+
     public DResponseObj<Store> getStore(int storeID) {
         if (storeID <= 0 | storeID >= storeCounter) {
             logger.warn("the StoreID is illegal");
@@ -867,8 +886,8 @@ public class Market {
         return new DResponseObj<>(true);
     }
 
-
     //target: this func chack that the card is valid
+
     private DResponseObj<Boolean> checkValidCard(String cardNumber, String exp, String pin) {
 
         //check card number
@@ -1224,7 +1243,7 @@ public class Market {
         if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
 
         //check PaymentService AND check SupplyService
-//         DResponseObj<Boolean> checkServices = paymentAndSupplyConnct(); 
+//         DResponseObj<Boolean> checkServices = paymentAndSupplyConnct();
 //        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
 //        if (!checkServices.getValue()){
 //            logger.warn("this External Services dont connect.");
@@ -1257,6 +1276,7 @@ public class Market {
         l.add(userBID.value);
         userManager.notifyUsers(l,msg);
     }
+
 
 
     class Tuple<E, T> {

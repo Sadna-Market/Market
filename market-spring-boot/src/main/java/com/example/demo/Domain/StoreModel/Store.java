@@ -315,6 +315,17 @@ public class Store {
         return discountPolicy.removeDiscountRule(discountRuleID);
     }
 
+    //requirement II.4.2
+    public DResponseObj<Boolean> combineANDORDiscountRules(String operator, List<Integer> rules, int category, int discount) {
+        if(discountPolicy == null) return new DResponseObj<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
+        return discountPolicy.combineANDORDiscountRules(operator,rules,category,discount);
+    }
+
+    //requirement II.4.2
+    public DResponseObj<Boolean> combineXORDiscountRules(List<Integer> rules, String decision) {
+        if(discountPolicy == null) return new DResponseObj<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
+        return discountPolicy.combineXORDiscountRules(rules,decision);
+    }
 
 
     //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
@@ -503,6 +514,9 @@ public class Store {
         if (!existsInv.value) return new DResponseObj<>(null,existsInv.getErrorMsg());
         return new DResponseObj<>(b);
     }
+
+
+
 }
 
 

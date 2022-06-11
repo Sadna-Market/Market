@@ -435,6 +435,16 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId, int storeId, String operator, List<Integer> rules, int category, int discount) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId, int storeId, String decision, List<Integer> rules) {
+        return null;
+    }
+
+    @Override
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
         return null;
     }

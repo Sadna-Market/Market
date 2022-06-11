@@ -3,10 +3,15 @@ package com.example.demo.Domain.StoreModel;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.AndDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.OrDiscountRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.XorDiscountRule;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.example.demo.Service.ServiceObj.ServiceDiscountPolicy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -52,5 +57,43 @@ public class DiscountPolicy {
 
     public ConcurrentHashMap<Integer,DiscountRule> getRules(){
         return rules;
+    }
+
+    public DResponseObj<Boolean> combineANDORDiscountRules(String operator, List<Integer> toCombineRules, int category, int discount) {
+        List<DiscountRule> rulesForCombine = new ArrayList<>();
+        for(Integer id : toCombineRules) {
+            DiscountRule rule = rules.get(id);
+            if (rule == null) return new DResponseObj<>(false, ErrorCode.INVALID_ARGS_FOR_RULE);
+            rulesForCombine.add(rule);
+        }
+        DiscountRule combine;
+        switch(operator) {
+            case "and":
+                combine = new AndDiscountRule(rulesForCombine, category,discount);
+                break;
+            case "or":
+                combine = new OrDiscountRule(rulesForCombine, category, discount);
+                break;
+            default:
+                return new DResponseObj<>(false, ErrorCode.INVALID_ARGS_FOR_RULE);
+        }
+        DResponseObj<Boolean> addCombine = addNewDiscountRule(combine);  // add the combine rule
+        if(addCombine.errorOccurred()) return addCombine;
+        toCombineRules.forEach(this::removeDiscountRule);  // remove all the rules that combine
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> combineXORDiscountRules(List<Integer> toCombineRules, String decision) {
+        List<DiscountRule> rulesForCombine = new ArrayList<>();
+        for(Integer id : toCombineRules) {
+            DiscountRule rule = rules.get(id);
+            if (rule == null) return new DResponseObj<>(false, ErrorCode.INVALID_ARGS_FOR_RULE);
+            rulesForCombine.add(rule);
+        }
+        DiscountRule xor = new XorDiscountRule(rulesForCombine,decision);
+        DResponseObj<Boolean> addCombine = addNewDiscountRule(xor);  // add the combine rule
+        if(addCombine.errorOccurred()) return addCombine;
+        toCombineRules.forEach(this::removeDiscountRule);  // remove all the rules that combine
+        return new DResponseObj<>(true);
     }
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,6 +65,52 @@ public class StoreAndPolicies {
             assertTrue(store.removeBuyRule(1).getValue());
             assertEquals(0,store.getBuyRulesSize());
         }
+
+    @Test
+    @DisplayName("combineDiscountrules  -  successful")
+    void combineANDDiscountrules() {
+        List<Integer> rules = new ArrayList<>(); rules.add(1); rules.add(2);
+        assertEquals(0,store.getDiscountRulesSize());
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(1,store.getDiscountRulesSize());
+        assertFalse(store.combineANDORDiscountRules("and",rules,1,3).value);
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(2,store.getDiscountRulesSize());
+        assertFalse(store.combineANDORDiscountRules("add",rules,1,3).value);
+        assertTrue(store.combineANDORDiscountRules("and",rules,1,3).value);
+        assertFalse(store.combineANDORDiscountRules("and",rules,1,3).value);
+    }
+
+    @Test
+    @DisplayName("combineDiscountrules  -  successful")
+    void combineORDiscountrules() {
+        List<Integer> rules = new ArrayList<>(); rules.add(1); rules.add(2);
+        assertEquals(0,store.getDiscountRulesSize());
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(1,store.getDiscountRulesSize());
+        assertFalse(store.combineANDORDiscountRules("or",rules,1,3).value);
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(2,store.getDiscountRulesSize());
+        assertFalse(store.combineANDORDiscountRules("xor",rules,1,3).value);
+        assertTrue(store.combineANDORDiscountRules("or",rules,1,3).value);
+        assertFalse(store.combineANDORDiscountRules("or",rules,1,3).value);
+    }
+
+    @Test
+    @DisplayName("combineDiscountrules  -  successful")
+    void combineXORDiscountrules() {
+        List<Integer> rules = new ArrayList<>(); rules.add(1); rules.add(2);
+        assertEquals(0,store.getDiscountRulesSize());
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(1,store.getDiscountRulesSize());
+        assertFalse(store.combineXORDiscountRules(rules,"Big discount").value);
+        assertTrue(store.addNewDiscountRule(sRule).getValue());
+        assertEquals(2,store.getDiscountRulesSize());
+        assertTrue((store.combineXORDiscountRules(rules,"Big discount").value));
+        assertFalse((store.combineXORDiscountRules(rules,"Big discount").value));
+    }
+
+
 
         @Test
         @DisplayName("checkBuyRule  -  successful")

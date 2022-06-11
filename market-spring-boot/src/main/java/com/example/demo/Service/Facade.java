@@ -1004,6 +1004,46 @@ public class Facade implements IMarket {
     }
 
     /**
+     * combine 2 or more rules by the operator and remove the rules
+     * @param userId
+     * @param storeId
+     * @param operator
+     * @param rules
+     * @param category
+     * @param discount
+     * @return
+     */
+    @Override
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId , int storeId,  String operator, List<Integer> rules, int category, int discount) {
+        if (userId == null || userId.equals("") || operator == null || operator.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if(rules == null || rules.size() < 2)
+            return new SLResponseOBJ<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
+        if(storeId < 0 || category < 0 || discount < 0)
+            return new SLResponseOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.combineANDORDiscountRules(UUID.fromString(userId), storeId,operator, rules,category,discount));
+    }
+
+
+    /**
+     *  combine 2 or more rules to Xor and remove the rules
+     * @param userId
+     * @param storeId
+     * @param decision
+     * @param rules
+     * @return
+     */
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId , int storeId, String decision, List<Integer> rules){
+        if (userId == null || userId.equals("") || decision == null || decision.equals("") )
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if(rules == null || rules.size() < 2 || !decision.equals("xor"))
+            return new SLResponseOBJ<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
+        if(storeId < 0)
+            return new SLResponseOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.combineXorDiscountRules(UUID.fromString(userId), storeId, decision,rules));
+    }
+
+    /**
      * get buy policy of store (all buy rules)
      * @param userId
      * @param storeId
