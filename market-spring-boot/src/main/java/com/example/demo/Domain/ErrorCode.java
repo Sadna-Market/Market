@@ -78,7 +78,11 @@ public class ErrorCode {
     public static int HANDSHAKEFAIL = 400;
     public static int HANDSHAKE_BEFOREPAY_FAIL = 401;
     public static int CARD_NOTRIGHT = 402;
-    public static int PAYAPIFAIL = 400;
-    public static int CANCELPAYAPIFAIL = 400;
+    public static int PAYAPIFAIL = 403;
+    public static int CANCELPAYAPIFAIL = 404;
+    public static int ADDRESS_NOTRIGHT = 405;
+    public static int SUPPLY_FAIL = 406;
+    public static int CANCELSUPPLYAPIFAIL = 407;
+
 
 }
