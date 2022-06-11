@@ -57,8 +57,14 @@ public class Facade implements IMarket {
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
     }
 
-    @Override
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) {
+        if(email==null||email.equals("")) return new SLResponseOBJ<>(false,ErrorCode.NOT_VALID_EMILE);
+        return new SLResponseOBJ<>(userManager.removeMember(UUID.fromString(userId),email));
+    }
+
+
+        @Override
+    public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
         /**
          * @requirement II. 1
          *
@@ -80,17 +86,19 @@ public class Facade implements IMarket {
          * It will create system manager user and start connections with services (Payment and delivery).
          */
         SLResponseOBJ<String> guestUUID = guestVisit();
-        if (guestUUID.errorOccurred()) return new SLResponseOBJ<>(guestUUID.value, guestUUID.errorMsg);
+        if (guestUUID.errorOccurred()) return new SLResponseOBJ<>(false, guestUUID.errorMsg);
         SLResponseOBJ<Boolean> addedSysManager = addNewMember(guestUUID.value, email, Password, phoneNumber, dateOfBirth);
-        if (addedSysManager.errorOccurred()) return new SLResponseOBJ<>(null, addedSysManager.errorMsg);
+        if (addedSysManager.errorOccurred()) return new SLResponseOBJ<>(false, addedSysManager.errorMsg);
         PermissionManager permissionManager = PermissionManager.getInstance();
 
         DResponseObj<Boolean> setSysManagerPermission = permissionManager.setSystemManager(email);
-        if (setSysManagerPermission.errorOccurred()) return new SLResponseOBJ<>(null, setSysManagerPermission.errorMsg);
+        if (setSysManagerPermission.errorOccurred()) return new SLResponseOBJ<>(false, setSysManagerPermission.errorMsg);
+        SLResponseOBJ<Boolean> leav =guestLeave(guestUUID.value);
+        if (leav.errorOccurred()) return new SLResponseOBJ<>(false, addedSysManager.errorMsg);
 
         DResponseObj<Boolean> initiateExternalServices = market.init();
         if (initiateExternalServices.errorOccurred() && initiateExternalServices.errorMsg != 50)
-            return new SLResponseOBJ<>(null, initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
+            return new SLResponseOBJ<>(false, initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
         /// the problem was from hear do with it watever you want
         //when you try to connect again to the conection service its throw you with message error
         //hara ahusharmuta
@@ -104,7 +112,7 @@ public class Facade implements IMarket {
             }
         }
 
-        return new SLResponseOBJ<>(guestUUID.value, -1);
+        return new SLResponseOBJ<>(true, -1);
     }
 
 
@@ -1464,5 +1472,12 @@ public class Facade implements IMarket {
         if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
         User user = res.value;
         return new SLResponseOBJ<>(PermissionManager.getInstance().isSystemManager(user.getEmail().value));
+    }
+
+    @Override
+    public SLResponseOBJ<List<String>> getAllMembers(String userId) {
+        DResponseObj<List<String>> res = userManager.getAllMembers(UUID.fromString(userId));
+        if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
+        return new SLResponseOBJ<List<String>>(res);
     }
 }

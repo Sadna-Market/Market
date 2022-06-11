@@ -13,11 +13,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 //*
@@ -222,6 +220,34 @@ public class UserManager {
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
         a.errorMsg = ErrorCode.NOTLOGGED;
         return a;
+    }
+
+    public DResponseObj<List<String>> getAllMembers(UUID userId){
+        DResponseObj<Boolean> res = isLogged(userId);
+        if(res.errorOccurred()|| !res.value) return new DResponseObj<>(ErrorCode.NOTLOGGED);
+        if(!LoginUsers.containsKey(userId)) return new DResponseObj<>(ErrorCode.NOTMEMBER);
+        User admin = LoginUsers.get(userId);
+        DResponseObj<Boolean> isadminres=PermissionManager.getInstance().isSystemManager(admin.email);
+        if(isadminres.errorOccurred() || !isadminres.value) return new DResponseObj<>(ErrorCode.NOTADMIN);
+        List<String> em = new LinkedList<>();
+        for(User u : members.values()){
+            em.add(u.email);
+        }
+        return new DResponseObj<>(em,-1);
+    }
+
+    public DResponseObj<Boolean> removeMember(UUID userId,String email){
+        DResponseObj<Boolean> res = isLogged(userId);
+        if(res.errorOccurred()|| !res.value) return new DResponseObj<>(false,ErrorCode.NOTLOGGED);
+        if(!LoginUsers.containsKey(userId)) return new DResponseObj<>(false,ErrorCode.NOTMEMBER);
+        User admin = LoginUsers.get(userId);
+        DResponseObj<Boolean> isadminres=PermissionManager.getInstance().isSystemManager(admin.email);
+        if(isadminres.errorOccurred() || !isadminres.value) return new DResponseObj<>(false,ErrorCode.NOTADMIN);
+
+        if (!members.containsKey(email)) return new DResponseObj<>(false,ErrorCode.NOTMEMBER);
+        if(admin.email.equals(email))return new DResponseObj<>(false,ErrorCode.NOTVALIDINPUT);
+        members.remove(email);
+        return new DResponseObj<>(true ,-1);
     }
 
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, Store store, String ownerEmail) {
