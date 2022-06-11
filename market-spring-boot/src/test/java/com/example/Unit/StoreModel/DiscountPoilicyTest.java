@@ -320,5 +320,45 @@ public class DiscountPoilicyTest {
         assertFalse(discountPolicy.addNewDiscountRule(add).errorOccurred());
         assertEquals(3.5*i*0.6,discountPolicy.checkDiscountPolicyShoppingBag("niv", 15, products).value);
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2,9,15})
+    @DisplayName("combineDiscountRules - failure")
+    void combineANDORDiscountRules(int i) {
+        List<Integer> l = new ArrayList<>(); l.add(i); l.add(i+1);
+        assertFalse(discountPolicy.combineANDORDiscountRules("and",l,i,4).value);
+        assertFalse(discountPolicy.combineANDORDiscountRules("or",l,1,i).value);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2,9,15})
+    @DisplayName("combineDiscountRules - success")
+    void combineANDORDiscountRulesSuccess(int i) {
+        assertTrue(discountPolicy.addNewDiscountRule(ssRule).value);
+        assertTrue(discountPolicy.addNewDiscountRule(psRule).value);
+        List<Integer> l = new ArrayList<>(); l.add(1); l.add(2);
+        assertTrue(discountPolicy.combineANDORDiscountRules("and",l,i,4).value);
+        assertFalse(discountPolicy.combineANDORDiscountRules("or",l,1,i).value);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2,9,15})
+    @DisplayName("combineXorDiscountRules - failure")
+    void combineXorDiscountRules(int i) {
+        List<Integer> l = new ArrayList<>(); l.add(i); l.add(i+1);
+        assertFalse(discountPolicy.combineXORDiscountRules(l,"Big discount").value);
+        assertFalse(discountPolicy.combineXORDiscountRules(l,"asd").value);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2,9,15})
+    @DisplayName("combineXorDiscountRules - success")
+    void combineXorDiscountRulesSuccess(int i) {
+        assertTrue(discountPolicy.addNewDiscountRule(ssRule).value);
+        assertTrue(discountPolicy.addNewDiscountRule(psRule).value);
+        List<Integer> l = new ArrayList<>(); l.add(1); l.add(2);
+        assertTrue(discountPolicy.combineXORDiscountRules(l,"Big discount").value);
+        assertFalse(discountPolicy.combineXORDiscountRules(l,"Big discount").value);
+    }
 }
 

@@ -443,6 +443,16 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId, int storeId, String operator, List<Integer> rules, int category, int discount) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId, int storeId, String decision, List<Integer> rules) {
+        return null;
+    }
+
+    @Override
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
         if(REAL==null){
 
@@ -621,11 +631,50 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID, boolean approve) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> BuyBID(String userId, int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
+        return null;
+
     public SLResponseOBJ<List<String>> getAllMembers(String userId) {
 
         if(REAL==null){
             return new SLResponseOBJ<>(null, -1);
         }
         return REAL.getAllMembers(userId);
+
     }
 }
