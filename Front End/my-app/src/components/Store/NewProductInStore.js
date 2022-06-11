@@ -10,6 +10,11 @@ const NewProductInStore = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
 
+  const [productName, setproductName] = useState("");
+  const changeProductNameHandler = (event) => {
+    setproductName(event.target.value);
+  };
+
   const [productID, setProductID] = useState("");
   const changeProductHandler = (event) => {
     setProductID(event.target.value);
@@ -45,11 +50,21 @@ const NewProductInStore = (props) => {
     }
 
   }
-
+//text   const [productName, setproductName] = useState("");
   return (
     <div>
       <h3>Add new ProductType to the Store {storeID}</h3>
       <div className="products__controls">
+        <div className="products__control">
+          <label>Product Name</label>
+          <input
+              type="text"
+              min="0"
+              value={productName}
+              placeholder="Write product Name"
+              onChange={changeProductNameHandler}
+          />
+        </div>
         <div className="products__control">
           <label>ProductID</label>
           <input

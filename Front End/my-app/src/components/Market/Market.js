@@ -25,6 +25,7 @@ const Market = (props) => {
     console.log("props.log " + props.log);
     console.log("props.uuid " + props.uuid);
     console.log("props.olduuid " + props.olduuid);
+    console.log("props.email " + props.emal);
 
 
     const showStoreHandler = (storeID) => {
@@ -60,7 +61,7 @@ const Market = (props) => {
     };
 
     const profileHandler = () => {
-        setCommand(<Profile uuid={UUID} useremail={props.useremail}/>);
+        setCommand(<Profile uuid={UUID} useremail={props.useremail} email={props.email}/>);
     };
 
     if (props.isLogin) {

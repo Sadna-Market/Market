@@ -5,6 +5,7 @@ import {errorCode} from "../../ErrorCodeGui"
 
 const Profile = (props) => {
     console.log("Profile")
+    console.log("userEmail"+ props.useremail)
 
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
@@ -18,7 +19,7 @@ const Profile = (props) => {
 
     //todo History of User
     async function historyHander() {
-        setCommand("History Bla bla bla");
+        setCommand("No History");
         console.log("historyHander UUID  "+UUID +"userEmail "+ userEmail+"end ")
         const getUserInfoResponse = await apiClientHttp.getUserInfo(UUID,userEmail);
         if (getUserInfoResponse.errorMsg !== -1) {
@@ -27,6 +28,10 @@ const Profile = (props) => {
             setCommand(getUserInfoResponse.value);
 
         }
+        let str = JSON.stringify(getUserInfoResponse);
+
+        console.log("vhistoryHander getUserInfoResponse  "+str)
+
     }
 
     return (

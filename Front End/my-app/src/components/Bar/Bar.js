@@ -33,8 +33,8 @@ const Bar = (props) => {
     // const Response = await apiClientHttp.getAllStores();
 
     const guestVisitResponse = await apiClientHttp.guestVisit();
-    // const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
-    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, "sysManager@gmail.com", "Shalom123$2");
+    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
+    // const loginResponse = await apiClientHttp.login(guestVisitResponse.value, "sysManager@gmail.com", "Shalom123$");
 
     let systemManager=false;
     if (loginResponse.errorMsg!== -1) {
@@ -86,8 +86,9 @@ const Bar = (props) => {
   if (isLogin === false) {
     command = (
       <div className="bar__controls">
-        <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
         <div className="bar__control">
+          <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
+
           <label>User's Email</label>
           <input type="text" value={email} onChange={emailChangeHandler} />
         </div>

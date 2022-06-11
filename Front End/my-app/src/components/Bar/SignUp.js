@@ -58,7 +58,6 @@ const SignUp = (props) => {
   return (
     <div className="signUp">
       <h3>Registration</h3>
-      <h3>{enteredError}</h3>
 
       <form onSubmit={submitHandler}>
         <div className="signUp__controls">

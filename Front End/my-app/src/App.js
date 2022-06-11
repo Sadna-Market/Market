@@ -181,7 +181,9 @@ function App(props) {
 
     return (
         <div>
+
             <div>
+                
                 {barCommand}
             </div>
             <div className="market ">
