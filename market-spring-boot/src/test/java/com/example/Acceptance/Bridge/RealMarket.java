@@ -26,8 +26,8 @@ public class RealMarket implements MarketBridge {
      * @param sysManager
      * @return true if success else false
      */
-    public ATResponseObj<String> initSystem(User sysManager) {
-        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
+    public ATResponseObj<Boolean> initSystem(User sysManager) {
+        SLResponseOBJ<Boolean> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
         return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value, null);
     }
 

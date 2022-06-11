@@ -1,5 +1,6 @@
 package com.example.demo.api;
 
+import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
@@ -13,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface Iapi {
 
     //1.1
-    public SLResponseOBJ<String> initMarket(  apiUser user) ;
+    public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;
 
     public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
 
@@ -118,6 +120,8 @@ public interface Iapi {
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger( String uuid, int StoreId, Map<String,Object> obj);
 
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) ;
+
     //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions( String uuid, int storeId, Map<String,Object> obj) ;
 
@@ -128,6 +132,7 @@ public interface Iapi {
     //2.4.11
     public SLResponseOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
 
+    public SLResponseOBJ<List<String>> getAllMembers(String userId);
 
 
     //2.6.5 && //2.4.13
@@ -148,6 +153,7 @@ public interface Iapi {
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
 
+    public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
 
 
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId) ;

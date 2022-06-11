@@ -23,7 +23,7 @@ public class ProxyMarket implements MarketBridge {
      * @param sysManager
      * @return true if success else false
      */
-    public ATResponseObj<String> initSystem(User sysManager) {
+    public ATResponseObj<Boolean> initSystem(User sysManager) {
         return realMarket.initSystem(sysManager);
     }
 

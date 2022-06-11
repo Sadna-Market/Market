@@ -21,9 +21,14 @@ public class Initilizer {
         JsonReader readJson = config.get_instance().getJsonReaderState();
         Map<String, Integer> userName_id = new HashMap<>();
         Map<String, Integer> pname_to_pid = adminaddSystemProducts(adminEmail, adminPassword, readJson);
+
+
+
+
+    }
+    public void register (JsonReader readJson){
         SLResponseOBJ<String> uuidSlr;
         String uuid;
-
         for (Map<String, String> reg : readJson.register) {
             uuidSlr = facade.guestVisit();
             if (uuidSlr.errorOccurred()) throw new IllegalArgumentException();
@@ -33,17 +38,25 @@ public class Initilizer {
             String phoneNumber = reg.get("phoneNumber");
             String date = reg.get("dateOfBirth");
             SLResponseOBJ<Boolean> res = facade.addNewMember(uuid, email, password, phoneNumber, date);
-            if (res.errorOccurred()) throw new IllegalArgumentException("oloossodo");
-            SLResponseOBJ<String> S = facade.login(uuid, email, password);
-            if (S.errorOccurred()) {
-                throw new IllegalArgumentException("olooo");
-            }
-            String u = S.value;
-            String logeduuid =addnewStores(readJson, pname_to_pid, email, u);
-            logoutAndExit(logeduuid);
+            if (res.errorOccurred()) throw new IllegalArgumentException("");
+            res = facade.guestLeave(uuid);
+            if (res.errorOccurred()) throw new IllegalArgumentException();
+        }
+    }
+
+    public void login(JsonReader reader)
+    {
+        SLResponseOBJ<String> uuidSlr;
+        String uuid;
+        Map<String,String> uuidlogins =new HashMap<>();
+        for(Map<String,String> log :reader.login){
+            uuidSlr = facade.guestVisit();
+            if (uuidSlr.errorOccurred()) throw new IllegalArgumentException();
+
         }
 
     }
+
 
     private Map<String, Integer> adminaddSystemProducts(String adminEmail, String adminPassword, JsonReader readJson) {
         //        admin add items to system
