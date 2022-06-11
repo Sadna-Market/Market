@@ -681,6 +681,9 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>("is ok", -1);
     }
 
+
+
+
     @Override
     public SLResponseOBJ<String> logout(String userId) {
 
@@ -1464,5 +1467,164 @@ public class Facade implements IMarket {
         if(res.errorOccurred()) return new SLResponseOBJ<>(false,res.errorMsg);
         User user = res.value;
         return new SLResponseOBJ<>(PermissionManager.getInstance().isSystemManager(user.getEmail().value));
+    }
+
+
+    /**
+     *  create BID - only for users
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param quantity
+     * @param totalPrice
+     * @return succuess or not
+     */
+    @Override
+    public SLResponseOBJ<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0 || totalPrice < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        if (quantity < 1)
+            return  new SLResponseOBJ<>(false, ErrorCode.INVALIDQUANTITY);
+        DResponseObj<Boolean> res = market.createBID(UUID.fromString(uuid),storeID,productID,quantity,totalPrice);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * remove BID
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.removeBID(UUID.fromString(uuid),storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to approve BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.approveBID(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to reject BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.rejectBID(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to counter BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @param newTotalPrice
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0 || newTotalPrice < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.counterBID(UUID.fromString(uuid),userEmail,storeID,productID,newTotalPrice);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a user want to response his countered BID
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param approve
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID, boolean approve) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.responseCounterBID(UUID.fromString(uuid),storeID,productID,approve);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to get approves list of BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return approves list or error msg
+     */
+    @Override
+    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<HashMap<String, Boolean>> res = market.getApprovesList(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     *      * user want to buy BID that approved
+     * @param userId
+     * @param storeID
+     * @param productID
+     * @param city
+     * @param adress
+     * @param apartment
+     * @param creditCard
+     * @return true if success else error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard){
+        if (userId == null ||
+                userId.equals("") ||
+                creditCard.creditCard == null ||
+                creditCard.creditCard.equals("") ||
+                creditCard.creditDate == null ||
+                creditCard.creditDate.equals("") ||
+                creditCard.pin == null ||
+                creditCard.pin.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res =
+                market.buyBID(UUID.fromString(userId),storeID,productID, city, adress, apartment, creditCard.creditCard, creditCard.creditDate, creditCard.pin);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>(res.value);
     }
 }

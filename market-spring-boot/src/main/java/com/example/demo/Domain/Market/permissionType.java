@@ -18,7 +18,7 @@ public class permissionType {
     static public List<permissionEnum> ownerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory,permissionEnum.addNewProductToStore,permissionEnum.deleteProductFromStore,
                     permissionEnum.setProductPriceInStore,permissionEnum.setProductQuantityInStore, permissionEnum.addNewStoreOwner,
-                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles,permissionEnum.addNewBuyRule,permissionEnum.removeBuyRule,permissionEnum.addNewDiscountRule,permissionEnum.removeDiscountRule,permissionEnum.removeStoreOwner));
+                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles,permissionEnum.addNewBuyRule,permissionEnum.removeBuyRule,permissionEnum.addNewDiscountRule,permissionEnum.removeDiscountRule,permissionEnum.removeStoreOwner,permissionEnum.ManageBID));
 
     static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory, permissionEnum.getUserInfo,
@@ -85,7 +85,7 @@ public class permissionType {
         removeBuyRule,
         addNewDiscountRule,
         removeDiscountRule,
-
+        ManageBID,
         //3 .קביעת אילוצי עקיבות עבור חנות://next versions
         addNewStoreOwner, //4 .מינוי בעל-חנות:
         removeStoreOwner,
@@ -97,16 +97,16 @@ public class permissionType {
         //10 .פתיחת חנות שנסגרה//next versions
         getStoreRoles, //11 .בקשה למידע על תפקידים בחנות:
 
-
         // system manager
             getUserInfo,
             getAllLoggedInUsers,
             getAllLoggedOutUsers,
-            cancelMembership
+            cancelMembership,
         //1 .סגירת חנות לצמיתות://next versions:
         //next versions3// .קבלת מידע ומתן תגובה:
         //4 .קבלת מידע על היסטוריית רכישות בחנות:
         //next versions// 5 .קבלת מידע על התנהלות המערכת:
+
     }
 
 }

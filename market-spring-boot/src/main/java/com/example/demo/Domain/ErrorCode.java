@@ -41,8 +41,10 @@ public class ErrorCode {
     public static int ROLLBACK =43;
     public static int DISCOUNT_RULE_NOT_EXIST = 44;
     public static int INVALID_PERECNT_DISCOUNT = 45;
-
+    public static int INVALIDQUANTITY =46;
+    public static int BIDNOTEXISTS =47;
     public static int NOT_MANAGER = 48;
+    public static final int BIDALLREADYEXISTS = 49;
     public static int SERVICEALREADYCONNECT = 50;
     public static int SERVICEALREADYDISCONNECT = 50;
     public static int EXISTEXTERNALSERVICEWITHTHISNAME =51;
@@ -50,6 +52,10 @@ public class ErrorCode {
     public static int ILLEGALCARD = 53;
     public static int EXTERNAL_SERVICE_ERROR =54;
     public static int SERVICE_NOT_CONNECTED = 55;
+    public static final int STATUSISNOTWAITINGAPPROVES = 56;
+    public static final int STATUSISNOTCOUNTERBID = 57;
+    public static final int STATUSISNOTBIDAPPROVED = 58;
+
 
     public static int PAYMENT_FAIL = 60;
     public static int CARD_NUMBER_ILLEGAL = 61;

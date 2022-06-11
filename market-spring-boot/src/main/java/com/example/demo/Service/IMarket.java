@@ -78,7 +78,7 @@ public interface IMarket {
     //2.2.5
     public SLResponseOBJ<String> orderShoppingCart(String userId, String city, String adress, int apartment , ServiceCreditCard creditCard) ;
 
-    //2.3.1
+        //2.3.1
     public SLResponseOBJ<String> logout(String userId);
 
     public SLResponseOBJ<Boolean> changePassword(String uuid, String email , String password , String newPassword) ;
@@ -148,4 +148,16 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
+
+    public SLResponseOBJ<Boolean> createBID(String uuid,  int storeID,int productID, int quantity, int totalPrice);
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID);
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
+    public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard);
+    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+
+
+
 }

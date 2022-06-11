@@ -10,6 +10,7 @@ import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.locks.StampedLock;
 
 public class Store {
@@ -27,7 +28,7 @@ public class Store {
     private BuyPolicy buyPolicy;
     private List<Permission> permission = new ArrayList<>(); // all the permission that have in this store
     private List<Permission> safePermission = Collections.synchronizedList(permission);
-
+    private ConcurrentLinkedDeque<BID> bids = new ConcurrentLinkedDeque<>();
 
     private final StampedLock historyLock = new StampedLock();
     static Logger logger=Logger.getLogger(Store.class);
@@ -46,7 +47,7 @@ public class Store {
         history = new ConcurrentHashMap<>();
         this.discountPolicy = discountPolicy; //this version is null
         this.buyPolicy = buyPolicy; //this version is null
-
+        this.bids = new ConcurrentLinkedDeque<>();
     }
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
@@ -285,6 +286,7 @@ public class Store {
         return new DResponseObj<>(roles);
     }
 
+
     //requirement II.4.2
     public DResponseObj<Boolean> addNewBuyRule(BuyRule buyRule) {
         if(buyPolicy == null)
@@ -328,9 +330,46 @@ public class Store {
         return new DResponseObj<>(safePermission);
     }
 
+    public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
+        DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
+        if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
+        if(findBID(email,productID) != null) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
+        ConcurrentHashMap<String,Boolean> approves =  createApprovesHashMap();
+        BID b = new BID(email,productID,quantity,totalPrice,approves);
+        bids.add(b);
+        return new DResponseObj<>(true);
+    }
+
+    private List<String> getOwners(){
+        List<String> owners = new ArrayList<>();
+        owners.add(founder);
+        getSafePermission().value.forEach(p -> {
+            DResponseObj<userTypes> type = p.getGranteeType();
+            if(!type.errorOccurred() && type.getValue().equals(userTypes.owner))
+                owners.add(p.getGrantee().getValue().getEmail().getValue());});
+        return owners;
+    }
 
 
-    /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
+    private ConcurrentHashMap<String,Boolean> createApprovesHashMap(){
+        ConcurrentHashMap<String,Boolean> approves = new ConcurrentHashMap<>();
+        getOwners().forEach(email -> approves.put(email,false));
+        return approves;
+    }
+
+    public DResponseObj<Boolean> removeBID(String email, int productID) {
+        for(BID b : bids){
+            if(b.getUsername().equals(email) && b.getProductID()==productID){
+                bids.remove(b);
+                return new DResponseObj<>(true);
+            }
+        }
+        return new DResponseObj<>(false, ErrorCode.BIDNOTEXISTS);
+    }
+
+
+
+        /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
     public DResponseObj<Inventory> getInventory(){
         return new DResponseObj<>(inventory);
@@ -401,6 +440,68 @@ public class Store {
     public DResponseObj<List<DiscountRule>> getDiscountPolicy() {
         return discountPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
                 new DResponseObj<>(new ArrayList<>(discountPolicy.getRules().values()));
+    }
+
+
+    public boolean allApprovedBID(String userEmail, int productID) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return false;
+        return b.allApproved();
+    }
+
+    public DResponseObj<Boolean> approveBID(String ownerEmail, String userEmail, int productID) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
+        if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
+        return b.approve(ownerEmail);
+    }
+
+    private BID findBID(String userEmail, int productID){
+        for(BID b : bids){
+            if(b.getUsername().equals(userEmail) && b.getProductID() == productID){
+              return b;
+            }
+        }
+        return null;
+    }
+
+    public DResponseObj<Boolean> rejectBID(String ownerEmail, String userEmail, int productID) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
+        if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
+        b.reject();
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> counterBID(String ownerEmail, String userEmail, int productID, int newTotalPrice) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
+        if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
+        b.counter(newTotalPrice);
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> responseCounterBID(String userEmail, int productID, boolean approve) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
+        if (b.getStatus() != BID.StatusEnum.CounterBID) return new DResponseObj<>(false,ErrorCode.STATUSISNOTCOUNTERBID);
+        b.responseCounter(approve);
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<HashMap<String, Boolean>> getApprovesList(String userEmail, int productID) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return new DResponseObj<>(null,ErrorCode.BIDNOTEXISTS);
+        return new DResponseObj<>(b.getApproves());
+    }
+
+    public DResponseObj<BID> canBuyBID(String userEmail, int productID) {
+        BID b = findBID(userEmail,productID);
+        if (b==null) return new DResponseObj<>(null,ErrorCode.BIDNOTEXISTS);
+        if (!b.getStatus().equals(BID.StatusEnum.BIDApproved)) return new DResponseObj<>(null,ErrorCode.STATUSISNOTBIDAPPROVED);
+        DResponseObj<Boolean> existsInv = isProductExistInStock(productID,b.getQuantity());
+        if (!existsInv.value) return new DResponseObj<>(null,existsInv.getErrorMsg());
+        return new DResponseObj<>(b);
     }
 }
 

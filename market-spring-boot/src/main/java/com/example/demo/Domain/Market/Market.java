@@ -8,10 +8,7 @@ import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
-import com.example.demo.Domain.UserModel.ShoppingCart;
-import com.example.demo.Domain.UserModel.User;
-import com.example.demo.Domain.UserModel.UserManager;
-import com.example.demo.Domain.UserModel.Validator;
+import com.example.demo.Domain.UserModel.*;
 import com.example.demo.ExternalService.ExternalService;
 import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
@@ -516,6 +513,14 @@ public class Market {
         });
     }
 
+    private void notifyOwnersPurchaseBID(User buyer, int storeId) {
+        String msg = String.format("User: %s has purchased his offer from your store", buyer.getEmail().value);
+        logger.info(String.format("notifying store[%d] owners of purchaseBID",storeId));
+        Store store = this.stores.get(storeId);
+        List<User> owners = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
+        userManager.notifyUsers(owners, msg);
+    }
+
 
     //2.3.2
     //pre: user is Member
@@ -758,6 +763,19 @@ public class Market {
         List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
         List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
         ownersAndManagers.addAll(managersOfStore);
+        userManager.notifyUsers(ownersAndManagers, msg);
+    }
+
+
+    private void notifyOwnersAndManagersWithPermBID(Store store,String msg) {
+        logger.info("notifying owners&managers with permission about BID");
+        List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
+        List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
+        managersOfStore.forEach(m -> {
+            if(!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID,m,store).value)
+                managersOfStore.remove(m);
+        });
+        ownersAndManagers.addAll(managersOfStore);  // after filter managers of stores
         userManager.notifyUsers(ownersAndManagers, msg);
     }
 
@@ -1086,6 +1104,158 @@ public class Market {
             userManager.notifyUsers(ownersAndManagers, msg);
         });
 
+    }
+
+    public DResponseObj<Boolean> createBID(UUID userId, int storeID, int productID, int quantity, int totalPrice) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        String email = logIN.value.getEmail().value;
+        DResponseObj<Boolean> created = s.value.createBID(email,productID,quantity,totalPrice);
+        if (created.errorOccurred()) return created;
+        logger.info(String.format("created new BID by [%s] in storeID [%d]",email,storeID));
+        String msg = String.format("[%s] create new offer in storeID [%d] for productID [%d], quantity [%d], total price [%d].", email,storeID,productID,quantity,totalPrice);
+        notifyOwnersAndManagersWithPermBID(s.value,msg);
+        logger.info(String.format("notify all owners and managers about new BID of [%s]",email));
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> removeBID(UUID userId, int storeID, int productID) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        String email = logIN.value.getEmail().value;
+        DResponseObj<Boolean> removed = s.value.removeBID(email,productID);
+        if (removed.errorOccurred()) return removed;
+        logger.info(String.format("remove BID by [%s] in storeID [%d] , productID [%d]",email,storeID, productID));
+        String msg = String.format("[%s] remove his offer in storeID [%d] for productID [%d]", email,storeID,productID);
+        notifyOwnersAndManagersWithPermBID(s.value,msg);
+        logger.info(String.format("notify all owners and managers about remove BID of [%s]",email));
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> approveBID(UUID owner, String userEmail, int storeID, int productID) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> logIN = userManager.getLoggedUser(owner);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        String ownerEmail = logIN.value.getEmail().value;
+        DResponseObj<Boolean> approved = s.value.approveBID(ownerEmail,userEmail,productID);
+        if (approved.errorOccurred()) return approved;
+        logger.info(String.format("[%s] approved BID of [%s] in storeID [%d] , productID [%d]",ownerEmail,userEmail,storeID, productID));
+        if (s.value.allApprovedBID(userEmail,productID)){
+            String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", storeID,productID);
+            notifyUser(userEmail, msg);
+        }
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> rejectBID(UUID owner, String userEmail, int storeID, int productID) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> logIN = userManager.getLoggedUser(owner);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        String ownerEmail = logIN.value.getEmail().value;
+        DResponseObj<Boolean> rejected = s.value.rejectBID(ownerEmail,userEmail,productID);
+        if (rejected.errorOccurred()) return rejected;
+        logger.info(String.format("[%s] reject BID of [%s] in storeID [%d] , productID [%d]",ownerEmail,userEmail,storeID, productID));
+        String msg = String.format("your BID in storeID [%d] for ProductID [%d] was rejected", storeID,productID);
+        notifyUser(userEmail, msg);
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> counterBID(UUID owner, String userEmail, int storeID, int productID, int newTotalPrice) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> logIN = userManager.getLoggedUser(owner);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        String ownerEmail = logIN.value.getEmail().value;
+        DResponseObj<Boolean> countered = s.value.counterBID(ownerEmail,userEmail,productID,newTotalPrice);
+        if (countered.errorOccurred()) return countered;
+        logger.info(String.format("[%s] countered BID of [%s] in storeID [%d] , productID [%d] to new total price [%d]",ownerEmail,userEmail,storeID, productID,newTotalPrice));
+        String msg = String.format("your got counter BID in storeID [%d] for ProductID [%d], the new total price is [%d]", storeID,productID,newTotalPrice);
+        notifyUser(userEmail, msg);
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> responseCounterBID(UUID user, int storeID, int productID, boolean approve) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<User> logIN = userManager.getLoggedUser(user);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        String userEmail = logIN.value.getEmail().value;
+        DResponseObj<Boolean> responseCounterBID = s.value.responseCounterBID(userEmail,productID,approve);
+        if (responseCounterBID.errorOccurred()) return responseCounterBID;
+        logger.info(String.format("[%s] accept countered BID in storeID [%d] , productID [%d]",userEmail,storeID, productID));
+        String msg;
+        msg = approve ?String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail,storeID,productID) :
+                String.format("[%s] rejected his countered BID in storeID [%d] for productID [%d]", userEmail,storeID,productID);
+        notifyOwnersAndManagersWithPermBID(s.value, msg);
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<HashMap<String, Boolean>> getApprovesList(UUID owner, String userEmail, int storeID, int productID) {
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> s = checkValidRules(owner,storeID, permissionType.permissionEnum.ManageBID);
+        if(s.errorOccurred()) return new DResponseObj<>(null,s.getErrorMsg());
+        DResponseObj<HashMap<String,Boolean>> approves = s.value.getApprovesList(userEmail,productID);
+        if (approves.errorOccurred()) return approves;
+        logger.info(String.format("got approves list - BID in storeID [%d] , productID [%d]",storeID, productID));
+        return new DResponseObj<>(approves.value);
+    }
+
+
+
+    public DResponseObj<Boolean> buyBID(UUID userId, int storeID, int productID, String city, String adress, int apartment, String cardNumber, String exp, String pin) {
+            //check valid Card
+        DResponseObj<Boolean> checkValidCard = checkValidCard(cardNumber, exp, pin);
+        if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
+
+        //get User
+        DResponseObj<User> user = userManager.getOnlineUser(userId);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+
+        //check PaymentService AND check SupplyService
+//         DResponseObj<Boolean> checkServices = paymentAndSupplyConnct(); 
+//        if (checkServices.errorOccurred()) return new DResponseObj<>(checkServices.getErrorMsg());
+//        if (!checkServices.getValue()){
+//            logger.warn("this External Services dont connect.");
+//            return new DResponseObj<>(ErrorCode.EXTERNAL_SERVICE_ERROR);
+//        }
+
+        //check BID
+        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> s = getStore(storeID);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        DResponseObj<BID> canBuyBID = s.value.canBuyBID(user.getValue().getEmail().value,productID); //return quantity to buy
+        if (canBuyBID.errorOccurred()) return new DResponseObj<>(canBuyBID.getErrorMsg());
+        int quantity = canBuyBID.value.getQuantity();
+        int finalPrice = canBuyBID.value.getTotalPrice();
+        ShoppingBag BID = new ShoppingBag(s.value);
+        BID.addProduct(productID,quantity);
+        DResponseObj<Boolean> res = purchase.orderBID(user.getValue(),storeID,BID,finalPrice,city, adress, apartment, cardNumber, exp, pin);
+        if (res.errorOccurred()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
+        canBuyBID.value.ChangeStatusProductBought();
+        notifyOwnersPurchaseBID(user.value,storeID);
+        return res;
+
+    }
+
+
+    private void notifyUser(String userEmail, String msg) {
+        DResponseObj<User> userBID = userManager.getMember(userEmail);
+        if(userBID.errorOccurred()) return;
+        List<User> l = new ArrayList<>();
+        l.add(userBID.value);
+        userManager.notifyUsers(l,msg);
     }
 
 
