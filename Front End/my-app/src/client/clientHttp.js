@@ -29,14 +29,8 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         },
-//TODO daniel
-        sendRules:async ()=>
-        {
-            let path = apiUrl.concat(`guestVisit`);
-            return await axios.post(path).then((res)=>{
-                return res.data;
-            })
-        },
+
+
 
         guestLeave :async (uuid)=>
         {
@@ -113,6 +107,7 @@ export const createApiClientHttp = () => {
         },
 
         filterByName :async (l , productName) =>{
+            console.log("*************filterByName******************** "+l+" "+productName)
             let path = apiUrl.concat(`filterByName/${productName}`);
             let body= {data:{
                     lst : l
@@ -142,6 +137,8 @@ export const createApiClientHttp = () => {
 
 
         filterByDesc : async(l,desc)=>{
+            console.log("*************filterByDesc******************** "+l+" "+desc)
+
             let path = apiUrl.concat(`filterByDesc/${desc}`);
             let body= {data:{
                     lst : l
@@ -172,6 +169,8 @@ export const createApiClientHttp = () => {
         },
 
         filterByStoreRate : async(l,minRate)=>{
+            console.log("*************filterByStoreRate******************** "+l+" "+minRate)
+
             let path = apiUrl.concat(`filterByStoreRate/${minRate}`);
             let body= {data:{
                     lst : l
@@ -202,6 +201,8 @@ export const createApiClientHttp = () => {
 
 
         filterByRangePrices: async(l,min,max)=>{
+            console.log("*************filterByRangePrices******************** "+l+"  min "+min+" max "+max)
+
             let path = apiUrl.concat(`filterByRangePrices/${min}/${max}`);
             let  body = {data:{
                     lst :l
@@ -358,6 +359,7 @@ export const createApiClientHttp = () => {
 
 
         setProductPriceInStore: async(uuid,storeid,productId,price)=>{
+            console.log("setProductPriceInStore uuid"+uuid+"storeid "+storeid+" productId "+ productId+"+ price"+ price)
             let path = apiUrl.concat(`setProductPriceInStore/${uuid}/${storeid}/${productId}`);
             let body = {
 
@@ -372,6 +374,7 @@ export const createApiClientHttp = () => {
 
 
         setProductQuantityInStore: async(uuid,storeid,productId,quantity)=>{
+            console.log("setProductQuantityInStore uuid,storeid,productId,quantity"+uuid+" "+storeid+" "+productId+" "+quantity)
             let path = apiUrl.concat(`setProductQuantityInStore/${uuid}/${storeid}/${productId}`);
             let body = {
 
@@ -386,6 +389,8 @@ export const createApiClientHttp = () => {
 
 
         addNewStoreOwner: async(uuid, storeId,OwnerEmail)=>{
+            console.log("addNewStoreOwnerEmail uuid, storeId,mangerEmail"+ uuid+ storeId+OwnerEmail)
+
             let path = apiUrl.concat(`addNewStoreOwner/${uuid}/${storeId}`);
             let body = {
 
@@ -401,6 +406,7 @@ export const createApiClientHttp = () => {
 
 
         addNewStoreManger: async(uuid, storeId,mangerEmail)=>{
+            console.log("addNewStoreManger uuid, storeId,mangerEmail"+ uuid+ storeId+mangerEmail)
             let path = apiUrl.concat(`addNewStoreManger/${uuid}/${storeId}`);
             let body = {
 
@@ -471,6 +477,8 @@ export const createApiClientHttp = () => {
 
         filterByRate :async(l,minRate)=>
         {
+            console.log("*************filterByRate******************** "+l+"  minRate "+minRate)
+
             let path = apiUrl.concat(`filterByRate/${minRate}`);
             let body={
                 data:{
@@ -508,6 +516,8 @@ export const createApiClientHttp = () => {
 
         filterByCategory:async(l,category)=>
         {
+            console.log("*************filterByCategory******************** "+l+"  category "+category)
+
             let path = apiUrl.concat(`filterByCategory/${category}`);
             let body={
                 data:{
@@ -564,6 +574,8 @@ export const createApiClientHttp = () => {
 
             let path = apiUrl.concat(`getAllStores`);
             return await axios.get(path).then((res)=>{
+                console.log(" res.data "+res.data);
+
                 return res.data;
             })
         },
@@ -605,50 +617,214 @@ export const createApiClientHttp = () => {
             })
         },
 
+        addNewBuyRule:async(uuid,storeid,obj)=>{
+            let path = apiUrl.concat(`addNewBuyRule/${uuid}/${storeid}`);
+            console.log(obj)
+            let body={data:obj}
+            return await axios.get(path,body).then((res)=>{
+                return res.data;
+            })
+        },
+        removeBuyRule:async(uuid,storeid,buyRuleID)=>{
+            console.log(uuid,storeid)
+            let path = apiUrl.concat(`removeBuyRule/${uuid}/${storeid}/${buyRuleID}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
+        addNewDiscountRule:async(uuid,storeid,obj)=>{
+            let path = apiUrl.concat(`addNewDiscountRule/${uuid}/${storeid}`);
+            console.log(obj)
+            let body={data:obj}
+            return await axios.get(path,body).then((res)=>{
+                return res.data;
+            })
+        },
+        removeNewDiscountRule:async(uuid,storeid,buyRuleID)=>{
+            console.log(uuid,storeid)
+            let path = apiUrl.concat(`removeNewDiscountRule/${uuid}/${storeid}/${buyRuleID}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
+        getBuyPolicy:async(uuid,storeid)=>{
+            let path = apiUrl.concat(`getBuyPolicy/${uuid}/${storeid}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
+        getDiscountPolicy:async(uuid,storeid)=>{
+            let path = apiUrl.concat(`getDiscountPolicy/${uuid}/${storeid}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        }
+
+
 
     }
 }
+/*
+CategoryRule {
+  uuid: 'UUID',
+  storeId: 'storeID',
+  categoryID: 'category',
+  minAge: 'minAge',
+  minHour: 'minHour',
+  maxHour: 'maxHour'
+}
+productRule {
+  uuid: 'UUID',
+  storeId: 'storeID',
+  productID: 'productID',
+  minQuantity: 'minQuantity',
+  maxQuantity: 'maxQuantity'
+}
+ShoppingRule {
+  uuid: 'UUID',
+  storeId: 'storeID',
+  quantity: 'minQuantity',
+  productTypes: 'minProductTypes'
+}
+UserRule { uuid: 'UUID', storeId: 'storeID', userEmail: 'email' }
+{
+  and: [
+    CategoryRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      categoryID: 'category',
+      minAge: 'minAge',
+      minHour: 'minHour',
+      maxHour: 'maxHour'
+    },
+    productRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      productID: 'productID',
+      minQuantity: 'minQuantity',
+      maxQuantity: 'maxQuantity'
+    },
+    ShoppingRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      quantity: 'minQuantity',
+      productTypes: 'minProductTypes'
+    },
+    UserRule { uuid: 'UUID', storeId: 'storeID', userEmail: 'email' }
+  ]
+}
+{
+  or: [
+    CategoryRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      categoryID: 'category',
+      minAge: 'minAge',
+      minHour: 'minHour',
+      maxHour: 'maxHour'
+    },
+    productRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      productID: 'productID',
+      minQuantity: 'minQuantity',
+      maxQuantity: 'maxQuantity'
+    },
+    ShoppingRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      quantity: 'minQuantity',
+      productTypes: 'minProductTypes'
+    },
+    UserRule { uuid: 'UUID', storeId: 'storeID', userEmail: 'email' }
+  ]
+}
+{
+  condition: [
+    CategoryRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      categoryID: 'category',
+      minAge: 'minAge',
+      minHour: 'minHour',
+      maxHour: 'maxHour'
+    },
+    productRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      productID: 'productID',
+      minQuantity: 'minQuantity',
+      maxQuantity: 'maxQuantity'
+    },
+    ShoppingRule {
+      uuid: 'UUID',
+      storeId: 'storeID',
+      quantity: 'minQuantity',
+      productTypes: 'minProductTypes'
+    },
+    UserRule { uuid: 'UUID', storeId: 'storeID', userEmail: 'email' }
+  ]
+}
+{ combine: [ 1, 2, 3, 4, 5 ] }
+*/
 
-//test()
+// test()
 async function test (){
+
     console.log("00000000000000000000000000000")
     let res = createApiClientHttp();
     let json;
-    json =await res.initMarket("adminedanielkheyfets@gmail.com","admin123asdS!","0538265477","20/01/2001");
-    json =await res.login(json.value,"adminedanielkheyfets@gmail.com","admin123asdS!");
+    // json =await res.initMarket("adminedanielkheyfets@gmail.com","admin123asdS!","0538265477","20/01/2001");
+    json =await res.guestVisit();
     console.log(json,"Admin")
     let uuid=json.value
     console.log(uuid,"00000")
-    json =await res.addNewProductType(uuid,"d;;;;sd","Dsd",1);
+    let obj ={CategoryRule: {
+            uuid: 'UUID',
+            storeId: 'storeID',
+            categoryID: "1",
+            minAge: "1",
+            minHour: "1",
+            maxHour: "1"
+        }}
+
+    json=await res.addNewBuyRule(uuid,1,obj)
+
     console.log(json,"00000")
-    json =await res.logout(uuid)
-    console.log(json,"00000")
+    // json =await res.addNewProductType(uuid,"d;;;;sd","Dsd",1);
+    // console.log(json,"00000")
+    // json =await res.logout(uuid)
+    // console.log(json,"00000")
 
 
 
 
 
-    uuid =await res.guestVisit()
-    json =await res.addNewMember(uuid.value,"edanielkheyfets@gmail.com","123asdS!","0538265477","20/01/2001");
-    json =await res.login(uuid.value,"edanielkheyfets@gmail.com","123asdS!");
-    uuid =json.value
-    json=await res.openNewStore(uuid,"lechem","edanielkheyfets@gmail.com")
-    console.log(json,"add new store")
-    json=await res.addNewProductToStore(uuid,1,1,80,30)
-    console.log(json,"d")
+    // uuid =await res.guestVisit()
+    // json =await res.addNewMember(uuid.value,"edanielkheyfets@gmail.com","123asdS!","0538265477","20/01/2001");
+    // json =await res.login(uuid.value,"edanielkheyfets@gmail.com","123asdS!");
+    // uuid =json.value
+    // json=await res.openNewStore(uuid,"lechem","edanielkheyfets@gmail.com")
+    // console.log(json,"add new store")
+    // json=await res.addNewProductToStore(uuid,1,1,80,30)
+    // console.log(json,"d")
 
-    json = await res.setProductPriceInStore(uuid,1,1,60)
-    console.log(json,"d")
+    // json = await res.setProductPriceInStore(uuid,1,1,60)
+    // console.log(json,"d")
 
-    json= await res.setProductQuantityInStore(uuid,1,1,100)
-    console.log(json,"d")
-    json =await res.changePassword(uuid,"edanielkheyfets@gmail.com","123asdS!","123as111dS!")
-    json =await res.setManagerPermissions(uuid,1,"edanielkheyfets@gmail.com","edanielkhddeyfets@gmail.com","Ds",true)
-    json =await res.getStoreOrderHistory(uuid,1);
-    json =await res.addProductToShoppingBag(uuid,1,1,10);
-    json =await res.getShoppingCart(uuid);
+    // json= await res.setProductQuantityInStore(uuid,1,1,100)
+    // console.log(json,"d")
+    // json =await res.changePassword(uuid,"edanielkheyfets@gmail.com","123asdS!","123as111dS!")
+    // json =await res.setManagerPermissions(uuid,1,"edanielkheyfets@gmail.com","edanielkhddeyfets@gmail.com","Ds",true)
+    // json =await res.getStoreOrderHistory(uuid,1);
+    // json =await res.addProductToShoppingBag(uuid,1,1,10);
+    // json =await res.getShoppingCart(uuid);
 
-    console.log(json.value.shoppingBagHash['1'],"d")
+    // console.log(json.value.shoppingBagHash['1'],"d")
     json = await res.getAllStores();
     console.log(json)
     json = await res.getAllProducts();
@@ -663,9 +839,9 @@ async function test (){
     json = await res.isSystemManagerUUID(uuid);
     console.log(json)
 
-    json =await res.closeStore(uuid,1);
+    // json =await res.closeStore(uuid,1);
 
-    console.log(json,"d")
+    // console.log(json,"d")
 
     // console.log(uuid.value)
     // await res.guestLeave(uuid.value);

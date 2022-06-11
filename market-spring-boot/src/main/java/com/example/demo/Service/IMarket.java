@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 
+import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
@@ -9,13 +10,15 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 //Api of all
 public interface IMarket {
     //1.1
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth);
+    public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) ;
 
 
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) ;
 
 
     // 2.1.1 when a user enter to the system he recognized us a guest visitor
@@ -150,6 +153,7 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
 
+
     public SLResponseOBJ<Boolean> createBID(String uuid,  int storeID,int productID, int quantity, int totalPrice);
     public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID);
     public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
@@ -158,7 +162,11 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
     public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard);
     public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+    
+    public SLResponseOBJ<List<String>> getAllMembers(String userId);
 
 
 
-}
+
+ }
+

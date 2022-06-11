@@ -23,12 +23,20 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber,String dateOfBirth) {
+    public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber,String dateOfBirth) {
 
         if(REAL==null){
-            return new SLResponseOBJ<>(email+" "+Password+" "+phoneNumber,-1);
+            return new SLResponseOBJ<>(false,-1);
         }
         return REAL.initMarket(email,Password,phoneNumber,dateOfBirth);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> removeMember(String userId, String email) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(false,-1);
+        }
+        return REAL.removeMember(userId, email);
     }
 
     @Override
@@ -446,12 +454,20 @@ public class proxy implements IMarket {
 
     @Override
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
-        return null;
-    }
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getBuyPolicy(userId,storeId);    }
 
     @Override
     public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
-        return null;
+
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getDiscountPolicy(userId,storeId);
     }
 
     @Override
@@ -652,5 +668,13 @@ public class proxy implements IMarket {
     @Override
     public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
         return null;
+
+    public SLResponseOBJ<List<String>> getAllMembers(String userId) {
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllMembers(userId);
+
     }
 }

@@ -19,7 +19,7 @@ const Profile = (props) => {
     //todo History of User
     async function historyHander() {
         setCommand("History Bla bla bla");
-        console.log("historyHander UUID  "+UUID +"userEmail "+ userEmail)
+        console.log("historyHander UUID  "+UUID +"userEmail "+ userEmail+"end ")
         const getUserInfoResponse = await apiClientHttp.getUserInfo(UUID,userEmail);
         if (getUserInfoResponse.errorMsg !== -1) {
             SetError(errorCode.get(getUserInfoResponse.errorMsg))

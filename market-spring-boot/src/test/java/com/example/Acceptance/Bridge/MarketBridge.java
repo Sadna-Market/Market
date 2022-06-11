@@ -17,7 +17,7 @@ public interface MarketBridge {
      * @return true if success else false
      * @param sysManager
      */
-    ATResponseObj<String> initSystem(User sysManager);
+    ATResponseObj<Boolean> initSystem(User sysManager);
 
     /**
      * Discards all resources from init (doesn't change the memory)
