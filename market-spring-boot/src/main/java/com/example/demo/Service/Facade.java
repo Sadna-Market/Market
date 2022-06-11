@@ -104,6 +104,7 @@ public class Facade implements IMarket {
         //hara ahusharmuta
         //&&initiateExternalServices.errorMsg!=50 this is that i add
         if(config.get_instance().getJsonInit().initState){
+            System.out.println("make system state");
             Initilizer I = new Initilizer(this);
             try {
                 I.initialization(email, Password);
