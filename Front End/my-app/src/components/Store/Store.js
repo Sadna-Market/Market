@@ -13,6 +13,7 @@ import PolicyStore from "./DiscountPolicy";
 import BuyingPolicy from "./BuyingPolicy";
 import DiscountPolicy from "./DiscountPolicy";
 import "./Store.css";
+import BID from "./BID/BID";
 
 const Store = (props) => {
   let storeID = props.storeID;
@@ -132,11 +133,16 @@ const Store = (props) => {
     setCommand(<Rules uuid={UUID} storeID={storeID} />);
   };
 
+  const BIDHandler = () => {
+    setCommand(<BID uuid={UUID} storeID={storeID} />);
+  };
+
   return (
     <div className="store">
       <h3>{name}</h3>
       <h3>{isOpen}</h3>
       <button onClick={rulesHandler}>Rules</button>
+      <button onClick={BIDHandler}>BID</button>
       {permission}
       <div>{command}</div>
     </div>
