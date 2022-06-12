@@ -1,0 +1,67 @@
+.BIDitem {
+  padding: 1rem;
+  background-color: rgb(111, 250, 255);
+  margin: 2rem auto;
+  width: 80rem;
+  max-width: 95%;
+  text-align: center;
+}
+
+.BIDitem__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.BIDitem__control label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.BIDitem__control input {
+  font: inherit;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 5rem;
+  max-width: 100%;
+}
+
+.BIDitemp__actions {
+  text-align: center;
+}
+
+.BIDitem h3 {
+  align-items: center;
+  color: #1d1c1c;
+  padding: 0.5rem;
+  font-size: 2rem;
+  flex: 1;
+  margin: 0 21.275rem;
+  color: rgb(44, 43, 43);
+}
+
+.BIDitem h2 {
+    align-items: center;
+    color: #1d1c1c;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    flex: 1;
+    color: rgb(0, 0, 0);
+  }
+
+.signUp button {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 2rem;
+  border: 1px solid #40005d;
+  background-color: #40005d;
+  color: white;
+  border-radius: 12px;
+  margin-right: 1rem;
+  margin-top: 1.8rem;
+  text-align: center;
+}

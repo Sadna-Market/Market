@@ -13,8 +13,14 @@ import PolicyStore from "./DiscountPolicy";
 import BuyingPolicy from "./BuyingPolicy";
 import DiscountPolicy from "./DiscountPolicy";
 import "./Store.css";
+
+import BID from "./BID/BID";
+
+
+  import BID from "./BID/BID";
 import {createApiClientHttp} from "../../client/clientHttp";
 import {errorCode} from "../../ErrorCodeGui"
+
 const Store = (props) => {
     let apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
@@ -157,11 +163,16 @@ const Store = (props) => {
 
   }
 
+  const BIDHandler = () => {
+    setCommand(<BID uuid={UUID} storeID={storeID} />);
+  };
+
   return (
     <div className="store">
       <h3>{name}</h3>
       <h3>{isOpen}</h3>
       <button onClick={rulesHandler}>Rules</button>
+      <button onClick={BIDHandler}>BID</button>
       {permission}
       <div>{command}</div>
     </div>
