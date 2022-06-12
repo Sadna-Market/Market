@@ -4,6 +4,8 @@ import Card from "../../UI/Card";
 import RuleInfo from "../RuleInfo";
 
 const CombineRuleID = (props) => {
+  console.log("CombineRuleID")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   let ruleID = props.id;

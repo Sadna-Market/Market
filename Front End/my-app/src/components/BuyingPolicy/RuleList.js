@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import RuleID from "./RuleID";
 
 const RuleList = (props) => {
+  console.log("buying policy " + "RuleList ")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
 

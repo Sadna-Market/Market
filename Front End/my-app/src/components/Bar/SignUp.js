@@ -1,10 +1,15 @@
 import React, {useState} from "react";
 import "./SignUp.css";
 import Card from "../UI/Card";
-//import createApiClientHttp from "../../client/clientHttp.js";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const SignUp = (props) => {
-    const [enteredName, SetName] = useState("");
+  console.log("SignUp")
+
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  const [enteredName, SetName] = useState("");
   const nameChangeHandler = (event) => {
     SetName(event.target.value);
   };
@@ -24,24 +29,24 @@ const SignUp = (props) => {
     SetPhone(event.target.value);
   };
 
-  const [enteredDate, SetDate] = useState("");
+  const [enteredDate, SetDate] = useState("");// need to chang to 10/01/1996
   const dateChangeHandler = (event) => {
     SetDate(event.target.value);
   };
 
-  //todo:register
-  const submitHandler = (event) => {
+  async function submitHandler(event) {
     event.preventDefault();
-    //register
+    const guestVisitResponse = await apiClientHttp.guestVisit();
+    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,'10/01/1996');
 
-    const userData = {
-      name: enteredName,
-      email: enteredEmail,
-      password: enteredPassword,
-      //phone
-    };
-    props.onSaveExpenseData();
-  };
+    if (addNewMemberResponse.errorMsg !== -1) {
+      SetError(errorCode.get(SetError.errorMsg))
+    } else {
+      props.onSaveExpenseData();
+    }
+    console.log(addNewMemberResponse)
+
+  }
 
   const cancelHandler = () => {
     SetName("");
@@ -53,6 +58,7 @@ const SignUp = (props) => {
   return (
     <div className="signUp">
       <h3>Registration</h3>
+
       <form onSubmit={submitHandler}>
         <div className="signUp__controls">
           <div className="signUp__control">

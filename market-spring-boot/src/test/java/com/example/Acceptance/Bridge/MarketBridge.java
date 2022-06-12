@@ -2,6 +2,12 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.ServiceStore;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.List;
 
@@ -11,7 +17,7 @@ public interface MarketBridge {
      * @return true if success else false
      * @param sysManager
      */
-    ATResponseObj<String> initSystem(User sysManager);
+    ATResponseObj<Boolean> initSystem(User sysManager);
 
     /**
      * Discards all resources from init (doesn't change the memory)
@@ -88,7 +94,7 @@ public interface MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    boolean register(String uuid, String username, String password);
+    boolean register(String uuid, String username, String password, String dateOfBirth);
 
     /**
      * checks if newUser is registered
@@ -241,7 +247,7 @@ public interface MarketBridge {
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID);
+    ATResponseObj<List<History>> getHistoryPurchase(String uuid, int storeID);
 
     /**
      * chechs if user is a contributor of store
@@ -305,6 +311,17 @@ public interface MarketBridge {
      * @return true if success, else false
      */
     boolean assignNewOwner(String uuid, int storeID, User newOwner);
+
+
+    /**
+     * remove store owner and the permission that this owner is grantor
+     * @param UserId
+     * @param StoreId
+     * @param OwnerEmail
+     * @return true if success, else false
+     */
+    boolean removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+
 
     /**
      * checks if user is manager in store
@@ -390,4 +407,93 @@ public interface MarketBridge {
      * @return
      */
     boolean connectExternalService(String payment);
+
+    /**
+     * add buy rule to this store
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    boolean addNewBuyRule(String uuid, int storeId, BuyRuleSL buyRule);
+
+    /**
+     * remove buy rule to this store
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    boolean removeBuyRule(String uuid, int storeId, int buyRuleID);
+
+
+
+
+
+    /**
+     * add discount rule to this store
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    boolean addNewDiscountRule(String uuid, int storeId, DiscountRuleSL discountRule);
+
+    /**
+     * remove discount rule to this store
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    boolean removeDiscountRule(String uuid, int storeId, int discountRuleID);
+
+    /**
+     * get buy rule of this store
+     * @param uuid
+     * @param storeId
+     * @return list of all buy rules
+     */
+    ATResponseObj<List<BuyRuleSL>> getBuyPolicy(String uuid, int storeId);
+
+
+    /**
+     * get discount rule of this store
+     * @param uuid
+     * @param storeId
+     * @return list of all discount rules
+     */
+    ATResponseObj<List<DiscountRuleSL>> getDiscountPolicy(String uuid, int storeId);
+
+
+
+    /**
+     * gets all logged in members info in the market
+     * @param uuid
+     * @return
+     */
+    ATResponseObj<List<User>> getLoggedInMembers(String uuid);
+
+    /**
+     * gets all logged out members info in the market
+     * @param uuid
+     * @return
+     */
+    ATResponseObj<List<User>> getLoggedOutMembers(String uuid);
+
+    /**
+     * Cancel a membership in the market
+     * This can only be done by the System manager
+     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
+     * @param uuid the uuid of the System manager
+     * @param cancelUser the user to cancel
+     * @return true if success, else false
+     */
+    boolean cancelMembership(String uuid, User cancelUser);
+
+    ATResponseObj<List<ServiceStore>> getAllStores();
+
+    boolean isOwnerUUID(String uuid, int storeID);
+    boolean isSysManagerUUID(String uuid);
+    boolean isManagerUUID(String uuid, int storeID);
 }

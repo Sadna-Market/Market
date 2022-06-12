@@ -4,6 +4,8 @@ import com.example.demo.Domain.Market.Purchase;
 import com.example.demo.Domain.UserModel.User;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +19,6 @@ public class PurchaseUnitTest {
 
     @Test
     public void order(){
-        assertFalse(purchase.order(new User(emails[0],passwords[0],PhoneNum[0]),"aa","aa",1,"11212223331","12/26","123").errorOccurred());
+        assertFalse(purchase.order(new User(emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,22)),"aa","aa",1,"11212223331","12/26","123").errorOccurred());
     }
 }

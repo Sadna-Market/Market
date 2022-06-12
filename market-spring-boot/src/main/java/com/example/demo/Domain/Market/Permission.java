@@ -10,6 +10,11 @@ import java.util.List;
 public class Permission {
     private User grantee;// the permission is for him
     private Store store;
+
+    public void setGrantor(User grantor) {
+        this.grantor = grantor;
+    }
+
     private User grantor;//who give the permission
     private List<permissionType.permissionEnum> granteePermissionTypes;
 

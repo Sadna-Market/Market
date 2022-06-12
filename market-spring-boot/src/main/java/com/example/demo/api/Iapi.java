@@ -1,6 +1,9 @@
 package com.example.demo.api;
 
+import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.api.apiObjects.apiProductType;
 import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
@@ -11,16 +14,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface Iapi {
 
     //1.1
-    public SLResponseOBJ<String> initMarket(  apiUser user) ;
+    public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;
+
+    public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
+
+    public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
+    public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
 
 
+    public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
 
 
-    // 2.1.1 when a user enter to the system he recognized us a guest visitor
+        // 2.1.1 when a user enter to the system he recognized us a guest visitor
     public SLResponseOBJ<String> guestVisit();
 
 
@@ -110,6 +120,8 @@ public interface Iapi {
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger( String uuid, int StoreId, Map<String,Object> obj);
 
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) ;
+
     //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions( String uuid, int storeId, Map<String,Object> obj) ;
 
@@ -120,6 +132,7 @@ public interface Iapi {
     //2.4.11
     public SLResponseOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
 
+    public SLResponseOBJ<List<String>> getAllMembers(String userId);
 
 
     //2.6.5 && //2.4.13
@@ -127,4 +140,24 @@ public interface Iapi {
 
     public SLResponseOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, apiUser user);
 
-}
+    public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID) ;
+
+    public SLResponseOBJ<List<ServiceProductType>> getAllProducts() ;
+
+    public SLResponseOBJ<List<ServiceStore>> getAllStores() ;
+
+    public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid) ;
+
+    public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid) ;
+    public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
+    public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
+    public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
+
+    public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+
+
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId) ;
+
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) ;
+
+    }

@@ -4,6 +4,7 @@ import StoreList from "../Store/StoreList";
 
 const MarketButton = (props) => {
   const [searchStore, setStore] = useState("");
+  console.log("MarketButton")
 
   const enterToStoreHandler = storeID => {
     props.onShowStore(storeID);

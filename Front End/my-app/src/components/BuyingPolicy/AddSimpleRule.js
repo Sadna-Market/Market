@@ -5,7 +5,9 @@ import ShoppingBagRule from "./simpleBuyingRules/ShoppingBagRules";
 import UserRule from "./simpleBuyingRules/UserRule";
 
 const AddSimpleRule = (props) => {
-  let UUID = props.uuid;
+    console.log("buying policy " + "AddSimpleRule ")
+
+   let UUID = props.uuid;
   let storeID = props.storeID;
   let basicPage = (
     <>
@@ -21,7 +23,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <ShoppingBagRule
-                uuid={UUID}
+                 compose={props.compose}
+                 uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage = {true}
@@ -35,7 +38,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <ProductRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage = {true}
@@ -49,7 +53,8 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <CategoryRule
-                uuid={UUID}
+                  compose={props.compose}
+                  uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}
                 simplePage = {true}
@@ -63,6 +68,7 @@ const AddSimpleRule = (props) => {
           onClick={() => {
             setCommand(
               <UserRule
+                compose={props.compose}
                 uuid={UUID}
                 storeID={storeID}
                 onRule={(res) => props.onRule(res)}

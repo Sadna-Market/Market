@@ -3,6 +3,8 @@ import "./NewExpense.css";
 import ExpenseForm from "./ExpenseForm";
 
 const NewExpense = (props) => {
+  console.log("NewExpense")
+
   const [isEditing, setIsEditing] = useState(false);
   const saveExpenseDataHandler = (enteredExpenseData) => {
     const expenseData = {

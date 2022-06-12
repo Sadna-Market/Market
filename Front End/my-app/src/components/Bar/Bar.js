@@ -3,8 +3,14 @@ import Card from "../UI/Card";
 import "./Bar.css";
 import SignUp from "./SignUp";
 import SignIn from "./Login";
-//import {createApiClientHttp} from "../../client/clientHttp";
+import {createApiClientHttp} from "../../client/clientHttp";
+import {errorCode} from "../../ErrorCodeGui"
 const Bar = (props) => {
+  console.log("Bar")
+
+  let apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+
   const [isLogin, setIsLogin] = useState(false);
 
   const [userName, setUserName] = useState("");
@@ -22,21 +28,47 @@ const Bar = (props) => {
 
 
   //todo: login after that the UUID put on onLogin(<UUID>)
-  const loginHandler = (event) => {
+  async function loginHandler(event) {
     event.preventDefault();
-    setUserName(email);
-    setIsLogin(true);
-    props.onLogin(7);
-  };
+    // const Response = await apiClientHttp.getAllStores();
 
-  //todo:logout
-  const logoutHandler = (event) => {
+    const guestVisitResponse = await apiClientHttp.guestVisit();
+    const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
+    // const loginResponse = await apiClientHttp.login(guestVisitResponse.value, "sysManager@gmail.com", "Shalom123$");
+
+    let systemManager=false;
+    if (loginResponse.errorMsg!== -1) {
+      SetError(errorCode.get(loginResponse.errorMsg))
+    } else {
+      const isSystemManagerUUIDResponse = await apiClientHttp.isSystemManagerUUID(loginResponse.value);
+
+      if (isSystemManagerUUIDResponse.errorMsg=== -1){
+        systemManager=true
+      }
+      setUserName(email);
+      setIsLogin(true);
+      props.onLogin(loginResponse.value,email,systemManager);
+    }
+    console.log(loginResponse)
+
+  }
+
+  async function logoutHandler(event) {
     event.preventDefault();
-    setEmail("");
-    setPassword("");
-    props.onLogout();
-    setIsLogin(false);
-  };
+    const logoutResponse = await apiClientHttp.logout(props.uuid);
+
+    if (logoutResponse.errorMsg!== -1) {
+      SetError(errorCode.get(logoutResponse.errorMsg))
+    } else {
+      setEmail("");
+      setPassword("");
+      props.onLogout(logoutResponse.value);
+      setIsLogin(false);
+    }
+    console.log(logoutResponse)
+
+  }
+
 
   const initHandler = () => {
     props.onInitMarket();
@@ -55,6 +87,8 @@ const Bar = (props) => {
     command = (
       <div className="bar__controls">
         <div className="bar__control">
+          <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
+
           <label>User's Email</label>
           <input type="text" value={email} onChange={emailChangeHandler} />
         </div>
@@ -69,14 +103,15 @@ const Bar = (props) => {
           <button
             className="signUp__button"
             onClick={singUpHandler}
-            onUserData={newUserHolder}
+            // onUserData={newUserHolder}
           >
             Sign-Up
           </button>
-          <button className="bar__button" onClick={initHandler}>
-            {" "}
-            Init-Market
-          </button>
+          {/*<button className="bar__button" onClick={initHandler}>*/}
+          {/*  {" "}*/}
+          {/*  Init-Market*/}
+          {/*</button>*/}
+
         </div>
       </div>
     );
@@ -88,7 +123,7 @@ const Bar = (props) => {
           <button
             className="signUp__button"
             onClick={logoutHandler}
-            onUserData={newUserHolder}
+            // onUserData={newUserHolder}
           >
             LogOut
           </button>

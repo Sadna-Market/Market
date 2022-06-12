@@ -3,6 +3,7 @@ import Card from "../UI/Card";
 import './InitMarket.css';
 
 const InitMarket= props => {
+    console.log("InitMarket")
 
     //todo: init
     const yesHolder =()=>{

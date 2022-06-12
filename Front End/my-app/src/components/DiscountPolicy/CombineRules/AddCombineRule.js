@@ -5,6 +5,8 @@ import AddRule from "./AddRule";
 import XorRule from "./XorRule";
 
 const AndCombineRule = (props) => {
+  console.log("AndCombineRule")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const andHandler = () => {
