@@ -14,7 +14,12 @@ const BuyingPolicy = (props) => {
 
   const simpleRuleHandler = () => {
     setComaand(
-      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={allRulesHandler} simplePage={true}/>
+      <AddSimpleRule
+        uuid={UUID}
+        storeID={storeID}
+        onRule={allRulesHandler}
+        simplePage={true}
+      />
     );
   };
 
@@ -26,7 +31,11 @@ const BuyingPolicy = (props) => {
 
   const simpleComposeRuleHandler = () => {
     setComaand(
-      <SimpleComposeRule uuid={UUID} storeID={storeID} onRule={allRulesHandler} />
+      <SimpleComposeRule
+        uuid={UUID}
+        storeID={storeID}
+        onRule={allRulesHandler}
+      />
     );
   };
 
@@ -41,7 +50,7 @@ const BuyingPolicy = (props) => {
         <button onClick={allRulesHandler}>All Rules</button>
         <button onClick={simpleRuleHandler}>Add Simple Rule</button>
         <button onClick={simpleComposeRuleHandler}>Add Compose Rule</button>
-        <button onClick={composeRuleHandler}>Combine Rules</button>
+        {/*<button onClick={composeRuleHandler}>Combine Rules</button>*/}
       </div>
       <div>{command}</div>
     </div>
