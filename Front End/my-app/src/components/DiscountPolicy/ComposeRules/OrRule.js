@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AddSimpleRule from "../SimpleRules/AddSimpleRule";
+import CategoryDiscount from "./CategoryDiscount";
 import MoreRule from "./MoreRule";
 
 const OrRule = (props) => {
@@ -16,13 +17,23 @@ const OrRule = (props) => {
   //todo: create Add with list
   const finishHandler = () => {
     //work with list
-    props.onRule();
+    setComaand(
+      <CategoryDiscount
+        uuid={UUID}
+        storeID={storeID}
+        rules={list}
+        kind="OR"
+        onRule={() => props.onRule()}
+      />
+    );
   };
 
   const moreHandler = (ruleID) => {
     list.push(ruleID);
     console.log(list);
-    setComaand(<MoreRule onMore={newRule} onFinish={finishHandler} />);
+    setComaand(
+      <MoreRule onMore={newRule} onFinish={finishHandler} continue={true} />
+    );
   };
 
   const [command, setComaand] = useState(

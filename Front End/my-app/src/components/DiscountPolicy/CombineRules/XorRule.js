@@ -19,7 +19,7 @@ const XorRule = (props) => {
   //todo: XOR rule
   const confirmHandler = () => {
     //do..... with the list
-    props.onRule();
+    props.onBigOrFirst(list);
   };
 
   //const [command, setCommand] = useState();

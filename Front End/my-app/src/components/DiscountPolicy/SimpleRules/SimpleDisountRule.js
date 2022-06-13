@@ -22,7 +22,7 @@ const SimpleDiscountRule = (props) => {
 
   return (
     <div>
-      <h3>Simple Discount For store #{storeID}</h3>
+      <h3>store #{storeID} Discount</h3>
       <div className="products__controls">
         <div className="products__control">
           <label>Discount</label>

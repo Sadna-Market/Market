@@ -19,15 +19,15 @@ const AndRule = (props) => {
   //todo: AndRULE
   const confirmHandler = () => {
     //do..... with the list
-    props.onRule();
+    props.onCategory(list, "AND");
   };
 
   //const [command, setCommand] = useState();
   return (
     <div>
       <h3>AND Rule</h3>
-      <h2>Sign the rules to Combile with AND, when you finish press</h2>
-      <button onClick={confirmHandler}>Confirm</button>
+      <h2>Sign the rules to Combile with AND, when you continue press</h2>
+      <button onClick={confirmHandler}>continue</button>
       <div>
         <CombineRuleList
           uuid={UUID}
