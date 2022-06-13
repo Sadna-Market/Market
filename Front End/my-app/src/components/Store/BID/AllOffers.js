@@ -6,12 +6,12 @@ const AllOffers = (props) => {
   let UUID = props.uuid;
   //todo: get all my products
   let products = [
-    { id: 1, name: "Sony 5", offers: 2},
-    { id: 2, name: "TV", offers: 3},
-    { id: 3, name: "Car KIA RIO", offers: 1},
-    { id: 4, name: "AC/DC", offers: 2 },
-    { id: 5, name: "MAMA Yokero", offers: 3 },
-    { id: 6, name: "Iphone 13", offers: 2 },
+    { id: 1, name: "Sony 5", offers: 2, managers:2},
+    { id: 2, name: "TV", offers: 3 , managers:1},
+    { id: 3, name: "Car KIA RIO", offers: 1, managers:3},
+    { id: 4, name: "AC/DC", offers: 2 , managers:3},
+    { id: 5, name: "MAMA Yokero", offers: 3 , managers:0},
+    { id: 6, name: "Iphone 13", offers: 2 , managers:1},
   ];
   let sum = 0;
   for (let i = 0; i < products.length; i++) {
@@ -31,6 +31,7 @@ const AllOffers = (props) => {
       offers={expense.offers}
       onCancel={cancelHandler}
       uuid={UUID}
+      managers={expense.managers}
     />
   ));
 

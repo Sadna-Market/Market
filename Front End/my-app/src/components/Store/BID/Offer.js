@@ -35,6 +35,7 @@ const Offer = (props) => {
         <div className="product-item__description">
           <h2>{name}</h2>
           <h2>Number of Offers: {Math.ceil(offers)} </h2>
+          <h2>{props.managers} /5</h2>
           <div className="BIDitem__control">
             <button onClick={clickHandler}>Offers</button>
           </div>

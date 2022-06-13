@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 
-const AddProduct = (props) => {
+const CeateBID = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
 
-  const [minPrice, setMinPrice] = useState("");
+  const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
 
-  const changeMinPriceHandler = (event) => {
-    setMinPrice(event.target.value);
+  const changePriceHandler = (event) => {
+    setPrice(event.target.value);
+  };
+
+  const changeQuantityHandler = (event) => {
+    setQuantity(event.target.value);
   };
 
   const [productID, setproductID] = useState("");
@@ -16,7 +21,8 @@ const AddProduct = (props) => {
   };
 
   const cleanHandler = () => {
-    setMinPrice("");
+    setQuantity("");
+    setPrice("");
     setproductID("");
   };
 
@@ -42,20 +48,32 @@ const AddProduct = (props) => {
           />
         </div>
         <div className="products__control">
-          <label>Min Quantity</label>
+          <label>Quantity</label>
           <input
             type="number"
             min="0"
-            value={minPrice}
+            value={quantity}
             placeholder="Write Minmum Quantity"
-            onChange={changeMinPriceHandler}
+            onChange={changeQuantityHandler}
           />
         </div>
-        <button onClick={cleanHandler}>Clean</button>
-        <button onClick={addHandler}>Add BID</button>
+        <div className="products__control">
+          <label>Price</label>
+          <input
+            type="number"
+            min="0"
+            value={price}
+            placeholder="Write Minmum Quantity"
+            onChange={changePriceHandler}
+          />
+        </div>
+        <div>
+          <button onClick={cleanHandler}>Clean</button>
+          <button onClick={addHandler}>Add BID</button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default AddProduct;
+export default CeateBID;
