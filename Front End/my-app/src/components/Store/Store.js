@@ -107,8 +107,8 @@ const Store = (props) => {
         <h2></h2>
         <button onClick={closeStoreHandler}> Close Store</button>
         <button onClick={historyHandler}> History </button>
-        <button onClick={policyHandler}> Policy </button>
-        <button onClick={buyingHandler}> Buying Strategy </button>
+        <button onClick={policyHandler}> Discount Policy </button>
+        <button onClick={buyingHandler}> Buy Policy </button>
       </>
     );
   }

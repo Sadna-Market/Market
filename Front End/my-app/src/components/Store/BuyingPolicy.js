@@ -36,7 +36,7 @@ const BuyingPolicy = (props) => {
 
   return (
     <div>
-      <h3>Buying</h3>
+      <h3>Buy Policy</h3>
       <div>
         <button onClick={allRulesHandler}>All Rules</button>
         <button onClick={simpleRuleHandler}>Add Simple Rule</button>
