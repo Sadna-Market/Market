@@ -32,10 +32,8 @@ const UserRule = (props) => {
 
   async function addHandler() {
     let rule = new RulesClass.UserRule(UUID,storeID,email)
-
     if (props.compose===undefined){ //false case - no comopse - realy simple
-      const sendRulesResponse = await apiClientHttp.sendRules(rule);
-
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, {'UserRule':rule});
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
       } else {
@@ -47,7 +45,7 @@ const UserRule = (props) => {
     }
     else { //compose case
       cleanHandler();
-      props.onRule(rule)
+      props.onRule( {'UserRule':rule})
 
     }
 

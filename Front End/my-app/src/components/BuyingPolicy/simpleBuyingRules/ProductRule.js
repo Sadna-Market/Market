@@ -38,7 +38,9 @@ const ProductRule = (props) => {
     let rule = new RulesClass.productRule(UUID,storeID,productID,minQuantity,maxQuantity)
     if (props.compose===undefined) { //false case - no comopse - realy simple
 
-      const sendRulesResponse = await apiClientHttp.sendRules(rule);
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, {'productRule':rule});
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
 
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
@@ -51,7 +53,7 @@ const ProductRule = (props) => {
     }
     
     cleanHandler();
-    props.onRule(rule);
+    props.onRule({'productRule':rule});
   }
 
   return (

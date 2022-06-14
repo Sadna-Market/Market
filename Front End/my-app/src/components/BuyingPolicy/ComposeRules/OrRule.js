@@ -26,7 +26,7 @@ const OrRule = (props) => {
   //todo: AddRule
     async function confirmHandler(){
         let combineAndMap ={"combineOr":list}
-        const sendRulesResponse = await apiClientHttp.sendRules(combineAndMap);
+        const sendRulesResponse = await apiClientHttp.addNewBuyRule(combineAndMap);
 
         if (sendRulesResponse.errorMsg !== -1) {
             SetError(errorCode.get(sendRulesResponse.errorMsg))

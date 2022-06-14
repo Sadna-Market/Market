@@ -28,7 +28,7 @@ const ConditionRule = (props) => {
   //todo: create rule
     async function confirmHandler(){
         let combineAndMap ={"combineCondition":list}
-        const sendRulesResponse = await apiClientHttp.sendRules(combineAndMap);
+        const sendRulesResponse = await apiClientHttp.addNewBuyRule(combineAndMap);
 
         if (sendRulesResponse.errorMsg !== -1) {
             SetError(errorCode.get(sendRulesResponse.errorMsg))

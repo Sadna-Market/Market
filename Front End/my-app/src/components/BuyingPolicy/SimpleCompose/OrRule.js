@@ -23,7 +23,7 @@ const OrRule = (props) => {
   //todo: create Add with list
   async function finishHandler (){
     let andMap ={"or":list}
-    const sendRulesResponse = await apiClientHttp.sendRules(andMap);
+    const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID,andMap);
 
     if (sendRulesResponse.errorMsg !== -1) {
       SetError(errorCode.get(sendRulesResponse.errorMsg))

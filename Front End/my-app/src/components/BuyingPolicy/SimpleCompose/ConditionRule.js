@@ -31,7 +31,7 @@ const ConditionRule = (props) => {
     list.push(ifRule)
     list.push(ThenRule)
     let andMap ={"condition":list}
-    const sendRulesResponse = await apiClientHttp.sendRules(andMap);
+    const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID,andMap);
 
     if (sendRulesResponse.errorMsg !== -1) {
       SetError(errorCode.get(sendRulesResponse.errorMsg))
