@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class config1 {
+public class config3 {
 
     Facade f = new Facade();
     List<String> members = new LinkedList<>();
@@ -31,17 +31,20 @@ public class config1 {
         members.add("u3@gmail.com");
         members.add("u4@gmail.com");
         members.add("u5@gmail.com");
+        members.add("u6@gmail.com");
         membersloged.add("u1@gmail.com");
         membersloged.add("u2@gmail.com");
         membersloged.add("u3@gmail.com");
         membersloged.add("u4@gmail.com");
         Stores.add("s1");
+        Stores.add("s2");
+
         List<Integer> s1prodducts = new LinkedList<>();
         s1prodducts.add(1);
+        s1prodducts.add(2);
+        s1prodducts.add(3);
         productrs.put("s1",s1prodducts);
     }
-
-
     @Test
     public void config() {
         SLResponseOBJ<String> UUID = f.guestVisit();
@@ -51,7 +54,7 @@ public class config1 {
         System.out.println(res2.errorMsg);
         List<String> me = res2.value;
         for (String m : members) {
-            assertTrue(me.contains(m));
+            assertFalse(me.contains(m));
         }
         SLResponseOBJ<List<ServiceUser>> loges = f.getloggedInMembers(res.value);
         List<String> log = new LinkedList<>();
@@ -60,7 +63,7 @@ public class config1 {
         }
         assertFalse(log.contains("u5@gmail.com"));
         for (String m : membersloged) {
-            assertTrue(log.contains(m));
+            assertFalse(log.contains(m));
         }
         List<ServiceStore> s = f.getAllStores().value;
         List<String> STORENAMES = new LinkedList<>();
@@ -69,25 +72,37 @@ public class config1 {
 
         }
         for (String name : Stores) {
-            assertTrue(STORENAMES.contains(name));
+            assertFalse(STORENAMES.contains(name));
 
         }
         List<ServiceStore> stores=f.getAllStores().value;
         for(ServiceStore st :stores){
-           List<ServiceProductStore> ps=f.getAllProductsInStore(st.storeId).value;
-           System.out.println(ps);
-           for(ServiceProductStore producr :ps){
-               assertTrue(productrs.get(st.name).contains(producr.itemID));
+            List<ServiceProductStore> ps=f.getAllProductsInStore(st.storeId).value;
+            System.out.println(ps);
+            for(ServiceProductStore producr :ps){
+                assertFalse(productrs.get(st.name).contains(producr.itemID));
+            }
         }
-        }
-        assertTrue(f.isOwner("u4@gmail.com",1).value);
-        assertTrue(f.isOwner("u5@gmail.com",1).value);
-        assertTrue(f.isManager("u3@gmail.com",1).value);
+        assertFalse(f.isOwner("u2@gmail.com",1).value);
+        assertFalse(f.isOwner("u4@gmail.com",1).value);
+        assertFalse(f.isOwner("u5@gmail.com",1).value);
+        assertFalse(f.isManager("u3@gmail.com",1).value);
+
+        assertFalse(f.isOwner("u3@gmail.com",2).value);
+
         UUID = f.guestVisit();
         assertTrue(f.login(UUID.value,"u1@gmail.com","abcA!123").errorOccurred());
+        UUID = f.guestVisit();
+
         assertTrue(f.login(UUID.value,"u2@gmail.com","abcA!123").errorOccurred());
+        UUID = f.guestVisit();
+
         assertTrue(f.login(UUID.value,"u3@gmail.com","abcA!123").errorOccurred());
+        UUID = f.guestVisit();
+
         assertTrue(f.login(UUID.value,"u4@gmail.com","abcA!123").errorOccurred());
-        assertFalse(f.login(UUID.value,"u5@gmail.com","abcA!123").errorOccurred());
+        UUID = f.guestVisit();
+
+        assertTrue(f.login(UUID.value,"u5@gmail.com","abcA!123").errorOccurred());
     }
 }

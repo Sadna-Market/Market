@@ -117,7 +117,7 @@ public class UserManager {
 
     public DResponseObj<UUID> Login(UUID userID, String email, String password) {
         logger.debug("UserManager Login");
-        if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID) && members.get(email).isPasswordEquals(password).value) {
+        if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID)  && !isEmailLoged(email) && members.get(email).isPasswordEquals(password).value) {
             User LogUser = members.get(email);
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
@@ -129,6 +129,14 @@ public class UserManager {
             return a;
         }
 
+    }
+    public boolean isEmailLoged(String email){
+        for(User u :LoginUsers.values()){
+            if(u.email.equals(email)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public DResponseObj<Boolean> ishasSystemManager() {

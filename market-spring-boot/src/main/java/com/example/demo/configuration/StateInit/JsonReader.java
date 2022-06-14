@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class JsonReader {
     public List<Map<String,Object>> register=new LinkedList<>();
-    public List<Map<String,Object>> systemItems;
+    public List<Map<String,Object>> systemItems = new LinkedList<>();
     public List<Map<String,Object>> login=new LinkedList<>();
     public Map<String,List<Map<String,String>>> stores=new HashMap<>();
     public Map<String,Map<String,List<Map<String,Object>>>> add_item=new HashMap<>();   //email->storename->{items}
