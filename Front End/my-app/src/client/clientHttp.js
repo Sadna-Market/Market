@@ -637,9 +637,9 @@ export const createApiClientHttp = () => {
 
         addNewBuyRule:async(uuid,storeid,obj)=>{
             let path = apiUrl.concat(`addNewBuyRule/${uuid}/${storeid}`);
-            console.log(obj)
-            let body={data:obj}
-            return await axios.get(path,body).then((res)=>{
+
+
+            return await axios.post(path,obj).then((res)=>{
                 return res.data;
             })
         },
