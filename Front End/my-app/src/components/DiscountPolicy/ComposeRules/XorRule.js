@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AddSimpleRule from "../SimpleRules/AddSimpleRule";
+import BigOrFirst from "./BigOrFirst";
 import MoreRule from "./MoreRule";
 import createApiClientHttp from "../../../client/clientHttp.js";
 import {errorCode} from "../../../ErrorCodeGui"
@@ -20,23 +21,25 @@ const XorRule = (props) => {
   };
 
   //todo: create Add with list
-  async function  finishHandler(){
-    let andMap ={"xor":list}
-    const sendRulesResponse = await apiClientHttp.sendDRules(andMap);
+  const finishHandler = () => {
+    setComaand(
+      <BigOrFirst
+        uuid={UUID}
+        storeID={storeID}
+        rules={list}
+        kind="XOR"
+        onRule={() => props.onRule()}
+      />
+    );
+  };
 
-    if (sendRulesResponse.errorMsg !== -1) {
-      SetError(errorCode.get(sendRulesResponse.errorMsg))
-    } else {
-      // props.onRule(sendRulesResponse.value);
-      props.onRule();
-    }
-  }
-  
 
   const moreHandler = (ruleID) => {
     list.push(ruleID);
     console.log(list);
-    setComaand(<MoreRule onMore={newRule} onFinish={finishHandler} />);
+    setComaand(
+      <MoreRule onMore={newRule} onFinish={finishHandler} continue={true} />
+    );
   };
 
   const [command, setComaand] = useState(

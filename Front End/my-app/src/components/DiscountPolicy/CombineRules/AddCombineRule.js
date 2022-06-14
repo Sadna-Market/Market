@@ -3,15 +3,40 @@ import OrRule from "./OrRule";
 import AndRule from "./AndRule";
 import AddRule from "./AddRule";
 import XorRule from "./XorRule";
+import CategoryDiscount from "./CategoryDiscout";
+import BigOrFirst from "./BigOrFirst";
 
 const AndCombineRule = (props) => {
   console.log("AndCombineRule")
 
   let UUID = props.uuid;
   let storeID = props.storeID;
+
+  const categoryHandler = (rules, kind) => {
+    setCommand(
+      <CategoryDiscount
+        uuid={UUID}
+        storeID={storeID}
+        onRule={() => props.onRule()}
+        rules={rules}
+        kind={kind}
+      />
+    );
+  };
+
+  const BigHandler = (rules) => {
+    setCommand(
+      <BigOrFirst
+        uuid={UUID}
+        storeID={storeID}
+        onRule={() => props.onRule()}
+        rules={rules}
+      />
+    );
+  };
   const andHandler = () => {
     setCommand(
-      <AndRule uuid={UUID} storeID={storeID} onRule={() => props.onRule()} />
+      <AndRule uuid={UUID} storeID={storeID} onCategory={categoryHandler} />
     );
   };
   const addHandler = () => {
@@ -21,12 +46,12 @@ const AndCombineRule = (props) => {
   };
   const orHandler = () => {
     setCommand(
-      <OrRule uuid={UUID} storeID={storeID} onRule={() => props.onRule()} />
+      <OrRule uuid={UUID} storeID={storeID} onCategory={categoryHandler} />
     );
   };
   const xorHandler = () => {
     setCommand(
-      <XorRule uuid={UUID} storeID={storeID} onRule={() => props.onRule()} />
+      <XorRule uuid={UUID} storeID={storeID} onBigOrFirst={BigHandler} />
     );
   };
   let besicPage = (

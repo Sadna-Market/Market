@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AddSimpleRule from "../SimpleRules/AddSimpleRule";
+import CategoryDiscount from "./CategoryDiscount";
 import MoreRule from "./MoreRule";
 import createApiClientHttp from "../../../client/clientHttp.js";
 import {errorCode} from "../../../ErrorCodeGui"
@@ -20,22 +21,26 @@ const AndRule = (props) => {
   };
 
   //todo: create AND with list
-  async function finishHandler(){
-    let andMap ={"and":list}
-    const sendRulesResponse = await apiClientHttp.sendDRules(andMap);
+  const finishHandler = () => {
+    //work with list
+    setComaand(
+      <CategoryDiscount
+        uuid={UUID}
+        storeID={storeID}
+        rules={list}
+        kind="AND"
+        onRule={() => props.onRule()}
+      />
+    );
+  };
 
-    if (sendRulesResponse.errorMsg !== -1) {
-      SetError(errorCode.get(sendRulesResponse.errorMsg))
-    } else {
-      // props.onRule(sendRulesResponse.value);
-      props.onRule();
-    }
-  }
 
   const moreHandler = (ruleID) => {
     list.push(ruleID);
     console.log(list);
-    setComaand(<MoreRule onMore={newRule} onFinish={finishHandler} />);
+    setComaand(
+      <MoreRule onMore={newRule} onFinish={finishHandler} continue={true} />
+    );
   };
 
   const [command, setComaand] = useState(

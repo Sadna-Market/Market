@@ -34,7 +34,7 @@ const AddSimpleRule = (props) => {
             );
           }}
         >
-          Full Discount
+          Store
         </button>
         <button
           onClick={() => {

@@ -22,17 +22,11 @@ const XorRule = (props) => {
   };
 
   //todo: XOR rule
-    async function confirmHandler(){
-      let combineAndMap ={"combineXor":list}
-      const sendRulesResponse = await apiClientHttp.sendDRules(combineAndMap);
+  const confirmHandler = () => {
+    //do..... with the list
+    props.onBigOrFirst(list);
+  };
 
-      if (sendRulesResponse.errorMsg !== -1) {
-          SetError(errorCode.get(sendRulesResponse.errorMsg))
-      } else {
-          // props.onRule(sendRulesResponse.value);
-          props.onRule();
-      }
-  }
 
   //const [command, setCommand] = useState();
   return (

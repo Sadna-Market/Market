@@ -35,7 +35,7 @@ const AddComposeDiscount = (props) => {
       <div>
         <button onClick={andHandler}>AND</button>
         <button onClick={orHandler}>OR</button>
-        <button onClick={orHandler}>XOR</button>
+        <button onClick={xorHandler}>XOR</button>
         <button onClick={addHandler}>ADD</button>
       </div>
     </>

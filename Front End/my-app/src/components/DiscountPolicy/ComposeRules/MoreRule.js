@@ -6,8 +6,12 @@ const MoreRule = (props) => {
 
     return (
     <div className="moreRule">
-      <button onClick={() => props.onMore()} >Add more Rule</button>
-      <button onClick={() => props.onFinish()}>Finish</button>
+      <button onClick={() => props.onMore()}>Add more Rule</button>
+      {props.continue ? (
+        <button onClick={() => props.onFinish()}>Continue</button>
+      ) : (
+        <button onClick={() => props.onFinish()}>Finish</button>
+      )}
     </div>
   );
 };

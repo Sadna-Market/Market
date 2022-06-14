@@ -11,6 +11,7 @@ const ProductRule = (props) => {
   let storeID = props.storeID;
 
   const [minQuantity, setminQuantity] = useState("");
+  const [checkbox, setCheckbox] = useState(false);
 
   const changeMinQuantityHandler = (event) => {
     setminQuantity(event.target.value);
@@ -85,6 +86,16 @@ const ProductRule = (props) => {
             value={maxQuantity}
             placeholder="Write Minmum Product Types"
             onChange={changeMaxQuanHandler}
+          />
+        </div>
+        <div className="products__control">
+          <label>Apply</label>
+          <input
+            type="checkbox"
+            checked={checkbox}
+            onChange={() => {
+              setCheckbox(!checkbox);
+            }}
           />
         </div>
         <button onClick={cleanHandler}>Clean</button>
