@@ -9,12 +9,21 @@ import java.util.List;
 
 public class ConditioningBuyRuleSL extends CompositionBuyRuleSL {
 
+    public String kind = "Conditioning Buy Rule";
+
     public BuyRuleSL predIf;
     public BuyRuleSL predThen;
 
 
     public ConditioningBuyRuleSL(BuyRuleSL predIf , BuyRuleSL predThen) {
-        super(null);
+        super(null,-1);
+        this.predIf = predIf;
+        this.predThen = predThen;
+    }
+
+    //for convert
+    public ConditioningBuyRuleSL(BuyRuleSL predIf , BuyRuleSL predThen, int id) {
+        super(null,id);
         this.predIf = predIf;
         this.predThen = predThen;
     }

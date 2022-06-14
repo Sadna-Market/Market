@@ -9,8 +9,14 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class UserBuyRuleSL extends LeafBuyRuleSL {
 
+    public String kind = "User Buy Rule";
+
     public UserBuyRuleSL(UserPredicateSL pred) {
-        super(pred);
+        super(pred,-1);
+    }
+    //for convert
+    public UserBuyRuleSL(UserPredicateSL pred,int id) {
+        super(pred,id);
     }
 
 

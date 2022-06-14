@@ -1,7 +1,5 @@
 package com.example.demo.api.apiObjects.bridge;
 
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
-import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.*;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
@@ -650,7 +648,7 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
+    public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
         return null;
     }
 }

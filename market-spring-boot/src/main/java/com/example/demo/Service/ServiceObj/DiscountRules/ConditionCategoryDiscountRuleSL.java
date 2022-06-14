@@ -10,10 +10,23 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class ConditionCategoryDiscountRuleSL extends SimpleCategoryDiscountRuleSL {
 
+    public String kind = "Condition Category Discount Rule";
+
     public CategoryPredicateSL pred;
 
     public ConditionCategoryDiscountRuleSL(CategoryPredicateSL pred, double percentDiscount) {
         super(percentDiscount, pred.getCategory());
+        this.pred = pred;
+    }
+
+    //for convert
+    public ConditionCategoryDiscountRuleSL(CategoryPredicateSL pred, double percentDiscount,int id) {
+        super(percentDiscount, pred.getCategory(),id);
+        this.pred = pred;
+    }
+    //use when this rule is inside composite rule
+    public ConditionCategoryDiscountRuleSL(CategoryPredicateSL pred) {
+        super(1.0, pred.getCategory());
         this.pred = pred;
     }
 

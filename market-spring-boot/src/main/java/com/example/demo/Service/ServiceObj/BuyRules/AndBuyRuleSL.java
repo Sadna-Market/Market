@@ -10,10 +10,16 @@ import java.util.List;
 
 public class AndBuyRuleSL extends CompositionBuyRuleSL {
 
+    public String kind = "And Buy Rule";
+
     public AndBuyRuleSL(List<BuyRuleSL> rules) {
-        super(rules);
+        super(rules,-1);
     }
 
+    //for convert
+    public AndBuyRuleSL(List<BuyRuleSL> rules,int id) {
+        super(rules,id);
+    }
 
     @Override
     public SLResponseOBJ<String> getBuyRule() {

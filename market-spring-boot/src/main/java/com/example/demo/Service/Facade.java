@@ -1622,7 +1622,7 @@ public class Facade implements IMarket {
     }
 
     /**
-     * a owner or manager with permission want to get approves list of BID
+     * a owner or manager with permission want to get status of BID
      * @param uuid
      * @param userEmail
      * @param storeID
@@ -1630,13 +1630,13 @@ public class Facade implements IMarket {
      * @return approves list or error msg
      */
     @Override
-    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
+    public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
         if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
             return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
         if (storeID < 0 || productID < 0)
             return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
-        DResponseObj<HashMap<String, Boolean>> res = market.getApprovesList(UUID.fromString(uuid),userEmail,storeID,productID);
-        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>(res.value);
+        DResponseObj<String> res = market.getBIDStatus(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>("res.value");
     }
 
     /**

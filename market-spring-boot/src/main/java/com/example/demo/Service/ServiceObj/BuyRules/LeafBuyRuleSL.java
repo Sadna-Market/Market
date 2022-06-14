@@ -10,8 +10,9 @@ public abstract class LeafBuyRuleSL implements BuyRuleSL {
     protected int id;
 
 
-    public LeafBuyRuleSL(PredicateSL pred) {
+    public LeafBuyRuleSL(PredicateSL pred,int id) {
         this.pred = pred;
+        this.id = id;
     }
 
     public abstract SLResponseOBJ<String> getBuyRule();

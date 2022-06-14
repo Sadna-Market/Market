@@ -8,10 +8,18 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class SimpleProductDiscountRuleSL extends LeafDiscountRuleSL {
 
+    public String kind = "Simple Proudct Discount Rule";
+
     public int productId;
 
     public SimpleProductDiscountRuleSL(double percentDiscount, int productId){
         super(percentDiscount);
+        this.productId = productId;
+    }
+
+    //for convert
+    public SimpleProductDiscountRuleSL(double percentDiscount, int productId,int id){
+        super(percentDiscount,id);
         this.productId = productId;
     }
 
