@@ -13,13 +13,10 @@ import PolicyStore from "./DiscountPolicy";
 import BuyingPolicy from "./BuyingPolicy";
 import DiscountPolicy from "./DiscountPolicy";
 import "./Store.css";
-
-import BID from "./BID/BID";
-
-
-  import BID from "./BID/BID";
 import {createApiClientHttp} from "../../client/clientHttp";
 import {errorCode} from "../../ErrorCodeGui"
+import BID from "./BID/BID";
+
 
 const Store = (props) => {
     let apiClientHttp = createApiClientHttp();
