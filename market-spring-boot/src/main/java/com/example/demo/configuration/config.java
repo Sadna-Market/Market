@@ -1,8 +1,10 @@
 package com.example.demo.configuration;
 
 
+import com.example.demo.Domain.Market.Market;
 import com.example.demo.configuration.StateInit.JsonReader;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 
@@ -11,6 +13,7 @@ public class config {
     private static   String state_system = "state_system.json";
 
     public static boolean isMakeState=true;
+    static Logger logger = Logger.getLogger(config.class);
 
     private  JsonReader jsonReader = null;
 
@@ -31,20 +34,24 @@ public class config {
             String absolutePath = file.getAbsolutePath();
             System.out.println(absolutePath);
             jsonInit = objectMapper.readValue(new File(absolutePath), JsonInit.class);
+            if (jsonInit.initState) {
+                try {
 
+                    file = new File(jsonInit.statePath);
 
-            if(jsonInit.initState) {
-                file = new File(jsonInit.statePath);
+                    absolutePath = file.getAbsolutePath();
+                    jsonReader = objectMapper.readValue(new File(absolutePath), JsonReader.class);
+                } catch (Exception e) {
+                    jsonReader = new JsonReader();
+                    logger.warn("Error : cannot load state file");
+                }
             }
-            else {
-                file =new File(state_system);
-            }
-            absolutePath = file.getAbsolutePath();
-            jsonReader = objectMapper.readValue(new File(absolutePath), JsonReader.class);
+            }catch(Exception e){
+                logger.warn("Error : config " + e.getMessage());
 
-        }catch (Exception e){
-            throw new IllegalArgumentException(e);
-        }
+                throw new IllegalArgumentException(e);
+            }
+
     }
 
     public JsonReader getJsonReaderState (){
@@ -54,6 +61,4 @@ public class config {
     public JsonInit getJsonInit (){
         return jsonInit;
     }
-
-
 }

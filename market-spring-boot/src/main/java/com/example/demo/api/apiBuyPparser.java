@@ -20,7 +20,7 @@ public class apiBuyPparser {
         String BuyRuleArr[]= {"and","or","condition"};
         if(buyRuleMap.containsKey("and")){
 
-            return BuyRuleParseAnd(buyRuleMap.get("combine"));
+            return BuyRuleParseAnd(buyRuleMap.get("and"));
 
         }
         if(buyRuleMap.containsKey("or"))

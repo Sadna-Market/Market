@@ -6,6 +6,7 @@ import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.api.apiObjects.apiProductType;
+import com.example.demo.api.apiObjects.apiRole;
 import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
@@ -500,9 +501,11 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("addNewBuyRule/{uuid}/{storeId}")
+    @PostMapping("addNewBuyRule/{uuid}/{storeId}")
     public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
         apiBuyPparser p = new apiBuyPparser();
+        System.out.println(uuid);
+        System.out.println(map);
         return iMarket.addNewBuyRule(uuid, storeId, p.BuyRuleParse(map));
     }
 

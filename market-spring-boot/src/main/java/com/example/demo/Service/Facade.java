@@ -1417,9 +1417,14 @@ public class Facade implements IMarket {
         if(products.errorOccurred()) return new SLResponseOBJ<>(null,products.errorMsg);
         List<ServiceProductStore> lst = new ArrayList<>();
         products.value.forEach(productStore -> {
+
             lst.add(new ServiceProductStore(productStore));
         });
         return new SLResponseOBJ<>(lst,-1);
+    }
+
+    public UserManager getUserManager(){
+        return userManager;
     }
 
 

@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class config1 {
+public class config2 {
 
     Facade f = new Facade();
     List<String> members = new LinkedList<>();
@@ -31,13 +31,18 @@ public class config1 {
         members.add("u3@gmail.com");
         members.add("u4@gmail.com");
         members.add("u5@gmail.com");
+        members.add("u6@gmail.com");
         membersloged.add("u1@gmail.com");
         membersloged.add("u2@gmail.com");
         membersloged.add("u3@gmail.com");
         membersloged.add("u4@gmail.com");
         Stores.add("s1");
+        Stores.add("s2");
+
         List<Integer> s1prodducts = new LinkedList<>();
         s1prodducts.add(1);
+        s1prodducts.add(2);
+        s1prodducts.add(3);
         productrs.put("s1",s1prodducts);
     }
 
@@ -74,15 +79,19 @@ public class config1 {
         }
         List<ServiceStore> stores=f.getAllStores().value;
         for(ServiceStore st :stores){
-           List<ServiceProductStore> ps=f.getAllProductsInStore(st.storeId).value;
-           System.out.println(ps);
-           for(ServiceProductStore producr :ps){
-               assertTrue(productrs.get(st.name).contains(producr.itemID));
+            List<ServiceProductStore> ps=f.getAllProductsInStore(st.storeId).value;
+            System.out.println(ps);
+            for(ServiceProductStore producr :ps){
+                assertTrue(productrs.get(st.name).contains(producr.itemID));
+            }
         }
-        }
+        assertTrue(f.isOwner("u2@gmail.com",1).value);
         assertTrue(f.isOwner("u4@gmail.com",1).value);
         assertTrue(f.isOwner("u5@gmail.com",1).value);
         assertTrue(f.isManager("u3@gmail.com",1).value);
+
+        assertTrue(f.isOwner("u3@gmail.com",2).value);
+
         UUID = f.guestVisit();
         assertTrue(f.login(UUID.value,"u1@gmail.com","abcA!123").errorOccurred());
         assertTrue(f.login(UUID.value,"u2@gmail.com","abcA!123").errorOccurred());
