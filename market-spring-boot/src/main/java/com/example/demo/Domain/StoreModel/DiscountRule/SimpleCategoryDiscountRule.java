@@ -39,6 +39,6 @@ public class SimpleCategoryDiscountRule extends LeafDiscountRule{
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
-        return new DResponseObj<>(new SimpleCategoryDiscountRuleSL(percentDiscount,categoryId));
+        return new DResponseObj<>(new SimpleCategoryDiscountRuleSL(percentDiscount,categoryId,id));
     }
 }
