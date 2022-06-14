@@ -16,6 +16,7 @@ const RemoveManager = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setEmail("");
   };
 
@@ -43,6 +44,8 @@ const RemoveManager = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <h3>Remove Owner \ Manager</h3>
       <div className="products__controls">
         <div className="products__control">

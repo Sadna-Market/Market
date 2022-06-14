@@ -36,23 +36,28 @@ const ConditionRule = (props) => {
     if (sendRulesResponse.errorMsg !== -1) {
       SetError(errorCode.get(sendRulesResponse.errorMsg))
     } else {
+      SetError("")
       // props.onRule(sendRulesResponse.value);
       props.onRule();
     }
   }
 
   const showHandler1 = (ruleID) => {
+    SetError("")
     setCommand1(<RuleInfo ruleID={ruleID} />);
     setIfRule(ruleID);
   };
 
   const showHandler2 = (ruleID) => {
+    SetError("")
     setCommand2(<RuleInfo ruleID={ruleID} />);
     setThenRule(ruleID);
   };
 
   //todo conditionRule
   const confirmHandler = () => {
+
+    SetError("")
     //return onRule(<ruleID>)
     props.onRule(15);
   };
@@ -68,6 +73,7 @@ const ConditionRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Condition Rule</h3>
       <div>
         <h2>when you finish, Press</h2>

@@ -27,6 +27,7 @@ const EditProduct = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setProductID("");
     setPrice("");
     setQuantity("");
@@ -72,6 +73,7 @@ const EditProduct = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Edit Product From Store {storeID}</h3>
       <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
       <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError2}</div>

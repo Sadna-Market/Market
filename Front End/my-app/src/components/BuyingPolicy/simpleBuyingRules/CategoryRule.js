@@ -32,6 +32,7 @@ const CategoryRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setCategory("");
     setminAge("");
     setminHour("");
@@ -62,6 +63,7 @@ const CategoryRule = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add Category Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

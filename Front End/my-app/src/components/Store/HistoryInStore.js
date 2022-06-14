@@ -33,7 +33,7 @@ const HistoryInStore = (props) => {
     } else {
       setCommand(getStoreOrderHistoryResponse.value);
       setemail("");
-
+      SetError("")
     }
     console.log("getStoreOrderHistoryResponse")
     console.log(getStoreOrderHistoryResponse)
@@ -42,6 +42,8 @@ const HistoryInStore = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <h3>History of User in Store {storeID}</h3>
       <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
       <div className="products__controls">

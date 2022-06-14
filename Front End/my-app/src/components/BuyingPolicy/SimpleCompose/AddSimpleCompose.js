@@ -29,6 +29,7 @@ const SimpleComposeRule = (props) => {
   };
   let besicPage = (
     <>
+
       <h3>Compose Rules</h3>
       <div>
         <button onClick={addHandler}>AND</button>

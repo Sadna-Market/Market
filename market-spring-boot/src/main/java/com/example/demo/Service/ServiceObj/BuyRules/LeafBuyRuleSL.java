@@ -6,8 +6,8 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 
 public abstract class LeafBuyRuleSL implements BuyRuleSL {
-    protected PredicateSL pred;
-    protected int id;
+    public PredicateSL pred;
+    public int id;
 
 
     public LeafBuyRuleSL(PredicateSL pred) {

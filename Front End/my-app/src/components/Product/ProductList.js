@@ -25,6 +25,7 @@ const ProductList = props => {
             for (let i = 0; i < getAllProductsResponse.value.length; i++) {
                 products.push({id: getAllProductsResponse.value[i].productID, name: getAllProductsResponse.value[i].productName})
             }
+            SetError("")
             console.log(products)
             setallProducts(products)
         }
@@ -75,6 +76,8 @@ const ProductList = props => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
             <ul className="products-list">{expensesContent}</ul>
         </div>
     );

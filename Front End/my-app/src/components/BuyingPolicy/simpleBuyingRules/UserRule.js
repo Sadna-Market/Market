@@ -25,6 +25,7 @@ const UserRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setEmail("");
   };
 
@@ -53,6 +54,7 @@ const UserRule = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add User Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

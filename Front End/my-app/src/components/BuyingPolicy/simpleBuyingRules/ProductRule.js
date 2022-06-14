@@ -28,6 +28,7 @@ const ProductRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setminQuantity("");
     setmaxQuantity("");
     setproductID("");
@@ -58,6 +59,7 @@ const ProductRule = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add Product Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">
