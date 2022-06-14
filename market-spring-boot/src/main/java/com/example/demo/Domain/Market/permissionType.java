@@ -18,10 +18,13 @@ public class permissionType {
     static public List<permissionEnum> ownerPermissions=new ArrayList<>
             (Arrays.asList(permissionEnum.getStoreOrderHistory,permissionEnum.addNewProductToStore,permissionEnum.deleteProductFromStore,
                     permissionEnum.setProductPriceInStore,permissionEnum.setProductQuantityInStore, permissionEnum.addNewStoreOwner,
-                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles));
+                    permissionEnum.addNewStoreManager,permissionEnum.setManagerPermissions,permissionEnum.closeStore,permissionEnum.getStoreRoles,permissionEnum.addNewBuyRule,permissionEnum.removeBuyRule,permissionEnum.addNewDiscountRule,permissionEnum.removeDiscountRule,permissionEnum.removeStoreOwner,permissionEnum.ManageBID));
 
     static public List<permissionEnum> systemManagerPermissions=new ArrayList<>
-            (Arrays.asList(permissionEnum.getStoreOrderHistory, permissionEnum.getUserInfo));
+            (Arrays.asList(permissionEnum.getStoreOrderHistory, permissionEnum.getUserInfo,
+                    permissionEnum.getAllLoggedInUsers,
+                    permissionEnum.getAllLoggedOutUsers,
+                    permissionEnum.cancelMembership));
 
     public enum permissionEnum {
 
@@ -78,10 +81,14 @@ public class permissionType {
 //        AddNewStoreOwner,
 //        AddNewStoreManger,
 
-        //TODO 2.שינוי סוגי וכללי )מדיניות( קניה והנחה של חנות
+        addNewBuyRule,
+        removeBuyRule,
+        addNewDiscountRule,
+        removeDiscountRule,
+        ManageBID,
         //3 .קביעת אילוצי עקיבות עבור חנות://next versions
         addNewStoreOwner, //4 .מינוי בעל-חנות:
-
+        removeStoreOwner,
         //5 .הסרת מינוי בעל-חנות://next versions
         addNewStoreManager, //6 .מינוי מנהל-חנות:
         setManagerPermissions, //7 .שינוי הרשאות של מנהל-חנות:
@@ -90,14 +97,16 @@ public class permissionType {
         //10 .פתיחת חנות שנסגרה//next versions
         getStoreRoles, //11 .בקשה למידע על תפקידים בחנות:
 
-
         // system manager
-            getUserInfo
+            getUserInfo,
+            getAllLoggedInUsers,
+            getAllLoggedOutUsers,
+            cancelMembership,
         //1 .סגירת חנות לצמיתות://next versions:
-        //2 .ביטול )הסרת( מנוי של השוק://next versions
         //next versions3// .קבלת מידע ומתן תגובה:
         //4 .קבלת מידע על היסטוריית רכישות בחנות:
         //next versions// 5 .קבלת מידע על התנהלות המערכת:
+
     }
 
 }

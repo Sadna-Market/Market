@@ -3,25 +3,22 @@ package com.example.demo.Service.ServiceObj;
 
 import com.example.demo.Domain.StoreModel.History;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceHistory {
-    private final int TID;
-    private final double finalPrice;
-    private final List<ServiceProductStore> products;
-    private final String user;
-
-    public ServiceHistory(int tid, double finalPrice, List<ServiceProductStore> products, String user) {
-        TID = tid;
-        this.finalPrice = finalPrice;
-        this.products = products;
-        this.user = user;
-    }
+    public final int TID;
+    public final double finalPrice;
+    public final List<ServiceProductStore> products;
+    public final String user;
 
     public ServiceHistory(History history){
         this.TID = history.getTID();
         this.finalPrice = history.getFinalPrice();
-        this.products = history.getProducts();
+        this.products = new ArrayList<>();
+        history.getProducts().forEach(productStore -> {
+            this.products.add(new ServiceProductStore(productStore));
+        });
         this.user = history.getUser();
     }
 

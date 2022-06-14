@@ -3,6 +3,8 @@ import './ProductID.css';
 import Card from "../UI/Card";
 
 const ProductID = props=>{
+    console.log("ProductID")
+
     const clickHandler = () => {
       props.onReadMore(props.id);
     };

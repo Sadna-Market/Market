@@ -4,6 +4,8 @@ import ConditionRule from "./ConditionRule";
 import OrRule from "./OrRule";
 
 const ComposeRule = (props) => {
+  console.log("ComposeRule")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const addHandler = () => {

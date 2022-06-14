@@ -2,7 +2,11 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.*;
 import com.example.demo.Service.TestableFacade;
 
@@ -22,8 +26,8 @@ public class RealMarket implements MarketBridge {
      * @param sysManager
      * @return true if success else false
      */
-    public ATResponseObj<String> initSystem(User sysManager) {
-        SLResponseOBJ<String> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number);
+    public ATResponseObj<Boolean> initSystem(User sysManager) {
+        SLResponseOBJ<Boolean> response = market.initMarket(sysManager.username, sysManager.password, sysManager.phone_number,sysManager.dateOfBirth);
         return response.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(response.value, null);
     }
 
@@ -109,7 +113,7 @@ public class RealMarket implements MarketBridge {
         deliver.forEach(i -> {
             lst.add(new ServiceProductStore(i.quantity, i.price, i.itemID, i.name));
         });
-        ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment);
+        ServiceUser su = new ServiceUser(user.username, user.password, user.phone_number, user.addr.city, user.addr.street, user.addr.apartment,user.dateOfBirth);
         SLResponseOBJ<Integer> res = market.supply(su, lst);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(String.valueOf(res.value), null);
     }
@@ -144,9 +148,9 @@ public class RealMarket implements MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    public boolean register(String uuid, String username, String password) {
-        SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222");
-        return response.value;
+    public boolean register(String uuid, String username, String password, String dateOfBirth) {
+        SLResponseOBJ<Boolean> response = market.addNewMember(uuid, username, password, "0522222222",dateOfBirth);
+        return !response.errorOccurred();
     }
 
     /**
@@ -339,10 +343,11 @@ public class RealMarket implements MarketBridge {
      */
     public ATResponseObj<Integer> addStore(String uuid, User owner) {
         SLResponseOBJ<Integer> res;
+        String storeName = owner == null ? "null" : owner.name;
         if (owner == null)
-            res = market.openNewStore(uuid, "moshe", null, null, null, null);
+            res = market.openNewStore(uuid, String.format("store of %s",storeName), null, null, null, null);
         else
-            res = market.openNewStore(uuid, "moshe", owner.username, null, null, null);
+            res = market.openNewStore(uuid, String.format("store of %s",storeName), owner.username, null, null, null);
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
 
@@ -398,11 +403,13 @@ public class RealMarket implements MarketBridge {
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    public ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID) {
+    public ATResponseObj<List<History>> getHistoryPurchase(String uuid, int storeID) {
         SLResponseOBJ<List<ServiceHistory>> res = market.getStoreOrderHistory(uuid, storeID);
         if (res.errorOccurred()) return new ATResponseObj<>("error");
-        List<String> tid = res.value.stream().map(h -> String.valueOf(h.getTID())).collect(Collectors.toList());
-        return new ATResponseObj<>(tid);
+//        List<String> tid = res.value.stream().map(h -> String.valueOf(h.getTID())).collect(Collectors.toList());
+          List<History> histories = res.value.stream().map(History::new).collect(Collectors.toList());
+
+        return new ATResponseObj<>(histories);
     }
 
     /**
@@ -497,6 +504,22 @@ public class RealMarket implements MarketBridge {
         SLResponseOBJ<Boolean> res = market.addNewStoreOwner(uuid, storeID, newOwner == null ? null : newOwner.username);
         return !res.errorOccurred();
     }
+
+
+    /**
+     * remove store owner and the permission that this owner is grantor
+     *
+     * @param UserId
+     * @param StoreId
+     * @param OwnerEmail
+     * @return true if success, else false
+     */
+    @Override
+    public boolean removeStoreOwner(String UserId, int StoreId, String OwnerEmail) {
+        SLResponseOBJ<Boolean> res = market.removeStoreOwner(UserId, StoreId, OwnerEmail);
+        return !res.errorOccurred();
+    }
+
 
     /**
      * checks if user is manager in store
@@ -608,6 +631,7 @@ public class RealMarket implements MarketBridge {
 
     @Override
     public ATResponseObj<Integer> addProductType(String uuid, ItemDetail item) {
+        System.out.println("ooooooo "+uuid);
         SLResponseOBJ<Integer> res = market.addNewProductType(uuid, item.name, "phone", 1); //TODO: change category to string
         return res.errorOccurred() ? new ATResponseObj<>("error") : new ATResponseObj<>(res.value);
     }
@@ -629,6 +653,157 @@ public class RealMarket implements MarketBridge {
      */
     public boolean connectExternalService(String payment) {
         SLResponseOBJ<Boolean> res = market.connectService(payment);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * add buy rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    @Override
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRuleSL buyRule) {
+        SLResponseOBJ<Boolean> res = market.addNewBuyRule(uuid, storeId, buyRule);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * remove buy rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    @Override
+    public boolean removeBuyRule(String uuid, int storeId, int buyRuleID) {
+        SLResponseOBJ<Boolean> res = market.removeBuyRule(uuid, storeId, buyRuleID);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * add discount rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    @Override
+    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRuleSL discountRule) {
+        SLResponseOBJ<Boolean> res = market.addNewDiscountRule(uuid, storeId, discountRule);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * remove discount rule to this store
+     *
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    @Override
+    public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
+        SLResponseOBJ<Boolean> res = market.removeDiscountRule(uuid, storeId, discountRuleID);
+        return !res.errorOccurred();
+    }
+
+    /**
+     * get buy rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all buy rules
+     */
+    @Override
+    public ATResponseObj<List<BuyRuleSL>> getBuyPolicy(String uuid, int storeId) {
+        SLResponseOBJ<List<BuyRuleSL>> res = market.getBuyPolicy(uuid,storeId);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * get discount rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all discount rules
+     */
+    @Override
+    public ATResponseObj<List<DiscountRuleSL>> getDiscountPolicy(String uuid, int storeId) {
+        SLResponseOBJ<List<DiscountRuleSL>> res = market.getDiscountPolicy(uuid,storeId);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * gets all logged in members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedInMembers(String uuid) {
+        SLResponseOBJ<List<ServiceUser>> res = market.getloggedInMembers(uuid);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        List<User> users = new ArrayList<>();
+        res.value.forEach(serviceUser -> {
+            users.add(new User(serviceUser));
+        });
+        return new ATResponseObj<>(users);
+    }
+
+    /**
+     * gets all logged out members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedOutMembers(String uuid) {
+        SLResponseOBJ<List<ServiceUser>> res = market.getloggedOutMembers(uuid);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        List<User> users = new ArrayList<>();
+        res.value.forEach(serviceUser -> {
+            users.add(new User(serviceUser));
+        });
+        return new ATResponseObj<>(users);
+    }
+
+    /**
+     * Cancel a membership in the market
+     * This can only be done by the System manager
+     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
+     *
+     * @param uuid       the uuid of the System manager
+     * @param cancelUser the user to cancel
+     * @return true if success, else false
+     */
+    public boolean cancelMembership(String uuid, User cancelUser) {
+        SLResponseOBJ<Boolean> res = market.cancelMembership(uuid,cancelUser.username);
+        return !res.errorOccurred();
+    }
+
+    public ATResponseObj<List<ServiceStore>> getAllStores() {
+        SLResponseOBJ<List<ServiceStore>> res = market.getAllStores();
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value,null);
+    }
+
+    public boolean isOwnerUUID(String uuid, int storeID) {
+        SLResponseOBJ<Boolean> res = market.isOwnerUUID(uuid,storeID);
+        return !res.errorOccurred();
+    }
+
+    public boolean isSysManagerUUID(String uuid) {
+        SLResponseOBJ<Boolean> res = market.isSystemManagerUUID(uuid);
+        return !res.errorOccurred();
+    }
+
+    public boolean isManagerUUID(String uuid, int storeID) {
+        SLResponseOBJ<Boolean> res = market.isManagerUUID(uuid,storeID);
         return !res.errorOccurred();
     }
 

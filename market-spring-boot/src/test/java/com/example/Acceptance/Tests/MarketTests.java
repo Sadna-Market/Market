@@ -19,10 +19,10 @@ public class MarketTests {
     public static int GALAXY_ID;
 
     public MarketTests() {
-        market = new ProxyMarket();
+       market = new ProxyMarket();
         counter = 1;
-        sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110");
-        member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111");
+        sysManager = new User("SysManager", "sysManager@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 2), "0523111110","10/4/1994");
+        member = new User("member", "member@gmail.com", "Shalom123$", new Address("Tel-Aviv", "Nordau", 3), "0523111111","16/3/2012");
     }
     public User generateUser() {
         int suffix = counter++;
@@ -30,7 +30,7 @@ public class MarketTests {
                 "user" + suffix + "@gmail.com",
                 PasswordGenerator.generateStrongPassword(),
                 new Address("Tel-Aviv", "Nordau", suffix),
-                "052311111" + suffix);
+                "052311111" + suffix,"25/10/1984");
     }
 
     protected void populateItemsAndStore() {
@@ -50,8 +50,9 @@ public class MarketTests {
         market.exitSystem(uuid);
     }
     protected void initMarketWithSysManagerAndItems(){
-        String uuid = market.initSystem(sysManager).value;
+        String uuid = market.guestVisit();
         //add items to system
+        //System.out.println(market.login(uuid, sysManager).errorMsg);
         uuid = market.login(uuid, sysManager).value;
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         ItemDetail item2 = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
@@ -67,7 +68,7 @@ public class MarketTests {
 
     protected void registerMemberData(){
         String uuid = market.guestVisit();
-        market.register(uuid, member.username, member.password);
+        market.register(uuid, member.username, member.password,member.dateOfBirth);
         market.exitSystem(uuid);
     }
     protected void roleBackAfterReset(){

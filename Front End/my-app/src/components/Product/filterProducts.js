@@ -2,6 +2,8 @@ import React,{useState} from "react";
 import './FilterProducts.css';
 
 const FilterProducts = (props) => {
+    console.log("FilterProducts")
+
     const [name,setName] = useState("");
     const changeNameHandler = event=>{
         setName(event.target.value);

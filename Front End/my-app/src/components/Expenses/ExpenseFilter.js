@@ -2,6 +2,8 @@ import React from "react";
 import "./ExpenseFilter.css";
 
 const ExpenseFilter = (props) => {
+  console.log("ExpenseFilter")
+
   const yearHandler = (event) => {
     //console.log(event.target.value);
     props.onSelactedYear(event.target.value);

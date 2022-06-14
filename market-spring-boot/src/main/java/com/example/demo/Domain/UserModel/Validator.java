@@ -28,7 +28,7 @@ public class Validator {
         } catch (AddressException ex) {
             result = false;
         }
-        System.out.println(result+ " emailll");
+       // System.out.println(result+ " emailll");
         return new DResponseObj<>( result,-1);
     }
 
@@ -118,7 +118,7 @@ public class Validator {
         // and regular expression.
         Matcher m = p.matcher(password);
 
-        System.out.println("passs "+ m.matches());
+       // System.out.println("passs "+ m.matches());
 
         // Return if the password
         // matched the ReGex

@@ -4,11 +4,16 @@ import Card from "../UI/Card";
 
 const UserID = (props) => {
   //todo: remove user
+  console.log("UserID")
+
   const clickHandler = () => {
+
     props.onEnterToStore(props.id);
+    
   };
   return (
     <li>
+      
       <Card className="store-item">
         <div className="store-item__description">
           <h2>{props.email}</h2>

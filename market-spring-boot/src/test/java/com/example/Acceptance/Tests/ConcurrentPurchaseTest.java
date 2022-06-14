@@ -33,7 +33,7 @@ public class ConcurrentPurchaseTest extends MarketTests {
         item1.itemID = IPHONE_5_ID;
         CreditCard creditCard = new CreditCard("1111222233334444", "1125", "111");
         User registeredUser = generateUser();
-        assertTrue(market.register(uuid, registeredUser.username, registeredUser.password));
+        assertTrue(market.register(uuid, registeredUser.username, registeredUser.password,registeredUser.dateOfBirth));
         //pre conditions
         //action1
         ATResponseObj<String> memberID = market.login(uuid, registeredUser);

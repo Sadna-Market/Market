@@ -12,6 +12,8 @@ import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,7 +67,9 @@ public class Purchase {
                 }
 
                 //check price and policy
-                DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email, crrAmount);
+
+                int age = Period.between(user.getDateOfBirth().getValue(), LocalDate.now()).getYears();
+                DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email,age, crrAmount);
                 if (Dprice.errorOccurred()) continue;
                 Double price = Dprice.getValue();
 
@@ -123,6 +127,75 @@ public class Purchase {
     }
 
 
+    public DResponseObj<Boolean> orderBID(User user, int storeID, ShoppingBag BID, int totalPrice, String city, String adress, int apartment, String cardNumber, String exp, String pin) {
+        //get email and bags of the user.
+        String email = user.getEmail().value;
+        ConcurrentHashMap<Integer, ShoppingBag> bags = new ConcurrentHashMap<>(); // will be only one bag (the BID)
+        bags.put(storeID,BID);
+
+        // per Store we save what we bought.
+        ConcurrentHashMap<Store, ConcurrentHashMap<Integer, Integer>> totalProducts=
+                new ConcurrentHashMap<>();
+
+        ConcurrentHashMap<Store, Integer> deliveries=new ConcurrentHashMap<>();
+
+        for (Integer bagID: bags.keySet()) {
+            //get the store and the bag that we will work on that.
+            ShoppingBag currBag = bags.get(bagID);
+            DResponseObj<Store> getStore = currBag.getStore();
+            DResponseObj<ConcurrentHashMap<Integer, Integer>> checkBags = currBag.getProductQuantity();
+
+            if (!getStore.errorOccurred() && !checkBags.errorOccurred()) {
+                Store curStore = getStore.getValue();
+
+                // catch the items.
+                DResponseObj<ConcurrentHashMap<Integer, Integer>> DRcrrAmount =
+                        catchItems(curStore, checkBags.getValue());
+                if (DRcrrAmount.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
+                ConcurrentHashMap<Integer, Integer> crrAmount = DRcrrAmount.getValue();
+                if (crrAmount.size() == 0){
+                    logger.warn("this client didnt catch no product in this store");
+                    return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
+                }
+
+                //check supply
+                DResponseObj<Integer> supply = createSupply(user, city, adress, apartment, crrAmount);
+
+                //if the supply does not work, we will do rollback.
+                if (supply.errorOccurred()) {
+                    logger.warn("supplyService does not work");
+                    DResponseObj<Boolean> rollBack = rollBack(curStore, crrAmount);
+                    if (rollBack.errorOccurred()) logger.error("rollback does not work!!!");
+                    return new DResponseObj<>(false,supply.getErrorMsg());
+                }
+
+                deliveries.put(curStore,supply.getValue());
+                totalProducts.put(curStore, crrAmount);
+            }
+        }
+
+        //check if can pay
+        DResponseObj<Integer> TIP= buy(cardNumber,exp,pin,(double) totalPrice,totalProducts);
+        if (TIP.errorOccurred()) return new DResponseObj<>(false,TIP.getErrorMsg());
+
+        //for store that we can not find the ID.
+        int counterMinus=-1;
+        List<History> histories = new ArrayList<>();
+
+        for (Store store: totalProducts.keySet()){
+            //create History for this store.
+            DResponseObj<History> historyDResponseObj = store.addHistory(TIP.getValue(),deliveries.get(store), email, totalProducts.get(store), totalPrice);
+            if (historyDResponseObj.errorOccurred())   logger.error("the History for This Store, didnt save");
+            else histories.add(historyDResponseObj.getValue());
+        }
+
+        // add all Histories to the User.
+        DResponseObj<Boolean> checkHistory = user.addHistoies(histories);
+        if (checkHistory.errorOccurred()) logger.error("User didnt get his Histories.");
+        return new DResponseObj<>(true);
+    }
+
+
     /*************************************************private methods*****************************************************/
 
     //target: to buy all the products if error then rollback.
@@ -141,18 +214,18 @@ public class Purchase {
     }
 
     //target: to get the price after all the process with store.
-    private DResponseObj<Double> getPriceAfterDiscount(Store store,String email,
+    private DResponseObj<Double> getPriceAfterDiscount(Store store,String email, int age,
                                                        ConcurrentHashMap<Integer, Integer> crrAmount) {
         //check about Discount in the Store.
-        DResponseObj<ConcurrentHashMap<Integer, Integer>> DRpolicy = store.checkBuyPolicy(email, crrAmount);
         Double discount = 0.;
+        DResponseObj<Double> DRpolicy = store.checkBuyAndDiscountPolicy(email,age, crrAmount);
+
         if (DRpolicy.errorOccurred()) {
             logger.warn("the policy of this store didnt work");
+            rollBack(store, crrAmount);
             return new DResponseObj<>(DRpolicy.getErrorMsg());
         }
-
-        DResponseObj<Double> DRdiscount = store.checkDiscountPolicy(email, DRpolicy.getValue());
-        if (!DRdiscount.errorOccurred()) discount = DRdiscount.getValue();
+         discount = DRpolicy.getValue();
 
         DResponseObj<Double> price = store.calculateBagPrice(crrAmount);
         if (price.errorOccurred()) {
@@ -206,6 +279,8 @@ public class Purchase {
         DResponseObj<Boolean> ans=store.rollbackProductQuantity(hashMap);
         return new DResponseObj<>(ErrorCode.ROLLBACK);
     }
+
+
 
 
     class Tuple<E,T>{

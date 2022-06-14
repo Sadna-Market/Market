@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const BuyCart = (props) => {
+  console.log("BuyCart")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  const [enteredConfirmation, SetConfirmation] = useState("");
   let UUID = props.uuid;
   const [cardNumber, setCardNumber] = useState("");
   const changeCardHandler = (event) => {
@@ -37,15 +43,25 @@ const BuyCart = (props) => {
     setApart("");
   };
 
+  async function buyHandler(){
+    const orderShoppingCartResponse = await apiClientHttp.orderShoppingCart(UUID, city, adress,apartment,cardNumber,cardDate, cardPin);
 
-  //todo: order!
-  const buyHandler = ()=>{
-      props.onMarket();
+    if (orderShoppingCartResponse.errorMsg !== -1) {
+      SetError(errorCode.get(orderShoppingCartResponse.errorMsg))
+    } else {
+      SetConfirmation("The Order completed successfully!")
       cleanHandler();
-  };
+      props.onMarket();
+    }
+  }
+  // useEffect(() => {
+  //   getAllStores();
+  // }, [enteredConfirmation.refresh]);
 
   return (
     <div className="products">
+      <div style={{ color: 'red',backgroundColor: "green",fontSize: 30 }}>{enteredConfirmation}</div>
+      <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
       <h3>Credit Card</h3>
       <div className="products__controls">
         <div className="products__control">

@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/BuyingRules"
 
 const ProductRule = (props) => {
+  console.log("ProductRule")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
   let UUID = props.uuid;
   let storeID = props.storeID;
 
@@ -27,12 +33,26 @@ const ProductRule = (props) => {
     setproductID("");
   };
 
-  //todo: add new ShoppingBag Rule to store
-  const addHandler = () => {
+  //todo: add new product Rule to store
+  async function addHandler (){
+    let rule = new RulesClass.productRule(UUID,storeID,productID,minQuantity,maxQuantity)
+    if (props.compose===undefined) { //false case - no comopse - realy simple
+
+      const sendRulesResponse = await apiClientHttp.sendRules(rule);
+
+      if (sendRulesResponse.errorMsg !== -1) {
+        SetError(errorCode.get(sendRulesResponse.errorMsg))
+      } else {
+        cleanHandler();
+        // props.onRule(sendRulesResponse.value);
+        props.onRule(-1);
+
+      }
+    }
+    
     cleanHandler();
-    //return the ruleId in onRule insead of 10/11/12/13
-    props.onRule(11);
-  };
+    props.onRule(rule);
+  }
 
   return (
     <div>

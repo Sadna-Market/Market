@@ -30,7 +30,7 @@ public class ConcurrentRemoveProductAndPurchaseTest extends MarketTests {
     @DisplayName("remove product from store and buy as same time")
     public void assignSameTime() throws InterruptedException {
         User buyer = generateUser();
-        assertTrue(market.register(uuid, buyer.username, buyer.password));
+        assertTrue(market.register(uuid, buyer.username, buyer.password,buyer.dateOfBirth));
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5_ID;
         ATResponseObj<String> buyerID = market.login(uuid, buyer);

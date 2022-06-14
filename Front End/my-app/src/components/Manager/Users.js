@@ -5,6 +5,8 @@ import UserList from "./UserList";
 
 
 const Users = props =>{
+    console.log("Users")
+
     let UUID= props.uuid;
 
     const [searchUser, setUser] = useState("");

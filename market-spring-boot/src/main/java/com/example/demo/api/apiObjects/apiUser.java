@@ -3,6 +3,7 @@ package com.example.demo.api.apiObjects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class apiUser {
+        public String datofbirth;
         public String email;
         public String Password;
         public String phoneNumber;
@@ -18,7 +19,8 @@ public class apiUser {
                 , int apartment
                 , String CreditCard
                 , String CreditDate
-                , String pin,
+                , String pin
+                ,String daybirth,
             String newPassword){
             this.email=email;
             this.Password=Password;
@@ -30,5 +32,6 @@ public class apiUser {
             this.CreditDate=CreditDate;
             this.pin=pin;
             this.newPassword=newPassword;
+            this.datofbirth=daybirth;
         }
     }

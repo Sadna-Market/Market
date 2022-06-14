@@ -3,7 +3,9 @@ import Card from "../UI/Card";
 import "./ProductType.css";
 
 const ProductType = (props) => {
-  let productID = props.productID;
+    console.log("ProductType")
+
+    let productID = props.productID;
   const [rateMe,setRate] = useState("");
 
   const rateHandler = event=>{

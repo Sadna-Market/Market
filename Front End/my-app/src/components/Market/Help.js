@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 
 const Help = (props) => {
-  let UUID = props.uuid;
+    console.log("Help")
+
+    let UUID = props.uuid;
 
   const [help, setHelp] = useState("");
   const changeHelpHandler = (event) => {
