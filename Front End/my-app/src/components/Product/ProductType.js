@@ -6,23 +6,23 @@ const ProductType = (props) => {
     console.log("ProductType")
 
     let productID = props.productID;
-  const [rateMe,setRate] = useState("");
+  const [rateMe,setRate] = useState(5);
 
   const rateHandler = event=>{
       setRate(event.target.value);
   };
 
   //todo: rate product
-  const rateClickHandler = ()=>{
-      setRate("");
-  }
-
-  //todo:get the info of the product
+    async function rateClickHandler (){
+      setRate(rateMe);
+  };
+    //getInfoProduct
+    //todo:get the info of the product
   let product = {
     name: "Hary Potter",
     description: "amazing",
     category: "Books",
-    rate: 5,
+    rate: rateMe,
   };
   return (
     <Card>

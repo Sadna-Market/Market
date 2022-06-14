@@ -32,6 +32,7 @@ const MyCart = (props) => {
           name: getShoppingCartResponse.value[i].amount
         })
       }
+      SetError("")
       SetProducts(products);
     }
   }
@@ -86,6 +87,7 @@ const MyCart = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>My Cart</h3>
       <button onClick={buyHandler}> Buy All The Cart</button>
       {command}

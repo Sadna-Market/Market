@@ -25,6 +25,7 @@ const UserRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setEmail("");
   };
 
@@ -32,10 +33,8 @@ const UserRule = (props) => {
 
   async function addHandler() {
     let rule = new RulesClass.UserRule(UUID,storeID,email)
-
     if (props.compose===undefined){ //false case - no comopse - realy simple
-      const sendRulesResponse = await apiClientHttp.sendRules(rule);
-
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, {'UserRule':rule});
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
       } else {
@@ -47,7 +46,7 @@ const UserRule = (props) => {
     }
     else { //compose case
       cleanHandler();
-      props.onRule(rule)
+      props.onRule( {'UserRule':rule})
 
     }
 
@@ -55,6 +54,7 @@ const UserRule = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add User Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

@@ -60,7 +60,8 @@ const FilterProducts = (props) => {
 
   return (
     <div className="products">
-      <h3>Filters</h3>
+
+        <h3>Filters</h3>
       <div className="products__controls">
         <div className="products__control">
           <label>Filter by Name</label>

@@ -20,6 +20,7 @@ const ComposeRuleList = (props) => {
   //   if (getAllRulesResponse.errorMsg !== -1) {
   //     SetError(errorCode.get(getAllRulesResponse.errorMsg))
   //   } else {
+  //SetError("")
   //     for (let i = 0; i < getAllRulesResponse.value.length; i++) {
   //       rules.push({
   //         id: getAllRulesResponse.value[i].id,
@@ -68,6 +69,8 @@ const ComposeRuleList = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <ul className="stores-list">{expensesContent}</ul>
     </div>
   );

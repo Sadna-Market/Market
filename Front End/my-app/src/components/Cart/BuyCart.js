@@ -35,6 +35,7 @@ const BuyCart = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setCardDate("");
     setCardDate("");
     setPin("");
@@ -61,7 +62,8 @@ const BuyCart = (props) => {
   return (
     <div className="products">
       <div style={{ color: 'red',backgroundColor: "green",fontSize: 30 }}>{enteredConfirmation}</div>
-      <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <h3>Credit Card</h3>
       <div className="products__controls">
         <div className="products__control">

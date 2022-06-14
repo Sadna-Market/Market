@@ -22,7 +22,7 @@ const AddRule = (props) => {
   //todo: create Add with list
   async function finishHandler(){
     let combineMap ={"add":list}
-    const sendRulesResponse = await apiClientHttp.sendRules(combineMap);
+    const sendRulesResponse = await apiClientHttp.addNewBuyRule(combineMap);
 
     if (sendRulesResponse.errorMsg !== -1) {
       SetError(errorCode.get(sendRulesResponse.errorMsg))

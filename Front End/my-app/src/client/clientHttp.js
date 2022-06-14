@@ -636,6 +636,7 @@ export const createApiClientHttp = () => {
         },
 
         addNewBuyRule:async(uuid,storeid,obj)=>{
+            console.log("cleint addNewBuyRule ",'uuid',uuid,'storeid',storeid,'obj',obj)
             let path = apiUrl.concat(`addNewBuyRule/${uuid}/${storeid}`);
 
 

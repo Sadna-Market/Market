@@ -23,6 +23,7 @@ const Password = (props) => {
     };
 
     const cleanHandler = () => {
+        SetError("")
         setEmail("");
         setpass1("");
         setpass2("");
@@ -44,6 +45,7 @@ const Password = (props) => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
             <h3>Change Password</h3>
             <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
 

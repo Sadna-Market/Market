@@ -65,6 +65,7 @@ const FilterProductList = (props) => {
       for (let i = 0; i < getAllFilterProductsResponse.value.length; i++) {
         filterProducts.push({id: getAllFilterProductsResponse.value[i].productID, name: getAllFilterProductsResponse.value[i].productName})
       }
+      SetError("")
       setallProducts(filterProducts)
     }
   }
@@ -93,6 +94,7 @@ const FilterProductList = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>After Filters</h3>
       <ul className="products-list">{productIDs}</ul>
     </div>

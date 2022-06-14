@@ -30,7 +30,7 @@ const StoreList = (props) => {
 
             }
             console.log("storesSSSS "+stores)
-
+            SetError("")
             Setstores(stores);
         }
     }
@@ -66,6 +66,8 @@ const StoreList = (props) => {
 
   return (
     <div>
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
         <div style={{ color: 'red' , fontsize:'29' }}>{enteredError}</div>
         <ul className="stores-list">{expensesContent}</ul>
     </div>
