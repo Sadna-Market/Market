@@ -147,7 +147,8 @@ public interface Iapi {
     public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
     public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
     public SLResponseOBJ<Boolean> BuyBID(@PathVariable("userId")String userId,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("city") String city, @PathVariable("adress")String adress,@PathVariable("apartment") int apartment,@RequestBody Map<String,Object> map) ;
-    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+//    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
 
 
 
