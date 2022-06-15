@@ -35,6 +35,6 @@ public class ProductBuyRule extends LeafBuyRule{
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
-        return new DResponseObj<>(new ProductBuyRuleSL(new ProductPredicateSL((ProductPred) pred)));
+        return new DResponseObj<>(new ProductBuyRuleSL(new ProductPredicateSL((ProductPred) pred),id));
     }
 }

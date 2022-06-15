@@ -64,6 +64,8 @@ public class StoreAndPolicies {
             assertEquals(1,store.getBuyRulesSize());
             assertTrue(store.removeBuyRule(1).getValue());
             assertEquals(0,store.getBuyRulesSize());
+            assertTrue(store.removeBuyRule(1).errorOccurred());
+            assertEquals(0,store.getBuyRulesSize());
         }
 
     @Test
@@ -78,6 +80,7 @@ public class StoreAndPolicies {
         assertEquals(2,store.getDiscountRulesSize());
         assertFalse(store.combineANDORDiscountRules("add",rules,1,3).value);
         assertTrue(store.combineANDORDiscountRules("and",rules,1,3).value);
+        assertEquals(1,store.getDiscountRulesSize());
         assertFalse(store.combineANDORDiscountRules("and",rules,1,3).value);
     }
 
@@ -93,6 +96,7 @@ public class StoreAndPolicies {
         assertEquals(2,store.getDiscountRulesSize());
         assertFalse(store.combineANDORDiscountRules("xor",rules,1,3).value);
         assertTrue(store.combineANDORDiscountRules("or",rules,1,3).value);
+        assertEquals(1,store.getDiscountRulesSize());
         assertFalse(store.combineANDORDiscountRules("or",rules,1,3).value);
     }
 
@@ -107,6 +111,7 @@ public class StoreAndPolicies {
         assertTrue(store.addNewDiscountRule(sRule).getValue());
         assertEquals(2,store.getDiscountRulesSize());
         assertTrue((store.combineXORDiscountRules(rules,"Big discount").value));
+        assertEquals(1,store.getDiscountRulesSize());
         assertFalse((store.combineXORDiscountRules(rules,"Big discount").value));
     }
 

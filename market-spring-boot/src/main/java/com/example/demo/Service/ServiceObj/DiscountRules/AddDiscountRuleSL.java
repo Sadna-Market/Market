@@ -11,8 +11,15 @@ import java.util.List;
 
 public class AddDiscountRuleSL extends CompositionDiscountRuleSL {
 
+    public String kind = "Add Discount Rule";
+
     public AddDiscountRuleSL(List<DiscountRuleSL> rules){
         super(rules,0.0);
+    }
+
+    //for convert
+    public AddDiscountRuleSL(List<DiscountRuleSL> rules,int id){
+        super(rules,0.0,id);
     }
 
     @Override

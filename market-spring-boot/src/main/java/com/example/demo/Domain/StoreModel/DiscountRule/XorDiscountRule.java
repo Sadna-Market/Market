@@ -71,6 +71,6 @@ public class XorDiscountRule extends CompositionDiscountRule {
             if(discountRuleSL.errorOccurred()) return discountRuleSL;
             rulesSL.add(discountRuleSL.value);
         }
-        return new DResponseObj<>(new XorDiscountRuleSL(rulesSL,decision));
+        return new DResponseObj<>(new XorDiscountRuleSL(rulesSL,decision,id));
     }
 }

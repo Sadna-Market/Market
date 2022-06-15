@@ -12,10 +12,19 @@ import java.util.List;
 
 public class XorDiscountRuleSL extends CompositionDiscountRuleSL {
 
+    public String kind = "Xor Discount Rule";
+
     public String decision;
 
     public XorDiscountRuleSL(List<DiscountRuleSL> rules, String decision) {
         super(rules, 0.0);
+        this.decision = decision;
+    }
+
+
+    //for convert
+    public XorDiscountRuleSL(List<DiscountRuleSL> rules, String decision,int id) {
+        super(rules, 0.0,id);
         this.decision = decision;
     }
 

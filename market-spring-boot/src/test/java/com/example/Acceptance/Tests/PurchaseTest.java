@@ -2,6 +2,7 @@ package com.example.Acceptance.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 import com.example.Acceptance.Obj.*;
+import com.example.demo.DataAccess.Repository.HistoryRepository;
 import com.example.demo.Domain.StoreModel.BuyRules.AndBuyRule;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.BuyRules.ProductBuyRule;
@@ -265,6 +266,53 @@ public class PurchaseTest extends MarketTests {
      * Requirement: purchase cart  - #2.4.2
      */
     @Test
+    @DisplayName("req: #2.2.5 with discount rule - failure test")
+    void purchaseCartWithDiscountRule_failure() {
+        //pre conditions
+        ATResponseObj<String> ownerID = market.login(uuid,member);
+        assertFalse(ownerID.errorOccurred());
+        uuid = ownerID.value;
+        DiscountRuleSL discountRule = new ConditionProductDiscountRuleSL(new ProductPredicateSL(2,4,10,true),30);
+        assertTrue(market.addNewDiscountRule(uuid,existing_storeID,discountRule));
+        ATResponseObj<String> guestID = market.logout(uuid);
+        assertFalse(guestID.errorOccurred());
+        uuid = guestID.value;
+
+        assertTrue(market.cartExists(uuid));
+        assertTrue(market.guestOnline(uuid));
+        ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5_ID;
+        ItemDetail item2 = new ItemDetail("screenFULLHD", 2, 10, List.of("TV"), "screen");
+        item2.itemID = SCREEN_FULL_HD_ID;
+        assertTrue(market.addToCart(uuid, existing_storeID, item1));
+        assertTrue(market.addToCart(uuid, existing_storeID, item2));
+
+        CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
+        Address address = new Address("Tel-Aviv","Nordau 3",3);
+        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        assertFalse(response.errorOccurred());
+
+        //post conditions
+        ATResponseObj<String> managerID = market.login(uuid,member);//manager of existing store
+        assertFalse(managerID.errorOccurred());
+        uuid = managerID.value;
+        assertEquals(1, market.getHistoryPurchase(uuid, existing_storeID).value.size());
+        int amountItem1 = market.getAmountOfProductInStore(existing_storeID,item1);
+        int amountItem2 = market.getAmountOfProductInStore(existing_storeID,item2);
+        assertEquals(0,amountItem1);
+        assertEquals(1,amountItem2);
+
+        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
+        List<History> recipes = res.value;
+        for(History h : recipes)
+            System.out.println("TID: " +h.getTID() + " price: "+ h.getFinalPrice() );
+        assertTrue(recipes.stream().anyMatch(h -> (h.getTID())==1 & h.getFinalPrice() == 30));
+    }
+
+    /**
+     * Requirement: purchase cart  - #2.4.2
+     */
+    @Test
     @DisplayName("req: #2.2.5 with buy rule - success test")
     void purchaseCartWithBuyRule_Success() {
         //pre conditions
@@ -398,48 +446,5 @@ public class PurchaseTest extends MarketTests {
         assertTrue(recipes.stream().anyMatch(h -> (h.getTID())==1 & h.getFinalPrice() == 15));
     }
 
-    /*    *//**
-     * Requirement: purchase cart  - #2.4.2
-     */
-    @Test
-    @DisplayName("req: #2.2.5 with discount rule - failure test")
-    void purchaseCartWithDiscountRule_failure() {
-        //pre conditions
-        ATResponseObj<String> ownerID = market.login(uuid,member);
-        assertFalse(ownerID.errorOccurred());
-        uuid = ownerID.value;
-        DiscountRuleSL discountRule = new ConditionProductDiscountRuleSL(new ProductPredicateSL(1,4,10,true),30);
-        assertTrue(market.addNewDiscountRule(uuid,existing_storeID,discountRule));
-        ATResponseObj<String> guestID = market.logout(uuid);
-        assertFalse(guestID.errorOccurred());
-        uuid = guestID.value;
 
-        assertTrue(market.cartExists(uuid));
-        assertTrue(market.guestOnline(uuid));
-        ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-        item1.itemID = IPHONE_5_ID;
-        ItemDetail item2 = new ItemDetail("screenFULLHD", 2, 10, List.of("TV"), "screen");
-        item2.itemID = SCREEN_FULL_HD_ID;
-        assertTrue(market.addToCart(uuid, existing_storeID, item1));
-        assertTrue(market.addToCart(uuid, existing_storeID, item2));
-
-        CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
-        Address address = new Address("Tel-Aviv","Nordau 3",3);
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
-        assertFalse(response.errorOccurred());
-
-        //post conditions
-        ATResponseObj<String> managerID = market.login(uuid,member);//manager of existing store
-        assertFalse(managerID.errorOccurred());
-        uuid = managerID.value;
-        assertEquals(1, market.getHistoryPurchase(uuid, existing_storeID).value.size());
-        int amountItem1 = market.getAmountOfProductInStore(existing_storeID,item1);
-        int amountItem2 = market.getAmountOfProductInStore(existing_storeID,item2);
-        assertEquals(0,amountItem1);
-        assertEquals(1,amountItem2);
-
-        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
-        List<History> recipes = res.value;
-        assertTrue(recipes.stream().anyMatch(h -> (h.getTID())==1 & h.getFinalPrice() == 30));
-    }
 }

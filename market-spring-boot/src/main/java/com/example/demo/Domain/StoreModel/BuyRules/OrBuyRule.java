@@ -46,6 +46,6 @@ public class OrBuyRule extends CompositionBuyRule{
             if(buyRuleSL.errorOccurred()) return buyRuleSL;
             rulesSL.add(buyRuleSL.value);
         }
-        return new DResponseObj<>(new OrBuyRuleSL(rulesSL));
+        return new DResponseObj<>(new OrBuyRuleSL(rulesSL,id));
     }
 }

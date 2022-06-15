@@ -10,6 +10,9 @@ import com.example.demo.Service.ServiceObj.Predicate.ShoppingBagPredicateSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class ConditionStoreDiscountRuleSL extends SimpleStoreDiscountRuleSL {
+
+    public String kind = "Condition Store Discount Rule";
+
     public ShoppingBagPredicateSL pred;
 
     public ConditionStoreDiscountRuleSL(ShoppingBagPredicateSL pred, double percentDiscount) {
@@ -17,6 +20,17 @@ public class ConditionStoreDiscountRuleSL extends SimpleStoreDiscountRuleSL {
         this.pred = pred;
     }
 
+    //for convert
+    public ConditionStoreDiscountRuleSL(ShoppingBagPredicateSL pred, double percentDiscount,int id) {
+        super(percentDiscount,id);
+        this.pred = pred;
+    }
+
+    //use when this rule is inside composite rule
+    public ConditionStoreDiscountRuleSL(ShoppingBagPredicateSL pred) {
+        super(1.0);
+        this.pred = pred;
+    }
     @Override
     public SLResponseOBJ<String> getDiscountRule() {
         String stringRule = "";

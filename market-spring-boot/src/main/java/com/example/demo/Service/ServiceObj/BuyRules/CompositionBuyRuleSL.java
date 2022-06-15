@@ -10,8 +10,9 @@ public abstract class CompositionBuyRuleSL implements BuyRuleSL {
     public List<BuyRuleSL> rules;
     public int id;
 
-    public CompositionBuyRuleSL(List<BuyRuleSL> rules){
+    public CompositionBuyRuleSL(List<BuyRuleSL> rules,int id){
         this.rules = rules;
+        this.id = id;
     }
 
     @Override

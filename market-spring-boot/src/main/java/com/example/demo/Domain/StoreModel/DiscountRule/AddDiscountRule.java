@@ -49,7 +49,7 @@ public class AddDiscountRule extends CompositionDiscountRule{
             if(discountRuleSL.errorOccurred()) return discountRuleSL;
             rulesSL.add(discountRuleSL.value);
         }
-        return new DResponseObj<>(new AddDiscountRuleSL(rulesSL));
+        return new DResponseObj<>(new AddDiscountRuleSL(rulesSL,id));
     }
 
 
