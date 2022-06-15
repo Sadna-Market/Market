@@ -38,6 +38,36 @@ public class api implements Iapi {
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber, user.datofbirth);
 
     }
+    @Override
+    @PostMapping("removeStoreMenager/{uuid}/{storeid}/{menagerEmail}")
+    public SLResponseOBJ<Boolean> removeStoreMenager(@PathVariable("uuid")String userId,@PathVariable("storeid") int storeId,@PathVariable("menagerEmail") String menagerEmail) {
+        return iMarket.removeStoreMenager(userId, storeId, menagerEmail);
+    }
+
+    @Override
+    @PostMapping("getRate/{uuid}/{productTypeID}")
+    public SLResponseOBJ<Integer> getRate(@PathVariable("uuid")String uuid,@PathVariable("productTypeID") int productTypeID) {
+        System.out.println(uuid);
+        System.out.println(productTypeID);
+        return iMarket.getRate(uuid, productTypeID);
+    }
+
+    @Override
+    @PostMapping("setRate/{uuid}/{productTypeID}/{rate}")
+    public SLResponseOBJ<Boolean> setRate(@PathVariable("uuid")String uuid,@PathVariable("productTypeID") int productTypeID,@PathVariable("rate") int rate) {
+        System.out.println(uuid);
+        System.out.println(productTypeID);
+        System.out.println(rate);
+        return iMarket.setRate(uuid, productTypeID, rate);
+    }
+
+    @Override
+    @PostMapping("getProductTypeInfo/{productTypeID}")
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(@PathVariable("productTypeID")Integer productTypeId) {
+        System.out.println(productTypeId);
+        return iMarket.getProductTypeInfo(productTypeId);
+
+    }
 
     @Override
     @PostMapping("guestVisit")
@@ -522,6 +552,7 @@ public class api implements Iapi {
     public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
 
         apiDiscountPparser p = new apiDiscountPparser();
+
         return iMarket.addNewDiscountRule(uuid, storeId, p.DiscountParse(map));
     }
 

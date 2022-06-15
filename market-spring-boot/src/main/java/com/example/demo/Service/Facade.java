@@ -1147,8 +1147,45 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.removeStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
+    @Override
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (menagerEmail == null || menagerEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.removeStoreMenager(UUID.fromString(userId), storeId, menagerEmail));
+    }
+
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID)
+    {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (productTypeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>( market.getRate(UUID.fromString(uuid),productTypeID));
+    }
 
 
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId)
+    {
+        if (productTypeId < 0) {
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        }
+        return new SLResponseOBJ<>(market.getProductTypeInfo(productTypeId));
+    }
+
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate)
+    {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (productTypeID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        if (rate < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.setRate(UUID.fromString(uuid),productTypeID,rate));
+    }
     @Override
     public SLResponseOBJ<Boolean> addNewStoreManger(String userId, int storeId, String mangerEmil) {
 
