@@ -1322,10 +1322,12 @@ public class Market {
     {
 
         if(userManager.isOnline(uuid).value) {
-
+            if(!productTypes.containsKey(productTypeID)){
+                return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXIST);
+            }
 
             ProductType p = productTypes.get(productTypeID);
-        DResponseObj<Integer> rat = p.getRate();
+            DResponseObj<Integer> rat = p.getRate();
         return rat;
     }
         else return new DResponseObj<>(ErrorCode.NOTONLINE);

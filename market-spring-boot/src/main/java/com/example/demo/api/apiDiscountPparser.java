@@ -137,15 +137,19 @@ public class apiDiscountPparser {
         throw new IllegalArgumentException();
     }
 
-    public List<Integer> combineCondition(){
-        return null;
+    public List<Integer> combineAnd(Map<String,Object> map){
+        return (List<Integer>) map.get("combineAnd");
+    }
+
+    public List<Integer> combineOr(Map<String,Object> map){
+        return (List<Integer>) map.get("combineOr");
+    }
+
+    public List<Integer> combineXor(Map<String,Object> map){
+        return (List<Integer>) map.get("combineXor");
     }
 
     public DiscountRuleSL DiscountParse(Map<String,Object> map){
-        if(map.containsKey(""))
-        {
-
-        }
         if(map.containsKey("or"))
         {
             return DiscountOr((Map<String, Object>) map.get("or"));
@@ -157,6 +161,7 @@ public class apiDiscountPparser {
         if(map.containsKey("xor")){
             return DiscountXor((Map<String, Object>) map.get("xor"));
         }
+
         return simpleDiscountParse(map);
     }
 

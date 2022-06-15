@@ -140,6 +140,16 @@ public interface Iapi {
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId);
 
+    public SLResponseOBJ<Boolean> createBID(String uuid,  int storeID,int productID, int quantity, int totalPrice);
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID);
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
+    public SLResponseOBJ<Boolean> BuyBID(@PathVariable("userId")String userId,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("city") String city, @PathVariable("adress")String adress,@PathVariable("apartment") int apartment,@RequestBody Map<String,Object> map) ;
+    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+
+
 
     //2.6.5 && //2.4.13
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
