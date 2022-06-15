@@ -7,11 +7,18 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class SimpleStoreDiscountRuleSL extends LeafDiscountRuleSL {
 
+    public String kind = "Simple Store Discount Rule";
+
     public SimpleStoreDiscountRuleSL(double percentDiscount){
         super(percentDiscount);
     }
 
-     @Override
+    //for convert
+    public SimpleStoreDiscountRuleSL(double percentDiscount,int id){
+        super(percentDiscount,id);
+    }
+
+    @Override
     public SLResponseOBJ<String> getDiscountRule() {
         String stringRule = "";
         if(id != 0)

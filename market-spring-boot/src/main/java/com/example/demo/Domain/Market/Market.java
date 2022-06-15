@@ -1236,11 +1236,11 @@ public class Market {
         return new DResponseObj<>(true);
     }
 
-    public DResponseObj<HashMap<String, Boolean>> getApprovesList(UUID owner, String userEmail, int storeID, int productID) {
+    public DResponseObj<String> getBIDStatus(UUID owner, String userEmail, int storeID, int productID) {
         if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> s = checkValidRules(owner,storeID, permissionType.permissionEnum.ManageBID);
         if(s.errorOccurred()) return new DResponseObj<>(null,s.getErrorMsg());
-        DResponseObj<HashMap<String,Boolean>> approves = s.value.getApprovesList(userEmail,productID);
+        DResponseObj<String> approves = s.value.getBIDStatus(userEmail,productID);
         if (approves.errorOccurred()) return approves;
         logger.info(String.format("got approves list - BID in storeID [%d] , productID [%d]",storeID, productID));
         return new DResponseObj<>(approves.value);

@@ -12,10 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AndDiscountRuleSL extends CompositionDiscountRuleSL {
+
+    public String kind = "And Discount Rule";
     public int category;
 
     public AndDiscountRuleSL(List<DiscountRuleSL> rules, int category, double dis){
         super(rules,dis);
+        this.category =category;
+    }
+
+    //for convert
+    public AndDiscountRuleSL(List<DiscountRuleSL> rules, int category, double dis,int id){
+        super(rules,dis,id);
         this.category =category;
     }
 

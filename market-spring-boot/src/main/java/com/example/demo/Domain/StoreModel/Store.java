@@ -500,10 +500,10 @@ public class Store {
         return new DResponseObj<>(true);
     }
 
-    public DResponseObj<HashMap<String, Boolean>> getApprovesList(String userEmail, int productID) {
+    public DResponseObj<String> getBIDStatus(String userEmail, int productID) {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(null,ErrorCode.BIDNOTEXISTS);
-        return new DResponseObj<>(b.getApproves());
+        return new DResponseObj<>(b.getStatusString());
     }
 
     public DResponseObj<BID> canBuyBID(String userEmail, int productID) {

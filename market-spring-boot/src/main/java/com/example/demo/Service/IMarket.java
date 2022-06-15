@@ -165,7 +165,7 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
     public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
     public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard);
-    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
     
     public SLResponseOBJ<List<String>> getAllMembers(String userId);
 

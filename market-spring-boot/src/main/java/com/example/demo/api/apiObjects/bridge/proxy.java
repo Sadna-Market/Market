@@ -1,7 +1,5 @@
 package com.example.demo.api.apiObjects.bridge;
 
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
-import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.*;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
@@ -737,6 +735,7 @@ public class proxy implements IMarket {
         }
         return REAL.getApprovesList(uuid, userEmail, storeID, productID);
     }
+
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId) {
 

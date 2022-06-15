@@ -10,9 +10,17 @@ import java.util.List;
 
 public class OrBuyRuleSL extends CompositionBuyRuleSL {
 
+    public String kind = "Or Buy Rule";
+
     public OrBuyRuleSL(List<BuyRuleSL> rules) {
-        super(rules);
+        super(rules,-1);
     }
+
+    //for convert
+    public OrBuyRuleSL(List<BuyRuleSL> rules,int id) {
+        super(rules,id);
+    }
+
 
     @Override
     public SLResponseOBJ<String> getBuyRule() {

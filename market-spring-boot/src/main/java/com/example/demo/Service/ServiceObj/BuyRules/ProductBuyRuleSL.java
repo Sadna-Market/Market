@@ -11,8 +11,15 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class ProductBuyRuleSL extends LeafBuyRuleSL {
 
+    public String kind = "Product Buy Rule";
+
     public ProductBuyRuleSL(ProductPredicateSL pred) {
-        super(pred);
+        super(pred,-1);
+    }
+
+    //for convert
+    public ProductBuyRuleSL(ProductPredicateSL pred,int id) {
+        super(pred,id);
     }
 
     @Override

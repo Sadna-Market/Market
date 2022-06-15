@@ -33,7 +33,7 @@ public class ShoppingBagBuyRule extends LeafBuyRule {
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
-        return new DResponseObj<>(new ShoppingBagBuyRuleSL(new ShoppingBagPredicateSL((ShoppingBagPred) pred)));
+        return new DResponseObj<>(new ShoppingBagBuyRuleSL(new ShoppingBagPredicateSL((ShoppingBagPred) pred),id));
     }
 
 }

@@ -91,11 +91,11 @@ public class BID {
         return status;
     }
 
-    public HashMap<String, Boolean> getApproves() {
-        HashMap<String,Boolean> approvesList = new HashMap<>();
-        approves.forEach((K,V) -> approvesList.put(K,V));
-        return approvesList;
+    public String getStatusString() {
+        return status.toString();
     }
+
+
 }
 
 
