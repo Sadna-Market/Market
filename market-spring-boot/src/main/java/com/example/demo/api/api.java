@@ -536,14 +536,25 @@ public class api implements Iapi {
     }
 
     @Override
-    @PostMapping("getApprovesList/{uuid}/{userEmail}/{storeID}/{productID}")
-    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+    @PostMapping("getBIDStatus/{uuid}/{userEmail}/{storeID}/{productID}")
+    public SLResponseOBJ<String> getBIDStatus(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
         System.out.println(uuid);
         System.out.println(userEmail);
         System.out.println(storeID);
         System.out.println(productID);
-        return iMarket.getApprovesList(uuid, userEmail, storeID, productID);
-    }
+        return iMarket.getBIDStatus(uuid, userEmail, storeID, productID);
+        }
+
+
+//    @Override
+//    @PostMapping("getApprovesList/{uuid}/{userEmail}/{storeID}/{productID}")
+//    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+//        System.out.println(uuid);
+//        System.out.println(userEmail);
+//        System.out.println(storeID);
+//        System.out.println(productID);
+//        return iMarket.getApprovesList(uuid, userEmail, storeID, productID);
+//    }
 
 
 

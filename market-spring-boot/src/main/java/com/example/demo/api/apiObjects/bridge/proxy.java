@@ -728,13 +728,20 @@ public class proxy implements IMarket {
         return REAL.BuyBID(userId, storeID, productID, city, adress, apartment, creditCard);
     }
 
-    @Override
-    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
-        if(REAL==null){
+//    @Override
+//    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
+//        if(REAL==null){
+//            return new SLResponseOBJ<>(null, -1);
+//        }
+//        return REAL.getApprovesList(uuid, userEmail, storeID, productID);
+//    }
+@Override
+public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID){
+    if(REAL==null){
             return new SLResponseOBJ<>(null, -1);
         }
-        return REAL.getApprovesList(uuid, userEmail, storeID, productID);
-    }
+        return REAL.getBIDStatus(uuid, userEmail, storeID, productID);
+}
 
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId) {
