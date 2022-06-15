@@ -9,7 +9,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class apiDiscountPparserTest {
+class apiBuyParserTest {
+
     @BeforeEach
     void setUp() {
     }
@@ -17,17 +18,16 @@ class apiDiscountPparserTest {
     @Test
     void testParser() {
         try {
-            apiDiscountPparser apiDiscountPparser = new apiDiscountPparser();
-            File file = new File("testDiscount.json");
+            apiBuyPparser apiBuyPparser = new apiBuyPparser();
+            File file = new File("test1.json");
             ObjectMapper objectMapper = new ObjectMapper();
             String absolutePath = file.getAbsolutePath();
             jsonReaderTest jsonReader = objectMapper.readValue(new File(absolutePath), jsonReaderTest.class);
             for(Map<String,Object> d : jsonReader.js){
                 System.out.println(d);
-                apiDiscountPparser.DiscountParse(d);}
+            apiBuyPparser.BuyRuleParse(d);}
         } catch (Exception e) {
             fail("Should not have thrown any exception"+e.getMessage());
         }
     }
-
 }

@@ -17,6 +17,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface Iapi {
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
+
+
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1
     public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;

@@ -281,6 +281,32 @@ public class UserManager {
     }
 
 
+
+    public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String MenagerEmail) {
+        logger.debug("UserManager removeStoreManager");
+        if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false,ErrorCode.NOTLOGGED);
+        User loggedUser = LoginUsers.get(userId);
+        if (!isOwner(userId, store).value) return new DResponseObj<>(false,ErrorCode.NOTOWNER);
+        User MenagerToRemove = members.get(MenagerEmail);
+        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(MenagerToRemove,store,loggedUser);
+        if(!removePermission.errorOccurred()){
+            //change all permission grantor to the founder (because we delete the grantor user)
+            String founder = store.getFounder().value;
+            User founderUser = getMember(founder).value;
+            for (Permission permission : founderUser.getGrantorPermission().value) {
+                if(permission.getStore().value.getStoreId().value.equals(store.getStoreId().value)) {
+                    permission.setGrantor(founderUser);
+                    founderUser.addGrantorPermission(permission);
+                    founderUser.removeGrantorPermission(permission);
+                }
+            }
+        }
+        return removePermission;
+    }
+
+
+
+
     public DResponseObj<Boolean> isCartExist(UUID uuid) {
         if (GuestVisitors.containsKey(uuid)) {
             return new DResponseObj<>(true);

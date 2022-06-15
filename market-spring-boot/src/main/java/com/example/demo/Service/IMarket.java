@@ -119,9 +119,13 @@ public interface IMarket {
 
     //2.4.5
     public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
 
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil);
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String

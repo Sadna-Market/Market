@@ -15,6 +15,7 @@ import com.example.demo.Domain.UserModel.Validator;
 import com.example.demo.ExternalService.ExternalService;
 import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
+import com.example.demo.Service.ServiceObj.ServiceProductType;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,14 @@ public class Market {
 
         List<Integer> pIDs = getProductTYpeIDs(getProductTypes());
         return searchProductByName(pIDs, name);
+    }
+
+    public DResponseObj<ServiceProductType> getProductTypeInfo(Integer productTypeId)
+    {
+        if(productTypes.containsKey(productTypeId)){
+            return new DResponseObj<>(new ServiceProductType(productTypes.get(productTypeId)));
+        }
+        return new DResponseObj<>(ErrorCode.PRODUCTNOTEXIST);
     }
 
     //2.2.2
@@ -697,7 +706,13 @@ public class Market {
         Store store = result.getValue();
         return userManager.removeStoreOwner(userId, store, ownerEmail);
     }
-
+    public DResponseObj<Boolean> removeStoreMenager(UUID userId, int storeId, String ownerEmail) {
+        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return userManager.removeStoreManager(userId, store, ownerEmail);
+    }
     //2.4.6
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
@@ -1110,6 +1125,34 @@ public class Market {
     public void setForIntegrationTestingWithUserManager() {
         userManager = new UserManager();
         initMarketTest();
+
+    }
+
+    public DResponseObj<Integer> getRate(UUID uuid,int productTypeID)
+    {
+
+        if(userManager.isOnline(uuid).value) {
+
+
+            ProductType p = productTypes.get(productTypeID);
+        DResponseObj<Integer> rat = p.getRate();
+        return rat;
+    }
+        else return new DResponseObj<>(ErrorCode.NOTONLINE);
+    }
+
+    public DResponseObj<Boolean> setRate(UUID uuid,int productTypeID,int rate)
+    {
+        if(userManager.isOnline(uuid).value) {
+            if(!productTypes.containsKey(productTypeID)){
+            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXIST);
+        }
+
+            ProductType p = productTypes.get(productTypeID);
+            DResponseObj<Boolean> rat = p.setRate(rate);
+            return rat;
+        }
+        else return new DResponseObj<>(ErrorCode.NOTONLINE);
 
     }
 

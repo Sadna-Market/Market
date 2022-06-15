@@ -36,9 +36,7 @@ public class config {
             jsonInit = objectMapper.readValue(new File(absolutePath), JsonInit.class);
             if (jsonInit.initState) {
                 try {
-
                     file = new File(jsonInit.statePath);
-
                     absolutePath = file.getAbsolutePath();
                     jsonReader = objectMapper.readValue(new File(absolutePath), JsonReader.class);
                 } catch (Exception e) {

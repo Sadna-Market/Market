@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServiceShoppingBag {
-    private Store store;
-    private Map<Integer, Integer> productQuantity=new HashMap<>();
+    public ServiceStore store;
+    public Map<Integer, Integer> productQuantity=new HashMap<>();
 
     public ServiceShoppingBag(ShoppingBag shoppingBag){
         productQuantity.putAll(shoppingBag.getProductQuantity().value);
-        store=shoppingBag.getStore().value;
+        store= new ServiceStore(shoppingBag.getStore().value);
     }
     public Map<Integer,Integer> getProductQuantity(){
         return productQuantity;

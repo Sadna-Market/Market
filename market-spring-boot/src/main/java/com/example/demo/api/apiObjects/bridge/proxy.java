@@ -483,6 +483,17 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) {
+        if(REAL==null){
+            System.out.println(userId);
+            System.out.println(storeId);
+            System.out.println(menagerEmail);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.removeStoreOwner(userId,storeId,menagerEmail);
+    }
+
+    @Override
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil) {
          if(REAL==null){
              System.out.println(UserId);
@@ -492,6 +503,36 @@ public class proxy implements IMarket {
          }
          return REAL.addNewStoreManger(UserId,StoreId,mangerEmil);
     }
+
+    @Override
+    public SLResponseOBJ<Integer> getRate(String uuid, int productTypeID) {
+        if(REAL==null){
+            System.out.println(uuid);
+            System.out.println(productTypeID);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getRate(uuid, productTypeID);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> setRate(String uuid, int productTypeID, int rate) {
+        if(REAL==null){
+            System.out.println(uuid);
+            System.out.println(productTypeID);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.setRate(uuid, productTypeID,rate);
+    }
+
+    @Override
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId) {
+        if(REAL==null){
+
+            System.out.println(productTypeId);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getProductTypeInfo(productTypeId);
+    }
+
 
     @Override
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String mangerEmil, String per, boolean onof) {
