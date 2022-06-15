@@ -552,6 +552,7 @@ public class api implements Iapi {
     public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
 
         apiDiscountPparser p = new apiDiscountPparser();
+
         return iMarket.addNewDiscountRule(uuid, storeId, p.DiscountParse(map));
     }
 

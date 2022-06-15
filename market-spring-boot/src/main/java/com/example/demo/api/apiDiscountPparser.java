@@ -137,7 +137,15 @@ public class apiDiscountPparser {
         throw new IllegalArgumentException();
     }
 
+    public List<Integer> combineCondition(){
+        return null;
+    }
+
     public DiscountRuleSL DiscountParse(Map<String,Object> map){
+        if(map.containsKey(""))
+        {
+
+        }
         if(map.containsKey("or"))
         {
             return DiscountOr((Map<String, Object>) map.get("or"));
