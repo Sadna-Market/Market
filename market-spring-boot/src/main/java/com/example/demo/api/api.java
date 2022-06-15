@@ -1,5 +1,6 @@
 package com.example.demo.api;
 
+import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Service.IMarket;
 import com.example.demo.Service.ServiceObj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api")
@@ -31,7 +33,7 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("initMarket")
-    public SLResponseOBJ<String> initMarket(@RequestBody apiUser user) {
+    public SLResponseOBJ<Boolean> initMarket(@RequestBody apiUser user) {
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber, user.datofbirth);
 
     }
@@ -57,7 +59,8 @@ public class api implements Iapi {
 
     }
 
-    @Override
+
+        @Override
     @PostMapping("login/{uuid}")
     public SLResponseOBJ<String> login(@PathVariable("uuid") String uuid, @RequestBody apiUser user) { //ok
 
@@ -89,7 +92,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("searchProductByName/List/{productName}")
+    @PostMapping("searchProductByName/List/{productName}")
     public SLResponseOBJ<List<Integer>> searchProductByName(@RequestBody Map<String, Object> o, @PathVariable("productName") String productName) { //ok
         System.out.println(o);
         System.out.println(productName);
@@ -97,7 +100,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("filterByName/{productName}")
+    @PostMapping("filterByName/{productName}")
     public SLResponseOBJ<List<Integer>> filterByName(@RequestBody Map<String, Object> o, @PathVariable("productName") String productName) { //ok
         System.out.println(o);
         System.out.println(productName);
@@ -112,7 +115,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("searchProductByDesc/list/{desc}")
+    @PostMapping("searchProductByDesc/list/{desc}")
     public SLResponseOBJ<List<Integer>> searchProductByDesc(@RequestBody Map<String, Object> o, @PathVariable("desc") String desc) { //ok
         System.out.println(o);
         System.out.println(desc);
@@ -120,7 +123,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("filterByDesc/{desc}")
+    @PostMapping("filterByDesc/{desc}")
     public SLResponseOBJ<List<Integer>> filterByDesc(@RequestBody Map<String, Object> o, @PathVariable("desc") String desc) {//ok
         System.out.println(o);
         System.out.println(desc);
@@ -135,7 +138,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("searchProductByRate/list/{rate}")
+    @PostMapping("searchProductByRate/list/{rate}")
     public SLResponseOBJ<List<Integer>> searchProductByRate(@RequestBody Map<String, Object> o, @PathVariable("rate") int rate) {//ok
         System.out.println(o);
         System.out.println(rate);
@@ -143,7 +146,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("filterByRate/{minRate}")
+    @PostMapping("filterByRate/{minRate}")
     public SLResponseOBJ<List<Integer>> filterByRate(@RequestBody Map<String, Object> o, @PathVariable("minRate") int minRate) {//ok
         System.out.println(o);
         System.out.println(minRate);
@@ -158,7 +161,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("searchProductByCategory/list/{category}")
+    @PostMapping("searchProductByCategory/list/{category}")
     public SLResponseOBJ<List<Integer>> searchProductByCategory(@RequestBody Map<String, Object> o, @PathVariable("category") int category) {//ok
         System.out.println(o);
         System.out.println(category);
@@ -166,7 +169,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("filterByCategory/{category}")
+    @PostMapping("filterByCategory/{category}")
     public SLResponseOBJ<List<Integer>> filterByCategory(@RequestBody Map<String, Object> o, @PathVariable("category") int category) {//ok
         System.out.println(o);
         System.out.println(category);
@@ -181,7 +184,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("searchProductByStoreRate/list/{rate}")
+    @PostMapping("searchProductByStoreRate/list/{rate}")
     public SLResponseOBJ<List<Integer>> searchProductByStoreRate(@RequestBody Map<String, Object> o, @PathVariable("rate") int rate) {//ok
         System.out.println(o);
         System.out.println(rate);
@@ -189,7 +192,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("filterByStoreRate/{minRate}")
+    @PostMapping("filterByStoreRate/{minRate}")
     public SLResponseOBJ<List<Integer>> filterByStoreRate(@RequestBody Map<String, Object> o, @PathVariable("minRate") int minRate) {//ok
         System.out.println(o);
         System.out.println(minRate);
@@ -206,7 +209,7 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("searchProductByRangePrices/list/{productId}/{min}/{max}")
+    @PostMapping("searchProductByRangePrices/list/{productId}/{min}/{max}")
     public SLResponseOBJ<List<Integer>> searchProductByRangePrices(@RequestBody Map<String, Object> o, @PathVariable("productId") int productId, @PathVariable("min") int min, @PathVariable("max") int max) {
         System.out.println(o);
         System.out.println(max);
@@ -216,12 +219,19 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("filterByRangePrices/{min}/{max}")
+    @PostMapping("filterByRangePrices/{min}/{max}")
     public SLResponseOBJ<List<Integer>> filterByRangePrices(@RequestBody Map<String, Object> o, @PathVariable("min") int min, @PathVariable("max") int max) {
         System.out.println(o);
         System.out.println(min);
         System.out.println(max);
         return iMarket.filterByRangePrices((List<Integer>) (o.get("lst")), min, max);
+    }
+
+    @PostMapping("filterByRangePrices2/{min}/{max}")
+    public SLResponseOBJ<List<Integer>> filterByRangePrices2(@RequestBody Map<String, Object> o,@PathVariable("min") int min, @PathVariable("max") int max) {
+        System.out.println(min);
+        System.out.println(max);
+        return new SLResponseOBJ<>(-1);
     }
 
     @Override
@@ -322,9 +332,9 @@ public class api implements Iapi {
         System.out.println(storeId);
         System.out.println(productId);
         System.out.println(Double.valueOf((String) obj.get("price")));
-        System.out.println((int) obj.get("quantity"));
+        System.out.println(Integer.valueOf((String)  obj.get("quantity")));
 
-        return iMarket.addNewProductToStore(uuid, storeId, productId, Double.valueOf((String) obj.get("price")), (int) obj.get("quantity"));
+        return iMarket.addNewProductToStore(uuid, storeId, productId, Double.valueOf((String) obj.get("price")), Integer.valueOf((String)  obj.get("quantity")));
     }
 
     @Override
@@ -352,10 +362,10 @@ public class api implements Iapi {
         System.out.println(uuid);
         System.out.println(storeId);
         System.out.println(productId);
-        System.out.println((int) obj.get("quantity"));
+        System.out.println(Integer.valueOf((String)  obj.get("quantity")));
         System.out.println(obj);
         System.out.println(obj);
-        return iMarket.setProductQuantityInStore(uuid, storeId, productId, (int) obj.get("quantity"));
+        return iMarket.setProductQuantityInStore(uuid, storeId, productId,Integer.valueOf((String)  obj.get("quantity")));
     }
 
     @Override
@@ -376,6 +386,13 @@ public class api implements Iapi {
         System.out.println(uuid);
         System.out.println(uuid);
         return iMarket.addNewStoreManger(uuid, StoreId, (String) obj.get("mangerEmail"));
+    }
+
+    @Override
+    @GetMapping("removeMember/{uuid}/{email}")
+    public SLResponseOBJ<Boolean> removeMember(@PathVariable("uuid") String userId,@PathVariable("email") String email) {
+        System.out.println(userId+"       ddddddddddddddddddddddddddd");
+        return iMarket.removeMember(userId, email);
     }
 
     @Override
@@ -406,6 +423,12 @@ public class api implements Iapi {
     }
 
     @Override
+    @GetMapping("getAllMembers/{uuid}")
+    public SLResponseOBJ<List<String>> getAllMembers(@PathVariable("uuid") String userId) {
+        return iMarket.getAllMembers(userId);
+    }
+
+    @Override
     @GetMapping("getStoreOrderHistory/{uuid}/{storeId}")
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(@PathVariable("uuid") String uuid, @PathVariable("storeId") int StoreId) {
         System.out.println(uuid);
@@ -414,8 +437,9 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("getUserInfo/{uuid}")
+    @PostMapping("getUserInfo/{uuid}")
     public SLResponseOBJ<List<List<ServiceHistory>>> getUserInfo(@PathVariable("uuid") String userID, @RequestBody apiUser user) {
+
         System.out.println(userID);
         System.out.println(user.email);
         return iMarket.getUserInfo(userID, user.email);
@@ -470,6 +494,12 @@ public class api implements Iapi {
     }
 
     @Override
+    @GetMapping("removeStoreOwner/{UserId}/{StoreId}/{OwnerEmail}")
+    public SLResponseOBJ<Boolean> removeStoreOwner(@PathVariable("UserId") String UserId,@PathVariable("StoreId") int StoreId,@PathVariable("OwnerEmail") String OwnerEmail) {
+        return iMarket.removeStoreOwner(UserId,StoreId,OwnerEmail);
+    }
+
+    @Override
     @GetMapping("addNewBuyRule/{uuid}/{storeId}")
     public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
         apiBuyPparser p = new apiBuyPparser();
@@ -499,13 +529,13 @@ public class api implements Iapi {
     }
 
     @Override
-    @GetMapping("getBuyPolicy/{uuid}/{storeId}/")
+    @GetMapping("getBuyPolicy/{uuid}/{storeId}")
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) {
         return iMarket.getBuyPolicy(uuid, storeId);
     }
 
     @Override
-    @GetMapping("getDiscountPolicy/{uuid}/{storeId}/")
+    @GetMapping("getDiscountPolicy/{uuid}/{storeId}")
     public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) {
         return iMarket.getDiscountPolicy(uuid, storeId);
     }

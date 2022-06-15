@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const RemoveManager = (props) => {
   console.log("RemoveManager" )
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
 
   let UUID = props.uuid;
   let storeID = props.storeID;

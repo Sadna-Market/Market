@@ -13,6 +13,7 @@ public class ErrorCode {
     public static int NEGATIVENUMBER = 15;
     public static int NOTUSER = 16;
     public static int GRANTEANDGRANTORSAMEUSER = 17;
+
     public static int ALLREADYOWNER = 18;
     public static int NOTOWNER = 19;
     public static int ALLREADYMANAGER = 20;
@@ -72,4 +73,6 @@ public class ErrorCode {
     public static int NOT_VALID_PHONE = 102;
     public static int INVALID_PERMISSION_TYPE = 103;
     public static final int FAIL_DELETE_STORE = 104;
+    public static int NOTADMIN = 300;
+
 }

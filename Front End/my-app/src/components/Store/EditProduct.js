@@ -49,7 +49,11 @@ const EditProduct = (props) => {
       console.log(setProductPriceInStoreResponse)
 
     }
+    console.log('before quantity'+quantity)
+
     if (quantity!==""){
+      console.log('quantity'+quantity)
+
       const setProductQuantityInStoreResponse = await apiClientHttp.setProductQuantityInStore(UUID, storeID, productID,quantity);
       if (setProductQuantityInStoreResponse.errorMsg !== -1) {
         pass=false;
