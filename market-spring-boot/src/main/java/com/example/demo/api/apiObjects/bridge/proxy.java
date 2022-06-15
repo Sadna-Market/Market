@@ -666,7 +666,7 @@ public class proxy implements IMarket {
     @Override
     public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
         return null;
-
+    }
     public SLResponseOBJ<List<String>> getAllMembers(String userId) {
 
         if(REAL==null){

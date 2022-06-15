@@ -1659,7 +1659,7 @@ public class Facade implements IMarket {
      * @return true if success else error msg
      */
     @Override
-    public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard){
+    public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard) {
         if (userId == null ||
                 userId.equals("") ||
                 creditCard.creditCard == null ||
@@ -1672,9 +1672,9 @@ public class Facade implements IMarket {
         if (storeID < 0 || productID < 0)
             return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
         DResponseObj<Boolean> res =
-                market.buyBID(UUID.fromString(userId),storeID,productID, city, adress, apartment, creditCard.creditCard, creditCard.creditDate, creditCard.pin);
-        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>(res.value);
-
+                market.buyBID(UUID.fromString(userId), storeID, productID, city, adress, apartment, creditCard.creditCard, creditCard.creditDate, creditCard.pin);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null, res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
     @Override
     public SLResponseOBJ<List<String>> getAllMembers(String userId) {
         DResponseObj<List<String>> res = userManager.getAllMembers(UUID.fromString(userId));
