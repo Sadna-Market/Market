@@ -166,6 +166,7 @@ public class SystemManagerTests extends MarketTests{
     @DisplayName("req: ##2.6.6 - success test")
     void getLoggedOutMembers_Success2() {
         ATResponseObj<String> res = market.login(uuid,sysManager);
+        System.out.println("aaadddddddddddddddda");
         assertFalse(res.errorOccurred());
         uuid = res.value;
         ATResponseObj<List<User>> lst = market.getLoggedOutMembers(uuid);

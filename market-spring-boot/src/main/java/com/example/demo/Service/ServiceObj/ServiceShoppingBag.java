@@ -15,7 +15,9 @@ public class ServiceShoppingBag {
         productQuantity.putAll(shoppingBag.getProductQuantity().value);
         store= new ServiceStore(shoppingBag.getStore().value);
     }
-    public Map<Integer,Integer> getProductQuantity(){
+    public ServiceShoppingBag() {
+    }
+        public Map<Integer,Integer> getProductQuantity(){
         return productQuantity;
     }
 }
