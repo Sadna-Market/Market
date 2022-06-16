@@ -35,6 +35,7 @@ const ConditionCategoryDiscountRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setDiscount("");
     setCategoryID("");
     setMinAge("");
@@ -46,8 +47,7 @@ const ConditionCategoryDiscountRule = (props) => {
   async function addHandler(){
     let rule = new RulesClass.conditionOnCategoryDiscount(UUID, storeID, discount, categoryID, minAge, minHour, maxHour)
     if (props.compose === undefined) { //false case - no comopse - realy simple
-
-      const sendRulesResponse = await apiClientHttp.sendDRules(rule);
+      const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID, {'conditionOnCategoryDiscount':rule});
 
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
@@ -59,12 +59,13 @@ const ConditionCategoryDiscountRule = (props) => {
       }
     } else {
       cleanHandler();
-      props.onRule(rule);
+      props.onRule({'conditionOnCategoryDiscount':rule});
     }
   };
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Category Discount For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

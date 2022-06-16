@@ -21,14 +21,18 @@ const RemoveManager = (props) => {
   };
 
   //todo: remove to be manager
+  //        removeStoreMenager:async(uuid,storeid,manageremail)=>{
   async function ManHandler(){
-    // const addNewStoreMangerResponse = await apiClientHttp.removeStoreOwner(UUID, storeID, email);
-    // if (addNewStoreMangerResponse.errorMsg !== -1) {
-    //   SetError(errorCode.get(addNewStoreMangerResponse.errorMsg))
-    // } else {
+    console.log("ManHandler UUID",UUID,'storeID',storeID,'email',email)
+    const addNewStoreMangerResponse = await apiClientHttp.removeStoreMenager(UUID, storeID, email);
+    console.log(addNewStoreMangerResponse)
+
+    if (addNewStoreMangerResponse.errorMsg !== -1) {
+      SetError(errorCode.get(addNewStoreMangerResponse.errorMsg))
+    } else {
       cleanHandler();
       props.onStore();
-    // }
+    }
   }
 
   //todo: remove to be owner

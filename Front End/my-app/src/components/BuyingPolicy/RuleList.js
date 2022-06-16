@@ -11,9 +11,7 @@ const RuleList = (props) => {
   let storeID = props.storeID;
 
   const [enteredrules, Setrules] = useState([]);
-
-  console.log("StoreList")
-
+  
   async function getAllRules() {
     let allRules = [];
 

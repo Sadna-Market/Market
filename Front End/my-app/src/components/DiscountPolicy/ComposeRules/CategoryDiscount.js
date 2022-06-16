@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 const CategoryDiscount = (props) => {
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  console.log("CategoryDiscount")
     let listOfRules= props.rules;
   let UUID = props.uuid;
   let storeID = props.storeID;
@@ -20,10 +25,40 @@ const CategoryDiscount = (props) => {
     setDiscount("");
     setCategoryID("");
   };
-
+  // "and": {
+  //   "categoryID": "1",
+  //       "discount": "1",
+  //       "list": [
   //todo: add new Category Discout rule with all the list
-  const addHandler = () => {
-    cleanHandler();
+  async function  addHandler(){
+    let map=[]
+    if (kind==='AND') {
+      map = {"and": {'categoryID': categoryID, 'discount': discount, 'list': props.rules}}
+    }
+    else if (kind==='OR'){
+      map = {"or": {'categoryID': categoryID, 'discount': discount, 'list': props.rules}}
+    }
+    else if (kind==='XOR'){
+      map = {"xor": {'categoryID': categoryID, 'discount': discount, 'list': props.rules}}
+    }
+
+      if (props.compose === undefined) { //false case - no comopse - realy simple
+
+        const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID,map);
+        let str = JSON.stringify(sendRulesResponse);
+        console.log("sendRulesResponse    "+str)
+
+        if (sendRulesResponse.errorMsg !== -1) {
+          SetError(errorCode.get(sendRulesResponse.errorMsg))
+        } else {
+          cleanHandler();
+          // props.onRule(sendRulesResponse.value);
+          props.onRule(-1);
+
+        }
+      }
+
+      cleanHandler();
     props.onRule(11);
   };
 

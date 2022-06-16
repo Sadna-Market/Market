@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 
 const BigOrFirst = (props) => {
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  console.log("BigOrFirst")
   let listOfRules = props.rules;
   let UUID = props.uuid;
   let storeID = props.storeID;
@@ -14,15 +20,31 @@ const BigOrFirst = (props) => {
 
   //todo: add new Category Discout rule with all the list
   const addHandler = () => {
+    // map = {"xor": {'decision': discount, 'list': props.rules}}
+    // const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID,map);
+    // let str = JSON.stringify(sendRulesResponse);
+    // console.log("sendRulesResponse    "+str)
+    //
+    // if (sendRulesResponse.errorMsg !== -1) {
+    //   SetError(errorCode.get(sendRulesResponse.errorMsg))
+    // } else {
+    //   cleanHandler();
+    //   // props.onRule(sendRulesResponse.value);
+    //   props.onRule(-1);
+    //
+    // }
     cleanHandler();
     props.onRule(11);
   };
 
   const changeValueHandler1 = (event) => {
+    console.log("  changeValueHandler1  setDiscount(false);")
     setDiscount(false);
   };
 
   const changeValueHandler2 = (event) => {
+    console.log("  changeValueHandler2  setDiscount(false);")
+
     setDiscount(false);
   };
 
