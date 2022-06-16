@@ -7,7 +7,7 @@ import CategoryDiscount from "./CategoryDiscout";
 import BigOrFirst from "./BigOrFirst";
 
 const AndCombineRule = (props) => {
-  console.log("AndCombineRule")
+  console.log("AddCombineRule")
 
   let UUID = props.uuid;
   let storeID = props.storeID;

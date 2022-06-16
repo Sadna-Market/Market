@@ -636,7 +636,6 @@ export const createApiClientHttp = () => {
         },
 
         addNewBuyRule:async(uuid,storeid,obj)=>{
-            console.log("cleint addNewBuyRule ",'uuid',uuid,'storeid',storeid,'obj',obj)
             let path = apiUrl.concat(`addNewBuyRule/${uuid}/${storeid}`);
 
 
@@ -655,8 +654,7 @@ export const createApiClientHttp = () => {
         addNewDiscountRule:async(uuid,storeid,obj)=>{
             let path = apiUrl.concat(`addNewDiscountRule/${uuid}/${storeid}`);
             console.log(obj)
-            let body={data:obj}
-            return await axios.get(path,body).then((res)=>{
+            return await axios.post(path,obj).then((res)=>{
                 return res.data;
             })
         },
@@ -703,15 +701,112 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
 
-        }
+        },
+        ///testssss
+        removeStoreMenager:async(uuid,storeid,manageremail)=>{
+            let path = apiUrl.concat(`removeStoreMenager/${uuid}/${storeid}/${manageremail}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
 
+        },
+
+        getRate:async(uuid,productTypeID)=>{
+            let path = apiUrl.concat(`getRate/${uuid}/${productTypeID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+
+        },
+
+        setRate:async(uuid,productTypeID,rate)=>{
+            let path = apiUrl.concat(`setRate/${uuid}/${productTypeID}/${rate}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        },
+        getProductTypeInfo:async(productTypeId)=>{
+            let path = apiUrl.concat(`getProductTypeInfo/${productTypeId}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        combineANDDiscountRules:async(uuid,storeid,obj)=>{
+            let path = apiUrl.concat(`combineANDDiscountRules/${uuid}/${storeid}`);
+            return await axios.post(path,obj).then((res)=>{
+                return res.data;
+            })
+        } ,
+        combineORDiscountRules:async(uuid,storeid,obj)=>{
+            let path = apiUrl.concat(`combineORDiscountRules/${uuid}/${storeid}`);
+            return await axios.post(path,obj).then((res)=>{
+                return res.data;
+            })
+        } ,
+        combineXorDiscountRules:async(uuid,storeid,desicion,obj)=>{
+            let path = apiUrl.concat(`combineXorDiscountRules/${uuid}/${storeid}/${desicion}`);
+            return await axios.post(path,obj).then((res)=>{
+                return res.data;
+            })
+        } ,
+        getBIDStatus:async(uuid,userEmail,storeID,productID)=>{
+            let path = apiUrl.concat(`getBIDStatus/${uuid}/${userEmail}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        BuyBID:async(userId,storeID,productID,city,adress,apartment,creditcard,creditDate,pin)=>{
+            let path = apiUrl.concat(`BuyBID/${userId}/${storeID}/${productID}/${city}/${adress}/${apartment}`);
+            return await axios.post(path,{"creditCard":creditcard,"creditDate":creditDate,"pin":pin}).then((res)=>{
+                return res.data;
+            })
+        } ,
+        responseCounterBID:async(uuid,storeID,productID,approve)=>{
+            let path = apiUrl.concat(`responseCounterBID/${uuid}/${storeID}/${productID}/${approve}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        counterBID:async(uuid,userEmail,storeID,productID,newTotalPrice)=>{
+            let path = apiUrl.concat(`counterBID/${uuid}/${userEmail}/${storeID}/${productID}/${newTotalPrice}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        rejectBID:async(uuid,userEmail,storeID,productID)=>{
+            let path = apiUrl.concat(`rejectBID/${uuid}/${userEmail}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        approveBID:async(uuid,userEmail,storeID,productID)=>{
+            let path = apiUrl.concat(`approveBID/${uuid}/${userEmail}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        removeBID:async(uuid,storeID,productID)=>{
+            let path = apiUrl.concat(`removeBID/${uuid}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        createBID:async(uuid,storeID,productID,quantity,totalPrice)=>{
+            let path = apiUrl.concat(`createBID/${uuid}/${storeID}/${productID}/${quantity}/${totalPrice}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
 
 
     }
 }
 /*
 CategoryRule {
-  uuid: 'UUID',
+  uuid: 'UUID',11
   storeId: 'storeID',
   categoryID: 'category',
   minAge: 'minAge',

@@ -4,6 +4,8 @@ import Offer from "./Offer";
 import Status from "./Status";
 
 const MyBIDs = (props) => {
+  console.log("MyBIDs")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   //todo: get all my products

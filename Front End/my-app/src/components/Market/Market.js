@@ -92,7 +92,7 @@ const Market = (props) => {
     };
 
     const productHandler = () => {
-        setCommand(<ProductButton/>);
+        setCommand(<ProductButton uuid={UUID}/>);
     };
 
     const helpHandler = () => {

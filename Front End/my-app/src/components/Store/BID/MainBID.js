@@ -1,17 +1,45 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import BIDItem from "./BIDItem";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
 const MainBID = (props) => {
+  console.log("MainBID")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  const [products, Setproducts] = useState([]);
+
   let UUID = props.uuid;
-  //todo: get all my products
-  let products = [
-    { id: 1, name: "Sony 5", price: Math.random() * 100 },
-    { id: 2, name: "TV", price: Math.random() * 100 },
-    { id: 3, name: "Car KIA RIO", price: Math.random() * 100 },
-    { id: 4, name: "AC/DC", price: Math.random() * 100, amount: 7 },
-    { id: 5, name: "MAMA Yokero", price: Math.random() * 100 },
-    { id: 6, name: "Iphone 13", price: Math.random() * 100 },
-  ];
+  async function getAllProducts() {
+    let allProducts = [];
+
+    const getAllProductsInStoreResponse = await apiClientHttp.getAllProductsInStore(props.storeID);
+    console.log("start func  getAllProducts")
+    console.log(getAllProductsInStoreResponse)
+
+    if (getAllProductsInStoreResponse.errorMsg !== -1) {
+      SetError(errorCode.get(getAllProductsInStoreResponse.errorMsg))
+    } else {
+      for (let i = 0; i < getAllProductsInStoreResponse.value.length; i++) {
+        allProducts.push({
+          id: getAllProductsInStoreResponse.value[i].itemID,
+          name: getAllProductsInStoreResponse.value[i].name,
+          price: getAllProductsInStoreResponse.value[i].price,
+          quantity: getAllProductsInStoreResponse.value[i].quantity
+
+        })
+      }
+      console.log(":allProducts. " +allProducts)
+      let str = JSON.stringify(getAllProductsInStoreResponse);
+      console.log(":str. " + str)
+      SetError("")
+      Setproducts(allProducts);
+    }
+  }
+
+  useEffect(() => {
+    getAllProducts();
+  }, [products.refresh]);
+
   let sum = 0;
   for (let i = 0; i < products.length; i++) {
     sum += products[i].price * products[i].amount;
