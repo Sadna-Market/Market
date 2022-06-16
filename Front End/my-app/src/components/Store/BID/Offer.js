@@ -5,6 +5,8 @@ import "./BIDItem.css";
 import Options from "./Options";
 
 const Offer = (props) => {
+  console.log("Offer")
+
   let UUID = props.uuid;
   let productID = props.id;
   let storeID = props.storeID;
