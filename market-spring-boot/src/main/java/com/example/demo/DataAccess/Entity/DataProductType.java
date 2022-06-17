@@ -102,5 +102,15 @@ public class DataProductType {
         this.stores = stores;
     }
 
+    public void update(DataProductType other){
+        this.productTypeId = other.getProductTypeId();
+        this.productName = other.getProductName();
+        this.category = other.getCategory();
+        this.counter_rates = other.getCounter_rates();
+        this.description = other.getDescription();
+        this.rate = other.getRate();
+        this.stores.clear();
+        this.stores.addAll(other.getStores());
+    }
 
 }

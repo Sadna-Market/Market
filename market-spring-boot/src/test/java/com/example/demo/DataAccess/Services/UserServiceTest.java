@@ -79,9 +79,8 @@ class UserServiceTest {
         u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
-        DataUser u2 = user.getDataObject();
-        u2.setPhoneNumber(newPhone);
-        assertTrue(userService.updateUser(u2));
+        u.setPhoneNumber(newPhone);
+        assertTrue(userService.updateUser(u));
 
         //check
         List<DataUser> afterUser = userService.getAllUsers();

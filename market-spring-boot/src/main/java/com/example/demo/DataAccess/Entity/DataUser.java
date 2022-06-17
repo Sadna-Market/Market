@@ -36,19 +36,19 @@ public class DataUser {
     )
     private Set<DataHistory> histories = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "grantee",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true
-    )
-    private Set<DataPermission> accessPermission = new HashSet<>();
+//    @OneToMany(fetch = FetchType.EAGER,
+//            mappedBy = "grantee",
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+//            orphanRemoval = true
+//    )
+//    private Set<DataPermission> accessPermission = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "grantor",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true
-    )
-    private Set<DataPermission> grantorPermission = new HashSet<>();
+//    @OneToMany(fetch = FetchType.EAGER,
+//            mappedBy = "grantor",
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+//            orphanRemoval = true
+//    )
+//    private Set<DataPermission> grantorPermission = new HashSet<>();
 
 
     public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
@@ -102,32 +102,33 @@ public class DataUser {
         this.histories = histories;
     }
 
-    public Set<DataPermission> getAccessPermission() {
-        return accessPermission;
-    }
-
-    public void setAccessPermission(Set<DataPermission> accessPermission) {
-        this.accessPermission = accessPermission;
-    }
-
-    public Set<DataPermission> getGrantorPermission() {
-        return grantorPermission;
-    }
-
-    public void setGrantorPermission(Set<DataPermission> grantorPermission) {
-        this.grantorPermission = grantorPermission;
-    }
+//    public Set<DataPermission> getAccessPermission() {
+//        return accessPermission;
+//    }
+//
+//    public void setAccessPermission(Set<DataPermission> accessPermission) {
+//        this.accessPermission = accessPermission;
+//    }
+//
+//    public Set<DataPermission> getGrantorPermission() {
+//        return grantorPermission;
+//    }
+//
+//    public void setGrantorPermission(Set<DataPermission> grantorPermission) {
+//        this.grantorPermission = grantorPermission;
+//    }
 
     public void update(DataUser user) { //maybe will need to change something here but this is the idea instead of making a lot of setter functions
         this.password = user.getPassword();
         this.phoneNumber = user.getPhoneNumber();
         this.dateOfBirth = user.getDateOfBirth();
-        this.accessPermission.clear();
-        this.accessPermission.addAll(user.getAccessPermission());
-        this.grantorPermission.clear();
-        this.grantorPermission.addAll(user.getGrantorPermission());
+//        this.accessPermission.clear();
+//        this.accessPermission.addAll(user.getAccessPermission());
+//        this.grantorPermission.clear();
+//        this.grantorPermission.addAll(user.getGrantorPermission());
         this.histories.clear();
         this.histories.addAll(user.getHistories());
+        this.dataShoppingCart.update(user.getDataShoppingCart());
     }
 
 }

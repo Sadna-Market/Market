@@ -38,6 +38,11 @@ public class ProductType {
         this.description = description;
         logger.debug("the productID: "+productID+" received successfully");
     }
+    public ProductType(String productName, String description,int category) {
+        this.category = category;
+        this.productName = productName;
+        this.description = description;
+    }
 
     public DResponseObj<Integer> getRate() {
         long stamp = rateLock.readLock();

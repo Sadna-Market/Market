@@ -32,7 +32,7 @@ class NotificationServiceTest {
         //check
         List<DataNotification> dataNotificationList = notificationService.getAllUserNotifications(sendTo);
         assertFalse(dataNotificationList.isEmpty());
-        assertEquals(message, dataNotificationList.get(0).getMessage());
+        assertEquals(notification.getText(), dataNotificationList.get(0).getMessage());
     }
 
     @Test

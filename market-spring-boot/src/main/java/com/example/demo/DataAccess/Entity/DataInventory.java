@@ -46,5 +46,11 @@ public class DataInventory {
     public DataInventory() {
     }
 
+    public void update(DataInventory other){
+        this.inventoryId = other.getInventoryId();
+        this.productStores.clear();
+        this.productStores.addAll(other.getProductStores());
+    }
+
 
 }

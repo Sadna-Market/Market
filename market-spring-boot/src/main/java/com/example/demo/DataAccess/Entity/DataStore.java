@@ -100,13 +100,13 @@ public class DataStore {
     )
     private DataBuyPolicy buyPolicy;
 
-    @OneToMany(
-            fetch = FetchType.EAGER,
-            mappedBy = "store", /* this is the name of the field in the "Many" side to be referenced to */
-            orphanRemoval = true,
-            cascade = {CascadeType.REMOVE, CascadeType.PERSIST}
-    )
-    private Set<DataPermission> permissions = new HashSet<>(); // all the permission that have in this store
+//    @OneToMany(
+//            fetch = FetchType.EAGER,
+//            mappedBy = "store", /* this is the name of the field in the "Many" side to be referenced to */
+//            orphanRemoval = true,
+//            cascade = {CascadeType.REMOVE, CascadeType.PERSIST}
+//    )
+//    private Set<DataPermission> permissions = new HashSet<>(); // all the permission that have in this store
 
 //    @ManyToMany(cascade = {CascadeType.ALL}) //TODO: change
 //    @JoinTable(name = "stores_product_types",
@@ -204,13 +204,13 @@ public class DataStore {
         this.history = history;
     }
 
-    public Set<DataPermission> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(Set<DataPermission> permissions) {
-        this.permissions = permissions;
-    }
+//    public Set<DataPermission> getPermissions() {
+//        return permissions;
+//    }
+//
+//    public void setPermissions(Set<DataPermission> permissions) {
+//        this.permissions = permissions;
+//    }
 
 //    public Set<DataProductType> getProductTypes() {
 //        return productTypes;
@@ -221,18 +221,18 @@ public class DataStore {
 //    }
     public void update(DataStore other){
         this.storeId = other.getStoreId();
-        //this.buyPolicy = other.getBuyPolicy();
-        //this.discountPolicy = other.getDiscountPolicy();
+        this.buyPolicy = other.getBuyPolicy();  //TODO: add the rules update
+        this.discountPolicy = other.getDiscountPolicy(); //TODO: add the rules update
         this.founder = other.getFounder();
-        //this.inventory = other.getInventory();
+        this.inventory = other.getInventory();
         this.isOpen = other.getOpen();
         this.name = other.getName();
         this.numOfRated = other.getNumOfRated();
         this.rate = other.getRate();
         this.history.clear();
         this.history.addAll(other.getHistory());
-        this.permissions.clear();
-        this.permissions.addAll(other.getPermissions());
+//        this.permissions.clear();
+//        this.permissions.addAll(other.getPermissions());
     }
 
 }

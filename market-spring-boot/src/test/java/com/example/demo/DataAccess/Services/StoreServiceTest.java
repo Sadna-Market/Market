@@ -64,12 +64,10 @@ class StoreServiceTest {
         DataStore dataStore = store.getDataObject();
         assertTrue(storeService.insertStore(dataStore));
         //action
-        DataStore s2 = store.getDataObject();
-        s2.setStoreId(dataStore.getStoreId());
-        s2.setRate(44);
-        s2.setOpen(false);
-        s2.setName("moshe");
-        assertTrue(storeService.updateStore(s2));
+        dataStore.setRate(44);
+        dataStore.setOpen(false);
+        dataStore.setName("moshe");
+        assertTrue(storeService.updateStore(dataStore));
 
         //check
         List<DataStore> afterStores = storeService.getAllStores();

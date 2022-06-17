@@ -27,7 +27,7 @@ public class Permission {
     private userTypes granteeType;
     private userTypes grantorType;
 
-    Permission(User grantee, Store store, User grantor) {
+    public Permission(User grantee, Store store, User grantor) {
         this.grantee = grantee;
         this.store = store;
         this.grantor = grantor;
@@ -105,13 +105,21 @@ public class Permission {
         pid.setGrantorId(this.grantor.getEmail().value);
         pid.setStoreId(this.store.getStoreId().value);
         dataPermission.setPermissionId(pid);
-        dataPermission.setGrantee(this.grantee.getDataObject());
-        dataPermission.setGrantor(this.grantor.getDataObject());
-        dataPermission.setStore(this.store.getDataObject());
+//        dataPermission.setGrantee(this.grantee.getDataObject());
+//        dataPermission.setGrantor(this.grantor.getDataObject());
+//        dataPermission.setStore(this.store.getDataObject());
         dataPermission.setGranteeType(UserType.valueOf(granteeType.name()));
         dataPermission.setGrantorType(UserType.valueOf(grantorType.name()));
         Set<PermissionType> permissionTypeSet = this.granteePermissionTypes.stream().map(permissionEnum -> PermissionType.valueOf(permissionEnum.name())).collect(Collectors.toSet());
         dataPermission.setGranteePermissionTypes(permissionTypeSet);
         return dataPermission;
+    }
+
+    public PermissionId getPermissionId(){
+        PermissionId id = new PermissionId();
+        id.setStoreId(this.store.getStoreId().value);
+        id.setGrantorId(this.grantor.getEmail().value);
+        id.setGranteeId(this.grantee.getEmail().value);
+        return id;
     }
 }

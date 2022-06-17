@@ -427,11 +427,14 @@ public class Store {
         this.safePermission.forEach(permission1 -> {
             permissions.add(permission1.getDataObject());
         });
-        dataStore.setPermissions(permissions);
+//        dataStore.setPermissions(permissions);
         dataStore.setRate(this.rate);
         return dataStore;
     }
 
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
+    }
 }
 
 

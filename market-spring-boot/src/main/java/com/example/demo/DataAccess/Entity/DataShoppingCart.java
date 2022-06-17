@@ -40,5 +40,10 @@ public class DataShoppingCart {
         this.shoppingCartId = shoppingCardId;
     }
 
+    public void update(DataShoppingCart other) {
+        this.shoppingCartId = other.getShoppingCartId();
+        this.shoppingBags.clear();
+        this.shoppingBags.addAll(other.getShoppingBags());
+    }
 
 }
