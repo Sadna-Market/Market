@@ -1,10 +1,15 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Entity.DataHistory;
+import com.example.demo.DataAccess.Entity.DataProductStore;
 import com.example.demo.Service.ServiceObj.ServiceProductStore;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class History {
     private final int TID;
@@ -40,5 +45,16 @@ public class History {
 
     public String getUser() {
         return user;
+    }
+
+    public DataHistory getDataObject() {
+        DataHistory dataHistory = new DataHistory();
+        dataHistory.setHistoryId(this.TID);
+        dataHistory.setFinalPrice(this.finalPrice);
+        dataHistory.setSupplyId(this.supplyID);
+        dataHistory.setUser(this.user);
+        Set<DataProductStore> productStores = products.stream().map(ProductStore::getDataObject).collect(Collectors.toSet());
+        dataHistory.setProducts(productStores);
+        return dataHistory;
     }
 }

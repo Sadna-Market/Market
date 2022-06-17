@@ -1,6 +1,7 @@
 package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 
 @Entity(name = "DiscountPolicy")
@@ -25,5 +26,14 @@ public class DataDiscountPolicy {
     //TODO: add rules field
 
     public DataDiscountPolicy() {
+    }
+
+
+    public Integer getDiscountPolicyId() {
+        return discountPolicyId;
+    }
+
+    public void setDiscountPolicyId(Integer discountPolicyId) {
+        this.discountPolicyId = discountPolicyId;
     }
 }

@@ -5,6 +5,7 @@ import com.example.demo.DataAccess.CompositeKeys.ShoppingBagId;
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity(name = "ShoppingBags")
@@ -16,12 +17,14 @@ public class DataShoppingBag {
 
     @ManyToOne
     @JoinColumn(name = "shopping_cart",
+            referencedColumnName = "shopping_cart_id",
             foreignKey = @ForeignKey(name = "shopping_cart_fk"))
     private DataShoppingCart dataShoppingCart;
 
     @ManyToOne
     @MapsId("storeId")
     @JoinColumn(name = "store_id",
+            referencedColumnName = "store_id",
             foreignKey = @ForeignKey(
                     name = "store_fk"
             ))
@@ -54,4 +57,6 @@ public class DataShoppingBag {
 
     public DataShoppingBag() {
     }
+
+
 }

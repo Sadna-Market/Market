@@ -2,6 +2,7 @@ package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "History")
@@ -29,6 +30,7 @@ public class DataHistory {
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "history",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     private Set<DataProductStore> products = new HashSet<>();
 
@@ -39,6 +41,7 @@ public class DataHistory {
 
     @ManyToOne
     @JoinColumn(name = "store_id",
+            referencedColumnName = "store_id",
             foreignKey = @ForeignKey(
                     name = "store_fk"
             ))
@@ -46,6 +49,7 @@ public class DataHistory {
 
     @ManyToOne
     @JoinColumn(name = "username",
+            referencedColumnName = "username",
             foreignKey = @ForeignKey(
                     name = "user_fk"
             ))
@@ -109,4 +113,6 @@ public class DataHistory {
     public void setUser(String user) {
         this.user = user;
     }
+
+
 }

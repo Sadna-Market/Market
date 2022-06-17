@@ -35,7 +35,7 @@ public class AlertServiceDemo implements IAlertService {
 
     public void modifyDelayIfExist(String username, UUID uuid) {
         if (delayedNotification.containsKey(username)) {
-            writeToFile(uuid, delayedNotification.get(username).get(0).text);
+            writeToFile(uuid, delayedNotification.get(username).get(0).getText());
         }
     }
 

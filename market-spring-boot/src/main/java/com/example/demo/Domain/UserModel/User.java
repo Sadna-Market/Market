@@ -1,6 +1,7 @@
 package com.example.demo.Domain.UserModel;
 
 
+import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.PermissionManager;
 import com.example.demo.Domain.Market.permissionType;
@@ -155,4 +156,15 @@ public class User {
     public DResponseObj<String> getPhoneNumber() {
         return new DResponseObj<>(phoneNumber,-1);
     }
+
+
+    public DataUser getDataObject(){
+        DataUser dataUser = new DataUser();
+        dataUser.setUsername(email);
+        dataUser.setPassword(this.Password);
+        dataUser.setDateOfBirth(this.dateOfBirth);
+        dataUser.setPhoneNumber(phoneNumber);
+        return dataUser;
+    }
+
 }

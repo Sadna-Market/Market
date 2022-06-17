@@ -1,11 +1,14 @@
 package com.example.demo.Domain.Market;
 
+import com.example.demo.DataAccess.Entity.DataProductType;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.StampedLock;
 
 
@@ -182,4 +185,16 @@ public class ProductType {
         return new DResponseObj<>(description.contains(desc));
     }
 
+    public DataProductType getDataObject() {
+        DataProductType dataProductType = new DataProductType();
+        dataProductType.setProductTypeId(this.productID);
+        dataProductType.setRate(this.rate);
+        dataProductType.setCounter_rates(this.counter_rates);
+        dataProductType.setProductName(this.productName);
+        dataProductType.setDescription(this.description);
+        dataProductType.setCategory(this.category);
+        Set<Integer> stores = new HashSet<>(this.stores);
+        dataProductType.setStores(stores);
+        return dataProductType;
+    }
 }

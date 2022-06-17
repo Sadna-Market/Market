@@ -1,10 +1,7 @@
 package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "ProductType")
 @Table(name = "product_type")
@@ -37,8 +34,14 @@ public class DataProductType {
     @Column(name = "category")
     private int category;
 
-    @ManyToMany(mappedBy = "productTypes")
-    public Set<DataStore> stores = new HashSet<>();
+//    @ManyToMany(mappedBy = "productTypes") //TODO: change
+//    public Set<DataStore> stores = new HashSet<>();
+
+    @ElementCollection
+    @Column(name = "store")
+    @CollectionTable(name = "product_type_and_store",
+            joinColumns = { @JoinColumn(name = "product_type_id", foreignKey = @ForeignKey(name = "product_type_fk"))})
+    private Set<Integer> stores = new HashSet<>();
 
     public DataProductType() {
     }
@@ -91,11 +94,13 @@ public class DataProductType {
         this.category = category;
     }
 
-    public Set<DataStore> getStores() {
+    public Set<Integer> getStores() {
         return stores;
     }
 
-    public void setStores(Set<DataStore> stores) {
+    public void setStores(Set<Integer> stores) {
         this.stores = stores;
     }
+
+
 }

@@ -1,11 +1,17 @@
 package com.example.demo.Domain.Market;
 
+import com.example.demo.DataAccess.CompositeKeys.PermissionId;
+import com.example.demo.DataAccess.Entity.DataPermission;
+import com.example.demo.DataAccess.Enums.PermissionType;
+import com.example.demo.DataAccess.Enums.UserType;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Domain.UserModel.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Permission {
     private User grantee;// the permission is for him
@@ -89,5 +95,23 @@ public class Permission {
 
     public DResponseObj<List<permissionType.permissionEnum>> getgranteePermissionTypes() {
         return new DResponseObj<>(granteePermissionTypes);
+    }
+
+
+    public DataPermission getDataObject() {
+        DataPermission dataPermission = new DataPermission();
+        PermissionId pid = new PermissionId();
+        pid.setGranteeId(this.grantee.getEmail().value);
+        pid.setGrantorId(this.grantor.getEmail().value);
+        pid.setStoreId(this.store.getStoreId().value);
+        dataPermission.setPermissionId(pid);
+        dataPermission.setGrantee(this.grantee.getDataObject());
+        dataPermission.setGrantor(this.grantor.getDataObject());
+        dataPermission.setStore(this.store.getDataObject());
+        dataPermission.setGranteeType(UserType.valueOf(granteeType.name()));
+        dataPermission.setGrantorType(UserType.valueOf(grantorType.name()));
+        Set<PermissionType> permissionTypeSet = this.granteePermissionTypes.stream().map(permissionEnum -> PermissionType.valueOf(permissionEnum.name())).collect(Collectors.toSet());
+        dataPermission.setGranteePermissionTypes(permissionTypeSet);
+        return dataPermission;
     }
 }

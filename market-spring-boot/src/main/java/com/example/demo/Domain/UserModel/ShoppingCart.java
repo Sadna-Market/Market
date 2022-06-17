@@ -1,10 +1,14 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.Entity.DataShoppingBag;
+import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShoppingCart {
@@ -79,5 +83,4 @@ public class ShoppingCart {
 
         }
     }
-
 }

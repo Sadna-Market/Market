@@ -2,6 +2,7 @@ package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "ShoppingCart")
@@ -38,4 +39,6 @@ public class DataShoppingCart {
     public void setShoppingCartId(Integer shoppingCardId) {
         this.shoppingCartId = shoppingCardId;
     }
+
+
 }

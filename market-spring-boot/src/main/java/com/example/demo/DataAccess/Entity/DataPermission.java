@@ -6,6 +6,7 @@ import com.example.demo.DataAccess.Enums.UserType;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "Permission")
@@ -47,7 +48,7 @@ public class DataPermission {
 
     @ElementCollection(targetClass = PermissionType.class)
     @JoinTable(name = "permission_types")
-    @Column(name = "permission_type", nullable = false)
+    @Column(name = "grantee_permission_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<PermissionType> granteePermissionTypes = new HashSet<>();
 
@@ -101,5 +102,14 @@ public class DataPermission {
 
     public void setGrantorType(UserType grantorType) {
         this.grantorType = grantorType;
+    }
+
+
+    public Set<PermissionType> getGranteePermissionTypes() {
+        return granteePermissionTypes;
+    }
+
+    public void setGranteePermissionTypes(Set<PermissionType> granteePermissionTypes) {
+        this.granteePermissionTypes = granteePermissionTypes;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Entity.DataBuyPolicy;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
@@ -45,5 +46,10 @@ public class BuyPolicy {
 
     public int rulesSize(){
         return rules.size();
+    }
+
+    public DataBuyPolicy getDataObject() {
+        //TODO: add DataRule and return a DataObject according to that.
+        return new DataBuyPolicy();
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -30,8 +31,8 @@ public class DataStore {
     )
     private String name;
 
-    @OneToOne(cascade = {CascadeType.REMOVE, /*when the store gets deleted then the inventory gets deleted*/
-            CascadeType.PERSIST /* when saving the store then save the inventory too */},
+    @OneToOne(cascade = {CascadeType.ALL, /*when the store gets deleted then the inventory gets deleted*/
+           /* CascadeType.PERSIST /* when saving the store then save the inventory too */},
             fetch = FetchType.EAGER) /*when store is fetched from db then fetch the inventory too*/
     @JoinColumn( /* The @JoinColumn annotation combined with a @OneToOne mapping indicates that a given column in the owner entity refers to a primary key in the reference entity*/
             name = "inventory_id", /* The name of the foreign key column in the DataStore entity is specified by name property.*/
@@ -73,8 +74,8 @@ public class DataStore {
     )
     private Set<DataHistory> history = new HashSet<>();
 
-    @OneToOne(cascade = {CascadeType.REMOVE, /*when the store gets deleted then the DiscountPolicy gets deleted*/
-            CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */},
+    @OneToOne(cascade = {CascadeType.ALL, /*when the store gets deleted then the DiscountPolicy gets deleted*/
+            /*CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */},
             fetch = FetchType.EAGER) /*when store is fetched from db then fetch the DiscountPolicy too*/
     @JoinColumn( /* The @JoinColumn annotation combined with a @OneToOne mapping indicates that a given column in the owner entity refers to a primary key in the reference entity*/
             name = "discount_policy_id", /* The name of the foreign key column in the DataStore entity is specified by name property.*/
@@ -86,8 +87,8 @@ public class DataStore {
     )
     private DataDiscountPolicy discountPolicy;
 
-    @OneToOne(cascade = {CascadeType.REMOVE, /*when the store gets deleted then the BuyPolicy gets deleted*/
-            CascadeType.PERSIST /* when saving the store then save the BuyPolicy too */},
+    @OneToOne(cascade = {CascadeType.ALL, /*when the store gets deleted then the BuyPolicy gets deleted*/
+           /* CascadeType.PERSIST /* when saving the store then save the BuyPolicy too */},
             fetch = FetchType.EAGER) /*when store is fetched from db then fetch the BuyPolicy too*/
     @JoinColumn( /* The @JoinColumn annotation combined with a @OneToOne mapping indicates that a given column in the owner entity refers to a primary key in the reference entity*/
             name = "buy_policy_id", /* The name of the foreign key column in the DataStore entity is specified by name property.*/
@@ -107,15 +108,15 @@ public class DataStore {
     )
     private Set<DataPermission> permissions = new HashSet<>(); // all the permission that have in this store
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "stores_product_types",
-            joinColumns = {@JoinColumn(name = "store_id", foreignKey = @ForeignKey(
-                    name = "store_fk"
-            ))},
-            inverseJoinColumns = {@JoinColumn(name = "product_type_id", foreignKey = @ForeignKey(
-                    name = "product_type_fk"
-            ))})
-    private Set<DataProductType> productTypes = new HashSet<>();
+//    @ManyToMany(cascade = {CascadeType.ALL}) //TODO: change
+//    @JoinTable(name = "stores_product_types",
+//            joinColumns = {@JoinColumn(name = "store_id", foreignKey = @ForeignKey(
+//                    name = "store_fk"
+//            ))},
+//            inverseJoinColumns = {@JoinColumn(name = "product_type_id", foreignKey = @ForeignKey(
+//                    name = "product_type_fk"
+//            ))})
+//    private Set<DataProductType> productTypes = new HashSet<>();
 
     /**
      * Constructor
@@ -211,11 +212,27 @@ public class DataStore {
         this.permissions = permissions;
     }
 
-    public Set<DataProductType> getProductTypes() {
-        return productTypes;
+//    public Set<DataProductType> getProductTypes() {
+//        return productTypes;
+//    }
+//
+//    public void setProductTypes(Set<DataProductType> productTypes) {
+//        this.productTypes = productTypes;
+//    }
+    public void update(DataStore other){
+        this.storeId = other.getStoreId();
+        //this.buyPolicy = other.getBuyPolicy();
+        //this.discountPolicy = other.getDiscountPolicy();
+        this.founder = other.getFounder();
+        //this.inventory = other.getInventory();
+        this.isOpen = other.getOpen();
+        this.name = other.getName();
+        this.numOfRated = other.getNumOfRated();
+        this.rate = other.getRate();
+        this.history.clear();
+        this.history.addAll(other.getHistory());
+        this.permissions.clear();
+        this.permissions.addAll(other.getPermissions());
     }
 
-    public void setProductTypes(Set<DataProductType> productTypes) {
-        this.productTypes = productTypes;
-    }
 }

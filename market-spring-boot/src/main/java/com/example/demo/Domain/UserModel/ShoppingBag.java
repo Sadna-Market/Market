@@ -1,5 +1,6 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.Entity.DataShoppingBag;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
@@ -66,4 +67,5 @@ public class ShoppingBag {
     public DResponseObj<Boolean> isEmpty(){
         return new DResponseObj<>(productQuantity.isEmpty(),-1);
     }
+
 }

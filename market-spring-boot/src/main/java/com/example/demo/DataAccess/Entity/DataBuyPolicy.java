@@ -1,6 +1,7 @@
 package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity(name = "BuyPolicy")
 @Table(name = "buy_policy")
@@ -32,4 +33,5 @@ public class DataBuyPolicy {
     public void setBuyPolicyID(Integer buyPolicyID) {
         this.buyPolicyID = buyPolicyID;
     }
+
 }

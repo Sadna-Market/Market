@@ -3,6 +3,7 @@ package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
 
+
 @Entity(name = "ProductStore")
 @Table(name = "product_store")
 public class DataProductStore {
@@ -94,4 +95,6 @@ public class DataProductStore {
     public void setPrice(double price) {
         this.price = price;
     }
+
+
 }

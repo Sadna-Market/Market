@@ -3,13 +3,14 @@ package com.example.demo.DataAccess.Entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "User")
 @Table(name = "users",
-    uniqueConstraints = {
-        @UniqueConstraint(name = "unique_username", columnNames = "username")
-    })
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_username", columnNames = "username")
+        })
 public class DataUser {
 
     @Id
@@ -24,27 +25,30 @@ public class DataUser {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "data_shopping_cart_id", foreignKey = @ForeignKey(name = "data_shopping_cart_fk"))
     private DataShoppingCart dataShoppingCart;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "userHistory",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
     private Set<DataHistory> histories = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "grantee",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
-   private Set<DataPermission> accessPermission = new HashSet<>();
+    private Set<DataPermission> accessPermission = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "grantor",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
-   private Set<DataPermission> grantorPermission = new HashSet<>();
+    private Set<DataPermission> grantorPermission = new HashSet<>();
 
 
     public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
@@ -113,4 +117,17 @@ public class DataUser {
     public void setGrantorPermission(Set<DataPermission> grantorPermission) {
         this.grantorPermission = grantorPermission;
     }
+
+    public void update(DataUser user) { //maybe will need to change something here but this is the idea instead of making a lot of setter functions
+        this.password = user.getPassword();
+        this.phoneNumber = user.getPhoneNumber();
+        this.dateOfBirth = user.getDateOfBirth();
+        this.accessPermission.clear();
+        this.accessPermission.addAll(user.getAccessPermission());
+        this.grantorPermission.clear();
+        this.grantorPermission.addAll(user.getGrantorPermission());
+        this.histories.clear();
+        this.histories.addAll(user.getHistories());
+    }
+
 }
