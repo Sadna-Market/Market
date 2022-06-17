@@ -20,7 +20,7 @@ public class SystemManagerTests extends MarketTests{
         uuid = market.guestVisit();
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5_ID;
-        CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
+        CreditCard creditCard = new CreditCard("1111222233334444","11/23","111");
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         buyer = generateUser();
         market.register(uuid, buyer.username, buyer.password,buyer.dateOfBirth);

@@ -23,12 +23,14 @@ class StoreTest {
     Store store = new Store(1,"Best Store", null, null, "dor@gmail.com");
     ProductType productType1 = new ProductTypeStab(1, "milk", "good milk",1);
     ProductType productType2 = new ProductTypeStab(2, "table", "good table",1);
-    String user = "dor@gmail.com";
+    String user = "liel@gmail.com";
+    String user2 = "niv@gmail.com";
+    String founder = "dor@gmail.com";
     UserBuyRule uRule;
     @BeforeEach
     void setUp() {
         uRule = new UserBuyRule(new UserPred("dor"));
-        store = new Store(1,"Best Store", null, null, "dor@gmail.com");
+        store = new Store(1,"Best Store", null, null, founder);
         productType1 = new ProductTypeStab(1, "milk", "good milk",1);
         productType2 = new ProductTypeStab(2, "table", "good table",1);
     }
@@ -338,6 +340,179 @@ class StoreTest {
         assertEquals(5, store.getRate().getValue());
     }
 
+    @DisplayName("createBID  -  success")
+    @Test
+    void createBIDS() {
+        assertEquals(0, store.getBids().size());
+        assertTrue(store.addNewProduct(productType1,5,22.0).value);
+        assertTrue(store.createBID("dor@gmail.com",productType1.getProductID().value,2,100).value);
+        assertEquals(1, store.getBids().size());
+        assertTrue(store.createBID("dor@gmail.com",productType1.getProductID().value,2,100).errorOccurred());
+        assertEquals(1, store.getBids().size());
+    }
+
+    @DisplayName("createBID  -  failure")
+    @Test
+    void createBIDF() {
+        assertEquals(0, store.getBids().size());
+        assertTrue(store.addNewProduct(productType1,5,22.0).value);
+        assertTrue(store.createBID("dor@gmail.com",productType1.getProductID().value,10,100).errorOccurred());
+        assertEquals(0, store.getBids().size());
+    }
+
+
+    @DisplayName("removeBIDS  -  success")
+    @Test
+    void removeBIDS() {
+        assertEquals(0, store.getBids().size());
+        addProductAndCreateBID(); // add product to store and create BID
+        assertEquals(1, store.getBids().size());
+        assertTrue(store.removeBID(user,productType1.getProductID().value).value);
+        assertEquals(0, store.getBids().size());
+    }
+
+    @DisplayName("removeBIDS  -  failure")
+    @Test
+    void removeBIDF() {
+        assertEquals(0, store.getBids().size());
+        addProductAndCreateBID(); // add product to store and create BID
+        assertEquals(1, store.getBids().size());
+        assertTrue(store.removeBID(user2,productType1.getProductID().value).errorOccurred());
+        assertEquals(1, store.getBids().size());
+    }
+
+    @DisplayName("allApprovedBID  -  success")
+    @Test
+    void allApprovedBIDS() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        store.getBids().getFirst().addManagerToList(user2);
+        assertFalse(store.allApprovedBID(user,productID));
+        assertTrue(store.approveBID(founder,user,productID).value);
+        assertFalse(store.allApprovedBID(user,productID));
+        assertTrue(store.approveBID(user2,user,productID).value);
+        assertTrue(store.allApprovedBID(user,productID));
+        assertEquals("BIDApproved", store.getBIDStatus(user, productID).value);
+    }
+
+    @DisplayName("allApprovedBID  -  failure")
+    @Test
+    void allApprovedBIDF() {
+        assertFalse(store.allApprovedBID(user,1));
+    }
+
+    @DisplayName("approveBID  -  success")
+    @Test
+    void approveBIDS() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.approveBID(founder,user,productID).value);
+        assertTrue(store.allApprovedBID(user,productID));
+        assertFalse(store.approveBID(founder,user,productID).value);
+        assertEquals("BIDApproved", store.getBIDStatus(user, productID).value);
+    }
+
+    @DisplayName("approveBID  -  failure")
+    @Test
+    void approveBIDF() {
+        assertFalse(store.approveBID(founder,user,1).value);
+    }
+
+    @DisplayName("rejectBID  -  failure")
+    @Test
+    void rejectBIDS() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.rejectBID(founder,user,productID).value);
+        assertEquals("BIDRejected", store.getBIDStatus(user, productID).value);
+    }
+
+    @DisplayName("rejectBID  -  failure")
+    @Test
+    void rejectBIDF() {
+        assertFalse(store.rejectBID(founder,user,1).value);
+    }
+
+
+    @DisplayName("counterBID  -  success")
+    @Test
+    void counterBIDS() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.counterBID(founder,user,productID,1111).value);
+        assertEquals("CounterBID", store.getBIDStatus(user, productID).value);
+    }
+
+    @DisplayName("counterBID  -  failure")
+    @Test
+    void counterBIDF() {
+        assertFalse(store.counterBID(founder,user,1,111).value);
+    }
+
+    @DisplayName("newStoreRate  -  success")
+    @Test
+    void responseCounterBIDS() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.counterBID(founder,user,productID,1111).value);
+        assertEquals("CounterBID", store.getBIDStatus(user, productID).value);
+        assertTrue(store.responseCounterBID(user,productID,true).value);
+        assertFalse(store.responseCounterBID(user,productID,true).value);
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.counterBID(founder,user,productID,1111).value);
+        assertEquals("CounterBID", store.getBIDStatus(user, productID).value);
+        assertTrue(store.responseCounterBID(user,productID,false).value);
+        assertEquals("BIDRejected", store.getBIDStatus(user, productID).value);
+    }
+
+    @DisplayName("newStoreRate  -  failure")
+    @Test
+    void responseCounterBIDF() {
+        assertFalse(store.responseCounterBID(user,1,true).value);
+    }
+
+
+    @DisplayName("canBuyBID  -  success")
+    @Test
+    void canBuyBIDS() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.approveBID(founder,user,productID).value);
+        assertTrue(store.allApprovedBID(user,productID));
+        assertEquals("BIDApproved", store.getBIDStatus(user, productID).value);
+        assertFalse(store.canBuyBID(user,productID).errorOccurred());
+    }
+
+    @DisplayName("canBuyBID  -  failure")
+    @Test
+    void canBuyBIDF1() {
+        assertTrue(store.canBuyBID(user,1).errorOccurred());
+    }
+
+
+    @DisplayName("canBuyBID  -  failure")
+    @Test
+    void canBuyBIDF2() {
+        addProductAndCreateBID();
+        int productID = productType1.getProductID().value;
+        assertEquals("WaitingForApprovals", store.getBIDStatus(user, productID).value);
+        assertTrue(store.approveBID(founder,user,productID).value);
+        assertTrue(store.allApprovedBID(user,productID));
+        assertEquals("BIDApproved", store.getBIDStatus(user, productID).value);
+        assertTrue(store.setProductQuantity(productID,1).value);
+        assertTrue(store.canBuyBID(user,productID).errorOccurred());
+    }
+
+
+    private void addProductAndCreateBID(){
+        assertTrue(store.addNewProduct(productType1,5,22.0).value);
+        assertTrue(store.createBID(user,productType1.getProductID().value,3,100).value);
+    }
 }
 
 

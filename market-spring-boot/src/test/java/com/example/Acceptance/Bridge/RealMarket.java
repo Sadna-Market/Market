@@ -807,6 +807,138 @@ public class RealMarket implements MarketBridge {
         return !res.errorOccurred();
     }
 
+    /**
+     * create new BID in store by user
+     *
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param quantity
+     * @param totalPrice
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice) {
+        SLResponseOBJ<Boolean> res = market.createBID(uuid,storeID,productID,quantity,totalPrice);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * remove BID from store
+     *
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> removeBID(String uuid, int storeID, int productID) {
+        SLResponseOBJ<Boolean>  res = market.removeBID(uuid,storeID,productID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * manager/owner approve BID
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID) {
+        SLResponseOBJ<Boolean>  res = market.approveBID(uuid,userEmail,storeID,productID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * manager/owner reject BID
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID) {
+        SLResponseOBJ<Boolean>  res = market.rejectBID(uuid,userEmail,storeID,productID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * manager/owner counter BID with new price
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @param newTotalPrice
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice) {
+        SLResponseOBJ<Boolean>  res = market.counterBID(uuid,userEmail,storeID,productID,newTotalPrice);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * user response to counter BID (approve/reject)
+     *
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param approve
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> responseCounterBID(String uuid, int storeID, int productID, boolean approve) {
+        SLResponseOBJ<Boolean>  res = market.responseCounterBID(uuid,storeID,productID,approve);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * user buy BID that approved by all owners
+     *
+     * @param userId
+     * @param storeID
+     * @param productID
+     * @param city
+     * @param adress
+     * @param apartment
+     * @param creditCard
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> BuyBID(String userId, int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+        SLResponseOBJ<Boolean> res = market.BuyBID(userId,storeID,productID,city,adress,apartment,creditCard);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * get status of specific BID
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
+        SLResponseOBJ<String> res = market.getBIDStatus(uuid,userEmail,storeID,productID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
 
 }
 

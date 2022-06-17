@@ -37,7 +37,7 @@ public class PaymentService extends AbsExternalService{
         try{
             list.put(counterTIP,v);
             logger.info("creditCart #"+createString(cardNumber,exp,pin) +" pay: "+v);
-            DResponseObj<Integer> output = pay(cardNumber,exp,pin,v);
+            DResponseObj<Integer> output = payByAPI(cardNumber,exp,pin,v);
             if (output.errorOccurred()) return output;
             return new DResponseObj<>(output.getValue(),-1);
         }
