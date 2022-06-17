@@ -137,7 +137,7 @@ public class TestableFacade extends Facade {
 
          * */
 
-        if (C == null || amount <= 0 || C.creditCard.length() != 16 || C.creditDate.length() != 4 || C.pin.length() != 3) return new SLResponseOBJ<>("error", -2);
+        if (C == null || amount <= 0 || C.creditCard.length() != 16 || C.creditDate.length() != 5 || C.pin.length() != 3) return new SLResponseOBJ<>("error", -2);
         DResponseObj<Integer> res = PaymentService.getInstance().pay(C.creditCard, C.creditDate, C.pin, amount);
         return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>(res.value.toString(), -1);
     }

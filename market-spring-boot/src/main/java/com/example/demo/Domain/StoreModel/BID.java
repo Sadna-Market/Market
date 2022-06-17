@@ -10,15 +10,17 @@ public class BID {
 
     private String username;
     private int productID;
+    private String productName;
     private int quantity;
     private int totalPrice;
     private int lastPrice;
     private StatusEnum status;
     private ConcurrentHashMap<String,Boolean> approves;
 
-    public BID(String username, int productID, int quantity, int totalPrice, ConcurrentHashMap<String, Boolean> approves){
+    public BID(String username, int productID, String productName, int quantity, int totalPrice, ConcurrentHashMap<String, Boolean> approves){
         this.username = username;
         this.productID = productID;
+        this.productName = productName;
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.lastPrice = totalPrice;
@@ -32,22 +34,23 @@ public class BID {
         CounterBID,
         BIDApproved,
         ProductBought;
-
-
-
     }
+
     public DResponseObj<Boolean> approve(String ownerEmail) {
         Boolean success = approves.replace(ownerEmail,true);
-        return success == null ? new DResponseObj<>(false,ErrorCode.NOPERMISSION) : new DResponseObj<>(true);
+        return success == null ? new DResponseObj<>(false,ErrorCode.NOPERMISSION) :
+                success ? new DResponseObj<>(false,ErrorCode.ALLREADYAPPROVEDTHISBID):
+                new DResponseObj<>(true);
     }
+
     public void reject() {
         status = StatusEnum.BIDRejected;
     }
     public void counter(int newTotalPrice) {
         approves.replaceAll((K,V) -> V = false);
         lastPrice = newTotalPrice;
+        status = StatusEnum.CounterBID;
     }
-
     public void responseCounter(boolean approve) {
         if(approve){
             status = StatusEnum.WaitingForApprovals;
@@ -70,6 +73,15 @@ public class BID {
     }
 
 
+    public void addManagerToList(String managerEmail) {
+        if(!approves.containsKey(managerEmail))
+            approves.put(managerEmail,false);
+    }
+
+    public void removeManagerFromList(String managerEmail) {
+        approves.remove(managerEmail);
+    }
+
 
     public String getUsername() {
         return username;
@@ -77,6 +89,10 @@ public class BID {
 
     public int getProductID() {
         return productID;
+    }
+
+    public String getProductName() {
+        return productName;
     }
 
     public int getQuantity() {
@@ -87,6 +103,10 @@ public class BID {
         return totalPrice;
     }
 
+    public int getLastPrice() {
+        return lastPrice;
+    }
+
     public StatusEnum getStatus() {
         return status;
     }
@@ -95,7 +115,9 @@ public class BID {
         return status.toString();
     }
 
-
+    public ConcurrentHashMap<String, Boolean> getApproves() {
+        return approves;
+    }
 }
 
 

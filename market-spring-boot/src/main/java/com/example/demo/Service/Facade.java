@@ -330,6 +330,8 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.searchProductByName(productName));
     }
 
+
+
     @Override
     public SLResponseOBJ<List<Integer>> searchProductByName(List<Integer> lst, String productName) {
         if (productName == null || productName.equals(""))
@@ -1688,6 +1690,72 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
         DResponseObj<String> res = market.getBIDStatus(UUID.fromString(uuid),userEmail,storeID,productID);
         return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>("res.value");
+    }
+
+    /**
+     * get all bids in the store if has permission
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<HashMap<Integer,List<BID>>> res = market.getAllOffersBIDs(UUID.fromString(uuid),storeID);
+        if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
+        HashMap<Integer,List<ServiceBID>> allBIDs = new HashMap<>();
+        for(Map.Entry<Integer, List<BID>> entry : res.value.entrySet()) {
+            Integer productID = entry.getKey();
+            List<BID> dBIDSs = entry.getValue();
+            List<ServiceBID> sBIDs = new ArrayList<>();
+            dBIDSs.forEach(b -> {
+                ServiceBID serviceBID = new ServiceBID(b);
+                sBIDs.add(serviceBID);
+            });
+            allBIDs.put(productID,sBIDs);
+        }
+        return new SLResponseOBJ<>(allBIDs);
+    }
+
+    /**
+     * get all bids of user in the store
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<BID>> res = market.getMyBIDs(UUID.fromString(uuid),storeID);
+        if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
+        List<ServiceBID> bids = new ArrayList<>();
+        res.value.forEach(b -> {
+            ServiceBID serviceBID = new ServiceBID(b);
+            bids.add(serviceBID);
+        });
+        return new SLResponseOBJ<>(bids);
+    }
+
+    /**
+     * reopen store that close by founder
+     * @param uuid
+     * @param storeID
+     * @return true if success else error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> reopenStore(String uuid, int storeID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> reopen = market.reopenStore(UUID.fromString(uuid),storeID);
+        return reopen.errorOccurred() ? new SLResponseOBJ<>(false,reopen.errorMsg) : new SLResponseOBJ<>(reopen);
     }
 
     /**

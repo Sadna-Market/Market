@@ -3,6 +3,9 @@ package com.example.demo.Domain;
 import com.example.demo.Domain.Response.DResponseObj;
 
 public class ErrorCode {
+    public static final int STORE_IS_NOT_CLOSED = 5;
+    public static final int ALLREADYINAPPROVESLIST = 6;
+    public static final int ALLREADYAPPROVEDTHISBID = 7 ;
     public static int STORE_IS_CLOSED = 8;
     public static int CAN_NOT_REMOVE_FOUNDER_PERMISSION = 9;
     public static int NOTLOGGED = 10;

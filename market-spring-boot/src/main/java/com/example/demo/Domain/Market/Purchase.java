@@ -158,6 +158,17 @@ public class Purchase {
                     return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
                 }
 
+                //check price and policy
+
+                int age = Period.between(user.getDateOfBirth().getValue(), LocalDate.now()).getYears();
+                DResponseObj<Double> Dprice = getPriceAfterDiscount(curStore, email,age, crrAmount);
+                if (Dprice.errorOccurred()) {
+                    logger.warn("can't buy because policies");
+                    DResponseObj<Boolean> rollBack = rollBack(curStore, crrAmount);
+                    if (rollBack.errorOccurred()) logger.error("rollback does not work!!!");
+                    return new DResponseObj<>(false,Dprice.getErrorMsg());
+                }
+
                 //check supply
                 DResponseObj<Integer> supply = createSupply(user, city, adress, apartment, crrAmount);
 

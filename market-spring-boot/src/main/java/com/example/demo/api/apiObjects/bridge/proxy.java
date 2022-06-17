@@ -743,6 +743,21 @@ public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int sto
         return REAL.getBIDStatus(uuid, userEmail, storeID, productID);
 }
 
+    @Override
+    public SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+        return null;
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> reopenStore(String uuid, int storeID) {
+        return null;
+    }
+
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId) {
 

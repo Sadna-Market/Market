@@ -31,7 +31,7 @@ public class ConcurrentPurchaseTest extends MarketTests {
     public void purchase() throws InterruptedException {
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5_ID;
-        CreditCard creditCard = new CreditCard("1111222233334444", "1125", "111");
+        CreditCard creditCard = new CreditCard("1111222233334444", "11/25", "111");
         User registeredUser = generateUser();
         assertTrue(market.register(uuid, registeredUser.username, registeredUser.password,registeredUser.dateOfBirth));
         //pre conditions
