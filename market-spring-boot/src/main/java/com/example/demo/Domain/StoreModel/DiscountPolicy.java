@@ -9,6 +9,7 @@ import com.example.demo.Domain.StoreModel.DiscountRule.OrDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.XorDiscountRule;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.example.demo.Service.ServiceObj.ServiceDiscountPolicy;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,8 @@ public class DiscountPolicy {
 
     private ConcurrentHashMap<Integer, DiscountRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
+
+    static Logger logger=Logger.getLogger(DiscountPolicy.class);
 
     public DiscountPolicy(ServiceDiscountPolicy discountPolicy) {
         this.rules = new ConcurrentHashMap<>();
@@ -34,12 +37,18 @@ public class DiscountPolicy {
         int id = idCounter.getAndIncrement();
         rules.put(id,discountRule);
         discountRule.setID(id);
+        logger.info("added new discountRule - id: "+id);
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> removeDiscountRule(int discountRuleID){
         DiscountRule removed = rules.remove(discountRuleID);
-        return removed == null ? new DResponseObj<>(false, ErrorCode.DISCOUNT_RULE_NOT_EXIST) : new DResponseObj<>(true);
+        if (removed == null)
+            return new DResponseObj<>(false, ErrorCode.DISCOUNT_RULE_NOT_EXIST);
+        else{
+            logger.info("discount rule #" + discountRuleID +" was removed");
+            return new DResponseObj<>(true);
+        }
     }
     public DResponseObj<Double> checkDiscountPolicyShoppingBag(String username, int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
         Double totalDiscount = 0.0;

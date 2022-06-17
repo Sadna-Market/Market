@@ -535,7 +535,7 @@ public class Market {
     //2.3.2
     //pre: user is Member
     //post: new Store add to the market
-    public DResponseObj<Integer> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    public DResponseObj<Integer> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy) {
         DResponseObj<Boolean> checkUM = userManager.isLogged(userId);
         if (checkUM.errorOccurred() || !checkUM.getValue()) return new DResponseObj<>(null, ErrorCode.NOTLOGGED);
 
@@ -1419,7 +1419,7 @@ public class Market {
         }
 
         for (int i = 0; i < 10; i++) {
-            Store store = OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy(), new BuyStrategy());
+            Store store = OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy());
             for (ProductType product : productTypes.values()) {
                 store.addNewProduct(product, 5, 10.2);
             }
@@ -1446,7 +1446,7 @@ public class Market {
         }
     }
 
-    private Store OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    private Store OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy) {
 
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");
