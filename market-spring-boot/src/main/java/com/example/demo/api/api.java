@@ -95,6 +95,37 @@ public class api implements Iapi {
     }
 
     @Override
+    @PostMapping("getStoreInfo/{storeId}")
+    public SLResponseOBJ<ServiceStore> getStoreInfo(@PathVariable("storeId") int storeId) {
+        System.out.println(storeId);
+        return iMarket.getStoreInfo(storeId);
+    }
+
+    @Override
+    @PostMapping("getAllOffersBIDS/{uuid}/{storeID}")
+    public SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        return iMarket.getAllOffersBIDS(uuid, storeID);
+    }
+
+    @Override
+    @PostMapping("getMyBIDs/{uuid}/{storeID}")
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        return iMarket.getMyBIDs(uuid, storeID);
+    }
+
+    @Override
+    @PostMapping("reopenStore/{uuid}/{storeID}")
+    public SLResponseOBJ<Boolean> reopenStore(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        return iMarket.reopenStore(uuid, storeID);
+    }
+
+    @Override
     @PostMapping("guestVisit")
     public SLResponseOBJ<String> guestVisit() { //ok
         return iMarket.guestVisit();
@@ -720,6 +751,11 @@ public class api implements Iapi {
     public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @PathVariable("DiscountRuleID") int DiscountRuleID) {
         return iMarket.removeDiscountRule(uuid, storeId, DiscountRuleID);
     }
+
+
+
+
+
 
     @Override
     @GetMapping("getBuyPolicy/{uuid}/{storeId}")

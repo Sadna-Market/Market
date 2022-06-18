@@ -554,12 +554,26 @@ public class Facade implements IMarket {
     }
 
     public SLResponseOBJ<Integer> getStoreRate(String uuid,int Store){
+        if(Store<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+        if(uuid==null||uuid.equals("")) return new SLResponseOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+
         return new SLResponseOBJ<>(market.getStoreRate(UUID.fromString(uuid),Store));
     }
     public SLResponseOBJ<Boolean> newStoreRate(String uuid,int Store,int rate){
+        if(uuid==null||uuid.equals("")) return new SLResponseOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+
+        if(Store<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+        if(rate<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+
         return new SLResponseOBJ<>(market.newStoreRate(UUID.fromString(uuid),Store, rate));
     }
-
+    @Override
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId){
+        if(storeId<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Store> s= market.getStore(storeId);
+        if(s.errorOccurred()) return new SLResponseOBJ<>(null,s.getErrorMsg());
+        return new SLResponseOBJ<>(new ServiceStore(market.getStore(storeId).value));
+    }
 
     @Override
     public SLResponseOBJ<ServiceShoppingCart> getShoppingCart(String userId) {

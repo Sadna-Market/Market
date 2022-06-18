@@ -129,6 +129,8 @@ public interface IMarket {
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
     public SLResponseOBJ<List<HashMap<String,Object>>> getAllusers();
 
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+
     public SLResponseOBJ<Integer> getStoreRate(String UUID,int Store);
     public SLResponseOBJ<Boolean> newStoreRate(String UUID,int Store,int rate);
 

@@ -28,6 +28,13 @@ public interface Iapi {
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid,int storeID);
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid,int storeID);
+    public SLResponseOBJ<Boolean> reopenStore(String uuid,int storeID);
+
+
+
     public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;
 
     public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;

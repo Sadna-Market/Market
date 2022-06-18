@@ -558,6 +558,15 @@ public class proxy implements IMarket {
         return REAL.getAllusers();    }
 
     @Override
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+    return REAL.getStoreInfo(storeId);
+    }
+
+    @Override
     public SLResponseOBJ<Integer> getStoreRate(String uuid,int Store) {
         if(REAL==null){
 
@@ -772,17 +781,26 @@ public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int sto
 
     @Override
     public SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
-        return null;
-    }
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllOffersBIDS(uuid, storeID);    }
 
     @Override
     public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
-        return null;
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getMyBIDs(uuid, storeID);
     }
 
     @Override
     public SLResponseOBJ<Boolean> reopenStore(String uuid, int storeID) {
-        return null;
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.reopenStore(uuid, storeID);
     }
 
 
