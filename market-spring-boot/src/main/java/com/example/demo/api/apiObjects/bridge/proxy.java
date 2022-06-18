@@ -506,7 +506,7 @@ public class proxy implements IMarket {
             System.out.println(menagerEmail);
             return new SLResponseOBJ<>(null,-1);
         }
-        return REAL.removeStoreOwner(userId,storeId,menagerEmail);
+        return REAL.removeStoreMenager(userId,storeId,menagerEmail);
     }
 
     @Override
@@ -549,6 +549,30 @@ public class proxy implements IMarket {
         return REAL.getProductTypeInfo(productTypeId);
     }
 
+    @Override
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getAllusers();    }
+
+    @Override
+    public SLResponseOBJ<Integer> getStoreRate(String uuid,int Store) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getStoreRate(uuid,Store);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> newStoreRate(String uuid,int Store, int rate) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.newStoreRate(uuid,Store,rate);    }
+
 
     @Override
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String mangerEmil, String per, boolean onof) {
@@ -586,8 +610,11 @@ public class proxy implements IMarket {
 
     @Override
     public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
-        return null;
-    }
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.cancelMembership(uuid,cancelMemberUsername);   }
 
     @Override
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId) {

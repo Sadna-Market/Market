@@ -62,6 +62,31 @@ public class api implements Iapi {
     }
 
     @Override
+    @PostMapping("cancelMembership/{uuid}/{cancelMemberUsername}")
+    public SLResponseOBJ<Boolean> cancelMembership(@PathVariable("uuid")String uuid,@PathVariable("cancelMemberUsername") String cancelMemberUsername) {
+        return iMarket.cancelMembership(uuid, cancelMemberUsername);
+    }
+
+    @Override
+    @PostMapping("getStoreRate/{uuid}/{Store}")
+    public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) {
+        return iMarket.getStoreRate(uuid,Store);
+    }
+
+    @Override
+    @PostMapping("newStoreRate/{uuid}/{Store}/{rate}")
+    public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) {
+        return iMarket.newStoreRate(uuid,Store,rate);
+    }
+
+    @Override
+    @PostMapping("getAllusers")
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() {
+        System.out.println(iMarket.getAllusers().value);
+        return iMarket.getAllusers();
+    }
+
+    @Override
     @PostMapping("getProductTypeInfo/{productTypeID}")
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(@PathVariable("productTypeID")Integer productTypeId) {
         System.out.println(productTypeId);
@@ -278,7 +303,7 @@ public class api implements Iapi {
     @Override
     @PostMapping("addProductToShoppingBag/{uuid}/{storeId}/{productId}/{quantity}")
     public SLResponseOBJ<Boolean> addProductToShoppingBag(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @PathVariable("productId") int productId, @PathVariable("quantity") int quantity) {//ok
-        System.out.println(uuid);
+        System.out.println(uuid+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
         System.out.println(storeId);
         System.out.println(productId);
         System.out.println(quantity);

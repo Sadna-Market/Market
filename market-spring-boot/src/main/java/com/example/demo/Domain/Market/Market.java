@@ -479,6 +479,16 @@ public class Market {
     }
 
 
+    public DResponseObj<Integer> getStoreRate(UUID uuid,int Store){
+        if(!isOnline(uuid).value) return new DResponseObj<>(ErrorCode.NOTONLINE);
+        return stores.get(Store).getRate();
+    }
+    public DResponseObj<Boolean> newStoreRate(UUID uuid,int Store,int rate){
+        if(!isOnline(uuid).value) return new DResponseObj<>(ErrorCode.NOTONLINE);
+
+        return stores.get(Store).newStoreRate(rate);
+    }
+
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User

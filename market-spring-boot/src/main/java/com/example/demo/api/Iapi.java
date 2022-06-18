@@ -20,7 +20,10 @@ public interface Iapi {
     public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
     public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
     public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
-
+    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) ;
+    public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) ;
+    public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) ;
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() ;
 
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 

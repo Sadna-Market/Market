@@ -68,6 +68,28 @@ public class UserManager {
         return members.containsKey(email) ? new DResponseObj<>(true, -1) : new DResponseObj<>(false, ErrorCode.NOTMEMBER);
     }
 
+    public DResponseObj<List<HashMap<String,Object>>> getAllusers(){
+        List<HashMap<String,Object>> res = new LinkedList<>();
+        for(User mem: members.values()){
+            if(isLogged(mem)){
+                HashMap<String,Object> h = new HashMap<>();
+                h.put("email", mem.email);
+                h.put("isLogged",true);
+                res.add(h);
+            }else {
+                HashMap<String,Object> h = new HashMap<>();
+                h.put("email", mem.email);
+                h.put("isLogged",false);
+                res.add(h);
+            }
+        }
+        return new DResponseObj<>( res);
+    }
+
+
+    public Boolean isLogged(User user){
+        return LoginUsers.values().contains(user);
+    }
     public DResponseObj<UUID> GuestVisit() {
         logger.debug("UserManager GuestVisit");
         UUID newid = UUID.randomUUID();
@@ -289,18 +311,7 @@ public class UserManager {
         if (!isOwner(userId, store).value) return new DResponseObj<>(false,ErrorCode.NOTOWNER);
         User MenagerToRemove = members.get(MenagerEmail);
         DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(MenagerToRemove,store,loggedUser);
-        if(!removePermission.errorOccurred()){
-            //change all permission grantor to the founder (because we delete the grantor user)
-            String founder = store.getFounder().value;
-            User founderUser = getMember(founder).value;
-            for (Permission permission : founderUser.getGrantorPermission().value) {
-                if(permission.getStore().value.getStoreId().value.equals(store.getStoreId().value)) {
-                    permission.setGrantor(founderUser);
-                    founderUser.addGrantorPermission(permission);
-                    founderUser.removeGrantorPermission(permission);
-                }
-            }
-        }
+
         return removePermission;
     }
 

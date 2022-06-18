@@ -181,8 +181,68 @@
     },
     {
       "xor": {
-        "categoryID": "1",
-        "discount": "1",
+        "decision": "1",
+        "list": [
+          {
+            "conditionOnCategoryDiscount": {
+              "uuid": "1",
+              "storeId": "1",
+              "discount": "1",
+              "minimumAge": "1",
+              "categoryID": "1",
+              "minimumHour": "1",
+              "maximumHour": "1"
+            }
+          },
+          {
+            "conditionOnProductDiscount": {
+              "uuid": "1",
+              "storeId": "1",
+              "discount": "1",
+              "productID": "1",
+              "minQuantity": "1",
+              "maxQuantity": "1"
+            }
+          },
+          {
+            "conditionOnStoreDiscount": {
+              "uuid": "1",
+              "storeId": "1",
+              "discount": "1",
+              "minQuantity": "1",
+              "totalPrice": "1",
+              "minProductTypes": "1"
+            }
+          },
+          {
+            "categoryDiscount": {
+              "uuid": "1",
+              "storeId": "1",
+              "discount": "1",
+              "categoryID": "1"
+            }
+          },
+          {
+            "ProductDiscount": {
+              "uuid": "1",
+              "storeId": "1",
+              "discount": "1",
+              "productID": "1"
+            }
+          },
+          {
+            "FullDiscount": {
+              "uuid": "1",
+              "storeId": "1",
+              "discount": "1"
+            }
+          }
+        ]
+      }
+    },
+
+    {
+      "add": {
         "list": [
           {
             "conditionOnCategoryDiscount": {
@@ -241,7 +301,6 @@
         ]
       }
     }
-
-  ]
+]
 
 }

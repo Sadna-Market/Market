@@ -161,10 +161,22 @@ public class apiDiscountPparser {
         if(map.containsKey("xor")){
             return DiscountXor((Map<String, Object>) map.get("xor"));
         }
+        if (map.containsKey("add")){
+            return DiscountAdd((Map<String, Object>) map.get("add"));
+        }
 
         return simpleDiscountParse(map);
     }
 
+    private DiscountRuleSL DiscountAdd(Map<String,Object> or){
+        List<Map<String,Object>> cl= (List<Map<String, Object>>) or.get("list");
+        List<DiscountRuleSL> simpleDisRules = new LinkedList<>();
+        for(Map<String,Object> m : cl) {
+            DiscountRuleSL b=simpleDiscountParse(m);
+            simpleDisRules.add(b);
+        }
+        return new AddDiscountRuleSL(simpleDisRules);
+    }
 
     private DiscountRuleSL DiscountOr(Map<String,Object> or){
         List<Map<String,Object>> cl= (List<Map<String, Object>>) or.get("list");
@@ -194,6 +206,7 @@ public class apiDiscountPparser {
             DiscountRuleSL b=simpleDiscountParse(m);
             simpleDisRules.add(b);
         }
+        System.out.println((String) Xor.get("decision"));
         return new XorDiscountRuleSL(simpleDisRules,(String) Xor.get("decision"));
     }
 

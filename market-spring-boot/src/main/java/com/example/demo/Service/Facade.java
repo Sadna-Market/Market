@@ -551,6 +551,14 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.AddProductToShoppingBag(UUID.fromString(userId), storeId, productId, quantity));
     }
 
+    public SLResponseOBJ<Integer> getStoreRate(String uuid,int Store){
+        return new SLResponseOBJ<>(market.getStoreRate(UUID.fromString(uuid),Store));
+    }
+    public SLResponseOBJ<Boolean> newStoreRate(String uuid,int Store,int rate){
+        return new SLResponseOBJ<>(market.newStoreRate(UUID.fromString(uuid),Store, rate));
+    }
+
+
     @Override
     public SLResponseOBJ<ServiceShoppingCart> getShoppingCart(String userId) {
 
@@ -1724,4 +1732,9 @@ public class Facade implements IMarket {
         if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
         return new SLResponseOBJ<List<String>>(res);
     }
-}
+    @Override
+    public SLResponseOBJ<List<HashMap<String,Object>>> getAllusers(){
+        return new SLResponseOBJ<>(userManager.getAllusers());
+    }
+
+    }
