@@ -187,6 +187,12 @@ public class UserManager {
         return false;
     }
 
+    public DResponseObj<Boolean> resetShoppingCart(UUID uuid){
+       DResponseObj<User> u = getOnlineUser(uuid);
+       if(u.errorOccurred()) return new DResponseObj<>(false,u.errorMsg);
+       return u.value.resetCart();
+    }
+
     public DResponseObj<Boolean> ishasSystemManager() {
         for (String mail : members.keySet()) {
             if (PermissionManager.getInstance().isSystemManager(mail).value) {
