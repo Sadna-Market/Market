@@ -30,9 +30,9 @@ const ProductInStore = (props) => {
   //todo: add to cart!
   //        addProductToShoppingBag :async (uuid,storeid,productid,quantity)=>{
   async function clickHandler() {
-    console.log("UUID    "+UUID,'storeID',storeID,'productID',productID,'quantity',quantity)
+    console.log("UUID    "+UUID,'storeID',storeID,'productID',productID,'quantity',add)
 
-    const addProductToShoppingBagResponse = await apiClientHttp.addProductToShoppingBag(UUID, storeID, productID,quantity);
+    const addProductToShoppingBagResponse = await apiClientHttp.addProductToShoppingBag(UUID, storeID, productID,add);
     if (addProductToShoppingBagResponse.errorMsg !== -1) {
       SetError(errorCode.get(addProductToShoppingBagResponse.errorMsg))
     } else {
