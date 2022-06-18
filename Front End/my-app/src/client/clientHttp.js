@@ -264,7 +264,6 @@ export const createApiClientHttp = () => {
             return await axios.get(path).then((res)=>{
                 return res.data;
             })
-
         },
 
 
@@ -655,6 +654,7 @@ export const createApiClientHttp = () => {
             })
         },
         addNewDiscountRule:async(uuid,storeid,obj)=>{
+            console.log("uuid,storeid,obj",uuid,storeid,obj)
             let path = apiUrl.concat(`addNewDiscountRule/${uuid}/${storeid}`);
             console.log(obj)
             return await axios.post(path,obj).then((res)=>{
@@ -747,6 +747,7 @@ export const createApiClientHttp = () => {
             })
         } ,
         combineXorDiscountRules:async(uuid,storeid,desicion,obj)=>{
+            console.log("client  combineXorDiscountRules  uuid,storeid,desicion,obj ",uuid,storeid,desicion,obj)
             let path = apiUrl.concat(`combineXorDiscountRules/${uuid}/${storeid}/${desicion}`);
             return await axios.post(path,obj).then((res)=>{
                 return res.data;

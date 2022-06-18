@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 
 const BigOrFirst = (props) => {
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+  console.log("BigOrFirst")
   let listOfRules = props.rules;
   let UUID = props.uuid;
   let storeID = props.storeID;
@@ -13,13 +19,28 @@ const BigOrFirst = (props) => {
   };
 
   //todo: add new Category Discout rule with all the list
-  const addHandler = () => {
-    cleanHandler();
-    props.onRule(11);
-  };
+  async function addHandler(){
+    let sendRulesResponse="";
+    if (discount){//        combineXorDiscountRules:async(uuid,storeid,desicion,obj)=>{
+       sendRulesResponse = await apiClientHttp.combineXorDiscountRules(UUID,storeID,'Big Discount',{'combineXor':listOfRules});
+    }
+    else {
+       sendRulesResponse = await apiClientHttp.combineXorDiscountRules(UUID,storeID,'First',{'combineXor':listOfRules});
+    }
+    let str = JSON.stringify(sendRulesResponse);
+    console.log("sendRulesResponse    "+str)
+
+    if (sendRulesResponse.errorMsg !== -1) {
+      SetError(errorCode.get(sendRulesResponse.errorMsg))
+    } else {
+      cleanHandler();
+      props.onRule(-1);
+    }
+
+  }
 
   const changeValueHandler1 = (event) => {
-    setDiscount(false);
+    setDiscount(true);
   };
 
   const changeValueHandler2 = (event) => {
