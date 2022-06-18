@@ -1,13 +1,13 @@
 package com.example.demo.Domain.StoreModel;
 
+//import com.example.demo.DataAccess.Entity.DataInventory;
+import com.example.demo.DataAccess.Entity.DataProductStore;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Inventory {
@@ -15,7 +15,7 @@ public class Inventory {
 
     /////////////////////////////////////////// Fields //////////////////////////////////////////////////////////////
     private ConcurrentHashMap<Integer, ProductStore> products;  // productTypeID, ProductStore
-    private final int storeId;
+    private int storeId;
 
     static Logger logger = Logger.getLogger(Inventory.class);
 
@@ -23,6 +23,9 @@ public class Inventory {
     public Inventory(int storeId) {
         products = new ConcurrentHashMap<>();
         this.storeId = storeId;
+    }
+    public Inventory() {
+        products = new ConcurrentHashMap<>();
     }
 
     public DResponseObj<Boolean> haseItem(int itemId){
@@ -58,10 +61,16 @@ public class Inventory {
             return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
+//            var data = toAdd.getDataObject();
+//            productStoreService.inserProductStore(data,storeId);
             products.put(productStore.getValue(), toAdd);
             logger.info("Inventory added productId:" + newProduct.getProductID());
             return newProduct.addStore(storeId);
         }
+    }
+
+    public void addNewProductStore(ProductType productType,ProductStore productStore){
+        products.put(productType.getProductID().value,productStore);
     }
 
     public DResponseObj<Boolean> removeProduct(int productId) {
@@ -254,5 +263,14 @@ public class Inventory {
         return new DResponseObj<>(products);
     }
 
-
+//    public DataInventory getDataObject() {
+//        DataInventory dataInventory = new DataInventory();
+//        dataInventory.setInventoryId(this.storeId);
+//        Set<DataProductStore> productStores = new HashSet<>();
+//        this.products.forEach((integer, productStore) -> {
+//            productStores.add(productStore.getDataObject());
+//        });
+//        dataInventory.setProductStores(productStores);
+//        return dataInventory;
+//    }
 }

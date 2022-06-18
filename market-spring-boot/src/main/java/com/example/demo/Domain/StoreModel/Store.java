@@ -1,5 +1,6 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Permission;
@@ -19,7 +20,7 @@ import java.util.concurrent.locks.StampedLock;
 public class Store {
 
     /////////////////////////////////////////////// Fields ////////////////////////////////////////////////////////
-    private final int storeId;
+    private int storeId;
     private final String name;
     private final Inventory inventory ;
     private String founder;
@@ -41,6 +42,20 @@ public class Store {
     //requirement II.3.2
     public Store(int storeId,String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
         this.storeId = storeId;
+        inventory = new Inventory(storeId);
+        this.name = name;
+        this.founder = founder;
+        isOpen = true;
+        rate = 5;
+        numOfRated = 0;
+        history = new ConcurrentHashMap<>();
+        this.discountPolicy = discountPolicy; //this version is null
+        this.buyPolicy = buyPolicy; //this version is null
+        this.bids = new ConcurrentLinkedDeque<>();
+    }
+
+    //db
+    public Store(String name, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, String founder){
         inventory = new Inventory(storeId);
         this.name = name;
         this.founder = founder;
@@ -571,6 +586,26 @@ public class Store {
     public DResponseObj<List<DiscountRule>> getDiscountPolicy() {
         return discountPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
                 new DResponseObj<>(new ArrayList<>(discountPolicy.getRules().values()));
+    }
+
+
+    public DataStore getDataObject() {
+        DataStore dataStore = new DataStore();
+        dataStore.setStoreId(this.storeId);
+        dataStore.setName(this.name);
+        dataStore.setRate(this.rate);
+        dataStore.setOpen(this.isOpen);
+        dataStore.setNumOfRated(this.numOfRated);
+        dataStore.setFounder(this.founder);
+        return dataStore;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
     }
 }
 

@@ -91,7 +91,12 @@ public class NotificationDispatcher {
             logger.error("the user that had delayed notifications has not set up the session on connection");
             return;
         }
-        realTimeListeners.get(sessionID).addAll(notifications);
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < notifications.size() - 1; i++) {
+            builder.append(notifications.get(i).getText()).append("\n");
+        }
+        builder.append(notifications.get(notifications.size()-1));
+        realTimeListeners.get(sessionID).add(new Notification(builder.toString()));
         logger.info("added all delayed notifications of user to real time map");
     }
 
