@@ -12,7 +12,7 @@ public class config {
     private static   String init_system_env = "env.json";
     private static   String state_system = "state_system.json";
 
-    public static boolean isMakeState=true;
+    public static boolean isMakeState = true;
     static Logger logger = Logger.getLogger(config.class);
 
     private  JsonReader jsonReader = null;
@@ -25,6 +25,10 @@ public class config {
             return new config();
         }
         return instance;
+    }
+
+    public String get_System_state_path(){
+        return state_system;
     }
     public config(){
         ObjectMapper objectMapper = new ObjectMapper();

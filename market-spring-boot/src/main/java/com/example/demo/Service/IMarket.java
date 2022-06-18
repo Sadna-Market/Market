@@ -127,8 +127,14 @@ public interface IMarket {
     public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
     public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
+    public SLResponseOBJ<List<HashMap<String,Object>>> getAllusers();
 
-    //2.4.7
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+
+    public SLResponseOBJ<Integer> getStoreRate(String UUID,int Store);
+    public SLResponseOBJ<Boolean> newStoreRate(String UUID,int Store,int rate);
+
+        //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
             mangerEmil, String per , boolean onof);
     //2.4.9

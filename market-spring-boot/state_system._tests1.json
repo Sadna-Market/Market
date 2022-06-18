@@ -111,10 +111,10 @@
   },
   "addOwner": {
     "u2@gmail.com": {
-    "s1": [
-      "u4@gmail.com","u5@gmail.com"
-    ]
-  }
+      "s1": [
+        "u4@gmail.com","u5@gmail.com"
+      ]
+    }
   },
   "Logoutandleave": ["u5@gmail.com","u2@gmail.com"]
 

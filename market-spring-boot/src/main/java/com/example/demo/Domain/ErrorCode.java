@@ -87,5 +87,8 @@ public class ErrorCode {
     public static int SUPPLY_FAIL = 406;
     public static int CANCELSUPPLYAPIFAIL = 407;
 
+    public static int STORE_IS_NOT_EXIST = 600;
+    public static int ALLRADYLOGED = 601;
+
 
 }

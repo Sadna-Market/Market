@@ -20,11 +20,21 @@ public interface Iapi {
     public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
     public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
     public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
-
+    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) ;
+    public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) ;
+    public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) ;
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() ;
 
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid,int storeID);
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid,int storeID);
+    public SLResponseOBJ<Boolean> reopenStore(String uuid,int storeID);
+
+
+
     public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;
 
     public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;

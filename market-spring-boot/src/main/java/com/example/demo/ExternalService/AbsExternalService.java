@@ -2,6 +2,7 @@ package com.example.demo.ExternalService;
 
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.configuration.config;
 import org.apache.log4j.Logger;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -38,6 +39,11 @@ public class AbsExternalService {
 
 
     public AbsExternalService(String name) {
+
+        config c = config.get_instance();
+        if(c.getJsonInit().url!=null||!c.getJsonInit().url.equals("")){
+            this.URL=c.getJsonInit().url;
+        }
         this.name = name;
     }
 
