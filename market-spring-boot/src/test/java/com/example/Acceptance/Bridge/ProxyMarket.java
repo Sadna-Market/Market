@@ -479,6 +479,18 @@ public class ProxyMarket implements MarketBridge {
     }
 
     /**
+     * reopen store
+     *
+     * @param uuid
+     * @param storeID
+     * @return true if success, else false
+     */
+    @Override
+    public boolean reopenStore(String uuid, int storeID) {
+        return realMarket.reopenStore(uuid,storeID);
+    }
+
+    /**
      * checks if store is closed
      *
      * @param storeID id of store

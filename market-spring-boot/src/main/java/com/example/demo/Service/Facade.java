@@ -785,7 +785,7 @@ public class Facade implements IMarket {
         if (founder == null || founder.equals(""))
             return new SLResponseOBJ<>(-1, ErrorCode.NOTSTRING);
         DResponseObj<Integer> res = market.OpenNewStore(UUID.fromString(userId), name, founder,
-                new DiscountPolicy(discountPolicy), new BuyPolicy(buyPolicy), new BuyStrategy(buyStrategy));
+                new DiscountPolicy(discountPolicy), new BuyPolicy(buyPolicy));
         return new SLResponseOBJ<>(res.value, res.errorMsg);
     }
 

@@ -578,6 +578,19 @@ public class RealMarket implements MarketBridge {
     }
 
     /**
+     * reopen store
+     *
+     * @param uuid
+     * @param storeID
+     * @return true if success, else false
+     */
+    @Override
+    public boolean reopenStore(String uuid, int storeID) {
+        SLResponseOBJ<Boolean> res = market.reopenStore(uuid, storeID);
+        return !res.errorOccurred();
+    }
+
+    /**
      * checks if store is closed
      *
      * @param storeID id of store

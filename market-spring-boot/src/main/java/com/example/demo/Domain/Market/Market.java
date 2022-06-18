@@ -545,7 +545,7 @@ public class Market {
     //2.3.2
     //pre: user is Member
     //post: new Store add to the market
-    public DResponseObj<Integer> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    public DResponseObj<Integer> OpenNewStore(UUID userId, String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy) {
         DResponseObj<Boolean> checkUM = userManager.isLogged(userId);
         if (checkUM.errorOccurred() || !checkUM.getValue()) return new DResponseObj<>(null, ErrorCode.NOTLOGGED);
 
@@ -770,14 +770,19 @@ public class Market {
     }
 
     //2.4.9
-    //pre: the store exist in the system, the user is owner of this store.
+    //pre: the store exist in the system, the user is founder of this store.
     //post: the market move this store to the closeStores, users can not see this store again(until she will be open).
     public DResponseObj<Boolean> closeStore(UUID userId, int storeId) {
         if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
-        DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.closeStore, null);
-        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
-        Store store = result.getValue().item1;
-
+        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
+        Store store = s.value;
+        if(!store.getFounder().value.equals(logIN.value.getEmail().value)){
+            logger.warn("only founder can close store");
+            return new DResponseObj<>(false,ErrorCode.NOPERMISSION);
+        }
         DResponseObj<Boolean> checkCloseStore = store.closeStore();
         if (checkCloseStore.errorOccurred()) return checkCloseStore;
         if (!checkCloseStore.getValue()) {
@@ -789,10 +794,10 @@ public class Market {
         long stamp = lock_stores.writeLock();
         logger.debug("catch WriteLock");
         try {
-            Store s = stores.remove(getStoreID.value);
-            closeStores.put(getStoreID.getValue(), store);
+            Store st = stores.remove(getStoreID.value);
+            closeStores.put(getStoreID.getValue(), st);
             logger.info("market update that Store #" + storeId + " close");
-            notifyOwnersAndManagersStoreClosed(s,"close");
+            notifyOwnersAndManagersStoreClosed(st,"close");
             return new DResponseObj<>(true);
         } finally {
             lock_stores.unlockWrite(stamp);
@@ -802,22 +807,24 @@ public class Market {
 
     public DResponseObj<Boolean> reopenStore(UUID userId, int storeId) {
         if(!isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_NOT_CLOSED);
-        DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.closeStore, null);
-        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
-        Store store = result.getValue().item1;
-        DResponseObj<Boolean> checkReopenStore = store.reopenStore();
-        if (checkReopenStore.errorOccurred()){
+        Store s = closeStores.get(storeId);
+        DResponseObj<User> logIN = userManager.getLoggedUser(userId);
+        if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
+        if(!s.getFounder().value.equals(logIN.value.getEmail().value)){
+            logger.warn("only founder can reopen store");
+            return new DResponseObj<>(false,ErrorCode.NOPERMISSION);
+        }
+        DResponseObj<Boolean> ReopenStore = s.reopenStore();
+        if (ReopenStore.errorOccurred()){
             logger.warn("Store return that can not close this store");
-            return checkReopenStore;
+            return ReopenStore;
         }
 
-        DResponseObj<Integer> getStoreID = store.getStoreId();
-        if (getStoreID.errorOccurred()) return new DResponseObj<>(getStoreID.getErrorMsg());
         long stamp = lock_stores.writeLock();
         logger.debug("catch WriteLock");
         try {
-            Store s = closeStores.remove(getStoreID.value);
-            stores.put(getStoreID.getValue(), store);
+            Store st = closeStores.remove(storeId);
+            stores.put(storeId, st);
             logger.info("market update that Store #" + storeId + " reopen");
             notifyOwnersAndManagersStoreClosed(s,"reopen");
             return new DResponseObj<>(true);
@@ -1422,7 +1429,7 @@ public class Market {
         }
 
         for (int i = 0; i < 10; i++) {
-            Store store = OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy(), new BuyStrategy());
+            Store store = OpenNewStore("name" + i, "founder" + 1, new DiscountPolicy(), new BuyPolicy());
             for (ProductType product : productTypes.values()) {
                 store.addNewProduct(product, 5, 10.2);
             }
@@ -1449,7 +1456,7 @@ public class Market {
         }
     }
 
-    private Store OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy, BuyStrategy buyStrategy) {
+    private Store OpenNewStore(String name, String founder, DiscountPolicy discountPolicy, BuyPolicy buyPolicy) {
 
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");

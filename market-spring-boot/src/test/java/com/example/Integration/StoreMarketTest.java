@@ -229,11 +229,11 @@ public class StoreMarketTest {
     }
 
 
-    @DisplayName("closeStore  - successful -StoreID")
+    @DisplayName("closeStore  - successful")
     @ParameterizedTest
     @ValueSource(ints = {1,2,4,6})
     void deleteStore2(int i) {
-        assertFalse(market.closeStore(UUID.randomUUID(),i).errorOccurred());
+        assertTrue(market.closeStore(UUID.randomUUID(),i).errorOccurred());
     }
 
     @DisplayName("deleteStore3  - failure -StoreID")
