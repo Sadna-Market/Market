@@ -74,7 +74,8 @@ public class PurchaseTest extends MarketTests {
 
         ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
         List<History> recipes = res.value;
-        assertTrue(recipes.stream().anyMatch(h -> String.valueOf(h.getTID()).equals("1")));
+        assertEquals(1, recipes.size());
+        assertTrue(recipes.stream().anyMatch(h -> h.getFinalPrice() == 20));
     }
 
     @Test
@@ -306,7 +307,8 @@ public class PurchaseTest extends MarketTests {
         List<History> recipes = res.value;
         for (History h : recipes)
             System.out.println("TID: " + h.getTID() + " price: " + h.getFinalPrice());
-        assertTrue(recipes.stream().anyMatch(h -> (h.getTID()) == 1 & h.getFinalPrice() == 30));
+        assertEquals(1, recipes.size());
+        assertTrue(recipes.stream().anyMatch(h -> h.getFinalPrice() == 30));
     }
 
     /**
@@ -354,7 +356,8 @@ public class PurchaseTest extends MarketTests {
 
         ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
         List<History> recipes = res.value;
-        assertTrue(recipes.stream().anyMatch(h -> (h.getTID()) == 1 && h.getFinalPrice() == 20));
+        assertEquals(1, recipes.size());
+        assertTrue(recipes.stream().anyMatch(h -> h.getFinalPrice() == 20));
     }
 
     /*    */
@@ -445,7 +448,8 @@ public class PurchaseTest extends MarketTests {
 
         ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
         List<History> recipes = res.value;
-        assertTrue(recipes.stream().anyMatch(h -> (h.getTID()) == 1 & h.getFinalPrice() == 15));
+        assertEquals(1, recipes.size());
+        assertTrue(recipes.stream().anyMatch(h -> h.getFinalPrice() == 15));
     }
 
 /*

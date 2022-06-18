@@ -31,7 +31,7 @@ public class Store {
     private BuyPolicy buyPolicy;
     private List<Permission> permission = new ArrayList<>(); // all the permission that have in this store
     private List<Permission> safePermission = Collections.synchronizedList(permission);
-    private ConcurrentLinkedDeque<BID> bids = new ConcurrentLinkedDeque<>();
+    private ConcurrentLinkedDeque<BID> bids;
 
     private final StampedLock historyLock = new StampedLock();
     static Logger logger=Logger.getLogger(Store.class);

@@ -791,7 +791,7 @@ public class StoreOwnerTests extends MarketTests{
      */
     @Test
     @DisplayName("req: #2.4.9 - success test")
-    void closeStore_Success() {
+    void closeAndReopenStore_Success() {
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
@@ -800,6 +800,9 @@ public class StoreOwnerTests extends MarketTests{
         ItemDetail item = new ItemDetail("iphoneZX", 1, 10, List.of("phone"), "phone");
         item.itemID = 1122;
         assertFalse(market.addItemToStore(uuid, existing_storeID,item));
+        assertTrue(market.reopenStore(uuid, existing_storeID));
+        assertFalse(market.storeIsClosed(existing_storeID));
+        assertTrue(market.addNewBuyRule(uuid,existing_storeID,new UserBuyRuleSL(new UserPredicateSL("niv@gmail.com"))));
     }
 
     @Test
@@ -843,6 +846,30 @@ public class StoreOwnerTests extends MarketTests{
         uuid = memberID.value;
         assertFalse(market.closeStore(uuid, existing_storeID));
     }
+
+    @Test
+    @DisplayName("req: #2.4.9 - fail test [user doesnt have permission]")
+    void closeAndReopenStore_Fail3() {
+        User user = generateUser();
+        assertTrue(market.register(uuid, user.username, user.password, user.dateOfBirth));
+        assertTrue(market.isMember(member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertTrue(market.closeStore(uuid,existing_storeID));
+
+        ATResponseObj<String> guestID = market.logout(uuid);
+        assertFalse(guestID.errorOccurred());
+        uuid = guestID.value;
+        memberID = market.login(uuid, user);
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.storeIsClosed(existing_storeID));
+        assertFalse(market.reopenStore(uuid, existing_storeID));
+        assertTrue(market.storeIsClosed(existing_storeID));
+    }
+
 
     @Test
     @DisplayName("req: #2.4.9 - fail test [invalid input]")

@@ -362,6 +362,14 @@ public interface MarketBridge {
     boolean closeStore(String uuid, int storeID);
 
     /**
+     * reopen store
+     * @param uuid
+     * @param storeID
+     * @return  true if success, else false
+     */
+    boolean reopenStore(String uuid, int storeID);
+
+    /**
      * checks if store is closed
      * @param storeID id of store
      * @return true is store is closed, else false
