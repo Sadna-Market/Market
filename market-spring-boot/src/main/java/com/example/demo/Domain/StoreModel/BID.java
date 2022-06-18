@@ -46,8 +46,9 @@ public class BID {
     public void reject() {
         status = StatusEnum.BIDRejected;
     }
-    public void counter(int newTotalPrice) {
+    public void counter(String ownerEmail, int newTotalPrice) {
         approves.replaceAll((K,V) -> V = false);
+        approves.replace(ownerEmail,true);
         lastPrice = newTotalPrice;
         status = StatusEnum.CounterBID;
     }

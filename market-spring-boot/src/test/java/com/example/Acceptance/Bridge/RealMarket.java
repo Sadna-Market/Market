@@ -952,6 +952,34 @@ public class RealMarket implements MarketBridge {
         return new ATResponseObj<>(res.value);
     }
 
+    /**
+     * get all bids in the store if has permission
+     *
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public ATResponseObj<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> res = market.getAllOffersBIDS(uuid,storeID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * get all bids of user in the store
+     *
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+        SLResponseOBJ<List<ServiceBID>> res = market.getMyBIDs(uuid,storeID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
 
 }
 
