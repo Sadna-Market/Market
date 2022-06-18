@@ -1,12 +1,15 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.ProductType;
+import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.Market.userTypes;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Service.ServiceObj.ServiceBID;
 import org.apache.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -331,25 +334,20 @@ public class Store {
     //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
     public void addPermission(Permission p){
         safePermission.add(p);
+        if(p.getgranteePermissionTypes().value.contains(permissionType.permissionEnum.ManageBID))
+            bids.forEach(b -> b.addManagerToList(p.getGrantee().value.getEmail().value));
     }
 
     //requirement II.4.7 (only owners)
     public void removePermission(Permission p){
         safePermission.remove(p);
+        if(p.getgranteePermissionTypes().value.contains(permissionType.permissionEnum.ManageBID))
+            bids.forEach(b -> b.removeManagerFromList(p.getGrantee().value.getEmail().value));
     }
     public DResponseObj<List<Permission>> getPermission(){
         return new DResponseObj<>(safePermission);
     }
 
-    public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
-        DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
-        if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
-        if(findBID(email,productID) != null) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
-        ConcurrentHashMap<String,Boolean> approves =  createApprovesHashMap();
-        BID b = new BID(email,productID,quantity,totalPrice,approves);
-        bids.add(b);
-        return new DResponseObj<>(true);
-    }
 
     private List<String> getOwners(){
         List<String> owners = new ArrayList<>();
@@ -361,6 +359,18 @@ public class Store {
         return owners;
     }
 
+    public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
+        DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
+        if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
+        if(findBID(email,productID) != null) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
+        ConcurrentHashMap<String,Boolean> approves =  createApprovesHashMap();
+        DResponseObj<ProductStore> productStore = inventory.getProductInfo(productID);
+        if(productStore.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
+        String productName = productStore.value.getProductType().getProductName().value;
+        BID b = new BID(email,productID,productName,quantity,totalPrice,approves);
+        bids.add(b);
+        return new DResponseObj<>(true);
+    }
 
     private ConcurrentHashMap<String,Boolean> createApprovesHashMap(){
         ConcurrentHashMap<String,Boolean> approves = new ConcurrentHashMap<>();
@@ -376,81 +386,6 @@ public class Store {
             }
         }
         return new DResponseObj<>(false, ErrorCode.BIDNOTEXISTS);
-    }
-
-
-
-        /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
-
-    public DResponseObj<Inventory> getInventory(){
-        return new DResponseObj<>(inventory);
-    }
-    public DResponseObj<Integer> getStoreId(){
-        return new DResponseObj<>(storeId,-1);
-    }
-
-    public DResponseObj<String> getName() {
-        return new DResponseObj<>(name);
-    }
-
-    public DResponseObj<Boolean> isOpen() {
-        return new DResponseObj<>(isOpen);
-    }
-
-    public DResponseObj<Integer> getRate() {
-        return new DResponseObj<>(rate,-1);
-    }
-
-    public DResponseObj<String> getFounder() {
-        return new DResponseObj<>(founder);
-    }
-
-    public DResponseObj<List<Permission>> getSafePermission() {
-        return new DResponseObj<>(safePermission);
-    }
-
-    public int getBuyRulesSize(){
-        return buyPolicy.rulesSize();
-    }
-    public int getDiscountRulesSize(){
-        return discountPolicy.rulesSize();
-    }
-
-    public void setHistory(ConcurrentHashMap<Integer,History> history) {
-        this.history = history;
-    }
-
-    //requirement II.4.2  (only owners)
-    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
-        this.discountPolicy = discountPolicy;
-    }
-
-    //requirement II.4.2  (only owners)
-    public void setBuyPolicy(BuyPolicy buyPolicy) {
-        this.buyPolicy = buyPolicy;
-    }
-
-    public void setFounder(String founder) {
-        this.founder = founder;
-    }
-
-    public DResponseObj<ConcurrentHashMap<Integer, History>> getHistory() {
-        return new DResponseObj<>(history);
-    }
-
-    public void openStoreAgain() {
-        isOpen = true;
-    }
-
-
-    public DResponseObj<List<BuyRule>> getBuyPolicy() {
-        return buyPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
-         new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
-    }
-
-    public DResponseObj<List<DiscountRule>> getDiscountPolicy() {
-        return discountPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
-                new DResponseObj<>(new ArrayList<>(discountPolicy.getRules().values()));
     }
 
 
@@ -470,7 +405,7 @@ public class Store {
     private BID findBID(String userEmail, int productID){
         for(BID b : bids){
             if(b.getUsername().equals(userEmail) && b.getProductID() == productID){
-              return b;
+                return b;
             }
         }
         return null;
@@ -506,6 +441,29 @@ public class Store {
         return new DResponseObj<>(b.getStatusString());
     }
 
+    public DResponseObj<List<BID>> getMyBIDs(String userEmail) {
+        List<BID> myBIDs = new ArrayList<>();
+        bids.forEach(b -> {
+            if(b.getUsername().equals(userEmail))
+                myBIDs.add(b);
+        });
+        return new DResponseObj<>(myBIDs);
+    }
+
+    public DResponseObj<HashMap<Integer, List<BID>>> getAllOffersBIDs() {
+        HashMap<Integer,List<BID>> BIDs = new HashMap<>();
+        bids.forEach(b -> {
+            if(!BIDs.containsKey(b.getProductID())){
+                List<BID> l = new ArrayList<>();
+                l.add(b);
+                BIDs.put(b.getProductID(),l);
+            }else{
+                BIDs.get(b.getProductID()).add(b);
+            }
+        });
+        return new DResponseObj<>(BIDs);
+    }
+
     public DResponseObj<BID> canBuyBID(String userEmail, int productID) {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(null,ErrorCode.BIDNOTEXISTS);
@@ -516,7 +474,89 @@ public class Store {
     }
 
 
+    public DResponseObj<Boolean> reopenStore() {
+        DResponseObj<Boolean> success = inventory.tellProductStoreIsReopen();
+        if (success.errorOccurred())
+            return success;
+        else {
+            isOpen = true;
+            logger.info("storeId: " + storeId + " reopen");
+            return new DResponseObj<>(success.getValue());
+        }
+    }
+    /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
+    public DResponseObj<Inventory> getInventory(){
+        return new DResponseObj<>(inventory);
+    }
+
+    public DResponseObj<Integer> getStoreId(){
+        return new DResponseObj<>(storeId,-1);
+    }
+
+    public DResponseObj<String> getName() {
+        return new DResponseObj<>(name);
+    }
+
+    public DResponseObj<Boolean> isOpen() {
+        return new DResponseObj<>(isOpen);
+    }
+
+    public DResponseObj<Integer> getRate() {
+        return new DResponseObj<>(rate,-1);
+    }
+
+    public DResponseObj<String> getFounder() {
+        return new DResponseObj<>(founder);
+    }
+    public ConcurrentLinkedDeque<BID> getBids() {
+        return bids;
+    }
+
+    public DResponseObj<List<Permission>> getSafePermission() {
+        return new DResponseObj<>(safePermission);
+    }
+
+    public int getBuyRulesSize(){
+        return buyPolicy.rulesSize();
+    }
+    public int getDiscountRulesSize(){
+        return discountPolicy.rulesSize();
+    }
+
+    public void setHistory(ConcurrentHashMap<Integer,History> history) {
+        this.history = history;
+    }
+    //requirement II.4.2  (only owners)
+
+    public void setDiscountPolicy(DiscountPolicy discountPolicy) {
+        this.discountPolicy = discountPolicy;
+    }
+
+    //requirement II.4.2  (only owners)
+
+    public void setBuyPolicy(BuyPolicy buyPolicy) {
+        this.buyPolicy = buyPolicy;
+    }
+
+    public void setFounder(String founder) {
+        this.founder = founder;
+    }
+
+    public DResponseObj<ConcurrentHashMap<Integer, History>> getHistory() {
+        return new DResponseObj<>(history);
+    }
+
+
+    public DResponseObj<List<BuyRule>> getBuyPolicy() {
+        return buyPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
+         new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
+    }
+
+    public DResponseObj<List<DiscountRule>> getDiscountPolicy() {
+        return discountPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
+                new DResponseObj<>(new ArrayList<>(discountPolicy.getRules().values()));
+    }
 }
 
 
