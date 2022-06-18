@@ -21,13 +21,17 @@ const AddRule = (props) => {
 
   //todo: create Add with list
   async function finishHandler(){
-    let combineMap ={"add":list}
-    const sendRulesResponse = await apiClientHttp.addNewDiscountRule(combineMap);
+    let AddMap ={"add":{'list': list}}
+
+    let str = JSON.stringify(AddMap);
+    console.log("AddMap    "+str)
+    const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID,AddMap);
+    let str2 = JSON.stringify(sendRulesResponse);
+    console.log("sendRulesResponse    "+str2)
 
     if (sendRulesResponse.errorMsg !== -1) {
       SetError(errorCode.get(sendRulesResponse.errorMsg))
     } else {
-      // props.onRule(sendRulesResponse.value);
       props.onRule();
     }
   }

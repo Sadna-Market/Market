@@ -11,14 +11,14 @@ const UserID = (props) => {
   const [enteredError, SetError] = useState("");
   async function clickHandler(){
 
-    //   const removeUserResponse = await apiClientHttp.removeUser(props.uuid,props.email);
-    //
-    //   if (removeUserResponse.errorMsg !== -1) {
-    //     SetError(errorCode.get(removeUserResponse.errorMsg))
-    //   } else {
-    //    SetError("")
-    //    props.onEnterToStore(props.id);
-    //   }
+      const removeUserResponse = await apiClientHttp.cancelMembership(props.uuid,props.email);
+
+      if (removeUserResponse.errorMsg !== -1) {
+        SetError(errorCode.get(removeUserResponse.errorMsg))
+      } else {
+       SetError("")
+       props.onEnterToStore(props.id);
+      }
 
 
   }

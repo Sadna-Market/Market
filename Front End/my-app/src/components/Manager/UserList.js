@@ -9,57 +9,62 @@ const UserList = (props) => {
   const apiClientHttp = createApiClientHttp();
   const [enteredError, SetError] = useState("");
 
-  // const [enteredusers, Setusers] = useState([]);
-  //
-  // console.log("StoreList")
-  //
-  // async function getAllUsers() {
-  //   let users = [];
-  //
-  //   const getAllUsersInTheSystemResponse = await apiClientHttp.getAllUsersInTheSystem(props.uuid);
-  //
-  //   if (getAllUsersInTheSystemResponse.errorMsg !== -1) {
-  //     SetError(errorCode.get(getAllUsersInTheSystemResponse.errorMsg))
-  //   } else {
-  //     for (let i = 0; i < getAllUsersInTheSystemResponse.value.length; i++) {
-  //     users.push({
-  //         State: getAllUsersInTheSystemResponse.value[i].storeId,
-  //          email: getAllUsersInTheSystemResponse.value[i].email,
-  //       })
-  //
-  //     }
-  //     SetError("")
-  //     Setusers(users);
-  //   }
-  // }
-  //
-  // useEffect(() => {
-  //     getAllUsers();
-  // }, [enteredusers.refresh]);
+  const [enteredusers, Setusers] = useState([]);
 
-  let users = [
-    { email: "a@gmail.com", State: "Connect" },
-    { email: "b@gmail.com", State: "Disconnect" },
-    { email: "c@gmail.com", State: "Connect" },
-    { email: "d@gmail.com", State: "Connect" },
-    { email: "e@gmail.com", State: "Disconnect" },
-    { email: "h@gmail.com", State: "Disconnect" },
-    { email: "e@gmail.com", State: "Disconnect" },
-  ];
-  if (users.length === 0) {
+  console.log("StoreList")
+
+  async function getAllUsers() {
+    let users = [];
+
+    const getAllUsersInTheSystemResponse = await apiClientHttp.getAllusers(props.uuid);
+
+    let str = JSON.stringify(getAllUsersInTheSystemResponse);
+    console.log("getAllUsersInTheSystemResponse    "+str)
+
+
+    if (getAllUsersInTheSystemResponse.errorMsg !== -1) {
+      SetError(errorCode.get(getAllUsersInTheSystemResponse.errorMsg))
+    } else {
+      for (let i = 0; i < getAllUsersInTheSystemResponse.value.length; i++) {
+        if (getAllUsersInTheSystemResponse.value[i].isLogged){
+          users.push({
+            State: 'Connect',
+            email: getAllUsersInTheSystemResponse.value[i].email,
+          })
+        }
+        else {
+          users.push({
+            State: 'Disconnect',
+            email: getAllUsersInTheSystemResponse.value[i].email,
+          })
+        }
+
+
+      }
+      SetError("")
+      Setusers(users);
+    }
+  }
+
+  useEffect(() => {
+      getAllUsers();
+  }, [enteredusers.refresh]);
+
+
+  if (enteredusers.length === 0) {
     return <h2 className="stores-list__fallback">Found No Stores</h2>;
   }
 
-  if (props.search != "") {
-    users = users.filter((user) => user.email === props.search);
-  }
+  // if (props.search != "") {
+  //   users = users.filter((user) => user.email === props.search);
+  // }
 
   const enterToStoreHandler = (storeID) => {
-    // getAllUsers();
+    getAllUsers();
     // props.onEnterToStore(storeID);
   };
 
-  let expensesContent = users.map((expense) => (
+  let expensesContent = enteredusers.map((expense) => (
       <UserID
           email={expense.email}
           state={expense.State}
