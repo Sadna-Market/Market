@@ -34,6 +34,66 @@ public class User {
     private List<Permission> safeAccessPermission = Collections.synchronizedList(accessPermission);
     private List<Permission> safeGrantorPermission = Collections.synchronizedList(grantorPermission);
 
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public List<History> getHistories() {
+        return histories;
+    }
+
+    public void setHistories(List<History> histories) {
+        this.histories = histories;
+    }
+
+    public void setAccessPermission(List<Permission> accessPermission) {
+        this.accessPermission = accessPermission;
+    }
+
+    public void setGrantorPermission(List<Permission> grantorPermission) {
+        this.grantorPermission = grantorPermission;
+    }
+
+    public List<Permission> getSafeAccessPermission() {
+        return safeAccessPermission;
+    }
+
+    public void setSafeAccessPermission(List<Permission> safeAccessPermission) {
+        this.safeAccessPermission = safeAccessPermission;
+    }
+
+    public List<Permission> getSafeGrantorPermission() {
+        return safeGrantorPermission;
+    }
+
+    public void setSafeGrantorPermission(List<Permission> safeGrantorPermission) {
+        this.safeGrantorPermission = safeGrantorPermission;
+    }
+
     public User(String email, String password, String phoneNumber, LocalDate dateOfBirth) {
         this.email = email;
         this.Password = password;
@@ -168,6 +228,7 @@ public class User {
         dataUser.setPassword(this.Password);
         dataUser.setDateOfBirth(this.dateOfBirth);
         dataUser.setPhoneNumber(phoneNumber);
+        dataUser.setDataShoppingCart(this.shoppingCart.getDataObject());
         return dataUser;
     }
 

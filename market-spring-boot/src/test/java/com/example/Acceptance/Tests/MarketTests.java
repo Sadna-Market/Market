@@ -7,7 +7,6 @@ import com.example.demo.DemoApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-@SpringBootTest(classes = DemoApplication.class)
 public class MarketTests {
     protected MarketBridge market;
     private int counter;

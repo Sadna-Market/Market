@@ -1,14 +1,12 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Entity.DataBuyRule;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import org.apache.log4j.Logger;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,4 +61,7 @@ public class BuyPolicy {
     }
 
 
+    public DataBuyRule getDataObject() {
+        return new DataBuyRule();
+    }
 }

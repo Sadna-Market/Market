@@ -1252,7 +1252,6 @@ public class Market {
         }
     }
 
-    @Scheduled
     private void checkStoreBIDAllApproved(Store store) {
         DResponseObj<HashMap<String,List<Integer>>> allApproved = store.checkStoreBIDAllApproved();
         allApproved.value.forEach((userEmail,productsID) -> {

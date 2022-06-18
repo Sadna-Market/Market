@@ -3,7 +3,6 @@ package com.example.demo.DataAccess.Entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "User")
@@ -30,7 +29,7 @@ public class DataUser {
     private DataShoppingCart dataShoppingCart;
 
     @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "userHistory",
+            mappedBy = "user",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
@@ -42,7 +41,7 @@ public class DataUser {
 //            orphanRemoval = true
 //    )
 //    private Set<DataPermission> accessPermission = new HashSet<>();
-
+//
 //    @OneToMany(fetch = FetchType.EAGER,
 //            mappedBy = "grantor",
 //            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
@@ -50,7 +49,8 @@ public class DataUser {
 //    )
 //    private Set<DataPermission> grantorPermission = new HashSet<>();
 
-
+    public DataUser() {
+    }
     public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
         this.dataShoppingCart = dataShoppingCart;
     }
@@ -59,8 +59,7 @@ public class DataUser {
         return dataShoppingCart;
     }
 
-    public DataUser() {
-    }
+
 
     public String getUsername() {
         return username;
@@ -118,17 +117,10 @@ public class DataUser {
 //        this.grantorPermission = grantorPermission;
 //    }
 
-    public void update(DataUser user) { //maybe will need to change something here but this is the idea instead of making a lot of setter functions
+    public void update(DataUser user) {
         this.password = user.getPassword();
         this.phoneNumber = user.getPhoneNumber();
         this.dateOfBirth = user.getDateOfBirth();
-//        this.accessPermission.clear();
-//        this.accessPermission.addAll(user.getAccessPermission());
-//        this.grantorPermission.clear();
-//        this.grantorPermission.addAll(user.getGrantorPermission());
-        this.histories.clear();
-        this.histories.addAll(user.getHistories());
-        this.dataShoppingCart.update(user.getDataShoppingCart());
     }
 
 }

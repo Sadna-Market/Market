@@ -3,7 +3,6 @@ package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -31,18 +30,13 @@ public class DataStore {
     )
     private String name;
 
-    @OneToOne(cascade = {CascadeType.ALL, /*when the store gets deleted then the inventory gets deleted*/
-           /* CascadeType.PERSIST /* when saving the store then save the inventory too */},
-            fetch = FetchType.EAGER) /*when store is fetched from db then fetch the inventory too*/
-    @JoinColumn( /* The @JoinColumn annotation combined with a @OneToOne mapping indicates that a given column in the owner entity refers to a primary key in the reference entity*/
-            name = "inventory_id", /* The name of the foreign key column in the DataStore entity is specified by name property.*/
-            nullable = false,
-            referencedColumnName = "inventory_id",
-            foreignKey = @ForeignKey(
-                    name = "inventory_fk"
-            )
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "store",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
-    private DataInventory inventory;
+    private Set<DataProductStore> productStores = new HashSet<>();
 
 
     @Column(
@@ -74,31 +68,20 @@ public class DataStore {
     )
     private Set<DataHistory> history = new HashSet<>();
 
-    @OneToOne(cascade = {CascadeType.ALL, /*when the store gets deleted then the DiscountPolicy gets deleted*/
-            /*CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */},
-            fetch = FetchType.EAGER) /*when store is fetched from db then fetch the DiscountPolicy too*/
-    @JoinColumn( /* The @JoinColumn annotation combined with a @OneToOne mapping indicates that a given column in the owner entity refers to a primary key in the reference entity*/
-            name = "discount_policy_id", /* The name of the foreign key column in the DataStore entity is specified by name property.*/
-            nullable = false,
-            referencedColumnName = "discount_policy_id",
-            foreignKey = @ForeignKey(
-                    name = "discount_policy_fk"
-            )
-    )
-    private DataDiscountPolicy discountPolicy;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, /*when the store gets deleted then the DiscountPolicy gets deleted*/
+            /*CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */
+            fetch = FetchType.EAGER,
+            mappedBy = "store",
+            orphanRemoval = true) /*when store is fetched from db then fetch the DiscountPolicy too*/
+    private Set<DataDiscountRule> discountRules;
 
-    @OneToOne(cascade = {CascadeType.ALL, /*when the store gets deleted then the BuyPolicy gets deleted*/
-           /* CascadeType.PERSIST /* when saving the store then save the BuyPolicy too */},
-            fetch = FetchType.EAGER) /*when store is fetched from db then fetch the BuyPolicy too*/
-    @JoinColumn( /* The @JoinColumn annotation combined with a @OneToOne mapping indicates that a given column in the owner entity refers to a primary key in the reference entity*/
-            name = "buy_policy_id", /* The name of the foreign key column in the DataStore entity is specified by name property.*/
-            nullable = false,
-            referencedColumnName = "buy_policy_id",
-            foreignKey = @ForeignKey(
-                    name = "buy_policy_fk"
-            )
-    )
-    private DataBuyPolicy buyPolicy;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, /*when the store gets deleted then the DiscountPolicy gets deleted*/
+            /*CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */
+            fetch = FetchType.EAGER,
+            mappedBy = "store",
+            orphanRemoval = true) /*when store is fetched from db then fetch the DiscountPolicy too*/
+    private Set<DataDiscountRule> buyRules;
+
 
 //    @OneToMany(
 //            fetch = FetchType.EAGER,
@@ -108,15 +91,6 @@ public class DataStore {
 //    )
 //    private Set<DataPermission> permissions = new HashSet<>(); // all the permission that have in this store
 
-//    @ManyToMany(cascade = {CascadeType.ALL}) //TODO: change
-//    @JoinTable(name = "stores_product_types",
-//            joinColumns = {@JoinColumn(name = "store_id", foreignKey = @ForeignKey(
-//                    name = "store_fk"
-//            ))},
-//            inverseJoinColumns = {@JoinColumn(name = "product_type_id", foreignKey = @ForeignKey(
-//                    name = "product_type_fk"
-//            ))})
-//    private Set<DataProductType> productTypes = new HashSet<>();
 
     /**
      * Constructor
@@ -138,14 +112,6 @@ public class DataStore {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public DataInventory getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(DataInventory inventory) {
-        this.inventory = inventory;
     }
 
     public String getFounder() {
@@ -180,22 +146,6 @@ public class DataStore {
         this.numOfRated = numOfRated;
     }
 
-    public DataDiscountPolicy getDiscountPolicy() {
-        return discountPolicy;
-    }
-
-    public void setDiscountPolicy(DataDiscountPolicy discountPolicy) {
-        this.discountPolicy = discountPolicy;
-    }
-
-    public DataBuyPolicy getBuyPolicy() {
-        return buyPolicy;
-    }
-
-    public void setBuyPolicy(DataBuyPolicy buyPolicy) {
-        this.buyPolicy = buyPolicy;
-    }
-
     public Set<DataHistory> getHistory() {
         return history;
     }
@@ -212,19 +162,18 @@ public class DataStore {
 //        this.permissions = permissions;
 //    }
 
-//    public Set<DataProductType> getProductTypes() {
+    //    public Set<DataProductType> getProductTypes() {
 //        return productTypes;
 //    }
 //
 //    public void setProductTypes(Set<DataProductType> productTypes) {
 //        this.productTypes = productTypes;
 //    }
-    public void update(DataStore other){
+    public void update(DataStore other) {
         this.storeId = other.getStoreId();
-        this.buyPolicy = other.getBuyPolicy();  //TODO: add the rules update
-        this.discountPolicy = other.getDiscountPolicy(); //TODO: add the rules update
         this.founder = other.getFounder();
-        this.inventory = other.getInventory();
+        this.productStores.clear();
+        this.productStores.addAll(other.getProductStores());
         this.isOpen = other.getOpen();
         this.name = other.getName();
         this.numOfRated = other.getNumOfRated();
@@ -235,4 +184,28 @@ public class DataStore {
 //        this.permissions.addAll(other.getPermissions());
     }
 
+    public Set<DataProductStore> getProductStores() {
+        return productStores;
+    }
+
+    public void setProductStores(Set<DataProductStore> productStores) {
+        productStores.forEach(dataProductStore -> dataProductStore.setStore(this));
+        this.productStores = productStores;
+    }
+
+    public Set<DataDiscountRule> getDiscountRules() {
+        return discountRules;
+    }
+
+    public void setDiscountRules(Set<DataDiscountRule> discountRule) {
+        this.discountRules = discountRule;
+    }
+
+    public Set<DataDiscountRule> getBuyRules() {
+        return buyRules;
+    }
+
+    public void setBuyRules(Set<DataDiscountRule> buyRules) {
+        this.buyRules = buyRules;
+    }
 }

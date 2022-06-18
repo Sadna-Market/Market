@@ -59,4 +59,19 @@ public class DataShoppingBag {
     }
 
 
+    public DataStore getStore() {
+        return store;
+    }
+
+    public void setStore(DataStore store) {
+        this.store = store;
+    }
+
+    public Map<Integer, Integer> getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Map<Integer, Integer> productQuantity) {
+        this.productQuantity = productQuantity;
+    }
 }

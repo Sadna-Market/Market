@@ -37,29 +37,14 @@ public class DataProductStore {
     private double price;
 
     @ManyToOne
-    @JoinColumn(name = "inventory",
+    @JoinColumn(name = "store",
             nullable = false,
-            referencedColumnName = "inventory_id",
+            referencedColumnName = "store_id",
             foreignKey = @ForeignKey(
-                    name = "inventory_fk"
+                    name = "store_fk"
             ))
-    private DataInventory inventory;
+    private DataStore store;
 
-    @ManyToOne
-    @JoinColumn(name = "history_id",
-            nullable = false,
-            referencedColumnName = "history_id",
-            foreignKey = @ForeignKey(name = "store_history_fk")
-    )
-    private DataHistory history;
-
-    public DataInventory getInventory() {
-        return inventory;
-    }
-
-    public void setInventory(DataInventory inventory) {
-        this.inventory = inventory;
-    }
 
     public DataProductStore() {
     }
@@ -97,4 +82,11 @@ public class DataProductStore {
     }
 
 
+    public DataStore getStore() {
+        return store;
+    }
+
+    public void setStore(DataStore store) {
+        this.store = store;
+    }
 }

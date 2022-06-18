@@ -1,6 +1,6 @@
 package com.example.demo.Domain.StoreModel;
 
-import com.example.demo.DataAccess.Entity.DataInventory;
+//import com.example.demo.DataAccess.Entity.DataInventory;
 import com.example.demo.DataAccess.Entity.DataProductStore;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.ProductType;
@@ -61,10 +61,16 @@ public class Inventory {
             return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
+//            var data = toAdd.getDataObject();
+//            productStoreService.inserProductStore(data,storeId);
             products.put(productStore.getValue(), toAdd);
             logger.info("Inventory added productId:" + newProduct.getProductID());
             return newProduct.addStore(storeId);
         }
+    }
+
+    public void addNewProductStore(ProductType productType,ProductStore productStore){
+        products.put(productType.getProductID().value,productStore);
     }
 
     public DResponseObj<Boolean> removeProduct(int productId) {
@@ -257,14 +263,14 @@ public class Inventory {
         return new DResponseObj<>(products);
     }
 
-    public DataInventory getDataObject() {
-        DataInventory dataInventory = new DataInventory();
-        dataInventory.setInventoryId(this.storeId);
-        Set<DataProductStore> productStores = new HashSet<>();
-        this.products.forEach((integer, productStore) -> {
-            productStores.add(productStore.getDataObject());
-        });
-        dataInventory.setProductStores(productStores);
-        return dataInventory;
-    }
+//    public DataInventory getDataObject() {
+//        DataInventory dataInventory = new DataInventory();
+//        dataInventory.setInventoryId(this.storeId);
+//        Set<DataProductStore> productStores = new HashSet<>();
+//        this.products.forEach((integer, productStore) -> {
+//            productStores.add(productStore.getDataObject());
+//        });
+//        dataInventory.setProductStores(productStores);
+//        return dataInventory;
+//    }
 }

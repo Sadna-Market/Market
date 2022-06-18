@@ -36,11 +36,7 @@ class StoreServiceTest {
         //action
         assertTrue(storeService.insertStore(dataStore));
         //check
-
         assertNotEquals(0, dataStore.getStoreId());
-        assertNotEquals(0, dataStore.getInventory().getInventoryId());
-        assertNotEquals(0, dataStore.getDiscountPolicy().getDiscountPolicyId());
-        assertNotEquals(0, dataStore.getBuyPolicy().getBuyPolicyID());
     }
 
     @Test
@@ -77,9 +73,6 @@ class StoreServiceTest {
         assertEquals(false, afterStore.getOpen());
         assertEquals("moshe", afterStore.getName());
         assertEquals(dataStore.getStoreId(), afterStore.getStoreId());
-        assertEquals(dataStore.getBuyPolicy().getBuyPolicyID(), afterStore.getBuyPolicy().getBuyPolicyID());
-        assertEquals(dataStore.getDiscountPolicy().getDiscountPolicyId(), afterStore.getDiscountPolicy().getDiscountPolicyId());
-        assertEquals(dataStore.getInventory().getInventoryId(), afterStore.getInventory().getInventoryId());
     }
 
     @Test
@@ -96,9 +89,6 @@ class StoreServiceTest {
         assertEquals(dataStore.getOpen(), dataStore1.getOpen());
         assertEquals(dataStore.getNumOfRated(), dataStore1.getNumOfRated());
         assertEquals(dataStore.getRate(), dataStore1.getRate());
-        assertEquals(dataStore.getInventory().getInventoryId(), dataStore1.getInventory().getInventoryId());
-        assertEquals(dataStore.getBuyPolicy().getBuyPolicyID(), dataStore1.getBuyPolicy().getBuyPolicyID());
-        assertEquals(dataStore.getDiscountPolicy().getDiscountPolicyId(), dataStore1.getDiscountPolicy().getDiscountPolicyId());
         assertEquals(dataStore.getHistory().size(), dataStore1.getHistory().size());
     }
 
@@ -131,9 +121,6 @@ class StoreServiceTest {
             assertEquals(dataStore.getOpen(), afterStore.getOpen());
             assertEquals(dataStore.getNumOfRated(), afterStore.getNumOfRated());
             assertEquals(dataStore.getRate(), afterStore.getRate());
-            assertEquals(dataStore.getInventory().getInventoryId(), afterStore.getInventory().getInventoryId());
-            assertEquals(dataStore.getBuyPolicy().getBuyPolicyID(), afterStore.getBuyPolicy().getBuyPolicyID());
-            assertEquals(dataStore.getDiscountPolicy().getDiscountPolicyId(), afterStore.getDiscountPolicy().getDiscountPolicyId());
             assertEquals(dataStore.getHistory().size(), afterStore.getHistory().size());
         }
     }

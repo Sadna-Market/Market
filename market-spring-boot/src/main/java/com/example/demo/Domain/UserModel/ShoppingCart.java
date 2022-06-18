@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ShoppingCart {
     static Logger logger= Logger.getLogger(ShoppingBag.class);
@@ -82,5 +83,14 @@ public class ShoppingCart {
 
 
         }
+    }
+
+    public DataShoppingCart getDataObject() {
+        DataShoppingCart dataShoppingCart = new DataShoppingCart();
+        Set<DataShoppingBag> dataShoppingBags = this.shoppingBagHash.values()
+                .stream()
+                .map(ShoppingBag::getDataObject).collect(Collectors.toSet());
+        dataShoppingCart.setShoppingBags(dataShoppingBags);
+        return dataShoppingCart;
     }
 }

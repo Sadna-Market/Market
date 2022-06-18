@@ -1,7 +1,8 @@
 package com.example.demo.Domain.StoreModel;
 
-import com.example.demo.DataAccess.Entity.DataHistory;
+//import com.example.demo.DataAccess.Entity.DataInventory;
 import com.example.demo.DataAccess.Entity.DataProductStore;
+import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Response.DResponseObj;
 import org.apache.log4j.Logger;
@@ -55,7 +56,6 @@ public class ProductStore {
         this.price = price;
     }
 
-    //TODO:
 
     @Override
     public String toString() {

@@ -2,23 +2,12 @@ package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "History")
 @Table(name = "history")
 public class DataHistory {
-
     @Id
-    @SequenceGenerator(
-            name = "history_sequence",
-            sequenceName = "history_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "history_sequence"
-    )
     @Column(name = "history_id")
     private Integer historyId;
 
@@ -32,12 +21,7 @@ public class DataHistory {
             mappedBy = "history",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
-    private Set<DataProductStore> products = new HashSet<>();
-
-    @Column(name = "purchase_user",
-            columnDefinition = "TEXT" ,
-            nullable = false)
-    private String user;
+    private Set<DataProductStoreHistory> products = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "store_id",
@@ -53,7 +37,7 @@ public class DataHistory {
             foreignKey = @ForeignKey(
                     name = "user_fk"
             ))
-    private DataUser userHistory;
+    private DataUser user;
 
     public DataStore getDataStore() {
         return store;
@@ -90,13 +74,13 @@ public class DataHistory {
         this.finalPrice = finalPrice;
     }
 
-    public Set<DataProductStore> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<DataProductStore> products) {
-        this.products = products;
-    }
+//    public Set<DataProductStore> getProducts() {
+//        return products;
+//    }
+//
+//    public void setProducts(Set<DataProductStore> products) {
+//        this.products = products;
+//    }
 
     public DataStore getStore() {
         return store;
@@ -106,13 +90,23 @@ public class DataHistory {
         this.store = store;
     }
 
-    public String getUser() {
+
+    public DataUser getUser() {
         return user;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUser(DataUser userHistory) {
+        this.user = userHistory;
     }
 
+    public Set<DataProductStoreHistory> getProducts() {
+        return products;
+    }
 
+    public void setProducts(Set<DataProductStoreHistory> products) {
+        products.forEach(dataProductStoreHistory -> {
+            dataProductStoreHistory.setHistory(this);
+        });
+        this.products = products;
+    }
 }

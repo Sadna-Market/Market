@@ -1,9 +1,15 @@
 package com.example.demo.DataAccess.Services;
 
+import com.example.Acceptance.Obj.ATResponseObj;
+import com.example.Acceptance.Obj.Address;
+import com.example.Acceptance.Obj.PasswordGenerator;
 import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.UserModel.User;
+import com.example.demo.Service.Facade;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +22,21 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class UserServiceTest {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private Facade market;
 
     User user;
+
     @BeforeEach
-    public void setUp(){
-        user = new User("exmaple@gmail.com","1qaz2wsx#EDC","0505555555", LocalDate.of(1993,8,18));
+    public void setUp() {
+        user = new User("exmaple@gmail.com", "1qaz2wsx#EDC", "0505555555", LocalDate.of(1993, 8, 18));
     }
 
 
@@ -36,18 +46,18 @@ class UserServiceTest {
         //pre
         DataUser u = user.getDataObject();
         DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags( new HashSet<>());
+        dataShoppingCart.setShoppingBags(new HashSet<>());
         u.setDataShoppingCart(dataShoppingCart);
 
         //action
         assertTrue(userService.insertUser(u));
 
         //check
-        assertEquals(u.getUsername(),"exmaple@gmail.com");
-        assertEquals(u.getPassword(),"1qaz2wsx#EDC");
-        assertEquals(u.getDateOfBirth(),LocalDate.of(1993,8,18));
-        assertEquals(u.getPhoneNumber(),"0505555555");
-        assertNotEquals(0,u.getDataShoppingCart().getShoppingCartId());
+        assertEquals(u.getUsername(), "exmaple@gmail.com");
+        assertEquals(u.getPassword(), "1qaz2wsx#EDC");
+        assertEquals(u.getDateOfBirth(), LocalDate.of(1993, 8, 18));
+        assertEquals(u.getPhoneNumber(), "0505555555");
+        assertNotEquals(0, u.getDataShoppingCart().getShoppingCartId());
 
     }
 
@@ -57,7 +67,7 @@ class UserServiceTest {
         //pre
         DataUser u = user.getDataObject();
         DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags( new HashSet<>());
+        dataShoppingCart.setShoppingBags(new HashSet<>());
         u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
@@ -75,7 +85,7 @@ class UserServiceTest {
         String newPhone = "0522222222";
         DataUser u = user.getDataObject();
         DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags( new HashSet<>());
+        dataShoppingCart.setShoppingBags(new HashSet<>());
         u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
@@ -84,8 +94,8 @@ class UserServiceTest {
 
         //check
         List<DataUser> afterUser = userService.getAllUsers();
-        assertEquals(1, afterUser.size());
-        assertEquals(afterUser.get(0).getPhoneNumber(), newPhone);
+        assertEquals(2, afterUser.size());
+        assertEquals(afterUser.get(1).getPhoneNumber(), newPhone);
     }
 
     @Test
@@ -93,44 +103,44 @@ class UserServiceTest {
     void getUserByUsername() {
         DataUser u = user.getDataObject();
         DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags( new HashSet<>());
+        dataShoppingCart.setShoppingBags(new HashSet<>());
         u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
         DataUser afterUser = userService.getUserByUsername(u.getUsername());
-        assertEquals(u.getUsername(),afterUser.getUsername());
-        assertEquals(u.getPassword(),afterUser.getPassword());
-        assertEquals(u.getDateOfBirth(),afterUser.getDateOfBirth());
-        assertEquals(u.getPhoneNumber(),afterUser.getPhoneNumber());
+        assertEquals(u.getUsername(), afterUser.getUsername());
+        assertEquals(u.getPassword(), afterUser.getPassword());
+        assertEquals(u.getDateOfBirth(), afterUser.getDateOfBirth());
+        assertEquals(u.getPhoneNumber(), afterUser.getPhoneNumber());
     }
 
     @Test
     @Transactional
     void getAllUsers() {
-        User user1 = new User("exmaple1@gmail.com","1qaz2wsx#EDC","1111111111", LocalDate.of(1993,8,18));
-        User user2 = new User("exmaple2@gmail.com","1qaz2wsx#EDC","0000000000", LocalDate.of(1993,8,18));
-        User user3 = new User("exmaple3@gmail.com","1qaz2wsx#EDC","2222222222", LocalDate.of(1993,8,18));
-        User user4 = new User("exmaple4@gmail.com","1qaz2wsx#EDC","3333333333", LocalDate.of(1993,8,18));
-        User user5 = new User("exmaple5@gmail.com","1qaz2wsx#EDC","4444444444", LocalDate.of(1993,8,18));
+        User user1 = new User("exmaple1@gmail.com", "1qaz2wsx#EDC", "1111111111", LocalDate.of(1993, 8, 18));
+        User user2 = new User("exmaple2@gmail.com", "1qaz2wsx#EDC", "0000000000", LocalDate.of(1993, 8, 18));
+        User user3 = new User("exmaple3@gmail.com", "1qaz2wsx#EDC", "2222222222", LocalDate.of(1993, 8, 18));
+        User user4 = new User("exmaple4@gmail.com", "1qaz2wsx#EDC", "3333333333", LocalDate.of(1993, 8, 18));
+        User user5 = new User("exmaple5@gmail.com", "1qaz2wsx#EDC", "4444444444", LocalDate.of(1993, 8, 18));
         DataUser u1 = user1.getDataObject();
         DataUser u2 = user2.getDataObject();
         DataUser u3 = user3.getDataObject();
         DataUser u4 = user4.getDataObject();
         DataUser u5 = user5.getDataObject();
         DataShoppingCart dataShoppingCart1 = new DataShoppingCart();
-        dataShoppingCart1.setShoppingBags( new HashSet<>());
+        dataShoppingCart1.setShoppingBags(new HashSet<>());
         u1.setDataShoppingCart(dataShoppingCart1);
         DataShoppingCart dataShoppingCart2 = new DataShoppingCart();
-        dataShoppingCart2.setShoppingBags( new HashSet<>());
+        dataShoppingCart2.setShoppingBags(new HashSet<>());
         u2.setDataShoppingCart(dataShoppingCart2);
         DataShoppingCart dataShoppingCart3 = new DataShoppingCart();
-        dataShoppingCart3.setShoppingBags( new HashSet<>());
+        dataShoppingCart3.setShoppingBags(new HashSet<>());
         u3.setDataShoppingCart(dataShoppingCart3);
         DataShoppingCart dataShoppingCart4 = new DataShoppingCart();
-        dataShoppingCart4.setShoppingBags( new HashSet<>());
+        dataShoppingCart4.setShoppingBags(new HashSet<>());
         u4.setDataShoppingCart(dataShoppingCart4);
         DataShoppingCart dataShoppingCart5 = new DataShoppingCart();
-        dataShoppingCart5.setShoppingBags( new HashSet<>());
+        dataShoppingCart5.setShoppingBags(new HashSet<>());
         u5.setDataShoppingCart(dataShoppingCart5);
         assertTrue(userService.insertUser(u1));
         assertTrue(userService.insertUser(u2));
@@ -139,6 +149,68 @@ class UserServiceTest {
         assertTrue(userService.insertUser(u5));
         //action
         List<DataUser> users = userService.getAllUsers();
-        assertEquals(5,users.size());
+        assertEquals(6, users.size());
+    }
+
+    @Test
+    @Transactional
+    void registration_Success() {
+        String uuid = market.guestVisit().value;
+        SLResponseOBJ<Boolean> res = market.addNewMember(uuid, "niv@gmail.com", "Shalom123$", "0523251252", "16/3/2012");
+        assertFalse(res.errorOccurred());
+    }
+
+    @Test
+    @Transactional
+    void changePass_Success() {
+        var username = "niv@gmail.com";
+        var password = "Shalom123$";
+        String uuid = market.guestVisit().value;
+        SLResponseOBJ<Boolean> res = market.addNewMember(uuid, username, password, "0523251252", "16/3/2012");
+        assertFalse(res.errorOccurred());
+        SLResponseOBJ<String> result = market.login(uuid, username, password);
+        assertFalse(result.errorOccurred());
+        uuid = result.value;
+        String newPass = PasswordGenerator.generateStrongPassword();
+        res = market.changePassword(uuid, username, password, newPass);
+        assertFalse(res.errorOccurred());
+    }
+
+    @Test
+    @Transactional
+    void removeUser() {
+        String uuid = market.guestVisit().value;
+        SLResponseOBJ<Boolean> res = market.addNewMember(uuid, "niv200@gmail.com", "Shalom123$", "0523251252", "16/3/2012");
+        assertNotEquals(false,res.value,String.valueOf(res.errorMsg));
+        SLResponseOBJ<String> result = market.login(uuid, "sysManager@gmail.com", "Shalom123$");
+        assertFalse(result.errorOccurred());
+        uuid = result.value;
+        res = market.removeMember(uuid, "niv200@gmail.com");
+        assertFalse(res.errorOccurred());
+    }
+
+    @Test
+    @Transactional
+    void load() {
+        int numOfUsers = 10;
+        String uuid = market.guestVisit().value;
+        for (int i = 0; i < numOfUsers; i++) {
+            String email = "niv" + i + "@gmail.com";
+            String pass = "Shalom123$";
+            String phone = "052325125" + i;
+            String date = "16/3/181" + i;
+            SLResponseOBJ<Boolean> res = market.addNewMember(uuid,
+                    email,
+                    pass,
+                    phone,
+                    date);
+            assertFalse(res.errorOccurred());
+        }
+        market.deleteAllMembers();
+        market.loadMembers();
+        for (int i = 0; i < numOfUsers; i++) {
+            String email = "niv" + i + "@gmail.com";
+            assertTrue(market.isMember2(email));
+        }
     }
 }

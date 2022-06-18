@@ -152,6 +152,10 @@ public class ProductType {
         finally {
             lock_stores.unlockWrite(stamp);
             logger.debug("released the WriteLock.");
+            /*
+            var data = this.getDataObject();
+            * productTypeService.updateProductType(data);
+            * */
         }
     }
 
@@ -201,5 +205,9 @@ public class ProductType {
         Set<Integer> stores = new HashSet<>(this.stores);
         dataProductType.setStores(stores);
         return dataProductType;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 }

@@ -68,4 +68,10 @@ public class ShoppingBag {
         return new DResponseObj<>(productQuantity.isEmpty(),-1);
     }
 
+    public DataShoppingBag getDataObject() {
+        DataShoppingBag dataShoppingBag = new DataShoppingBag();
+        dataShoppingBag.setStore(this.store.getDataObject());
+        dataShoppingBag.setProductQuantity(this.productQuantity);
+        return dataShoppingBag;
+    }
 }

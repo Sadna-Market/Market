@@ -22,6 +22,7 @@ public class DataShoppingCart {
     Set<DataShoppingBag> shoppingBags = new HashSet<>();
 
     public void setShoppingBags(Set<DataShoppingBag> shoppingBags) {
+        shoppingBags.forEach(dataShoppingBag -> dataShoppingBag.setDataShoppingCart(this));
         this.shoppingBags = shoppingBags;
     }
 

@@ -1,13 +1,12 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Entity.DataDiscountRule;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.AndDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.OrDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.XorDiscountRule;
-import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.example.demo.Service.ServiceObj.ServiceDiscountPolicy;
 import org.apache.log4j.Logger;
 
@@ -104,5 +103,9 @@ public class DiscountPolicy {
         if(addCombine.errorOccurred()) return addCombine;
         toCombineRules.forEach(this::removeDiscountRule);  // remove all the rules that combine
         return new DResponseObj<>(true);
+    }
+
+    public DataDiscountRule getDataObject() {
+        return new DataDiscountRule();
     }
 }

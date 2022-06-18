@@ -90,5 +90,7 @@ public class ErrorCode {
     public static int STORE_IS_NOT_EXIST = 600;
     public static int ALLRADYLOGED = 601;
 
+    public static int DB_ERROR = 1000;
+
 
 }
