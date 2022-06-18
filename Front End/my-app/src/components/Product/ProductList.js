@@ -25,6 +25,7 @@ const ProductList = props => {
             for (let i = 0; i < getAllProductsResponse.value.length; i++) {
                 products.push({id: getAllProductsResponse.value[i].productID, name: getAllProductsResponse.value[i].productName})
             }
+            SetError("")
             console.log(products)
             setallProducts(products)
         }
@@ -34,45 +35,33 @@ const ProductList = props => {
         getAllProducts();
     }, [allProducts.refresh]);
 
-    // const [enteredstores, Setstores] = useState([]);
-    //
-    //
-    // console.log("StoreList")
-    //
-    // async function getAllStores() {
-    //     let stores = [];
-    //
-    //     const getAllStoresResponse = await apiClientHttp.getAllStores();
-    //     console.log("start func  getAllStores")
-    //
-    //     if (getAllStoresResponse.errorMsg !== -1) {
-    //         SetError(errorCode.get(getAllStoresResponse.errorMsg))
-    //     } else {
-    //         for (let i = 0; i < getAllStoresResponse.value.length; i++) {
-    //             stores.push({
-    //                 id: getAllStoresResponse.value[i].storeId,
-    //                 name: getAllStoresResponse.value[i].name,
-    //                 open: getAllStoresResponse.value[i].isOpen
-    //             })
-    //         }
-    //         Setstores(stores);
-    //     }
-    // }
-    //
-    // useEffect(() => {
-    //     getAllStores();
-    // }, [enteredstores.refresh]);
-    // console.log(enteredstores)
-    // console.log(enteredstores.length)
 
+    //
+    // async function setSearch(){
+    //     console.log("setSearch")
+    //
+    //     let allpro = allProducts.filter((product) => product.id === parseInt(props.search));
+    //     setallProducts(allpro);
+    //
+    // }
+    // if (props.search != ""){
+    //     useEffect(() => {
+    //         if (props.search != ""){
+    //         setSearch();
+    //         }
+    //     }, [allProducts.refresh]);
+    //
+    // }
 
     if (allProducts.length === 0) {
         return <h2 className="stores-list__fallback">Found No expenses</h2>;
     }
+    // let allpro='-1'
+    // if (props.search != "") {
+    //      allpro = allProducts.filter((product) => product.id === parseInt(props.search));
+    //     // setallProducts(allpro)
+    // }
 
-    if (props.search != "") {
-        allProducts = allProducts.filter((product) => product.id === parseInt(props.search));
-    }
 
     const readMoreHandler = productID => {
         props.onReadMore(productID);
@@ -87,6 +76,8 @@ const ProductList = props => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
             <ul className="products-list">{expensesContent}</ul>
         </div>
     );

@@ -3,7 +3,11 @@ package com.example.demo.Domain.StoreModel.BuyRules;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.BuyRules.AndBuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.BuyRules.ConditioningBuyRuleSL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,6 +53,15 @@ public class ConditioningBuyRule extends CompositionBuyRule {
         stringRule += "if: " + predIf.getBuyRule().value +"\n\t";
         stringRule += "then: " + predThen.getBuyRule().value;
         return new DResponseObj<>(stringRule);
+    }
+
+    @Override
+    public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
+        DResponseObj<BuyRuleSL> ifRule =  predIf.convertToBuyRuleSL();
+        DResponseObj<BuyRuleSL> thenRule =  predThen.convertToBuyRuleSL();
+        if(ifRule.errorOccurred()) return ifRule;
+        if(thenRule.errorOccurred()) return thenRule;
+        return new DResponseObj<>(new ConditioningBuyRuleSL(ifRule.value,thenRule.value,id));
     }
 
     /*class Tuple<E, T> {

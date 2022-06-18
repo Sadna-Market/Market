@@ -27,6 +27,7 @@ const EditProduct = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setProductID("");
     setPrice("");
     setQuantity("");
@@ -49,7 +50,11 @@ const EditProduct = (props) => {
       console.log(setProductPriceInStoreResponse)
 
     }
+    console.log('before quantity'+quantity)
+
     if (quantity!==""){
+      console.log('quantity'+quantity)
+
       const setProductQuantityInStoreResponse = await apiClientHttp.setProductQuantityInStore(UUID, storeID, productID,quantity);
       if (setProductQuantityInStoreResponse.errorMsg !== -1) {
         pass=false;
@@ -68,6 +73,7 @@ const EditProduct = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Edit Product From Store {storeID}</h3>
       <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
       <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError2}</div>

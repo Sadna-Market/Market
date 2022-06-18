@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CategoryPred implements Predicate{
 
+
     private final int category;
     private final int minAge;
     private final int minHour;  // for example 6 is like 6:00
@@ -67,6 +68,17 @@ public class CategoryPred implements Predicate{
 
     public int getCategory() {
         return category;
+    }
+    public int getMinAge() {
+        return minAge;
+    }
+
+    public int getMinHour() {
+        return minHour;
+    }
+
+    public int getMaxHour() {
+        return maxHour;
     }
 
 }

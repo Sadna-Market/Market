@@ -152,6 +152,17 @@ public class Inventory {
         return new DResponseObj<>(true);
     }
 
+    public DResponseObj<Boolean> tellProductStoreIsReopen() {
+        for (Map.Entry<Integer, ProductStore> entry : products.entrySet()) {
+            DResponseObj<Boolean> success = entry.getValue().getProductType().addStore(storeId);
+            if (success.errorOccurred()) {
+                logger.warn("not success to remove storeID from productTypeID: " + entry.getValue().getProductType().getProductID());
+                return success;
+            }
+        }
+        return new DResponseObj<>(true);
+    }
+
     public DResponseObj<ProductStore> getProductStoreAfterBuy(Integer productID, Integer productQuantity) {
         ProductStore productStore = products.get(productID);
         if (productStore == null)

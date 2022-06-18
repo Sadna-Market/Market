@@ -1,0 +1,149 @@
+{
+"js": [
+  {
+    "CategoryRule": {
+      "uuid": "UUID",
+      "storeId": "1",
+      "categoryID": "1",
+      "minAge": "1",
+      "minHour": "1",
+      "maxHour": "1"
+    }
+  },
+  {
+    "productRule": {
+      "uuid": "1",
+      "storeId": "1",
+      "productID": "1",
+      "minQuantity": "1",
+      "maxQuantity": "1",
+      "canbuy": "true"
+    }
+  },
+  {
+    "ShoppingRule": {
+    "uuid": "1",
+    "storeId": "1",
+    "quantity": "1",
+    "productTypes": "4"
+  }
+  },
+  {
+    "UserRule" :{ "uuid":"1", "storeId": "1", "userEmail": "1" }
+  },
+  {
+    "or": [
+      {
+        "CategoryRule": {
+          "uuid": "UUID",
+          "storeId": "1",
+          "categoryID": "1",
+          "minAge": "1",
+          "minHour": "1",
+          "maxHour": "1"
+        }
+      },
+      {
+        "productRule": {
+          "uuid": "1",
+          "storeId": "1",
+          "productID": "1",
+          "minQuantity": "1",
+          "maxQuantity": "1"
+        }
+      },
+      {
+        "ShoppingRule": {
+          "uuid": "1",
+          "storeId": "1",
+          "quantity": "1",
+          "productTypes": "4"
+        }
+      },
+      {
+        "UserRule" :{ "uuid":"1", "storeId": "1", "userEmail": "1" }
+      }
+    ]
+
+  },
+  {
+    "and": [
+      {
+        "CategoryRule": {
+          "uuid": "UUID",
+          "storeId": "1",
+          "categoryID": "1",
+          "minAge": "1",
+          "minHour": "1",
+          "maxHour": "1"
+        }
+      },
+      {
+        "productRule": {
+          "uuid": "1",
+          "storeId": "1",
+          "productID": "1",
+          "minQuantity": "1",
+          "maxQuantity": "1"
+        }
+      },
+      {
+        "ShoppingRule": {
+          "uuid": "1",
+          "storeId": "1",
+          "quantity": "1",
+          "productTypes": "4"
+        }
+      },
+      {
+        "UserRule" :{ "uuid":"1", "storeId": "1", "userEmail": "1" }
+      }
+
+    ]
+  },
+  {
+"condition": [
+  {
+    "CategoryRule": {
+      "uuid": "UUID",
+      "storeId": "1",
+      "categoryID": "1",
+      "minAge": "1",
+      "minHour": "1",
+      "maxHour": "1"
+    }
+  },
+  {
+    "productRule": {
+      "uuid": "1",
+      "storeId": "1",
+      "productID": "1",
+      "minQuantity": "1",
+      "maxQuantity": "1"
+    }
+  },
+  {
+    "ShoppingRule": {
+      "uuid": "1",
+      "storeId": "1",
+      "quantity": "1",
+      "productTypes": "4"
+    }
+  },
+  {
+    "UserRule" :{ "uuid":"1", "storeId": "1", "userEmail": "1" }
+  }
+
+
+]
+
+
+  }
+
+
+]
+
+
+
+}
+

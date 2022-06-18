@@ -5,7 +5,10 @@ import FilterProducts from "./filterProducts";
 import FilterProductList from "./FilterProductList";
 
 const ProductButton = (props) => {
-  
+  console.log("ProductButton")
+
+  console.log("asdasddasasddasda ",props.uuid)
+
   // const [command, setCommand] = useState(<StoreList search={searchStore} />);
   // const searchButtonHolder = () => {
   //   setCommand(<StoreList search={searchStore} />);
@@ -22,7 +25,7 @@ const ProductButton = (props) => {
   const [searchProduct, setProduct] = useState("");
   const readMoreHandler = (productID) => {
     setBackCommand(command);
-    setCommand(<ProductType productID={productID} />);
+    setCommand(<ProductType productID={productID} uuid={props.uuid} />);
   };
 
   const [command, setCommand] = useState(

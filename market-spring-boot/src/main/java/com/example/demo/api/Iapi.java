@@ -1,6 +1,9 @@
 package com.example.demo.api;
 
+import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.api.apiObjects.apiProductType;
 import com.example.demo.api.apiObjects.apiStore;
 import com.example.demo.api.apiObjects.apiUser;
@@ -11,16 +14,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface Iapi {
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
+    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) ;
+    public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) ;
+    public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) ;
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() ;
+
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1
-    public SLResponseOBJ<String> initMarket(  apiUser user) ;
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid,int storeID);
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid,int storeID);
+    public SLResponseOBJ<Boolean> reopenStore(String uuid,int storeID);
 
 
 
+    public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;
 
-    // 2.1.1 when a user enter to the system he recognized us a guest visitor
+    public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
+
+    public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
+    public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
+
+
+    public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
+
+
+        // 2.1.1 when a user enter to the system he recognized us a guest visitor
     public SLResponseOBJ<String> guestVisit();
 
 
@@ -110,6 +136,8 @@ public interface Iapi {
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger( String uuid, int StoreId, Map<String,Object> obj);
 
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) ;
+
     //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions( String uuid, int storeId, Map<String,Object> obj) ;
 
@@ -119,6 +147,18 @@ public interface Iapi {
 
     //2.4.11
     public SLResponseOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
+
+    public SLResponseOBJ<List<String>> getAllMembers(String userId);
+
+    public SLResponseOBJ<Boolean> createBID(String uuid,  int storeID,int productID, int quantity, int totalPrice);
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID);
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
+    public SLResponseOBJ<Boolean> BuyBID(@PathVariable("userId")String userId,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("city") String city, @PathVariable("adress")String adress,@PathVariable("apartment") int apartment,@RequestBody Map<String,Object> map) ;
+//    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
 
 
 
@@ -140,8 +180,11 @@ public interface Iapi {
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
 
+    public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
 
 
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId) ;
 
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) ;
 
     }

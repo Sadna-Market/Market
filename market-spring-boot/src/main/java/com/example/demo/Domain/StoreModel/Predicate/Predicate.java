@@ -2,6 +2,7 @@ package com.example.demo.Domain.StoreModel.Predicate;
 
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.concurrent.ConcurrentHashMap;
 

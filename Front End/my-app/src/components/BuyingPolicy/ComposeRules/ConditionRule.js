@@ -2,9 +2,16 @@ import React, { useState } from "react";
 import RuleList from "../RuleList";
 import ComposeRuleList from "./ComposeRuleList";
 import "./ConditionRule.css";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/BuyingRules"
 
 const ConditionRule = (props) => {
-  let UUID = props.uuid;
+    console.log("ConditionRule")
+    const apiClientHttp = createApiClientHttp();
+    const [enteredError, SetError] = useState("");
+
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 
@@ -19,10 +26,18 @@ const ConditionRule = (props) => {
   };
 
   //todo: create rule
-  const confirmHandler = () => {
-    //do..... with the list
-    props.onRule();
-  };
+    async function confirmHandler(){
+        let combineAndMap ={"combineCondition":list}
+        const sendRulesResponse = await apiClientHttp.addNewBuyRule(combineAndMap);
+
+        if (sendRulesResponse.errorMsg !== -1) {
+            SetError(errorCode.get(sendRulesResponse.errorMsg))
+        } else {
+            // props.onRule(sendRulesResponse.value);
+            SetError("")
+            props.onRule();
+        }
+  }
 
   const [ifRule, SetIfRule] = useState("");
   const ifRuleChangeHandler = (event) => {
@@ -37,7 +52,9 @@ const ConditionRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div className="condition">
-      <h3>Condition Rule</h3>
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
+        <h3>Condition Rule</h3>
       <h2>if Rule #</h2>
       <input
               type="number"

@@ -60,4 +60,16 @@ public class ProductPred implements Predicate{
     public int getProductID(){
         return productID;
     }
+
+    public int getMinQuantity() {
+        return minQuantity;
+    }
+
+    public int getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public boolean isCanBuy() {
+        return canBuy;
+    }
 }

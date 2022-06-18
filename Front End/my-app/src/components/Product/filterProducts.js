@@ -2,6 +2,8 @@ import React,{useState} from "react";
 import './FilterProducts.css';
 
 const FilterProducts = (props) => {
+    console.log("FilterProducts")
+
     const [name,setName] = useState("");
     const changeNameHandler = event=>{
         setName(event.target.value);
@@ -58,7 +60,8 @@ const FilterProducts = (props) => {
 
   return (
     <div className="products">
-      <h3>Filters</h3>
+
+        <h3>Filters</h3>
       <div className="products__controls">
         <div className="products__control">
           <label>Filter by Name</label>

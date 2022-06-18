@@ -79,8 +79,7 @@ public class Validator {
     }
 
     public static DResponseObj<Boolean> isValidCreditDate(String CreditDATE) {
-        String regex = "^(?=.*[0-9])"
-                + ".{4}$";
+        String regex = "^(0[1-9]|1[0-2]){1}\\/?([0-9]{2})$";
         Pattern p = Pattern.compile(regex);
         if (CreditDATE == null||CreditDATE=="") {
             return new DResponseObj<>(false);

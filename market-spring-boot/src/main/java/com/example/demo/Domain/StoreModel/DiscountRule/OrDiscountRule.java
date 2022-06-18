@@ -4,7 +4,11 @@ import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.DiscountRules.AddDiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.OrDiscountRuleSL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +27,7 @@ public class OrDiscountRule extends CompositionDiscountRule {
         boolean needToGetDiscount = false;
         for (DiscountRule discountRule : rules) {
             DResponseObj<Double> res = discountRule.howMuchDiscount(username, age, shoppingBag);
-            if (!res.errorOccurred()) {
+            if (res.value != 0.0) {
                 needToGetDiscount = true;
                 break;
             }
@@ -50,6 +54,17 @@ public class OrDiscountRule extends CompositionDiscountRule {
         if (id != 0)
             stringRule.append("\n\tSo all products from Category ").append(category).append(" have a ").append(discount).append("% discount");
         return new DResponseObj<>(stringRule.toString());
+    }
+
+    @Override
+    public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
+        List<DiscountRuleSL> rulesSL = new ArrayList<>();
+        for(DiscountRule discountRule : rules){
+            DResponseObj<DiscountRuleSL> discountRuleSL =  discountRule.convertToDiscountRuleSL();
+            if(discountRuleSL.errorOccurred()) return discountRuleSL;
+            rulesSL.add(discountRuleSL.value);
+        }
+        return new DResponseObj<>(new OrDiscountRuleSL(rulesSL,category,discount,id));
     }
 
 }

@@ -7,6 +7,7 @@ const StoreList = (props) => {
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
     const [enteredstores, Setstores] = useState([]);
+    const [enteredsearch, Setsearch] = useState(props.search);
 
 
     console.log("StoreList")
@@ -26,7 +27,10 @@ const StoreList = (props) => {
                     name: getAllStoresResponse.value[i].name,
                     open: getAllStoresResponse.value[i].isOpen
                 })
+
             }
+            console.log("storesSSSS "+stores)
+            SetError("")
             Setstores(stores);
         }
     }
@@ -43,8 +47,11 @@ const StoreList = (props) => {
     return <h2 className="stores-list__fallback">Found No Stores</h2>;
   }
 
-  if (props.search != "") {
-      enteredstores = enteredstores.filter((store) => store.id === parseInt(props.search));
+  if (enteredsearch != "") {
+      Setsearch("")
+      console.log("props.search != \"\" "+props.search)
+      console.log("enteredstores "+enteredstores)
+      Setstores(enteredstores.filter((store) => store.id === parseInt(props.search)));
   }
 
   const enterToStoreHandler = storeID => {
@@ -59,6 +66,8 @@ const StoreList = (props) => {
 
   return (
     <div>
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
         <div style={{ color: 'red' , fontsize:'29' }}>{enteredError}</div>
         <ul className="stores-list">{expensesContent}</ul>
     </div>

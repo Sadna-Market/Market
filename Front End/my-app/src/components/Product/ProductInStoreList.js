@@ -6,6 +6,9 @@ import {errorCode} from "../../ErrorCodeGui"
 
 
 const ProductInStoreList = props =>{
+    console.log("ProductInStoreList")
+    console.log("props.uuid "+props.uuid)
+
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
 
@@ -23,11 +26,18 @@ const ProductInStoreList = props =>{
         } else {
             for (let i = 0; i < getAllProductsInStoreResponse.value.length; i++) {
                 allProducts.push({
-                    id: getAllProductsInStoreResponse.value[i].storeId,
+                    id: getAllProductsInStoreResponse.value[i].itemID,
                     name: getAllProductsInStoreResponse.value[i].name,
-                    open: getAllProductsInStoreResponse.value[i].isOpen
+                    price: getAllProductsInStoreResponse.value[i].price,
+                    quantity: getAllProductsInStoreResponse.value[i].quantity
+
                 })
             }
+
+            console.log(":allProducts. " +allProducts)
+            let str = JSON.stringify(getAllProductsInStoreResponse);
+            console.log(":str. " + str)
+            SetError("")
             Setproducts(allProducts);
         }
     }
@@ -47,9 +57,10 @@ const ProductInStoreList = props =>{
     // ];
 
 //getAllProductsInStore
+    //    //str. {"errorMsg":-1,"value":[{"quantity":10,"price":10,"itemID":1,"name":null}]}
 
     let expensesContent = products.map((expense) => (
-      <ProductInStore id={expense.id} UUID={props.uuid} storeID={props.storeID} name={expense.name} />
+      <ProductInStore id={expense.id} UUID={props.uuid} storeID={props.storeID} name={expense.name}  quantity={expense.quantity} price={expense.price}/>
     ));
   
    // const [searchStore, setStore] = useState("");
@@ -57,7 +68,8 @@ const ProductInStoreList = props =>{
   
     return (
       <div>
-        <ul className="products-list">{expensesContent}</ul>
+          <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+          <ul className="products-list">{expensesContent}</ul>
       </div>
     );
 };

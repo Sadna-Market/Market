@@ -5,6 +5,8 @@ import OrRule from "./OrRule";
 import XorRule from "./XorRule";
 
 const AddComposeDiscount = (props) => {
+  console.log("AddComposeDiscount")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const andHandler = () => {
@@ -33,7 +35,7 @@ const AddComposeDiscount = (props) => {
       <div>
         <button onClick={andHandler}>AND</button>
         <button onClick={orHandler}>OR</button>
-        <button onClick={orHandler}>XOR</button>
+        <button onClick={xorHandler}>XOR</button>
         <button onClick={addHandler}>ADD</button>
       </div>
     </>

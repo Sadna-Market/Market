@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 
 const ProductDiscountRule = (props) => {
+  console.log("ProductDiscountRule")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
   let UUID = props.uuid;
   let storeID = props.storeID;
 
@@ -15,19 +21,36 @@ const ProductDiscountRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setDiscount("");
     setproductID("");
   };
 
   //todo: add new Product Discount rule
-  const addHandler = () => {
-    cleanHandler();
-    //return the ruleId in onRule insead of 10/11/12/13
-    props.onRule(11);
-  };
+  async function  addHandler(){
+    let rule = new RulesClass.ProductDiscount(UUID,storeID,discount,productID)
+    if (props.compose===undefined) { //false case - no comopse - realy simple
+
+      const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID, {'ProductDiscount':rule});
+
+      if (sendRulesResponse.errorMsg !== -1) {
+        SetError(errorCode.get(sendRulesResponse.errorMsg))
+      } else {
+        cleanHandler();
+        // props.onRule(sendRulesResponse.value);
+        props.onRule(-1);
+
+      }
+    }
+    else {
+      cleanHandler();
+      props.onRule({'ProductDiscount':rule});
+    }
+  }
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Product Discount For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

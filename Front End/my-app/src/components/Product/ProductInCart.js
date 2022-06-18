@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import Card from "../UI/Card";
 
 const ProductInCart = props=>{
+    console.log("ProductInCart")
+
     let UUID=props.uuid;
     let productID = props.id;
     let storeID = props.storeID;
@@ -13,7 +15,7 @@ const ProductInCart = props=>{
 
     //todo:cencel this product from list
     const clickHandler = () => {
-        props.onCancel(price*amount);
+        props.onCancel(price*amount,storeID,productID)
         setAmount(0);
 
       };

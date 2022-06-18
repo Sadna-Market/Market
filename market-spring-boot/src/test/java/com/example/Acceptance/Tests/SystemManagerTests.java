@@ -20,7 +20,7 @@ public class SystemManagerTests extends MarketTests{
         uuid = market.guestVisit();
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5_ID;
-        CreditCard creditCard = new CreditCard("1111222233334444","1123","111");
+        CreditCard creditCard = new CreditCard("1111222233334444","11/23","111");
         Address address = new Address("Tel-Aviv","Nordau 3",3);
         buyer = generateUser();
         market.register(uuid, buyer.username, buyer.password,buyer.dateOfBirth);
@@ -99,7 +99,7 @@ public class SystemManagerTests extends MarketTests{
         ATResponseObj<String> res = market.getStoreInfo(existing_storeID);
         assertFalse(res.errorOccurred());
         assertNotEquals("",res.value);
-        ATResponseObj<List<String>> res2 = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> res2 = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(res2.errorOccurred());
         assertFalse(res2.value.isEmpty());
     }
@@ -124,7 +124,7 @@ public class SystemManagerTests extends MarketTests{
         ATResponseObj<String> res = market.getStoreInfo(existing_storeID+10);
         assertTrue(res.errorOccurred());
 
-        ATResponseObj<List<String>> res2 = market.getHistoryPurchase(uuid, existing_storeID+10);
+        ATResponseObj<List<History>> res2 = market.getHistoryPurchase(uuid, existing_storeID+10);
         assertTrue(res2.errorOccurred());
     }
     @Test
@@ -166,6 +166,7 @@ public class SystemManagerTests extends MarketTests{
     @DisplayName("req: ##2.6.6 - success test")
     void getLoggedOutMembers_Success2() {
         ATResponseObj<String> res = market.login(uuid,sysManager);
+        System.out.println("aaadddddddddddddddda");
         assertFalse(res.errorOccurred());
         uuid = res.value;
         ATResponseObj<List<User>> lst = market.getLoggedOutMembers(uuid);

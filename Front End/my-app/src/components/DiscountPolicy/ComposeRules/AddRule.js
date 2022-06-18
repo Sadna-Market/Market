@@ -1,23 +1,36 @@
 import React, { useState } from "react";
 import AddSimpleRule from "../SimpleRules/AddSimpleRule";
 import MoreRule from "./MoreRule";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/BuyingRules"
 
 const AddRule = (props) => {
+  console.log("AddRule")
+  const [enteredError, SetError] = useState("");
+  const apiClientHttp = createApiClientHttp();
   let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 
   const newRule = (num) => {
     setComaand(
-      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={moreHandler} />
+      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={moreHandler}  compose={true}/>
     );
   };
 
   //todo: create Add with list
-  const finishHandler = ()=>{
-    //work with list
-    props.onRule();
-  };
+  async function finishHandler(){
+    let combineMap ={"add":list}
+    const sendRulesResponse = await apiClientHttp.addNewDiscountRule(combineMap);
+
+    if (sendRulesResponse.errorMsg !== -1) {
+      SetError(errorCode.get(sendRulesResponse.errorMsg))
+    } else {
+      // props.onRule(sendRulesResponse.value);
+      props.onRule();
+    }
+  }
 
   const moreHandler = (ruleID) => {
     list.push(ruleID);
@@ -26,7 +39,7 @@ const AddRule = (props) => {
   };
 
   const [command, setComaand] = useState(
-    <AddSimpleRule uuid={UUID} storeID={storeID} onRule={moreHandler} />
+    <AddSimpleRule uuid={UUID} storeID={storeID} onRule={moreHandler}  compose={true}/>
   );
 
   //todo: AddRule
@@ -34,7 +47,7 @@ const AddRule = (props) => {
     //do..... with the list
     // props.onRule();
     setComaand(
-      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={newRule} />
+      <AddSimpleRule uuid={UUID} storeID={storeID} onRule={newRule}  compose={true}/>
     );
   };
 

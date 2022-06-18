@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import CombineRuleList from "./CombineRuleList";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 const XorRule = (props) => {
-  let UUID = props.uuid;
+    console.log("XorRule")
+    const [enteredError, SetError] = useState("");
+    const apiClientHttp = createApiClientHttp();
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 
@@ -19,8 +24,9 @@ const XorRule = (props) => {
   //todo: XOR rule
   const confirmHandler = () => {
     //do..... with the list
-    props.onRule();
+    props.onBigOrFirst(list);
   };
+
 
   //const [command, setCommand] = useState();
   return (

@@ -52,8 +52,9 @@ public class MarketTests {
         market.exitSystem(uuid);
     }
     protected void initMarketWithSysManagerAndItems(){
-        String uuid = market.initSystem(sysManager).value;
+        String uuid = market.guestVisit();
         //add items to system
+        //System.out.println(market.login(uuid, sysManager).errorMsg);
         uuid = market.login(uuid, sysManager).value;
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         ItemDetail item2 = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");

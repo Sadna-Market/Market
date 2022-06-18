@@ -3,7 +3,7 @@ import {createApiClientHttp} from "../../client/clientHttp";
 import {errorCode} from "../../ErrorCodeGui"
 
 const NewStore = (props) => {
-    console.log("NewStore UUID:"+props.uuid )
+    console.log("NewStore" )
 
     let apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
@@ -18,6 +18,7 @@ const NewStore = (props) => {
     };
 
     const cleanHandler = () => {
+        SetError("")
         setName("");
         setfounder("");
     }
@@ -40,6 +41,7 @@ const NewStore = (props) => {
 
     return (
         <div className="products">
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
             <h3>Open New Store</h3>
             <div className="products__controls">
                 <div className="products__control">

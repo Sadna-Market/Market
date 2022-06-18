@@ -1,23 +1,24 @@
 package com.example.demo.Service;
 
 
-
-
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
-import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 //Api of all
 public interface IMarket {
     //1.1
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth);
+    public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) ;
 
 
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) ;
 
 
     // 2.1.1 when a user enter to the system he recognized us a guest visitor
@@ -80,7 +81,7 @@ public interface IMarket {
     //2.2.5
     public SLResponseOBJ<String> orderShoppingCart(String userId, String city, String adress, int apartment , ServiceCreditCard creditCard) ;
 
-    //2.3.1
+        //2.3.1
     public SLResponseOBJ<String> logout(String userId);
 
     public SLResponseOBJ<Boolean> changePassword(String uuid, String email , String password , String newPassword) ;
@@ -104,21 +105,36 @@ public interface IMarket {
 
     //2.4.2
 
-    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule);
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRuleSL buyRule);
     public SLResponseOBJ<Boolean> removeBuyRule(String userId, int storeId, int buyRuleID);
-    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule);
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule);
     public SLResponseOBJ<Boolean> removeDiscountRule(String userId, int storeId, int discountRuleID);
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId , int storeId,  String operator, List<Integer> rules, int category, int discount);
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId , int storeId, String decision, List<Integer> rules);
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId);
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId);
+
 
     //2.4.4
     public SLResponseOBJ<Boolean> addNewStoreOwner(String UserId, int StoreId, String OwnerEmail);
 
     //2.4.5
     public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
 
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil);
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
+    public SLResponseOBJ<List<HashMap<String,Object>>> getAllusers();
 
-    //2.4.7
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+
+    public SLResponseOBJ<Integer> getStoreRate(String UUID,int Store);
+    public SLResponseOBJ<Boolean> newStoreRate(String UUID,int Store,int rate);
+
+        //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
             mangerEmil, String per , boolean onof);
     //2.4.9
@@ -146,4 +162,25 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
-}
+
+
+    public SLResponseOBJ<Boolean> createBID(String uuid,  int storeID,int productID, int quantity, int totalPrice);
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID);
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
+    public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard);
+    public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid,int storeID);
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid,int storeID);
+    public SLResponseOBJ<Boolean> reopenStore(String uuid,int storeID);
+
+    public SLResponseOBJ<List<String>> getAllMembers(String userId);
+
+
+
+
+
+ }
+

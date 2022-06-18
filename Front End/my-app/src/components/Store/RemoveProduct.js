@@ -3,6 +3,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const RemoveProduct = (props) => {
+    console.log("RemoveProduct" )
+
     let UUID = props.uuid;
     let storeID = props.storeID;
     const apiClientHttp = createApiClientHttp();
@@ -14,6 +16,7 @@ const RemoveProduct = (props) => {
     };
 
     const cleanHandler = () => {
+        SetError("")
         setProductID("");
     };
 
@@ -31,6 +34,7 @@ const RemoveProduct = (props) => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
             <h3>Remove Product From Store {storeID}</h3>
             <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
             <div className="products__controls">

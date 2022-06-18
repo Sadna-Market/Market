@@ -3,8 +3,18 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.SimpleCategoryDiscountRule;
+import com.example.demo.Service.ServiceObj.BuyRules.*;
+import com.example.demo.Service.ServiceObj.DiscountRules.*;
+import com.example.demo.Service.ServiceObj.Predicate.CategoryPredicateSL;
+import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
+import com.example.demo.Service.ServiceObj.Predicate.ShoppingBagPredicateSL;
+import com.example.demo.Service.ServiceObj.Predicate.UserPredicateSL;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
 import java.util.List;
 @DisplayName("Store Owner Tests  - AT")
 public class StoreOwnerTests extends MarketTests{
@@ -246,32 +256,151 @@ public class StoreOwnerTests extends MarketTests{
     }
 
     /**
-     * //TODO: not in this version
+     *
      * Requirement: policies of buying and discounts  - #2.4.2
      */
     @Test
     @DisplayName("req: #2.4.2 - success test")
-    void policy_Success() {
-        //TODO: not in this version
+    void add_remove_buy_policy_Success() {
+        BuyRuleSL userRule = new UserBuyRuleSL(new UserPredicateSL("osnat@gmail.com"));
+        BuyRuleSL productRule = new ProductBuyRuleSL(new ProductPredicateSL(1,2,5));
+        List<BuyRuleSL> rules = new ArrayList<>();
+        rules.add(userRule); rules.add(productRule);
+        BuyRuleSL and = new AndBuyRuleSL(rules);
+
+        assertTrue(market.isOwner(existing_storeID,member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertEquals(0, market.getBuyPolicy(uuid, existing_storeID).value.size());
+        assertTrue(market.addNewBuyRule(uuid, existing_storeID, and));
+        assertEquals(1, market.getBuyPolicy(uuid, existing_storeID).value.size());
+
+        BuyRuleSL categoryBR = new CategoryBuyRuleSL(new CategoryPredicateSL(1,18,0,24));
+        assertTrue(market.addNewBuyRule(uuid, existing_storeID, categoryBR));
+        assertEquals(2, market.getBuyPolicy(uuid, existing_storeID).value.size());
+
+        assertFalse(market.removeBuyRule(uuid, existing_storeID, 3)); // 3 id is not in buy policy
+        assertEquals(2, market.getBuyPolicy(uuid, existing_storeID).value.size());
+        assertTrue(market.removeBuyRule(uuid, existing_storeID, 2));
+        assertEquals(1, market.getBuyPolicy(uuid, existing_storeID).value.size());
+        assertTrue(market.removeBuyRule(uuid, existing_storeID, 1));
+        assertEquals(0, market.getBuyPolicy(uuid, existing_storeID).value.size());
+
+    }
+
+
+
+    @Test
+    @DisplayName("req: #2.4.2 - fail test [...]")
+    void add_remove_buy_policy_Fail() {
+        BuyRuleSL userRule = new UserBuyRuleSL(new UserPredicateSL("osnat@gmail.com"));
+        BuyRuleSL productRule = new ProductBuyRuleSL(new ProductPredicateSL(1,2,5));
+        List<BuyRuleSL> rules = new ArrayList<>();
+        rules.add(userRule); rules.add(productRule);
+        BuyRuleSL or = new OrBuyRuleSL(rules);
+
+        User newMem = generateUser();
+        assertTrue(market.register(uuid, newMem.username, newMem.password,newMem.dateOfBirth));
+        assertFalse(market.isOwner(existing_storeID,newMem));
+        assertTrue(market.isMember(newMem));
+
+        ATResponseObj<String> newMemID = market.login(uuid, newMem); //newMem is not owner
+        assertFalse(newMemID.errorOccurred());
+        uuid = newMemID.value;
+
+        assertFalse(market.addNewBuyRule(uuid, existing_storeID, or));  // not owner
+        assertEquals(0,market.getBuyPolicy(uuid, existing_storeID).value.size());
+
+        assertFalse(market.removeBuyRule(uuid, existing_storeID, 1)); // not owner
+        assertEquals(0,market.getBuyPolicy(uuid, existing_storeID).value.size());
+
+    }
+
+    @Test
+    @DisplayName("req: #2.4.2 - success test")
+    void add_remove_discount_policy_Success() {
+        DiscountRuleSL storeDiscountRule = new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(1,2,100),50);
+        DiscountRuleSL productDiscountRule = new ConditionProductDiscountRuleSL(new ProductPredicateSL(1,2,5),10);
+        List<DiscountRuleSL> rules = new ArrayList<>();
+        rules.add(storeDiscountRule); rules.add(productDiscountRule);
+        DiscountRuleSL and = new AndDiscountRuleSL(rules,1,50);
+
+        assertTrue(market.isOwner(existing_storeID,member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertEquals(0, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+        assertTrue(market.addNewDiscountRule(uuid, existing_storeID, and));
+        assertEquals(1, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
+        DiscountRuleSL categoryDR = new SimpleCategoryDiscountRuleSL(1,30);
+        assertTrue(market.addNewDiscountRule(uuid, existing_storeID, categoryDR));
+        assertEquals(2, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
+        assertFalse(market.removeDiscountRule(uuid, existing_storeID, 3)); // 3 id is not in buy policy
+        assertEquals(2, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+        assertTrue(market.removeDiscountRule(uuid, existing_storeID, 2));
+        assertEquals(1, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+        assertTrue(market.removeDiscountRule(uuid, existing_storeID, 1));
+        assertEquals(0, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
+    }
+
+
+
+    @Test
+    @DisplayName("req: #2.4.2 - fail test [...]")
+    void add_remove_discount_policy_Success_Fail() {
+        DiscountRuleSL storeDiscountRule = new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(1,2,100),50);
+        DiscountRuleSL productDiscountRule = new ConditionProductDiscountRuleSL(new ProductPredicateSL(1,2,5),10);
+        List<DiscountRuleSL> rules = new ArrayList<>();
+        rules.add(storeDiscountRule); rules.add(productDiscountRule);
+        DiscountRuleSL or = new OrDiscountRuleSL(rules,1,50);
+
+        User newMem = generateUser();
+        assertTrue(market.register(uuid, newMem.username, newMem.password,newMem.dateOfBirth));
+        assertFalse(market.isOwner(existing_storeID,newMem));
+        assertTrue(market.isMember(newMem));
+
+        ATResponseObj<String> newMemID = market.login(uuid, newMem); //newMem is not owner
+        assertFalse(newMemID.errorOccurred());
+        uuid = newMemID.value;
+
+        assertFalse(market.addNewDiscountRule(uuid, existing_storeID, or));  // not owner
+        assertEquals(0,market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
+        assertFalse(market.removeDiscountRule(uuid, existing_storeID, 1)); // not owner
+        assertEquals(0,market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
     }
 
     @Test
     @DisplayName("req: #2.4.2 - fail test [...]")
-    void policy_Fail1() {
-        //TODO: not in this version
+    void add_discount_policy_Success_Fail2() {
+        DiscountRuleSL storeDiscountRule = new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(1,2,100),50);
+        DiscountRuleSL productDiscountRule = new ConditionProductDiscountRuleSL(new ProductPredicateSL(1,2,5),10);
+        List<DiscountRuleSL> rules = new ArrayList<>();
+        rules.add(storeDiscountRule); rules.add(productDiscountRule);
+        DiscountRuleSL and = new AndDiscountRuleSL(rules,1,200);
+
+        assertTrue(market.isOwner(existing_storeID,member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertEquals(0, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+        assertFalse(market.addNewDiscountRule(uuid, existing_storeID, and)); // discount not between 0-100
+        assertEquals(0, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
+        DiscountRuleSL categoryDR = new SimpleCategoryDiscountRuleSL(-5,30);
+        assertFalse(market.addNewDiscountRule(uuid, existing_storeID, categoryDR)); // discount not between 0-100
+        assertEquals(0, market.getDiscountPolicy(uuid, existing_storeID).value.size());
+
     }
 
-    @Test
-    @DisplayName("req: #2.4.2 - fail test [...]")
-    void policy_Fail2() {
-        //TODO: not in this version
-    }
-
-    @Test
-    @DisplayName("req: #2.4.2 - fail test [...]")
-    void policy_Fail3() {
-        //TODO: not in this version
-    }
 
     /**
      * Requirement: assign store owner - #2.4.4
@@ -576,7 +705,7 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(market.assignNewManager(uuid, existing_storeID, newManager));
         assertTrue(market.isManager(existing_storeID, newManager));
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(historyPurchase.errorOccurred());
 
         assertTrue(market.updatePermission(uuid, Permission.GET_ORDER_HISTORY, false, newManager, existing_storeID));
@@ -603,7 +732,7 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(market.assignNewManager(uuid, existing_storeID, newManager));
         assertTrue(market.isManager(existing_storeID, newManager));
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(historyPurchase.errorOccurred());
 
         assertFalse(market.updatePermission(uuid, Permission.GET_ORDER_HISTORY, false, newManager, -1));
@@ -634,7 +763,7 @@ public class StoreOwnerTests extends MarketTests{
         assertTrue(market.assignNewManager(uuid, existing_storeID, newManager));
         assertTrue(market.isManager(existing_storeID, newManager));
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(historyPurchase.errorOccurred());
 
         assertFalse(market.updatePermission(uuid, "killTheManager", false, newManager, existing_storeID));
@@ -662,7 +791,7 @@ public class StoreOwnerTests extends MarketTests{
      */
     @Test
     @DisplayName("req: #2.4.9 - success test")
-    void closeStore_Success() {
+    void closeAndReopenStore_Success() {
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
@@ -671,6 +800,9 @@ public class StoreOwnerTests extends MarketTests{
         ItemDetail item = new ItemDetail("iphoneZX", 1, 10, List.of("phone"), "phone");
         item.itemID = 1122;
         assertFalse(market.addItemToStore(uuid, existing_storeID,item));
+        assertTrue(market.reopenStore(uuid, existing_storeID));
+        assertFalse(market.storeIsClosed(existing_storeID));
+        assertTrue(market.addNewBuyRule(uuid,existing_storeID,new UserBuyRuleSL(new UserPredicateSL("niv@gmail.com"))));
     }
 
     @Test
@@ -714,6 +846,30 @@ public class StoreOwnerTests extends MarketTests{
         uuid = memberID.value;
         assertFalse(market.closeStore(uuid, existing_storeID));
     }
+
+    @Test
+    @DisplayName("req: #2.4.9 - fail test [user doesnt have permission]")
+    void closeAndReopenStore_Fail3() {
+        User user = generateUser();
+        assertTrue(market.register(uuid, user.username, user.password, user.dateOfBirth));
+        assertTrue(market.isMember(member));
+        ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+
+        assertTrue(market.closeStore(uuid,existing_storeID));
+
+        ATResponseObj<String> guestID = market.logout(uuid);
+        assertFalse(guestID.errorOccurred());
+        uuid = guestID.value;
+        memberID = market.login(uuid, user);
+        assertFalse(memberID.errorOccurred());
+        uuid = memberID.value;
+        assertTrue(market.storeIsClosed(existing_storeID));
+        assertFalse(market.reopenStore(uuid, existing_storeID));
+        assertTrue(market.storeIsClosed(existing_storeID));
+    }
+
 
     @Test
     @DisplayName("req: #2.4.9 - fail test [invalid input]")
@@ -794,7 +950,7 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
         assertTrue(market.isOwner(existing_storeID,member));
-        ATResponseObj<List<String>> res = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(res.errorOccurred());
         assertNotEquals(null,res.value);
     }
@@ -806,7 +962,7 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
         assertTrue(market.isOwner(existing_storeID,member));
-        ATResponseObj<List<String>> res = market.getHistoryPurchase(uuid, existing_storeID+50);
+        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID+50);
         assertTrue(res.errorOccurred());
     }
     @Test
@@ -817,7 +973,7 @@ public class StoreOwnerTests extends MarketTests{
         ATResponseObj<String> memberID = market.login(uuid, user); //member is contributor
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
-        ATResponseObj<List<String>> res = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);
         assertTrue(res.errorOccurred());
     }
 
@@ -828,7 +984,7 @@ public class StoreOwnerTests extends MarketTests{
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
         assertTrue(market.isOwner(existing_storeID,member));
-        ATResponseObj<List<String>> res = market.getHistoryPurchase(uuid, -1);
+        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, -1);
         assertTrue(res.errorOccurred());
     }
 

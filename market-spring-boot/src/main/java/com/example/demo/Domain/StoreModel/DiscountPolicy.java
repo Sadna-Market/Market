@@ -1,13 +1,18 @@
 package com.example.demo.Domain.StoreModel;
 
-import com.example.demo.DataAccess.Entity.DataDiscountPolicy;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.AndDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.OrDiscountRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.XorDiscountRule;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.example.demo.Service.ServiceObj.ServiceDiscountPolicy;
+import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,6 +20,8 @@ public class DiscountPolicy {
 
     private ConcurrentHashMap<Integer, DiscountRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
+
+    static Logger logger=Logger.getLogger(DiscountPolicy.class);
 
     public DiscountPolicy(ServiceDiscountPolicy discountPolicy) {
         this.rules = new ConcurrentHashMap<>();
@@ -26,15 +33,22 @@ public class DiscountPolicy {
 
 
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule){
+        if(discountRule.getPercentDiscount() < 0 || discountRule.getPercentDiscount() > 100) return new DResponseObj<>(false,ErrorCode.INVALID_PERECNT_DISCOUNT);
         int id = idCounter.getAndIncrement();
         rules.put(id,discountRule);
         discountRule.setID(id);
+        logger.info("added new discountRule - id: "+id);
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> removeDiscountRule(int discountRuleID){
         DiscountRule removed = rules.remove(discountRuleID);
-        return removed == null ? new DResponseObj<>(false, ErrorCode.DISCOUNT_RULE_NOT_EXIST) : new DResponseObj<>(true);
+        if (removed == null)
+            return new DResponseObj<>(false, ErrorCode.DISCOUNT_RULE_NOT_EXIST);
+        else{
+            logger.info("discount rule #" + discountRuleID +" was removed");
+            return new DResponseObj<>(true);
+        }
     }
     public DResponseObj<Double> checkDiscountPolicyShoppingBag(String username, int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
         Double totalDiscount = 0.0;
@@ -50,8 +64,45 @@ public class DiscountPolicy {
         return rules.size();
     }
 
-    public DataDiscountPolicy getDataObject() {
-        //TODO: add DataRule and add to DataObject according to that
-        return new DataDiscountPolicy();
+    public ConcurrentHashMap<Integer,DiscountRule> getRules(){
+        return rules;
+    }
+
+    public DResponseObj<Boolean> combineANDORDiscountRules(String operator, List<Integer> toCombineRules, int category, int discount) {
+        List<DiscountRule> rulesForCombine = new ArrayList<>();
+        for(Integer id : toCombineRules) {
+            DiscountRule rule = rules.get(id);
+            if (rule == null) return new DResponseObj<>(false, ErrorCode.INVALID_ARGS_FOR_RULE);
+            rulesForCombine.add(rule);
+        }
+        DiscountRule combine;
+        switch(operator) {
+            case "and":
+                combine = new AndDiscountRule(rulesForCombine, category,discount);
+                break;
+            case "or":
+                combine = new OrDiscountRule(rulesForCombine, category, discount);
+                break;
+            default:
+                return new DResponseObj<>(false, ErrorCode.INVALID_ARGS_FOR_RULE);
+        }
+        DResponseObj<Boolean> addCombine = addNewDiscountRule(combine);  // add the combine rule
+        if(addCombine.errorOccurred()) return addCombine;
+        toCombineRules.forEach(this::removeDiscountRule);  // remove all the rules that combine
+        return new DResponseObj<>(true);
+    }
+
+    public DResponseObj<Boolean> combineXORDiscountRules(List<Integer> toCombineRules, String decision) {
+        List<DiscountRule> rulesForCombine = new ArrayList<>();
+        for(Integer id : toCombineRules) {
+            DiscountRule rule = rules.get(id);
+            if (rule == null) return new DResponseObj<>(false, ErrorCode.INVALID_ARGS_FOR_RULE);
+            rulesForCombine.add(rule);
+        }
+        DiscountRule xor = new XorDiscountRule(rulesForCombine,decision);
+        DResponseObj<Boolean> addCombine = addNewDiscountRule(xor);  // add the combine rule
+        if(addCombine.errorOccurred()) return addCombine;
+        toCombineRules.forEach(this::removeDiscountRule);  // remove all the rules that combine
+        return new DResponseObj<>(true);
     }
 }

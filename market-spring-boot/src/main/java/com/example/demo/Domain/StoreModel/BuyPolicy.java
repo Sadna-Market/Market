@@ -1,10 +1,10 @@
 package com.example.demo.Domain.StoreModel;
 
-import com.example.demo.DataAccess.Entity.DataBuyPolicy;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
+import org.apache.log4j.Logger;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -13,8 +13,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BuyPolicy {
+
     private ConcurrentHashMap<Integer,BuyRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
+
+
+    static Logger logger=Logger.getLogger(BuyPolicy.class);
 
     public BuyPolicy(ServiceBuyPolicy buyPolicy) {
         this.rules = new ConcurrentHashMap<>();
@@ -29,12 +33,18 @@ public class BuyPolicy {
         int id = idCounter.getAndIncrement();
         rules.put(id,buyRule);
         buyRule.setID(id);
+        logger.info("added new buyRule - id: "+id);
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> removeBuyRule(int buyRuleID){
         BuyRule removed = rules.remove(buyRuleID);
-        return removed == null ? new DResponseObj<>(false, ErrorCode.BUY_RULE_NOT_EXIST) : new DResponseObj<>(true);
+        if (removed == null)
+            return new DResponseObj<>(false, ErrorCode.BUY_RULE_NOT_EXIST);
+        else{
+            logger.info("buy rule #"+buyRuleID+" was removed");
+            return new DResponseObj<>(true);
+        }
     }
     public DResponseObj<Boolean> checkBuyPolicyShoppingBag(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
         for(BuyRule buyRule : rules.values()){
@@ -48,8 +58,9 @@ public class BuyPolicy {
         return rules.size();
     }
 
-    public DataBuyPolicy getDataObject() {
-        //TODO: add DataRule and return a DataObject according to that.
-        return new DataBuyPolicy();
+    public ConcurrentHashMap<Integer, BuyRule> getRules() {
+        return rules;
     }
+
+
 }

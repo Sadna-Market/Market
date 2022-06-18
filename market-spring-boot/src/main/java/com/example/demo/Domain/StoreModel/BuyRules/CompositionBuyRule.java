@@ -2,6 +2,8 @@ package com.example.demo.Domain.StoreModel.BuyRules;
 
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,4 +42,8 @@ public abstract class CompositionBuyRule implements BuyRule {
 
     @Override
     public abstract DResponseObj<String> getBuyRule();
+
+    public abstract     DResponseObj<BuyRuleSL> convertToBuyRuleSL();
+    ;
+
 }

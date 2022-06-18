@@ -1,9 +1,9 @@
 package com.example.demo.api.apiObjects.bridge;
 
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
-import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.*;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,12 +21,20 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber,String dateOfBirth) {
+    public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber,String dateOfBirth) {
 
         if(REAL==null){
-            return new SLResponseOBJ<>(email+" "+Password+" "+phoneNumber,-1);
+            return new SLResponseOBJ<>(false,-1);
         }
         return REAL.initMarket(email,Password,phoneNumber,dateOfBirth);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> removeMember(String userId, String email) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(false,-1);
+        }
+        return REAL.removeMember(userId, email);
     }
 
     @Override
@@ -389,14 +397,14 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule) {
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRuleSL buyRule) {
         if(REAL==null){
             System.out.println(userId);
             System.out.println(storeId);
             System.out.println(buyRule.toString());
             return new SLResponseOBJ<>(null,-1);
         }
-        return addNewBuyRule(userId,storeId,buyRule);
+        return REAL.addNewBuyRule(userId,storeId,buyRule);
     }
 
     @Override
@@ -407,18 +415,18 @@ public class proxy implements IMarket {
             System.out.println(buyRuleID);
             return new SLResponseOBJ<>(null,-1);
         }
-        return removeBuyRule(userId,storeId,buyRuleID);
+        return REAL.removeBuyRule(userId,storeId,buyRuleID);
     }
 
     @Override
-    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule) {
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule) {
         if(REAL==null){
             System.out.println(userId);
             System.out.println(storeId);
             System.out.println(discountRule.toString());
             return new SLResponseOBJ<>(null,-1);
         }
-        return addNewDiscountRule(userId,storeId,discountRule);
+        return REAL.addNewDiscountRule(userId,storeId,discountRule);
     }
 
     @Override
@@ -429,7 +437,43 @@ public class proxy implements IMarket {
             System.out.println(discountRuleID);
             return new SLResponseOBJ<>(null,-1);
         }
-        return removeDiscountRule(userId,storeId,discountRuleID);
+        return REAL.removeDiscountRule(userId,storeId,discountRuleID);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId, int storeId, String operator, List<Integer> rules, int category, int discount) {
+        if(REAL==null){
+            System.out.println(userId);
+            System.out.println(storeId);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.combineANDORDiscountRules(userId, storeId, operator, rules, category, discount);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId, int storeId, String decision, List<Integer> rules) {
+        if (REAL == null) {
+            System.out.println(userId);
+            System.out.println(storeId);
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.combineXORDiscountRules(userId, storeId, decision, rules);
+    }
+    @Override
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getBuyPolicy(userId,storeId);    }
+
+    @Override
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
+
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getDiscountPolicy(userId,storeId);
     }
 
     @Override
@@ -455,6 +499,17 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) {
+        if(REAL==null){
+            System.out.println(userId);
+            System.out.println(storeId);
+            System.out.println(menagerEmail);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.removeStoreMenager(userId,storeId,menagerEmail);
+    }
+
+    @Override
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil) {
          if(REAL==null){
              System.out.println(UserId);
@@ -464,6 +519,69 @@ public class proxy implements IMarket {
          }
          return REAL.addNewStoreManger(UserId,StoreId,mangerEmil);
     }
+
+    @Override
+    public SLResponseOBJ<Integer> getRate(String uuid, int productTypeID) {
+        if(REAL==null){
+            System.out.println(uuid);
+            System.out.println(productTypeID);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getRate(uuid, productTypeID);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> setRate(String uuid, int productTypeID, int rate) {
+        if(REAL==null){
+            System.out.println(uuid);
+            System.out.println(productTypeID);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.setRate(uuid, productTypeID,rate);
+    }
+
+    @Override
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId) {
+        if(REAL==null){
+
+            System.out.println(productTypeId);
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getProductTypeInfo(productTypeId);
+    }
+
+    @Override
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getAllusers();    }
+
+    @Override
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+    return REAL.getStoreInfo(storeId);
+    }
+
+    @Override
+    public SLResponseOBJ<Integer> getStoreRate(String uuid,int Store) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getStoreRate(uuid,Store);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> newStoreRate(String uuid,int Store, int rate) {
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.newStoreRate(uuid,Store,rate);    }
+
 
     @Override
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String mangerEmil, String per, boolean onof) {
@@ -501,8 +619,11 @@ public class proxy implements IMarket {
 
     @Override
     public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
-        return null;
-    }
+        if(REAL==null){
+
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.cancelMembership(uuid,cancelMemberUsername);   }
 
     @Override
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId) {
@@ -590,5 +711,105 @@ public class proxy implements IMarket {
             return new SLResponseOBJ<>(null, -1);
         }
         return REAL.isSystemManagerUUID(uuid);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.createBID(uuid, storeID, productID, quantity, totalPrice);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.removeBID(uuid, storeID, productID);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.approveBID(uuid, userEmail, storeID, productID);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.rejectBID(uuid, userEmail, storeID, productID);    }
+
+    @Override
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.counterBID(uuid, userEmail, storeID, productID, newTotalPrice);     }
+
+    @Override
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID, boolean approve) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.responseCounterBID(uuid, storeID, productID, approve);     }
+
+    @Override
+    public SLResponseOBJ<Boolean> BuyBID(String userId, int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.BuyBID(userId, storeID, productID, city, adress, apartment, creditCard);
+    }
+
+//    @Override
+//    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID) {
+//        if(REAL==null){
+//            return new SLResponseOBJ<>(null, -1);
+//        }
+//        return REAL.getApprovesList(uuid, userEmail, storeID, productID);
+//    }
+@Override
+public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID){
+    if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getBIDStatus(uuid, userEmail, storeID, productID);
+}
+
+    @Override
+    public SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllOffersBIDS(uuid, storeID);    }
+
+    @Override
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getMyBIDs(uuid, storeID);
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> reopenStore(String uuid, int storeID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.reopenStore(uuid, storeID);
+    }
+
+
+    public SLResponseOBJ<List<String>> getAllMembers(String userId) {
+
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.getAllMembers(userId);
+
     }
 }

@@ -13,11 +13,19 @@ import PolicyStore from "./DiscountPolicy";
 import BuyingPolicy from "./BuyingPolicy";
 import DiscountPolicy from "./DiscountPolicy";
 import "./Store.css";
+import {createApiClientHttp} from "../../client/clientHttp";
+import {errorCode} from "../../ErrorCodeGui"
+import BID from "./BID/BID";
+
 
 const Store = (props) => {
-  let storeID = props.storeID;
+    let apiClientHttp = createApiClientHttp();
+    const [enteredError, SetError] = useState("");
+    console.log("Store" )
+
+    let storeID = props.storeID;
   let UUID = props.uuid;
-    console.log("Store storeID: "+storeID +" UUID: "+UUID )
+    console.log("UUID " +UUID)
 
   const addProductHandler = () => {
     setCommand(
@@ -109,8 +117,8 @@ const Store = (props) => {
         <h2></h2>
         <button onClick={closeStoreHandler}> Close Store</button>
         <button onClick={historyHandler}> History </button>
-        <button onClick={policyHandler}> Policy </button>
-        <button onClick={buyingHandler}> Buying Strategy </button>
+        <button onClick={policyHandler}> Discount Policy </button>
+        <button onClick={buyingHandler}> Buy Policy </button>
       </>
     );
   }
@@ -132,8 +140,28 @@ const Store = (props) => {
     </>
   );
 
-  const rulesHandler = () => {
-    setCommand(<Rules uuid={UUID} storeID={storeID} />);
+    async function rulesHandler(){
+        console.log(":UUID " + UUID + "storeID " +storeID)
+
+        const getStoreRolesResponse = await apiClientHttp.getStoreRoles(UUID,storeID);
+        if (getStoreRolesResponse.errorMsg!== -1) {
+            SetError(errorCode.get(getStoreRolesResponse.errorMsg))
+        } else {
+            // console.log(":getStoreRolesResponse. "+ getStoreRolesResponse[0].type)
+            
+            console.log(":getStoreRolesResponse.value22 " + getStoreRolesResponse)
+            let str = JSON.stringify(getStoreRolesResponse);
+            //:getStoreRolesResponse.value {"errorMsg":-1,"value":{"owner":["sysManager@gmail.com"],"manager":[],"founder":["1dfssdf"]}}
+            console.log(":getStoreRolesResponse.value "+ str)
+            // getStoreRolesResponse.value
+            setCommand(<Rules uuid={UUID} storeID={storeID} rules={getStoreRolesResponse.value}/>);
+
+        }
+
+  }
+
+  const BIDHandler = () => {
+    setCommand(<BID uuid={UUID} storeID={storeID} />);
   };
 
   return (
@@ -141,6 +169,7 @@ const Store = (props) => {
       <h3>{name}</h3>
       <h3>{isOpen}</h3>
       <button onClick={rulesHandler}>Rules</button>
+      <button onClick={BIDHandler}>BID</button>
       {permission}
       <div>{command}</div>
     </div>

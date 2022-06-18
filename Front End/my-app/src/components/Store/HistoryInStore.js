@@ -3,6 +3,8 @@ import createApiClientHttp from "../../client/clientHttp.js";
 import {errorCode} from "../../ErrorCodeGui"
 
 const HistoryInStore = (props) => {
+  console.log("HistoryInStore")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const apiClientHttp = createApiClientHttp();
@@ -22,7 +24,7 @@ const HistoryInStore = (props) => {
 
   //todo: search the history
   async function searchHandler(){
-    console.log("searchHandler getStoreOrderHistory")
+    console.log("searchHandler getStoreOrderHistory storeID" +storeID )
 
     const getStoreOrderHistoryResponse = await apiClientHttp.getStoreOrderHistory(UUID, storeID);
 
@@ -31,7 +33,7 @@ const HistoryInStore = (props) => {
     } else {
       setCommand(getStoreOrderHistoryResponse.value);
       setemail("");
-
+      SetError("")
     }
     console.log("getStoreOrderHistoryResponse")
     console.log(getStoreOrderHistoryResponse)
@@ -40,6 +42,8 @@ const HistoryInStore = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <h3>History of User in Store {storeID}</h3>
       <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
       <div className="products__controls">

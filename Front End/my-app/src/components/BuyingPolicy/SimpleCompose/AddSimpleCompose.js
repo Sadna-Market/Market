@@ -4,6 +4,8 @@ import ConditionRule from "./ConditionRule";
 import OrRule from "./OrRule";
 
 const SimpleComposeRule = (props) => {
+  console.log("buying policy " + "SimpleComposeRule ")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const addHandler = () => {
@@ -27,6 +29,7 @@ const SimpleComposeRule = (props) => {
   };
   let besicPage = (
     <>
+
       <h3>Compose Rules</h3>
       <div>
         <button onClick={addHandler}>AND</button>

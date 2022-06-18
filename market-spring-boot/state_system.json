@@ -1,0 +1,121 @@
+{
+  "systemItems": [{
+    "name" : "bamba",
+    "description": "bamba snack",
+    "category": 2
+  }],
+  "login":[
+    {
+      "email": "u1@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u2@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u3@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u4@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u5@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }, {
+      "email": "u6@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }
+  ],
+  "register": [
+    {
+      "email": "u1@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u2@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u3@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u4@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u5@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }, {
+      "email": "u6@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }
+  ],
+  "stores": {
+    "u2@gmail.com": [
+      {
+        "name": "s1",
+        "founder": "u2@gmail.com"
+      }
+    ]
+  },
+  "add_item":
+  {
+    "u2@gmail.com": {
+      "s1": [
+        {
+          "name": "bamba",
+          "price": 30.00,
+          "quantity": 20
+        }
+      ]
+    }
+
+  },
+  "addManager" : {
+    "u2@gmail.com": {
+      "s1": [
+        {"u3@gmail.com": ["addNewProductToStore",
+          "deleteProductFromStore",
+          "setProductPriceInStore",
+          "setProductQuantityInStore"]}
+      ]
+    }
+  },
+  "addOwner": {
+    "u2@gmail.com": {
+    "s1": [
+      "u4@gmail.com","u5@gmail.com"
+    ]
+  }
+  },
+  "Logoutandleave": ["u5@gmail.com","u2@gmail.com"]
+
+}

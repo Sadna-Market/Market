@@ -34,14 +34,21 @@ const Bar = (props) => {
 
     const guestVisitResponse = await apiClientHttp.guestVisit();
     const loginResponse = await apiClientHttp.login(guestVisitResponse.value, email, password);
+    // const loginResponse = await apiClientHttp.login(guestVisitResponse.value, "sysManager@gmail.com", "Shalom123$");
 
-
+    let systemManager=false;
     if (loginResponse.errorMsg!== -1) {
       SetError(errorCode.get(loginResponse.errorMsg))
     } else {
+      const isSystemManagerUUIDResponse = await apiClientHttp.isSystemManagerUUID(loginResponse.value);
+
+      if (isSystemManagerUUIDResponse.errorMsg=== -1){
+        systemManager=true
+      }
+      SetError("")
       setUserName(email);
       setIsLogin(true);
-      props.onLogin(loginResponse.value,email);
+      props.onLogin(loginResponse.value,email,systemManager);
     }
     console.log(loginResponse)
 
@@ -54,6 +61,7 @@ const Bar = (props) => {
     if (logoutResponse.errorMsg!== -1) {
       SetError(errorCode.get(logoutResponse.errorMsg))
     } else {
+      SetError("")
       setEmail("");
       setPassword("");
       props.onLogout(logoutResponse.value);
@@ -69,6 +77,8 @@ const Bar = (props) => {
   };
 
   const singUpHandler = () => {
+    SetError("")
+
     props.onSignUp();
   };
 
@@ -79,9 +89,10 @@ const Bar = (props) => {
   let command = "";
   if (isLogin === false) {
     command = (
-      <div className="bar__controls">
-        <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
-        <div className="bar__control">
+    <div className="bar__controls">
+
+      <div className="bar__control">
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
           <label>User's Email</label>
           <input type="text" value={email} onChange={emailChangeHandler} />
         </div>
@@ -100,10 +111,10 @@ const Bar = (props) => {
           >
             Sign-Up
           </button>
-          <button className="bar__button" onClick={initHandler}>
-            {" "}
-            Init-Market
-          </button>
+          {/*<button className="bar__button" onClick={initHandler}>*/}
+          {/*  {" "}*/}
+          {/*  Init-Market*/}
+          {/*</button>*/}
 
         </div>
       </div>

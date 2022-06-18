@@ -21,8 +21,10 @@ public class ServiceShoppingCart {
             shoppingBagHash.put(storrId,serviceShoppingBag);
         }
     }
+    public ServiceShoppingCart() {
+    }
 
-    public List<List<Integer>> get() {
+        public List<List<Integer>> get() {
         List<List<Integer>> lst = new LinkedList<>();
         shoppingBagHash.forEach((i, bag) -> {
             List<Integer> l = new LinkedList<>(bag.getProductQuantity().values());

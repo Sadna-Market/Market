@@ -1,0 +1,137 @@
+{
+  "syste1111mItems": [{
+    "name" : "bamba",
+    "description": "bamba snack",
+    "category": 2
+  },
+    {
+      "name" : "bira",
+      "description": "bira",
+      "category": 3
+    },
+    {
+      "name" : "kola",
+      "description": "kola",
+      "category": 3
+    }],
+  "log111in":[
+    {
+      "email": "u1@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u2@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u3@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u4@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u5@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }, {
+      "email": "u6@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }
+  ],
+  "regis111ter": [
+    {
+      "email": "u1@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u2@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u3@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u4@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    },
+    {
+      "email": "u5@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }, {
+      "email": "u6@gmail.com",
+      "password": "abcA!123",
+      "phoneNumber": "0538265477",
+      "dateOfBirth" : "25/10/1984"
+    }
+  ],
+  "sto111res": {
+    "u2@gmail.com": [
+      {
+        "name": "s1",
+        "founder": "u2@gmail.com"
+      }
+    ],
+    "u3@gmail.com": [
+      {
+        "name": "s2",
+        "founder": "u3@gmail.com"
+      }
+    ]
+  },
+  "add_it11em":
+  {
+    "u2@gmail.com": {
+      "s1": [
+        {
+          "name": "bamba",
+          "price": 30.00,
+          "quantity": 20
+        }
+      ]
+    }
+
+  },
+  "addMana111ger" : {
+    "u2@gmail.com": {
+      "s1": [
+        {"u3@gmail.com": ["addNewProductToStore",
+          "deleteProductFromStore",
+          "setProductPriceInStore",
+          "setProductQuantityInStore"]}
+      ]
+    }
+  },
+  "addO111wner": {
+    "u2@gmail.com": {
+      "s1": [
+        "u4@gmail.com","u5@gmail.com"
+      ]
+    }
+  },
+  "Logout1111andleave": ["u5@gmail.com"]
+
+}

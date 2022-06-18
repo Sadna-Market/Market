@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import Card from "../UI/Card";
 import RuleInfo from "./RuleInfo";
+
+
 const RuleID = (props) => {
+  console.log("buying policy " + "RuleID ")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   let ruleID = props.ruleID;
@@ -11,7 +15,8 @@ const RuleID = (props) => {
 
   //todo: remove Rule
   const removeHandler = () => {
-    props.onRemove();
+    console.log("removeHandler "+ruleID)
+    props.onRemove(ruleID);
   };
 
   const infoHandler = () => {

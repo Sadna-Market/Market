@@ -6,6 +6,8 @@ import {errorCode} from "../../ErrorCodeGui"
 
 
 const SignUpManager = (props) => {
+  console.log("SignUpManager")
+
   console.log("SignUpManager UUID:")
 
   const apiClientHttp = createApiClientHttp();
@@ -50,6 +52,7 @@ const SignUpManager = (props) => {
   }
 
   const cancelHandler = () => {
+    SetError("")
     SetName("");
     SetEmail("");
     setPassword("");
@@ -58,6 +61,7 @@ const SignUpManager = (props) => {
 
   return (
       <div className="signUpManager">
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
         <h3>Manager System</h3>
         <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
         <form onSubmit={submitHandler}>

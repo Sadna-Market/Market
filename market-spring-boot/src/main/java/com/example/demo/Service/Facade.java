@@ -13,10 +13,18 @@ import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import com.example.demo.Service.ServiceObj.*;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+
+import com.example.demo.configuration.JsonUser;
+import com.example.demo.configuration.StateInit.Initilizer;
+import com.example.demo.configuration.config;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,18 +38,33 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Facade implements IMarket {
     UserManager userManager;
     Market market;
+
     @Autowired
     public Facade(UserManager userManager) {
         this.userManager = userManager;
-        this.market = new Market(userManager);
+        this.market = new Market(this.userManager);
+        JsonUser a= config.get_instance().getJsonInit().admin;
+        System.out.println(a.email+" "+a.password+" "+a.phoneNumber+" "+a.dateOfBirth);
+        System.out.println(config.isMakeState);
+        initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
     }
     public Facade(){
         this.userManager = new UserManager();
-        this.market = new Market(userManager);
+        this.market = new Market(this.userManager);
+        JsonUser a= config.get_instance().getJsonInit().admin;
+        System.out.println(a.email+" "+a.password+" "+a.phoneNumber+" "+a.dateOfBirth);
+        System.out.println(config.isMakeState);
+        initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
     }
 
-    @Override
-    public SLResponseOBJ<String> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
+    public SLResponseOBJ<Boolean> removeMember(String userId,String email) {
+        if(email==null||email.equals("")) return new SLResponseOBJ<>(false,ErrorCode.NOT_VALID_EMILE);
+        return new SLResponseOBJ<>(userManager.removeMember(UUID.fromString(userId),email));
+    }
+
+
+        @Override
+    public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
         /**
          * @requirement II. 1
          *
@@ -63,23 +86,34 @@ public class Facade implements IMarket {
          * It will create system manager user and start connections with services (Payment and delivery).
          */
         SLResponseOBJ<String> guestUUID = guestVisit();
-        if (guestUUID.errorOccurred()) return new SLResponseOBJ<>(guestUUID.value, guestUUID.errorMsg);
+        if (guestUUID.errorOccurred()) return new SLResponseOBJ<>(false, guestUUID.errorMsg);
         SLResponseOBJ<Boolean> addedSysManager = addNewMember(guestUUID.value, email, Password, phoneNumber, dateOfBirth);
-        if (addedSysManager.errorOccurred()) return new SLResponseOBJ<>(null, addedSysManager.errorMsg);
+        if (addedSysManager.errorOccurred()) return new SLResponseOBJ<>(false, addedSysManager.errorMsg);
         PermissionManager permissionManager = PermissionManager.getInstance();
 
         DResponseObj<Boolean> setSysManagerPermission = permissionManager.setSystemManager(email);
-        if (setSysManagerPermission.errorOccurred()) return new SLResponseOBJ<>(null, setSysManagerPermission.errorMsg);
+        if (setSysManagerPermission.errorOccurred()) return new SLResponseOBJ<>(false, setSysManagerPermission.errorMsg);
+        SLResponseOBJ<Boolean> leav =guestLeave(guestUUID.value);
+        if (leav.errorOccurred()) return new SLResponseOBJ<>(false, addedSysManager.errorMsg);
 
         DResponseObj<Boolean> initiateExternalServices = market.init();
         if (initiateExternalServices.errorOccurred() && initiateExternalServices.errorMsg != 50)
-            return new SLResponseOBJ<>(null, initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
+            return new SLResponseOBJ<>(false, initiateExternalServices.errorMsg); //nivvvvvvvvvvvvvvvvvvvvvvvvv !!!!!
         /// the problem was from hear do with it watever you want
         //when you try to connect again to the conection service its throw you with message error
         //hara ahusharmuta
         //&&initiateExternalServices.errorMsg!=50 this is that i add
+        if(config.get_instance().getJsonInit().initState){
+            System.out.println("make system state");
+            Initilizer I = new Initilizer(this);
+            try {
+                I.initialization(email, Password);
+            }catch (Exception e){
+                throw new IllegalArgumentException(e);
+            }
+        }
 
-        return new SLResponseOBJ<>(guestUUID.value, -1);
+        return new SLResponseOBJ<>(true, -1);
     }
 
 
@@ -295,6 +329,8 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
         return new SLResponseOBJ<>(market.searchProductByName(productName));
     }
+
+
 
     @Override
     public SLResponseOBJ<List<Integer>> searchProductByName(List<Integer> lst, String productName) {
@@ -517,6 +553,28 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.AddProductToShoppingBag(UUID.fromString(userId), storeId, productId, quantity));
     }
 
+    public SLResponseOBJ<Integer> getStoreRate(String uuid,int Store){
+        if(Store<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+        if(uuid==null||uuid.equals("")) return new SLResponseOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+
+        return new SLResponseOBJ<>(market.getStoreRate(UUID.fromString(uuid),Store));
+    }
+    public SLResponseOBJ<Boolean> newStoreRate(String uuid,int Store,int rate){
+        if(uuid==null||uuid.equals("")) return new SLResponseOBJ<>(null,ErrorCode.NOTVALIDINPUT);
+
+        if(Store<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+        if(rate<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+
+        return new SLResponseOBJ<>(market.newStoreRate(UUID.fromString(uuid),Store, rate));
+    }
+    @Override
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId){
+        if(storeId<0) return new SLResponseOBJ<>(null,ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Store> s= market.getStore(storeId);
+        if(s.errorOccurred()) return new SLResponseOBJ<>(null,s.getErrorMsg());
+        return new SLResponseOBJ<>(new ServiceStore(market.getStore(storeId).value));
+    }
+
     @Override
     public SLResponseOBJ<ServiceShoppingCart> getShoppingCart(String userId) {
 
@@ -656,6 +714,9 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>("is ok", -1);
     }
 
+
+
+
     @Override
     public SLResponseOBJ<String> logout(String userId) {
 
@@ -738,7 +799,7 @@ public class Facade implements IMarket {
         if (founder == null || founder.equals(""))
             return new SLResponseOBJ<>(-1, ErrorCode.NOTSTRING);
         DResponseObj<Integer> res = market.OpenNewStore(UUID.fromString(userId), name, founder,
-                new DiscountPolicy(discountPolicy), new BuyPolicy(buyPolicy), new BuyStrategy(buyStrategy));
+                new DiscountPolicy(discountPolicy), new BuyPolicy(buyPolicy));
         return new SLResponseOBJ<>(res.value, res.errorMsg);
     }
 
@@ -878,7 +939,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRule buyRule) {
+    public SLResponseOBJ<Boolean> addNewBuyRule(String userId, int storeId, BuyRuleSL buyRule) {
 
         /**
          * @requirement II. 4.2
@@ -904,7 +965,9 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (buyRule == null)
             return new SLResponseOBJ<>(false, ErrorCode.BUY_RULE_IS_NULL);
-        return new SLResponseOBJ<>(market.addNewBuyRule(UUID.fromString(userId), storeId, buyRule));
+        SLResponseOBJ<BuyRule> buyRuleConverted = buyRule.convertToBuyRuleDL();
+        if(buyRuleConverted.errorOccurred()) return new SLResponseOBJ<>(buyRuleConverted.getErrorMsg());
+        return new SLResponseOBJ<>(market.addNewBuyRule(UUID.fromString(userId), storeId, buyRuleConverted.value));
     }
 
     @Override
@@ -944,14 +1007,16 @@ public class Facade implements IMarket {
      */
 
     @Override
-    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRule discountRule) {
+    public SLResponseOBJ<Boolean> addNewDiscountRule(String userId, int storeId, DiscountRuleSL discountRule) {
         if (userId == null || userId.equals(""))
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         if (discountRule == null)
             return new SLResponseOBJ<>(false, ErrorCode.BUY_RULE_IS_NULL);
-        return new SLResponseOBJ<>(market.addNewDiscountRule(UUID.fromString(userId), storeId, discountRule));
+        SLResponseOBJ<DiscountRule> DiscountRuleConverted = discountRule.convertToDiscountRuleDL();
+        if(DiscountRuleConverted.errorOccurred()) return new SLResponseOBJ<>(DiscountRuleConverted.getErrorMsg());
+        return new SLResponseOBJ<>(market.addNewDiscountRule(UUID.fromString(userId), storeId, DiscountRuleConverted.value));
     }
 
     /**
@@ -969,6 +1034,92 @@ public class Facade implements IMarket {
         if (storeId < 0 || discountRuleID < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
         return new SLResponseOBJ<>(market.removeDiscountRule(UUID.fromString(userId), storeId, discountRuleID));
+    }
+
+    /**
+     * combine 2 or more rules by the operator and remove the rules
+     * @param userId
+     * @param storeId
+     * @param operator
+     * @param rules
+     * @param category
+     * @param discount
+     * @return
+     */
+    @Override
+    public SLResponseOBJ<Boolean> combineANDORDiscountRules(String userId , int storeId,  String operator, List<Integer> rules, int category, int discount) {
+        if (userId == null || userId.equals("") || operator == null || operator.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if(rules == null || rules.size() < 2)
+            return new SLResponseOBJ<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
+        if(storeId < 0 || category < 0 || discount < 0)
+            return new SLResponseOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.combineANDORDiscountRules(UUID.fromString(userId), storeId,operator, rules,category,discount));
+    }
+
+
+    /**
+     *  combine 2 or more rules to Xor and remove the rules
+     * @param userId
+     * @param storeId
+     * @param decision
+     * @param rules
+     * @return
+     */
+    public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId , int storeId, String decision, List<Integer> rules){
+        if (userId == null || userId.equals("") || decision == null || decision.equals("") )
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if(rules == null || rules.size() < 2 || !decision.equals("xor"))
+            return new SLResponseOBJ<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
+        if(storeId < 0)
+            return new SLResponseOBJ<>(false,ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.combineXorDiscountRules(UUID.fromString(userId), storeId, decision,rules));
+    }
+
+    /**
+     * get buy policy of store (all buy rules)
+     * @param userId
+     * @param storeId
+     * @return list of buy rules or error if error occur
+     */
+    @Override
+    public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeId < 0 )
+            return new SLResponseOBJ<>(ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<BuyRule>> buyPolicy = market.getBuyPolicy(UUID.fromString(userId), storeId);
+        if(buyPolicy.errorOccurred()) return new SLResponseOBJ<>(buyPolicy.getErrorMsg());
+        List<BuyRuleSL> converted = new ArrayList<>();
+        for(BuyRule br : buyPolicy.value){
+            DResponseObj<BuyRuleSL> brSL = br.convertToBuyRuleSL();
+            if(brSL.errorOccurred()) return new SLResponseOBJ<>(brSL.getErrorMsg());
+            converted.add(brSL.value);
+        }
+        return new SLResponseOBJ<>(converted);
+    }
+
+    /**
+     * get discount policy of store (all discount rules)
+     * @param userId
+     * @param storeId
+     * @return list of buy rules or error if error occur
+     */
+    @Override
+    public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeId < 0 )
+            return new SLResponseOBJ<>(ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<DiscountRule>> discountPolicy = market.getDiscountPolicy(UUID.fromString(userId), storeId);
+        if(discountPolicy.errorOccurred()) return new SLResponseOBJ<>(discountPolicy.getErrorMsg());
+        List<DiscountRuleSL> converted = new ArrayList<>();
+        for(DiscountRule dr : discountPolicy.value){
+            DResponseObj<DiscountRuleSL> drSL = dr.convertToDiscountRuleSL();
+            if(drSL.errorOccurred()) return new SLResponseOBJ<>(drSL.getErrorMsg());
+            converted.add(drSL.value);
+        }
+        return new SLResponseOBJ<>(converted);
     }
 
 
@@ -1020,8 +1171,45 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(market.removeStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
+    @Override
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) {
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (menagerEmail == null || menagerEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.removeStoreMenager(UUID.fromString(userId), storeId, menagerEmail));
+    }
+
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID)
+    {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (productTypeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>( market.getRate(UUID.fromString(uuid),productTypeID));
+    }
 
 
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId)
+    {
+        if (productTypeId < 0) {
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        }
+        return new SLResponseOBJ<>(market.getProductTypeInfo(productTypeId));
+    }
+
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate)
+    {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (productTypeID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        if (rate < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        return new SLResponseOBJ<>(market.setRate(UUID.fromString(uuid),productTypeID,rate));
+    }
     @Override
     public SLResponseOBJ<Boolean> addNewStoreManger(String userId, int storeId, String mangerEmil) {
 
@@ -1290,9 +1478,14 @@ public class Facade implements IMarket {
         if(products.errorOccurred()) return new SLResponseOBJ<>(null,products.errorMsg);
         List<ServiceProductStore> lst = new ArrayList<>();
         products.value.forEach(productStore -> {
+
             lst.add(new ServiceProductStore(productStore));
         });
         return new SLResponseOBJ<>(lst,-1);
+    }
+
+    public UserManager getUserManager(){
+        return userManager;
     }
 
 
@@ -1390,4 +1583,240 @@ public class Facade implements IMarket {
         User user = res.value;
         return new SLResponseOBJ<>(PermissionManager.getInstance().isSystemManager(user.getEmail().value));
     }
-}
+
+
+    /**
+     *  create BID - only for users
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param quantity
+     * @param totalPrice
+     * @return succuess or not
+     */
+    @Override
+    public SLResponseOBJ<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0 || totalPrice < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        if (quantity < 1)
+            return  new SLResponseOBJ<>(false, ErrorCode.INVALIDQUANTITY);
+        DResponseObj<Boolean> res = market.createBID(UUID.fromString(uuid),storeID,productID,quantity,totalPrice);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * remove BID
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.removeBID(UUID.fromString(uuid),storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to approve BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.approveBID(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to reject BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.rejectBID(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to counter BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @param newTotalPrice
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0 || newTotalPrice < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.counterBID(UUID.fromString(uuid),userEmail,storeID,productID,newTotalPrice);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a user want to response his countered BID
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param approve
+     * @return true if success else false with error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID, boolean approve) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.responseCounterBID(UUID.fromString(uuid),storeID,productID,approve);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false,res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+
+    /**
+     * a owner or manager with permission want to get status of BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return approves list or error msg
+     */
+    @Override
+    public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
+        if (uuid == null || uuid.equals("") || userEmail == null || userEmail.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<String> res = market.getBIDStatus(UUID.fromString(uuid),userEmail,storeID,productID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) : new SLResponseOBJ<>("res.value");
+    }
+
+    /**
+     * get all bids in the store if has permission
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<HashMap<Integer,List<BID>>> res = market.getAllOffersBIDs(UUID.fromString(uuid),storeID);
+        if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
+        HashMap<Integer,List<ServiceBID>> allBIDs = new HashMap<>();
+        for(Map.Entry<Integer, List<BID>> entry : res.value.entrySet()) {
+            Integer productID = entry.getKey();
+            List<BID> dBIDSs = entry.getValue();
+            List<ServiceBID> sBIDs = new ArrayList<>();
+            dBIDSs.forEach(b -> {
+                ServiceBID serviceBID = new ServiceBID(b);
+                sBIDs.add(serviceBID);
+            });
+            allBIDs.put(productID,sBIDs);
+        }
+        return new SLResponseOBJ<>(allBIDs);
+    }
+
+    /**
+     * get all bids of user in the store
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<List<BID>> res = market.getMyBIDs(UUID.fromString(uuid),storeID);
+        if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
+        List<ServiceBID> bids = new ArrayList<>();
+        res.value.forEach(b -> {
+            ServiceBID serviceBID = new ServiceBID(b);
+            bids.add(serviceBID);
+        });
+        return new SLResponseOBJ<>(bids);
+    }
+
+    /**
+     * reopen store that close by founder
+     * @param uuid
+     * @param storeID
+     * @return true if success else error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> reopenStore(String uuid, int storeID) {
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> reopen = market.reopenStore(UUID.fromString(uuid),storeID);
+        return reopen.errorOccurred() ? new SLResponseOBJ<>(false,reopen.errorMsg) : new SLResponseOBJ<>(reopen);
+    }
+
+    /**
+     *      * user want to buy BID that approved
+     * @param userId
+     * @param storeID
+     * @param productID
+     * @param city
+     * @param adress
+     * @param apartment
+     * @param creditCard
+     * @return true if success else error msg
+     */
+    @Override
+    public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+        if (userId == null ||
+                userId.equals("") ||
+                creditCard.creditCard == null ||
+                creditCard.creditCard.equals("") ||
+                creditCard.creditDate == null ||
+                creditCard.creditDate.equals("") ||
+                creditCard.pin == null ||
+                creditCard.pin.equals(""))
+            return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
+        if (storeID < 0 || productID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res =
+                market.buyBID(UUID.fromString(userId), storeID, productID, city, adress, apartment, creditCard.creditCard, creditCard.creditDate, creditCard.pin);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null, res.errorMsg) : new SLResponseOBJ<>(res.value);
+    }
+    @Override
+    public SLResponseOBJ<List<String>> getAllMembers(String userId) {
+        DResponseObj<List<String>> res = userManager.getAllMembers(UUID.fromString(userId));
+        if(res.errorOccurred()) return new SLResponseOBJ<>(null,res.errorMsg);
+        return new SLResponseOBJ<List<String>>(res);
+    }
+    @Override
+    public SLResponseOBJ<List<HashMap<String,Object>>> getAllusers(){
+        return new SLResponseOBJ<>(userManager.getAllusers());
+    }
+
+    }
