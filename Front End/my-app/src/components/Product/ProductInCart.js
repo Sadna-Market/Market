@@ -15,7 +15,7 @@ const ProductInCart = props=>{
 
     //todo:cencel this product from list
     const clickHandler = () => {
-        props.onCancel(price*amount);
+        props.onCancel(price*amount,storeID,productID)
         setAmount(0);
 
       };

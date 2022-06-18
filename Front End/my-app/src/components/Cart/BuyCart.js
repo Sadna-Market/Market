@@ -45,7 +45,10 @@ const BuyCart = (props) => {
   };
 
   async function buyHandler(){
+    console.log("UUID, city, adress,apartment,cardNumber,cardDate, cardPin",UUID, city, adress,apartment,cardNumber,cardDate, cardPin)
     const orderShoppingCartResponse = await apiClientHttp.orderShoppingCart(UUID, city, adress,apartment,cardNumber,cardDate, cardPin);
+    let str = JSON.stringify(orderShoppingCartResponse);
+    console.log("orderShoppingCartResponset",str)
 
     if (orderShoppingCartResponse.errorMsg !== -1) {
       SetError(errorCode.get(orderShoppingCartResponse.errorMsg))
