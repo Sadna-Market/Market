@@ -343,7 +343,6 @@ public class UserManager {
         if (!isOwner(userId, store).value) return new DResponseObj<>(false,ErrorCode.NOTOWNER);
         User MenagerToRemove = members.get(MenagerEmail);
         DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(MenagerToRemove,store,loggedUser);
-
         return removePermission;
     }
 

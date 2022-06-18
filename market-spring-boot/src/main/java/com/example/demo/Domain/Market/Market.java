@@ -17,6 +17,7 @@ import com.example.demo.Service.ServiceObj.ServiceProductType;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
@@ -455,19 +456,27 @@ public class Market {
         DResponseObj<ProductType> productTypeDResponseObj = getProductType(ProductId);
         if (productTypeDResponseObj.errorOccurred()) return new DResponseObj<>(productTypeDResponseObj.getErrorMsg());
 
+        //get cart
+        DResponseObj<ShoppingCart> cart = user.getValue().GetSShoppingCart();
+        if (cart.errorOccurred()) return new DResponseObj<>(cart.getErrorMsg());
+
+        int currQuantity = 0;
+        ShoppingBag shoppingBag = cart.value.getHashShoppingCart().value.get(StoreId);
+        if(shoppingBag!=null){
+            DResponseObj<Integer> curr = shoppingBag.getProductQuantity(ProductId);
+            if (curr.value != null) currQuantity = curr.value;
+        }
+
         //check the store
         DResponseObj<Store> store = getStore(StoreId);
         if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        DResponseObj<Boolean> isExist = store.getValue().isProductExistInStock(ProductId, quantity);
+        DResponseObj<Boolean> isExist = store.getValue().isProductExistInStock(ProductId, quantity+(currQuantity));
         if (isExist.errorOccurred()) return new DResponseObj<>(isExist.getErrorMsg());
         if (!isExist.getValue()) {
             logger.warn("the quantity is not exist in the Store");
             return new DResponseObj<>(ErrorCode.PRODUCT_DOESNT_EXIST_IN_THE_STORE);
         }
 
-        //get cart
-        DResponseObj<ShoppingCart> cart = user.getValue().GetSShoppingCart();
-        if (cart.errorOccurred()) return new DResponseObj<>(cart.getErrorMsg());
 
         //get args for the
         DResponseObj<Boolean> add = cart.getValue().addNewProductToShoppingBag(ProductId, store.getValue(), quantity);
@@ -739,14 +748,20 @@ public class Market {
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
-        return userManager.removeStoreOwner(userId, store, ownerEmail);
+        DResponseObj<Boolean> removed = userManager.removeStoreOwner(userId, store, ownerEmail);
+        if(!removed.errorOccurred())  checkStoreBIDAllApproved(store);
+        return removed;
     }
+
+
     public DResponseObj<Boolean> removeStoreMenager(UUID userId, int storeId, String ownerEmail) {
         if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
-        return userManager.removeStoreManager(userId, store, ownerEmail);
+        DResponseObj<Boolean> removed = userManager.removeStoreManager(userId, store, ownerEmail);
+        if(!removed.errorOccurred()) checkStoreBIDAllApproved(store);
+        return removed;
     }
     //2.4.6
     //pre: the store exist in the system.
@@ -1171,9 +1186,6 @@ public class Market {
         return new SLResponseOBJ<>(true,-1);
     }
 
-    public UserManager getUserManager() {
-        return userManager;
-    }
 
     private void notifyOwnersAndManagersStoreDeleted(List<Store> storesToDelete) {
         storesToDelete.forEach(store -> {
@@ -1229,11 +1241,26 @@ public class Market {
         DResponseObj<Boolean> approved = s.value.approveBID(ownerEmail,userEmail,productID);
         if (approved.errorOccurred()) return approved;
         logger.info(String.format("[%s] approved BID of [%s] in storeID [%d] , productID [%d]",ownerEmail,userEmail,storeID, productID));
-        if (s.value.allApprovedBID(userEmail,productID)){
-            String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", storeID,productID);
+        allApproved(s.value,userEmail,productID);
+        return new DResponseObj<>(true);
+    }
+
+    private void allApproved(Store s, String userEmail, int productID){
+        if (s.allApprovedBID(userEmail,productID)) {
+            String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", s.getStoreId().value, productID);
             notifyUser(userEmail, msg);
         }
-        return new DResponseObj<>(true);
+    }
+
+    @Scheduled
+    private void checkStoreBIDAllApproved(Store store) {
+        DResponseObj<HashMap<String,List<Integer>>> allApproved = store.checkStoreBIDAllApproved();
+        allApproved.value.forEach((userEmail,productsID) -> {
+            productsID.forEach(id -> {
+                String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", store.getStoreId().value, id);
+                notifyUser(userEmail, msg);
+            });
+        });
     }
 
     public DResponseObj<Boolean> rejectBID(UUID owner, String userEmail, int storeID, int productID) {
