@@ -1346,7 +1346,7 @@ public class Market {
         DResponseObj<BID> canBuyBID = s.value.canBuyBID(user.getValue().getEmail().value,productID); //return quantity to buy
         if (canBuyBID.errorOccurred()) return new DResponseObj<>(canBuyBID.getErrorMsg());
         int quantity = canBuyBID.value.getQuantity();
-        int finalPrice = canBuyBID.value.getTotalPrice();
+        int finalPrice = canBuyBID.value.getLastPrice();
         ShoppingBag BID = new ShoppingBag(s.value);
         BID.addProduct(productID,quantity);
         DResponseObj<Boolean> res = purchase.orderBID(user.getValue(),storeID,BID,finalPrice,city, adress, apartment, cardNumber, exp, pin);

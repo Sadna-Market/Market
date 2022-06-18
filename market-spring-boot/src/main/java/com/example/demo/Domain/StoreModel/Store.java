@@ -438,7 +438,7 @@ public class Store {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
         if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
-        b.counter(newTotalPrice);
+        b.counter(ownerEmail,newTotalPrice);
         return new DResponseObj<>(true);
     }
 

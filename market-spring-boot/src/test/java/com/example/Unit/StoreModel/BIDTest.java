@@ -46,11 +46,11 @@ class BIDTest {
         assertTrue(b.approve("niv@gmail.com").value);
         assertTrue(b.getApproves().get("niv@gmail.com"));
         assertEquals(b.getStatus(), BID.StatusEnum.WaitingForApprovals);
-        b.counter(222);
+        b.counter("niv@gmail.com", 222);
         assertEquals(b.getStatus(), BID.StatusEnum.CounterBID);
         assertEquals(b.getLastPrice(),222);
         assertEquals(b.getTotalPrice(),100);
-        assertFalse(b.getApproves().get("niv@gmail.com"));
+        assertTrue(b.getApproves().get("niv@gmail.com"));
     }
 
 /*    @Test
