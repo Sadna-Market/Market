@@ -395,6 +395,21 @@ public class Store {
         return b.allApproved();
     }
 
+    public DResponseObj<HashMap<String, List<Integer>>> checkStoreBIDAllApproved() {
+        HashMap<String, List<Integer>> allApproved = new HashMap<>();
+        bids.forEach(b -> {
+            if(b.needToChangeToApproved())
+                if(allApproved.containsKey(b.getUsername()))
+                    allApproved.get(b.getUsername()).add(b.getProductID());
+                else{
+                    List<Integer> productsID = new ArrayList<>();
+                    productsID.add(b.getProductID());
+                    allApproved.put(b.getUsername(),productsID);
+                }
+        });
+        return new DResponseObj<>(allApproved);
+    }
+
     public DResponseObj<Boolean> approveBID(String ownerEmail, String userEmail, int productID) {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
@@ -473,7 +488,6 @@ public class Store {
         return new DResponseObj<>(b);
     }
 
-
     public DResponseObj<Boolean> reopenStore() {
         DResponseObj<Boolean> success = inventory.tellProductStoreIsReopen();
         if (success.errorOccurred())
@@ -484,6 +498,7 @@ public class Store {
             return new DResponseObj<>(success.getValue());
         }
     }
+
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
     public DResponseObj<Inventory> getInventory(){
@@ -505,10 +520,10 @@ public class Store {
     public DResponseObj<Integer> getRate() {
         return new DResponseObj<>(rate,-1);
     }
-
     public DResponseObj<String> getFounder() {
         return new DResponseObj<>(founder);
     }
+
     public ConcurrentLinkedDeque<BID> getBids() {
         return bids;
     }
@@ -516,17 +531,17 @@ public class Store {
     public DResponseObj<List<Permission>> getSafePermission() {
         return new DResponseObj<>(safePermission);
     }
-
     public int getBuyRulesSize(){
         return buyPolicy.rulesSize();
     }
+
     public int getDiscountRulesSize(){
         return discountPolicy.rulesSize();
     }
-
     public void setHistory(ConcurrentHashMap<Integer,History> history) {
         this.history = history;
     }
+
     //requirement II.4.2  (only owners)
 
     public void setDiscountPolicy(DiscountPolicy discountPolicy) {

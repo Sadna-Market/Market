@@ -39,7 +39,7 @@ public class XorDiscountRuleSL extends CompositionDiscountRuleSL {
         }
         stringRule.append(rules.get(rules.size()-1).getDiscountRule().value);
         stringRule.append("\n\tdecision rule is ");
-        if (decision.equals("Big discount")) {
+        if (decision.equals("Big Discount")) {
             stringRule.append(decision);
         } else {
             stringRule.append("first");

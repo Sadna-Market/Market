@@ -65,7 +65,16 @@ public class BID {
         }
         status = StatusEnum.BIDApproved;
         return true;
+    }
 
+    public boolean needToChangeToApproved(){
+        if(!status.equals(StatusEnum.WaitingForApprovals)) return false;
+        for(Boolean b : approves.values()){
+            if(!b)
+                return false;
+        }
+        status = StatusEnum.BIDApproved;
+        return true;
     }
 
     public void ChangeStatusProductBought() {
@@ -74,12 +83,13 @@ public class BID {
 
 
     public void addManagerToList(String managerEmail) {
-        if(!approves.containsKey(managerEmail))
+        if(!approves.containsKey(managerEmail) && (status.equals(StatusEnum.WaitingForApprovals) || (status.equals(StatusEnum.CounterBID))))
             approves.put(managerEmail,false);
     }
 
     public void removeManagerFromList(String managerEmail) {
-        approves.remove(managerEmail);
+        if(approves.containsKey(managerEmail) && (status.equals(StatusEnum.WaitingForApprovals) || (status.equals(StatusEnum.CounterBID))))
+            approves.remove(managerEmail);
     }
 
 
