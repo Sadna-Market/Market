@@ -43,6 +43,10 @@ public class User {
 
     }
 
+    public DResponseObj<Boolean> resetCart (){
+        shoppingCart=new ShoppingCart();
+        return new DResponseObj<Boolean>(true);
+    }
     public User() {
         shoppingCart = new ShoppingCart();
         email = "guest";

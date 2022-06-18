@@ -519,6 +519,7 @@ public class Market {
         DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = purchase.order(user.getValue(), City, Street, apartment, cardNumber, exp, pin);
         if (res.errorOccurred() || res.value.isEmpty()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
         notifyOwnersPurchase(user.value, res.value);
+        userManager.resetShoppingCart(userId);
         return res;
     }
 
