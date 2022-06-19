@@ -95,7 +95,8 @@ const Status = (props) => {
             </>
           ) : status === "Approved" ? (
             <>
-              <button onClick={confirmHandler}>Confirm</button>
+              <button onClick={() => props.onConfirm()}>Confirm</button>
+
             </>
           ) : (
             <></>
