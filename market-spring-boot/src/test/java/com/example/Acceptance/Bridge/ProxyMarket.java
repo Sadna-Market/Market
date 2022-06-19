@@ -6,6 +6,7 @@ import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.ServiceBID;
 import com.example.demo.Service.ServiceObj.ServiceCreditCard;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import com.example.demo.Service.ServiceObj.ServiceStore;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
@@ -321,7 +322,7 @@ public class ProxyMarket implements MarketBridge {
      * @param address    address to send the items for supply service
      * @return certificated of payment and supply
      */
-    public ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address) {
+    public ATResponseObj<ServiceDetailsPurchase> purchaseCart(String uuid, CreditCard creditCard, Address address) {
         return realMarket.purchaseCart(uuid, creditCard, address);
     }
 

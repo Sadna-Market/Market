@@ -503,7 +503,7 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, String cardNumber, String exp, String pin) {
+    public DResponseObj<DetailsPurchase> order(UUID userId, String City, String Street, int apartment, String cardNumber, String exp, String pin) {
         //check valid Card
         DResponseObj<Boolean> checkValidCard = checkValidCard(cardNumber, exp, pin);
         if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
@@ -525,18 +525,18 @@ public class Market {
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
         if (shoppingCart.value.getHashShoppingCart().value.isEmpty())
             return new DResponseObj<>(null, ErrorCode.EMPTY_CART);
-        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = purchase.order(user.getValue(), City, Street, apartment, cardNumber, exp, pin);
-        if (res.errorOccurred() || res.value.isEmpty()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
-        notifyOwnersPurchase(user.value, res.value);
+        DResponseObj<DetailsPurchase> res = purchase.order(user.getValue(), City, Street, apartment, cardNumber, exp, pin);
+        if (res.errorOccurred()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
+        notifyOwnersPurchase(user.value, res.value.getBoughtInStores());
         userManager.resetShoppingCart(userId);
         return res;
     }
 
-    private void notifyOwnersPurchase(User buyer, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> stores) {
+    private void notifyOwnersPurchase(User buyer, List<Integer> stores) {
         //in the future we can make a message factory. for now lets keep it simple.
         logger.info("notifying all stores that had a purchase.");
         String msg = String.format("User: %s has purchased items from your store", buyer.getEmail().value);
-        stores.forEach((storeID, purchaseMap) -> {
+        stores.forEach(storeID -> {
             logger.info(String.format("notifying store[%d] owners of purchase", storeID));
             Store store = this.stores.get(storeID);
             List<User> owners = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;

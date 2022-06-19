@@ -19,6 +19,6 @@ public class PurchaseUnitTest {
 
     @Test
     public void order(){
-        assertFalse(purchase.order(new User(emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,22)),"aa","aa",1,"11212223331","12/26","123").errorOccurred());
+        assertTrue(purchase.order(new User(emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,22)),"aa","aa",1,"11212223331","12/26","123").errorOccurred());
     }
 }

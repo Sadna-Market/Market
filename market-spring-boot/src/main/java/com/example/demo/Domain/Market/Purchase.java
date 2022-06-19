@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,7 +27,7 @@ public class Purchase {
 
     //pre:user is connect, credit card is valid.
     //post: the paying of all the cart is successes.
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(User user, String city , String Street, int apartment,
+    public DResponseObj<DetailsPurchase> order(User user, String city , String Street, int apartment,
                                                                                                String cardNumber, String exp, String pin){
         //get email and bags of the user.
         DResponseObj<Tuple<String,ConcurrentHashMap<Integer, ShoppingBag>>> emailAndBags = getEmailAndShoppingBags(user);
@@ -115,7 +116,7 @@ public class Purchase {
                 output.put(storeID.getValue(),totalProducts.get(store));
 
             //create History for this store.
-            DResponseObj<History> historyDResponseObj =store.addHistory(TIP.getValue(),deliveries.get(store), email, totalProducts.get(store), prices.get(store));
+            DResponseObj<History> historyDResponseObj = store.addHistory(TIP.getValue(),deliveries.get(store), email, totalProducts.get(store), prices.get(store));
             if (historyDResponseObj.errorOccurred())   logger.error("the History for This Store, didnt save");
             else histories.add(historyDResponseObj.getValue());
         }
@@ -123,7 +124,9 @@ public class Purchase {
         // add all Histories to the User.
         DResponseObj<Boolean> checkHistory = user.addHistoies(histories);
         if (checkHistory.errorOccurred()) logger.error("User didnt get his Histories.");
-        return new DResponseObj<>(output);
+        if (output.isEmpty()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
+        List<Integer> stores = new ArrayList<>(output.keySet());
+        return new DResponseObj<>(new DetailsPurchase(TIP.value,totalPrice,stores));
     }
 
 

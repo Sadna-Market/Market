@@ -6,6 +6,7 @@ import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.ServiceBID;
 import com.example.demo.Service.ServiceObj.ServiceCreditCard;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import com.example.demo.Service.ServiceObj.ServiceStore;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
@@ -239,7 +240,7 @@ public interface MarketBridge {
      * @param address address to send the items for supply service
      * @return certificated of payment and supply
      */
-    ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address);
+    ATResponseObj<ServiceDetailsPurchase> purchaseCart(String uuid, CreditCard creditCard, Address address);
 
     /**
      * query to get the history of all purchases of a store with storeID

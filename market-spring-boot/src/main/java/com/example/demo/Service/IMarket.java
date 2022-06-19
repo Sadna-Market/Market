@@ -79,7 +79,7 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> setProductQuantityShoppingBag(String userId, int productId, int storeId, int quantity);
 
     //2.2.5
-    public SLResponseOBJ<String> orderShoppingCart(String userId, String city, String adress, int apartment , ServiceCreditCard creditCard) ;
+    public SLResponseOBJ<ServiceDetailsPurchase> orderShoppingCart(String userId, String city, String adress, int apartment , ServiceCreditCard creditCard) ;
 
         //2.3.1
     public SLResponseOBJ<String> logout(String userId);
@@ -134,7 +134,7 @@ public interface IMarket {
     public SLResponseOBJ<Integer> getStoreRate(String UUID,int Store);
     public SLResponseOBJ<Boolean> newStoreRate(String UUID,int Store,int rate);
 
-        //2.4.7
+    //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
             mangerEmil, String per , boolean onof);
     //2.4.9
@@ -151,6 +151,7 @@ public interface IMarket {
     public SLResponseOBJ<List<ServiceHistory>> getStoreOrderHistory(String UserId, int StoreId);
 
     public SLResponseOBJ<List<List<ServiceHistory>>> getUserInfo(String userID, String email);
+
 
     //2.6.6
     public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid);
