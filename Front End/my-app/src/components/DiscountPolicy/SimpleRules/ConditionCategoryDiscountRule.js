@@ -9,7 +9,7 @@ const ConditionCategoryDiscountRule = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
 
-  const [discount, setDiscount] = useState("");
+  const [discount, setDiscount] = useState("1");
   const changeDiscountHandler = (event) => {
     setDiscount(event.target.value);
   };
@@ -36,7 +36,7 @@ const ConditionCategoryDiscountRule = (props) => {
 
   const cleanHandler = () => {
     SetError("")
-    setDiscount("");
+    // setDiscount("");
     setCategoryID("");
     setMinAge("");
     setMinHour("");
@@ -62,7 +62,22 @@ const ConditionCategoryDiscountRule = (props) => {
       props.onRule({'conditionOnCategoryDiscount':rule});
     }
   };
+  // const [DiscountCommand, SetDiscountCommand] = useState("");
+let DiscountCommand=""
+  if (props.compose === undefined) {
+    DiscountCommand=
+    <div className="products__control">
+      <label>Discount</label>
+      <input
+          type="number"
+          min="0"
+          value={discount}
+          placeholder="write number between 1-100%"
+          onChange={changeDiscountHandler}
+      />
+    </div>
 
+  }
   return (
     <div>
       <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
@@ -78,16 +93,7 @@ const ConditionCategoryDiscountRule = (props) => {
             onChange={changeCategoryIDHandler}
           />
         </div>
-        <div className="products__control">
-          <label>Discount</label>
-          <input
-            type="number"
-            min="0"
-            value={discount}
-            placeholder="write number between 1-100%"
-            onChange={changeDiscountHandler}
-          />
-        </div>
+        {DiscountCommand}
         <div className="products__control">
           <label>Minimum Age</label>
           <input
