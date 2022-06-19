@@ -6,6 +6,8 @@ import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.StoreModel.BuyPolicy;
 import com.example.demo.Domain.StoreModel.DiscountPolicy;
 import com.example.demo.Domain.StoreModel.Store;
+import com.example.demo.Service.Facade;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductTypeServiceTest {
     @Autowired
     private ProductTypeService productTypeService;
+
+    @Autowired
+    private Facade market;
 
     @Test
     @Transactional
@@ -113,5 +118,18 @@ class ProductTypeServiceTest {
             assertEquals(dataProductType.getCategory(), afterProductType.getCategory());
             assertEquals(dataProductType.getProductName(), afterProductType.getProductName());
         }
+    }
+
+    @Test
+    void addNewProductType(){
+        String uuid = market.guestVisit().value;
+        SLResponseOBJ<String> result = market.login(uuid, "sysManager@gmail.com", "Shalom123$");
+        assertFalse(result.errorOccurred());
+        uuid = result.value;
+        var res = market.addNewProductType(uuid,"newProduct","hello",1);
+        assertFalse(res.errorOccurred());
+        var p = productTypeService.getAllProductTypes();
+        assertFalse(p.isEmpty());
+        assertEquals(p.get(0).getProductTypeId(), res.value);
     }
 }

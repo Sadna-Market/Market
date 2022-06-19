@@ -24,9 +24,9 @@ public class DataUser {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "data_shopping_cart_id", foreignKey = @ForeignKey(name = "data_shopping_cart_fk"))
-    private DataShoppingCart dataShoppingCart;
+//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    @JoinColumn(name = "data_shopping_cart_id", foreignKey = @ForeignKey(name = "data_shopping_cart_fk"))
+//    private DataShoppingCart dataShoppingCart;
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "user",
@@ -51,13 +51,13 @@ public class DataUser {
 
     public DataUser() {
     }
-    public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
-        this.dataShoppingCart = dataShoppingCart;
-    }
-
-    public DataShoppingCart getDataShoppingCart() {
-        return dataShoppingCart;
-    }
+//    public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
+//        this.dataShoppingCart = dataShoppingCart;
+//    }
+//
+//    public DataShoppingCart getDataShoppingCart() {
+//        return dataShoppingCart;
+//    }
 
 
 

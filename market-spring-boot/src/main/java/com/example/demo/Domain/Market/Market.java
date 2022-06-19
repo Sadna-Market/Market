@@ -3,6 +3,7 @@ package com.example.demo.Domain.Market;
 import Stabs.PurchaseStab;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
@@ -12,14 +13,11 @@ import com.example.demo.Domain.UserModel.*;
 import com.example.demo.ExternalService.ExternalService;
 import com.example.demo.ExternalService.PaymentService;
 import com.example.demo.ExternalService.SupplyService;
-import com.example.demo.Service.ServiceObj.ServiceBID;
 import com.example.demo.Service.ServiceObj.ServiceProductType;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,9 +40,12 @@ public class Market {
      */
     private StampedLock lock_stores = new StampedLock(), lock_TP = new StampedLock();
 
+    private final DataServices dataServices;
+
     /*************************************************constructors******************************************************/
     @Autowired
-    public Market(UserManager userManager) {
+    public Market(UserManager userManager, DataServices dataServices) {
+        this.dataServices = dataServices;
         this.userManager = userManager;
         ExternalService.getInstance();
         purchase = new Purchase();
@@ -96,9 +97,8 @@ public class Market {
         return searchProductByName(pIDs, name);
     }
 
-    public DResponseObj<ServiceProductType> getProductTypeInfo(Integer productTypeId)
-    {
-        if(productTypes.containsKey(productTypeId)){
+    public DResponseObj<ServiceProductType> getProductTypeInfo(Integer productTypeId) {
+        if(productTypes.containsKey(productTypeId)) {
             return new DResponseObj<>(new ServiceProductType(productTypes.get(productTypeId)));
         }
         return new DResponseObj<>(ErrorCode.PRODUCTNOTEXIST);
@@ -446,7 +446,7 @@ public class Market {
     //pre: user is online
     //post: add <quantity> times this product from this store
     public DResponseObj<Boolean> AddProductToShoppingBag(UUID userId, int StoreId, int ProductId, int quantity) {
-        if(isStoreClosed(StoreId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(StoreId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
 
         //get user
         DResponseObj<User> user = userManager.getOnlineUser(userId);
@@ -462,7 +462,7 @@ public class Market {
 
         int currQuantity = 0;
         ShoppingBag shoppingBag = cart.value.getHashShoppingCart().value.get(StoreId);
-        if(shoppingBag!=null){
+        if (shoppingBag != null) {
             DResponseObj<Integer> curr = shoppingBag.getProductQuantity(ProductId);
             if (curr.value != null) currQuantity = curr.value;
         }
@@ -470,7 +470,7 @@ public class Market {
         //check the store
         DResponseObj<Store> store = getStore(StoreId);
         if (store.errorOccurred()) return new DResponseObj<>(store.getErrorMsg());
-        DResponseObj<Boolean> isExist = store.getValue().isProductExistInStock(ProductId, quantity+(currQuantity));
+        DResponseObj<Boolean> isExist = store.getValue().isProductExistInStock(ProductId, quantity + (currQuantity));
         if (isExist.errorOccurred()) return new DResponseObj<>(isExist.getErrorMsg());
         if (!isExist.getValue()) {
             logger.warn("the quantity is not exist in the Store");
@@ -489,14 +489,15 @@ public class Market {
     }
 
 
-    public DResponseObj<Integer> getStoreRate(UUID uuid,int Store){
-        if(!isOnline(uuid).value) return new DResponseObj<>(null,ErrorCode.NOTONLINE);
-        if(!stores.containsKey(Store)) return new DResponseObj<>(null,ErrorCode.STORE_IS_NOT_EXIST);
+    public DResponseObj<Integer> getStoreRate(UUID uuid, int Store) {
+        if (!isOnline(uuid).value) return new DResponseObj<>(null, ErrorCode.NOTONLINE);
+        if (!stores.containsKey(Store)) return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
         return stores.get(Store).getRate();
     }
-    public DResponseObj<Boolean> newStoreRate(UUID uuid,int Store,int rate){
-        if(!isOnline(uuid).value) return new DResponseObj<>(ErrorCode.NOTONLINE);
-        if(!stores.containsKey(Store)) return new DResponseObj<>(null,ErrorCode.STORE_IS_NOT_EXIST);
+
+    public DResponseObj<Boolean> newStoreRate(UUID uuid, int Store, int rate) {
+        if (!isOnline(uuid).value) return new DResponseObj<>(ErrorCode.NOTONLINE);
+        if (!stores.containsKey(Store)) return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
         return stores.get(Store).newStoreRate(rate);
     }
 
@@ -546,7 +547,7 @@ public class Market {
 
     private void notifyOwnersPurchaseBID(User buyer, int storeId) {
         String msg = String.format("User: %s has purchased his offer from your store", buyer.getEmail().value);
-        logger.info(String.format("notifying store[%d] owners of purchaseBID",storeId));
+        logger.info(String.format("notifying store[%d] owners of purchaseBID", storeId));
         Store store = this.stores.get(storeId);
         List<User> owners = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
         userManager.notifyUsers(owners, msg);
@@ -578,7 +579,7 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType exist in the market, exist in this store.
     public DResponseObj<Boolean> addNewProductToStore(UUID userId, int storeId, int productId, double price, int quantity) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewProductToStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -600,8 +601,20 @@ public class Market {
                     return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
             }
             int productID = productCounter++;
-            ProductType p = new ProductType(productID, name, description, category);
+            ProductType p = new ProductType(name, description, category);
+            //db
+            if (dataServices != null && dataServices.getProductTypeService() != null) {
+                var dataProductType = p.getDataObject();
+                if (!dataServices.getProductTypeService().insertProductType(dataProductType)) {
+                    logger.error(String.format("failed to persist product type [%s] in db", name));
+                    return new DResponseObj<>(ErrorCode.DB_ERROR);
+                }
+                productID = dataProductType.getProductTypeId();
+            }
+            //
+            p.setProductID(productID);
             productTypes.put(productID, p);
+
             return new DResponseObj<>(productID, -1);
         } finally {
             lock_TP.unlockWrite(stamp);
@@ -613,7 +626,7 @@ public class Market {
     //pre: user is Owner
     //post: product that his ProductType  exist in the market, not exist anymore in this store.
     public DResponseObj<Boolean> deleteProductFromStore(UUID userId, int storeId, int productId) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.deleteProductFromStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -629,7 +642,7 @@ public class Market {
     //pre: user is Owner of the store
     //post: the price of this product in this store changed.
     public DResponseObj<Boolean> setProductPriceInStore(UUID userId, int storeId, int productId, double price) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -642,7 +655,7 @@ public class Market {
     //pre: user is Owner of the store
     //post: the quantity of this product in this store changed.
     public DResponseObj<Boolean> setProductQuantityInStore(UUID userId, int storeId, int productId, int quantity) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -654,7 +667,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: buy rule added to this store
     public DResponseObj<Boolean> addNewBuyRule(UUID userId, int storeId, BuyRule buyRule) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewBuyRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -665,7 +678,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: buy rule removed from this store
     public DResponseObj<Boolean> removeBuyRule(UUID userId, int storeId, int buyRuleID) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeBuyRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -676,7 +689,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: discount rule added to this store
     public DResponseObj<Boolean> addNewDiscountRule(UUID userId, int storeId, DiscountRule discountRule) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -687,7 +700,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: discount rule removed from this store
     public DResponseObj<Boolean> removeDiscountRule(UUID userId, int storeId, int discountRuleID) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeDiscountRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
@@ -695,24 +708,24 @@ public class Market {
     }
 
     public DResponseObj<Boolean> combineANDORDiscountRules(UUID userId, int storeId, String operator, List<Integer> rules, int category, int discount) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
-        return store.combineANDORDiscountRules(operator,rules,category,discount);
+        return store.combineANDORDiscountRules(operator, rules, category, discount);
     }
 
     public DResponseObj<Boolean> combineXorDiscountRules(UUID userId, int storeId, String decision, List<Integer> rules) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
-        return store.combineXORDiscountRules(rules,decision);
+        return store.combineXORDiscountRules(rules, decision);
     }
 
 
-    public DResponseObj<List<BuyRule>> getBuyPolicy(UUID userId, int storeId){
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+    public DResponseObj<List<BuyRule>> getBuyPolicy(UUID userId, int storeId) {
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> login = userManager.getLoggedUser(userId);
         if (login.errorOccurred()) return new DResponseObj<>(login.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
@@ -720,19 +733,20 @@ public class Market {
         return s.value.getBuyPolicy();
     }
 
-    public DResponseObj<List<DiscountRule>> getDiscountPolicy(UUID userId, int storeId){
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+    public DResponseObj<List<DiscountRule>> getDiscountPolicy(UUID userId, int storeId) {
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> login = userManager.getLoggedUser(userId);
         if (login.errorOccurred()) return new DResponseObj<>(login.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         return s.value.getDiscountPolicy();
     }
+
     //2.4.4
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreOwner, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -744,30 +758,31 @@ public class Market {
     //pre: the store exist in the system and uuid is grantor of owner
     //post: the owner is not owner.
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, int storeId, String ownerEmail) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
         DResponseObj<Boolean> removed = userManager.removeStoreOwner(userId, store, ownerEmail);
-        if(!removed.errorOccurred())  checkStoreBIDAllApproved(store);
+        if (!removed.errorOccurred()) checkStoreBIDAllApproved(store);
         return removed;
     }
 
 
     public DResponseObj<Boolean> removeStoreMenager(UUID userId, int storeId, String ownerEmail) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue();
         DResponseObj<Boolean> removed = userManager.removeStoreManager(userId, store, ownerEmail);
-        if(!removed.errorOccurred()) checkStoreBIDAllApproved(store);
+        if (!removed.errorOccurred()) checkStoreBIDAllApproved(store);
         return removed;
     }
+
     //2.4.6
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
     public DResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreManager, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -779,7 +794,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm, boolean onof) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setManagerPermissions, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
@@ -790,15 +805,15 @@ public class Market {
     //pre: the store exist in the system, the user is founder of this store.
     //post: the market move this store to the closeStores, users can not see this store again(until she will be open).
     public DResponseObj<Boolean> closeStore(UUID userId, int storeId) {
-        if(isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         Store store = s.value;
-        if(!store.getFounder().value.equals(logIN.value.getEmail().value)){
+        if (!store.getFounder().value.equals(logIN.value.getEmail().value)) {
             logger.warn("only founder can close store");
-            return new DResponseObj<>(false,ErrorCode.NOPERMISSION);
+            return new DResponseObj<>(false, ErrorCode.NOPERMISSION);
         }
         DResponseObj<Boolean> checkCloseStore = store.closeStore();
         if (checkCloseStore.errorOccurred()) return checkCloseStore;
@@ -814,7 +829,7 @@ public class Market {
             Store st = stores.remove(getStoreID.value);
             closeStores.put(getStoreID.getValue(), st);
             logger.info("market update that Store #" + storeId + " close");
-            notifyOwnersAndManagersStoreClosed(st,"close");
+            notifyOwnersAndManagersStoreClosed(st, "close");
             return new DResponseObj<>(true);
         } finally {
             lock_stores.unlockWrite(stamp);
@@ -823,16 +838,16 @@ public class Market {
     }
 
     public DResponseObj<Boolean> reopenStore(UUID userId, int storeId) {
-        if(!isStoreClosed(storeId).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_NOT_CLOSED);
+        if (!isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_CLOSED);
         Store s = closeStores.get(storeId);
         DResponseObj<User> logIN = userManager.getLoggedUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
-        if(!s.getFounder().value.equals(logIN.value.getEmail().value)){
+        if (!s.getFounder().value.equals(logIN.value.getEmail().value)) {
             logger.warn("only founder can reopen store");
-            return new DResponseObj<>(false,ErrorCode.NOPERMISSION);
+            return new DResponseObj<>(false, ErrorCode.NOPERMISSION);
         }
         DResponseObj<Boolean> ReopenStore = s.reopenStore();
-        if (ReopenStore.errorOccurred()){
+        if (ReopenStore.errorOccurred()) {
             logger.warn("Store return that can not close this store");
             return ReopenStore;
         }
@@ -843,7 +858,7 @@ public class Market {
             Store st = closeStores.remove(storeId);
             stores.put(storeId, st);
             logger.info("market update that Store #" + storeId + " reopen");
-            notifyOwnersAndManagersStoreClosed(s,"reopen");
+            notifyOwnersAndManagersStoreClosed(s, "reopen");
             return new DResponseObj<>(true);
         } finally {
             lock_stores.unlockWrite(stamp);
@@ -852,8 +867,8 @@ public class Market {
     }
 
     private void notifyOwnersAndManagersStoreClosed(Store store, String closeOpen) {
-        logger.info(String.format("notifying owners/managers of %s store %d", closeOpen,store.getStoreId().value));
-        String msg = String.format("Store [%d] was %s by %s.", store.getStoreId().value, closeOpen,store.getFounder().value);
+        logger.info(String.format("notifying owners/managers of %s store %d", closeOpen, store.getStoreId().value));
+        String msg = String.format("Store [%d] was %s by %s.", store.getStoreId().value, closeOpen, store.getFounder().value);
         List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
         List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
         ownersAndManagers.addAll(managersOfStore);
@@ -861,12 +876,12 @@ public class Market {
     }
 
 
-    private void notifyOwnersAndManagersWithPermBID(Store store,String msg) {
+    private void notifyOwnersAndManagersWithPermBID(Store store, String msg) {
         logger.info("notifying owners&managers with permission about BID");
         List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
         List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
         managersOfStore.forEach(m -> {
-            if(!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID,m,store).value)
+            if (!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID, m, store).value)
                 managersOfStore.remove(m);
         });
         ownersAndManagers.addAll(managersOfStore);  // after filter managers of stores
@@ -1157,7 +1172,7 @@ public class Market {
     }
 
     public DResponseObj<List<ProductStore>> getAllProductsInStore(int storeID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         Store store = stores.get(storeID);
         return store.getInventory().value.getAllProducts();
     }
@@ -1179,18 +1194,18 @@ public class Market {
                 logger.warn(String.format("store %d is not in stores map", store.getStoreId().value));
             }
         }
-        if(!b) return new SLResponseOBJ<>(false, ErrorCode.FAIL_DELETE_STORE);
+        if (!b) return new SLResponseOBJ<>(false, ErrorCode.FAIL_DELETE_STORE);
         //notify the owners/managers that has permissions in those stores that the store is deleted.
         notifyOwnersAndManagersStoreDeleted(storesToDelete);
         lock_stores.unlockWrite(stamp);
-        return new SLResponseOBJ<>(true,-1);
+        return new SLResponseOBJ<>(true, -1);
     }
 
 
     private void notifyOwnersAndManagersStoreDeleted(List<Store> storesToDelete) {
         storesToDelete.forEach(store -> {
             logger.info(String.format("notifying owners/managers of deletion of store %d", store.getStoreId().value));
-            String msg = String.format("Store [%d] was deleted permanently by System Manager",store.getStoreId().value);
+            String msg = String.format("Store [%d] was deleted permanently by System Manager", store.getStoreId().value);
             List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
             List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
             ownersAndManagers.addAll(managersOfStore);
@@ -1200,61 +1215,61 @@ public class Market {
     }
 
     public DResponseObj<Boolean> createBID(UUID userId, int storeID, int productID, int quantity, int totalPrice) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         String email = logIN.value.getEmail().value;
-        DResponseObj<Boolean> created = s.value.createBID(email,productID,quantity,totalPrice);
+        DResponseObj<Boolean> created = s.value.createBID(email, productID, quantity, totalPrice);
         if (created.errorOccurred()) return created;
-        logger.info(String.format("created new BID by [%s] in storeID [%d]",email,storeID));
-        String msg = String.format("[%s] create new offer in storeID [%d] for productID [%d], quantity [%d], total price [%d].", email,storeID,productID,quantity,totalPrice);
-        notifyOwnersAndManagersWithPermBID(s.value,msg);
-        logger.info(String.format("notify all owners and managers about new BID of [%s]",email));
+        logger.info(String.format("created new BID by [%s] in storeID [%d]", email, storeID));
+        String msg = String.format("[%s] create new offer in storeID [%d] for productID [%d], quantity [%d], total price [%d].", email, storeID, productID, quantity, totalPrice);
+        notifyOwnersAndManagersWithPermBID(s.value, msg);
+        logger.info(String.format("notify all owners and managers about new BID of [%s]", email));
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> removeBID(UUID userId, int storeID, int productID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(userId);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         String email = logIN.value.getEmail().value;
-        DResponseObj<Boolean> removed = s.value.removeBID(email,productID);
+        DResponseObj<Boolean> removed = s.value.removeBID(email, productID);
         if (removed.errorOccurred()) return removed;
-        logger.info(String.format("remove BID by [%s] in storeID [%d] , productID [%d]",email,storeID, productID));
-        String msg = String.format("[%s] remove his offer in storeID [%d] for productID [%d]", email,storeID,productID);
-        notifyOwnersAndManagersWithPermBID(s.value,msg);
-        logger.info(String.format("notify all owners and managers about remove BID of [%s]",email));
+        logger.info(String.format("remove BID by [%s] in storeID [%d] , productID [%d]", email, storeID, productID));
+        String msg = String.format("[%s] remove his offer in storeID [%d] for productID [%d]", email, storeID, productID);
+        notifyOwnersAndManagersWithPermBID(s.value, msg);
+        logger.info(String.format("notify all owners and managers about remove BID of [%s]", email));
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> approveBID(UUID owner, String userEmail, int storeID, int productID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(owner);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         String ownerEmail = logIN.value.getEmail().value;
-        DResponseObj<Boolean> approved = s.value.approveBID(ownerEmail,userEmail,productID);
+        DResponseObj<Boolean> approved = s.value.approveBID(ownerEmail, userEmail, productID);
         if (approved.errorOccurred()) return approved;
-        logger.info(String.format("[%s] approved BID of [%s] in storeID [%d] , productID [%d]",ownerEmail,userEmail,storeID, productID));
-        allApproved(s.value,userEmail,productID);
+        logger.info(String.format("[%s] approved BID of [%s] in storeID [%d] , productID [%d]", ownerEmail, userEmail, storeID, productID));
+        allApproved(s.value, userEmail, productID);
         return new DResponseObj<>(true);
     }
 
-    private void allApproved(Store s, String userEmail, int productID){
-        if (s.allApprovedBID(userEmail,productID)) {
+    private void allApproved(Store s, String userEmail, int productID) {
+        if (s.allApprovedBID(userEmail, productID)) {
             String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", s.getStoreId().value, productID);
             notifyUser(userEmail, msg);
         }
     }
 
     private void checkStoreBIDAllApproved(Store store) {
-        DResponseObj<HashMap<String,List<Integer>>> allApproved = store.checkStoreBIDAllApproved();
-        allApproved.value.forEach((userEmail,productsID) -> {
+        DResponseObj<HashMap<String, List<Integer>>> allApproved = store.checkStoreBIDAllApproved();
+        allApproved.value.forEach((userEmail, productsID) -> {
             productsID.forEach(id -> {
                 String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", store.getStoreId().value, id);
                 notifyUser(userEmail, msg);
@@ -1263,66 +1278,65 @@ public class Market {
     }
 
     public DResponseObj<Boolean> rejectBID(UUID owner, String userEmail, int storeID, int productID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(owner);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         String ownerEmail = logIN.value.getEmail().value;
-        DResponseObj<Boolean> rejected = s.value.rejectBID(ownerEmail,userEmail,productID);
+        DResponseObj<Boolean> rejected = s.value.rejectBID(ownerEmail, userEmail, productID);
         if (rejected.errorOccurred()) return rejected;
-        logger.info(String.format("[%s] reject BID of [%s] in storeID [%d] , productID [%d]",ownerEmail,userEmail,storeID, productID));
-        String msg = String.format("your BID in storeID [%d] for ProductID [%d] was rejected", storeID,productID);
+        logger.info(String.format("[%s] reject BID of [%s] in storeID [%d] , productID [%d]", ownerEmail, userEmail, storeID, productID));
+        String msg = String.format("your BID in storeID [%d] for ProductID [%d] was rejected", storeID, productID);
         notifyUser(userEmail, msg);
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> counterBID(UUID owner, String userEmail, int storeID, int productID, int newTotalPrice) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(owner);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         String ownerEmail = logIN.value.getEmail().value;
-        DResponseObj<Boolean> countered = s.value.counterBID(ownerEmail,userEmail,productID,newTotalPrice);
+        DResponseObj<Boolean> countered = s.value.counterBID(ownerEmail, userEmail, productID, newTotalPrice);
         if (countered.errorOccurred()) return countered;
-        logger.info(String.format("[%s] countered BID of [%s] in storeID [%d] , productID [%d] to new total price [%d]",ownerEmail,userEmail,storeID, productID,newTotalPrice));
-        String msg = String.format("your got counter BID in storeID [%d] for ProductID [%d], the new total price is [%d]", storeID,productID,newTotalPrice);
+        logger.info(String.format("[%s] countered BID of [%s] in storeID [%d] , productID [%d] to new total price [%d]", ownerEmail, userEmail, storeID, productID, newTotalPrice));
+        String msg = String.format("your got counter BID in storeID [%d] for ProductID [%d], the new total price is [%d]", storeID, productID, newTotalPrice);
         notifyUser(userEmail, msg);
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> responseCounterBID(UUID user, int storeID, int productID, boolean approve) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(user);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         String userEmail = logIN.value.getEmail().value;
-        DResponseObj<Boolean> responseCounterBID = s.value.responseCounterBID(userEmail,productID,approve);
+        DResponseObj<Boolean> responseCounterBID = s.value.responseCounterBID(userEmail, productID, approve);
         if (responseCounterBID.errorOccurred()) return responseCounterBID;
-        logger.info(String.format("[%s] accept countered BID in storeID [%d] , productID [%d]",userEmail,storeID, productID));
+        logger.info(String.format("[%s] accept countered BID in storeID [%d] , productID [%d]", userEmail, storeID, productID));
         String msg;
-        msg = approve ?String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail,storeID,productID) :
-                String.format("[%s] rejected his countered BID in storeID [%d] for productID [%d]", userEmail,storeID,productID);
+        msg = approve ? String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID) :
+                String.format("[%s] rejected his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID);
         notifyOwnersAndManagersWithPermBID(s.value, msg);
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<String> getBIDStatus(UUID owner, String userEmail, int storeID, int productID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
-        DResponseObj<Store> s = checkValidRules(owner,storeID, permissionType.permissionEnum.ManageBID);
-        if(s.errorOccurred()) return new DResponseObj<>(null,s.getErrorMsg());
-        DResponseObj<String> approves = s.value.getBIDStatus(userEmail,productID);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> s = checkValidRules(owner, storeID, permissionType.permissionEnum.ManageBID);
+        if (s.errorOccurred()) return new DResponseObj<>(null, s.getErrorMsg());
+        DResponseObj<String> approves = s.value.getBIDStatus(userEmail, productID);
         if (approves.errorOccurred()) return approves;
-        logger.info(String.format("got approves list - BID in storeID [%d] , productID [%d]",storeID, productID));
+        logger.info(String.format("got approves list - BID in storeID [%d] , productID [%d]", storeID, productID));
         return new DResponseObj<>(approves.value);
     }
 
 
-
     public DResponseObj<Boolean> buyBID(UUID userId, int storeID, int productID, String city, String adress, int apartment, String cardNumber, String exp, String pin) {
-            //check valid Card
+        //check valid Card
         DResponseObj<Boolean> checkValidCard = checkValidCard(cardNumber, exp, pin);
         if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
 
@@ -1339,25 +1353,25 @@ public class Market {
 //        }
 
         //check BID
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> s = getStore(storeID);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
-        DResponseObj<BID> canBuyBID = s.value.canBuyBID(user.getValue().getEmail().value,productID); //return quantity to buy
+        DResponseObj<BID> canBuyBID = s.value.canBuyBID(user.getValue().getEmail().value, productID); //return quantity to buy
         if (canBuyBID.errorOccurred()) return new DResponseObj<>(canBuyBID.getErrorMsg());
         int quantity = canBuyBID.value.getQuantity();
         int finalPrice = canBuyBID.value.getTotalPrice();
         ShoppingBag BID = new ShoppingBag(s.value);
-        BID.addProduct(productID,quantity);
-        DResponseObj<Boolean> res = purchase.orderBID(user.getValue(),storeID,BID,finalPrice,city, adress, apartment, cardNumber, exp, pin);
+        BID.addProduct(productID, quantity);
+        DResponseObj<Boolean> res = purchase.orderBID(user.getValue(), storeID, BID, finalPrice, city, adress, apartment, cardNumber, exp, pin);
         if (res.errorOccurred()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
         canBuyBID.value.ChangeStatusProductBought();
-        notifyOwnersPurchaseBID(user.value,storeID);
+        notifyOwnersPurchaseBID(user.value, storeID);
         return res;
 
     }
 
     public DResponseObj<List<BID>> getMyBIDs(UUID user, int storeID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(user);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
@@ -1365,12 +1379,12 @@ public class Market {
         String userEmail = logIN.value.getEmail().value;
         DResponseObj<List<BID>> myBids = s.value.getMyBIDs(userEmail);
         if (myBids.errorOccurred()) return myBids;
-        logger.info(String.format("[%s] get his BIDs in storeID [%d] ]",userEmail,storeID));
+        logger.info(String.format("[%s] get his BIDs in storeID [%d] ]", userEmail, storeID));
         return new DResponseObj<>(myBids.value);
     }
 
     public DResponseObj<HashMap<Integer, List<BID>>> getAllOffersBIDs(UUID owner, int storeID) {
-        if(isStoreClosed(storeID).value) return new DResponseObj<>(null,ErrorCode.STORE_IS_CLOSED);
+        if (isStoreClosed(storeID).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<User> logIN = userManager.getLoggedUser(owner);
         if (logIN.errorOccurred()) return new DResponseObj<>(logIN.getErrorMsg());
         DResponseObj<Store> s = getStore(storeID);
@@ -1378,16 +1392,16 @@ public class Market {
         String ownerEmail = logIN.value.getEmail().value;
         DResponseObj<HashMap<Integer, List<BID>>> bids = s.value.getAllOffersBIDs();
         if (bids.errorOccurred()) return bids;
-        logger.info(String.format("[%s] get all bids of storeID [%d]",ownerEmail,storeID));
+        logger.info(String.format("[%s] get all bids of storeID [%d]", ownerEmail, storeID));
         return bids;
     }
 
     private void notifyUser(String userEmail, String msg) {
         DResponseObj<User> userBID = userManager.getMember(userEmail);
-        if(userBID.errorOccurred()) return;
+        if (userBID.errorOccurred()) return;
         List<User> l = new ArrayList<>();
         l.add(userBID.value);
-        userManager.notifyUsers(l,msg);
+        userManager.notifyUsers(l, msg);
     }
 
 
@@ -1415,33 +1429,29 @@ public class Market {
 
     }
 
-    public DResponseObj<Integer> getRate(UUID uuid,int productTypeID)
-    {
+    public DResponseObj<Integer> getRate(UUID uuid, int productTypeID) {
 
-        if(userManager.isOnline(uuid).value) {
-            if(!productTypes.containsKey(productTypeID)){
-                return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXIST);
+        if (userManager.isOnline(uuid).value) {
+            if (!productTypes.containsKey(productTypeID)) {
+                return new DResponseObj<>(null, ErrorCode.PRODUCTNOTEXIST);
             }
 
             ProductType p = productTypes.get(productTypeID);
             DResponseObj<Integer> rat = p.getRate();
-        return rat;
-    }
-        else return new DResponseObj<>(ErrorCode.NOTONLINE);
+            return rat;
+        } else return new DResponseObj<>(ErrorCode.NOTONLINE);
     }
 
-    public DResponseObj<Boolean> setRate(UUID uuid,int productTypeID,int rate)
-    {
-        if(userManager.isOnline(uuid).value) {
-            if(!productTypes.containsKey(productTypeID)){
-            return new DResponseObj<>(null,ErrorCode.PRODUCTNOTEXIST);
-        }
+    public DResponseObj<Boolean> setRate(UUID uuid, int productTypeID, int rate) {
+        if (userManager.isOnline(uuid).value) {
+            if (!productTypes.containsKey(productTypeID)) {
+                return new DResponseObj<>(null, ErrorCode.PRODUCTNOTEXIST);
+            }
 
             ProductType p = productTypes.get(productTypeID);
             DResponseObj<Boolean> rat = p.setRate(rate);
             return rat;
-        }
-        else return new DResponseObj<>(ErrorCode.NOTONLINE);
+        } else return new DResponseObj<>(ErrorCode.NOTONLINE);
 
     }
 

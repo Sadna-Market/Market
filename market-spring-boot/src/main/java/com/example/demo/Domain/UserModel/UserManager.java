@@ -1,6 +1,8 @@
 package com.example.demo.Domain.UserModel;
 
 import com.example.demo.DataAccess.Entity.DataUser;
+import com.example.demo.DataAccess.Services.DataServices;
+import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.DataAccess.Services.UserService;
 import com.example.demo.Domain.AlertService.AlertServiceDemo;
 import com.example.demo.Domain.AlertService.IAlertService;
@@ -37,7 +39,7 @@ public class UserManager {
     private IAlertService alertService;
 
     @Autowired
-    private UserService dataUserService;
+    private DataServices dataServices;
 
     private StampedLock LockUsers = new StampedLock();
 
@@ -256,9 +258,9 @@ public class UserManager {
             User user = new User(email, Password, phoneNumber, dateOfBirth);
             members.put(email, user);
             //db
-            if (dataUserService != null) { //because no autowire in AT
+            if (dataServices != null && dataServices.getUserService() != null) { //because no autowire in AT
                 DataUser dataUser = user.getDataObject();
-                if (!dataUserService.insertUser(dataUser)) {
+                if (!dataServices.getUserService().insertUser(dataUser)) {
                     logger.error(String.format("didnt save user %s", user.email));
                     return new DResponseObj<>(false, ErrorCode.DB_ERROR);
                 }
@@ -329,8 +331,8 @@ public class UserManager {
         if (admin.email.equals(email)) return new DResponseObj<>(false, ErrorCode.NOTVALIDINPUT);
         members.remove(email);
         //db
-        if (dataUserService != null) {
-            if (!dataUserService.deleteUser(email)) {
+        if (dataServices != null && dataServices.getUserService() != null) {
+            if (!dataServices.getUserService().deleteUser(email)) {
                 logger.error(String.format("failed to remove user %s", email));
                 return new DResponseObj<>(false, ErrorCode.DB_ERROR);
             }
@@ -519,9 +521,9 @@ public class UserManager {
             return new DResponseObj<>(res.errorMsg);
         }
         //db
-        if (dataUserService != null) {
+        if (dataServices != null && dataServices.getUserService() != null) {
             var dataUser = u.getDataObject();
-            if (!dataUserService.updateUser(dataUser)) {
+            if (!dataServices.getUserService().updateUser(dataUser)) {
                 logger.error("couldn't change password in db");
                 return new DResponseObj<>(false, ErrorCode.DB_ERROR);
             }
@@ -663,15 +665,15 @@ public class UserManager {
         User s = members.remove(toCancelUser.email);
         if (s == null)
             logger.warn(String.format("failed to delete. %s is not a member already", toCancelUser.email));
-        if (dataUserService != null) {
-            if (!dataUserService.deleteUser(toCancelUser.email)) {
+        if (dataServices != null && dataServices.getUserService() != null) {
+            if (!dataServices.getUserService().deleteUser(toCancelUser.email)) {
                 logger.error(String.format("failed to delete from db. %s is not a member already", toCancelUser.email));
             }
         }
     }
     @PostConstruct
     public void load() {
-        List<DataUser> dataUsers = dataUserService.getAllUsers();
+        List<DataUser> dataUsers = dataServices.getUserService().getAllUsers();
         dataUsers.forEach(duser -> {
             var decrypted = Validator.getInstance().decryptAES(duser.getPassword());
             User user = new User(duser.getUsername(),decrypted,duser.getPhoneNumber(),duser.getDateOfBirth());

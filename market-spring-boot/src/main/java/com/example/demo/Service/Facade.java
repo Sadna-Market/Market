@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import com.example.demo.DataAccess.Services.DataServices;
+import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Market;
 import com.example.demo.Domain.Market.PermissionManager;
@@ -24,6 +26,7 @@ import com.example.demo.configuration.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 
 import java.text.ParseException;
@@ -40,9 +43,9 @@ public class Facade implements IMarket {
     Market market;
 
     @Autowired
-    public Facade(UserManager userManager) {
+    public Facade(UserManager userManager, DataServices dataServices) {
         this.userManager = userManager;
-        this.market = new Market(this.userManager);
+        this.market = new Market(this.userManager, dataServices);
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
@@ -51,7 +54,7 @@ public class Facade implements IMarket {
 
     public Facade() {
         this.userManager = new UserManager();
-        this.market = new Market(this.userManager);
+        this.market = new Market(this.userManager, new DataServices());
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
@@ -60,6 +63,7 @@ public class Facade implements IMarket {
 
     public SLResponseOBJ<Boolean> removeMember(String userId, String email) {
         if (email == null || email.equals("")) return new SLResponseOBJ<>(false, ErrorCode.NOT_VALID_EMILE);
+        email = email.toLowerCase();
         return new SLResponseOBJ<>(userManager.removeMember(UUID.fromString(userId), email));
     }
 
@@ -86,6 +90,7 @@ public class Facade implements IMarket {
          * This function will be called only once when someone open a new market, with the information about the system manager.
          * It will create system manager user and start connections with services (Payment and delivery).
          */
+        email = email.toLowerCase();
         SLResponseOBJ<String> guestUUID = guestVisit();
         if (guestUUID.errorOccurred()) return new SLResponseOBJ<>(false, guestUUID.errorMsg);
         SLResponseOBJ<Boolean> addedSysManager = addNewMember(guestUUID.value, email, Password, phoneNumber, dateOfBirth);
@@ -202,6 +207,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         LocalDate date = checkDateOfBirth(dateOfBirth);
         if (date == null) return new SLResponseOBJ<>(false, ErrorCode.NOTLEGALDATE);
+        email = email.toLowerCase();
         DResponseObj<Boolean> res = userManager.AddNewMember(UUID.fromString(uuid), email, Password, phoneNumber, date);
         return new SLResponseOBJ<>(res.value, res.errorMsg);
     }
@@ -251,6 +257,7 @@ public class Facade implements IMarket {
 
         if (password == null || password.equals(""))
             return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        email = email.toLowerCase();
         DResponseObj<UUID> res = userManager.Login(UUID.fromString(userId), email, password);
         return res.errorOccurred() ? new SLResponseOBJ<>(res.errorMsg) : new SLResponseOBJ<>(res.value.toString(), -1);
     }
@@ -758,6 +765,7 @@ public class Facade implements IMarket {
         if (newPassword == null || newPassword.equals("")) {
             return new SLResponseOBJ<>(false, ErrorCode.NOT_VALID_PASSWORD);
         }
+        email = email.toLowerCase();
         DResponseObj<Boolean> res = userManager.changePassword(UUID.fromString(uuid), email, password, newPassword);
         if (res.errorOccurred()) {
             return new SLResponseOBJ<>(false, res.errorMsg);
@@ -1154,6 +1162,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        ownerEmail = ownerEmail.toLowerCase();
         return new SLResponseOBJ<>(market.addNewStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
@@ -1174,6 +1183,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        ownerEmail = ownerEmail.toLowerCase();
         return new SLResponseOBJ<>(market.removeStoreOwner(UUID.fromString(userId), storeId, ownerEmail));
     }
 
@@ -1185,6 +1195,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        menagerEmail = menagerEmail.toLowerCase();
         return new SLResponseOBJ<>(market.removeStoreMenager(UUID.fromString(userId), storeId, menagerEmail));
     }
 
@@ -1404,7 +1415,7 @@ public class Facade implements IMarket {
          *
          * @documentation:
          */
-
+        email = email.toLowerCase();
         DResponseObj<List<List<History>>> h = market.getUserInfo(userID, email);
         if (h.errorOccurred()) return new SLResponseOBJ<>(null, h.errorMsg);
         List<List<ServiceHistory>> ServiceHistoryList = new ArrayList<>();
@@ -1503,7 +1514,7 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(res);
     }
 
-    @Override //TODO way search product ? if you return stores ??
+    @Override
     public SLResponseOBJ<List<Integer>> searchProductByStoreRate(int rate) {
         /**
          * @requirement: ?????
@@ -1547,6 +1558,7 @@ public class Facade implements IMarket {
 
 
     public SLResponseOBJ<Boolean> isOwner(String email, int storeId) {
+        email = email.toLowerCase();
         DResponseObj<Store> s = market.getStore(storeId);
         if (s.errorOccurred()) {
             return new SLResponseOBJ<>(false, s.errorMsg);
@@ -1556,6 +1568,7 @@ public class Facade implements IMarket {
     }
 
     public SLResponseOBJ<Boolean> isManager(String email, int storeId) {
+        email = email.toLowerCase();
         DResponseObj<Store> s = market.getStore(storeId);
         if (s.errorOccurred()) {
             return new SLResponseOBJ<>(false, s.errorMsg);
@@ -1644,6 +1657,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeID < 0 || productID < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        userEmail = userEmail.toLowerCase();
         DResponseObj<Boolean> res = market.approveBID(UUID.fromString(uuid), userEmail, storeID, productID);
         return res.errorOccurred() ? new SLResponseOBJ<>(false, res.errorMsg) : new SLResponseOBJ<>(res.value);
     }
@@ -1663,6 +1677,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeID < 0 || productID < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        userEmail = userEmail.toLowerCase();
         DResponseObj<Boolean> res = market.rejectBID(UUID.fromString(uuid), userEmail, storeID, productID);
         return res.errorOccurred() ? new SLResponseOBJ<>(false, res.errorMsg) : new SLResponseOBJ<>(res.value);
     }
@@ -1683,6 +1698,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeID < 0 || productID < 0 || newTotalPrice < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        userEmail = userEmail.toLowerCase();
         DResponseObj<Boolean> res = market.counterBID(UUID.fromString(uuid), userEmail, storeID, productID, newTotalPrice);
         return res.errorOccurred() ? new SLResponseOBJ<>(false, res.errorMsg) : new SLResponseOBJ<>(res.value);
     }
@@ -1721,6 +1737,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
         if (storeID < 0 || productID < 0)
             return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        userEmail = userEmail.toLowerCase();
         DResponseObj<String> res = market.getBIDStatus(UUID.fromString(uuid), userEmail, storeID, productID);
         return res.errorOccurred() ? new SLResponseOBJ<>(null, res.errorMsg) : new SLResponseOBJ<>("res.value");
     }

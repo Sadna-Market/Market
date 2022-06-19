@@ -1,6 +1,7 @@
 package com.example.Unit.Market;
 
 
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Market.Market;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
@@ -26,7 +27,7 @@ class MarketTest {
 
     @BeforeEach
     void setUP() {
-        market =new Market(new UserManager());
+        market =new Market(new UserManager(), new DataServices());
         //logger.info("new test will run right now");
         market.setForTesting();
     }
