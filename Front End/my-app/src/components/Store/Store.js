@@ -271,7 +271,7 @@ const Store = (props) => {
             {permission}
             <div>{command}</div>
             <div className="bar__control">
-                <label>Rate Product</label>
+                <label>Rate Store</label>
                 <input
                     type="number"
                     min="0"

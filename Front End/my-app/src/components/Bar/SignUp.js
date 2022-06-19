@@ -37,7 +37,7 @@ const SignUp = (props) => {
   async function submitHandler(event) {
     event.preventDefault();
     const guestVisitResponse = await apiClientHttp.guestVisit();
-    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,'10/01/1996');
+    const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,enteredDate);
 
     if (addNewMemberResponse.errorMsg !== -1) {
       SetError(errorCode.get(addNewMemberResponse.errorMsg))
@@ -98,16 +98,24 @@ const SignUp = (props) => {
               onChange={phoneChangeHandler}
             />
           </div>
-          <div className="new-expense__control">
-            <label>BirthDay</label>
+          <div className="signUp__control">
+            <label>Birth Date</label>
             <input
-              type="date"
-              value={enteredDate}
-              min="1879-03-14"
-              max="2004-14-04"
-              onChange={dateChangeHandler}
+                type="text"
+                value={enteredDate}
+                onChange={dateChangeHandler}
             />
           </div>
+          {/*<div className="new-expense__control">*/}
+          {/*  <label>BirthDay</label>*/}
+          {/*  <input*/}
+          {/*    type="date"*/}
+          {/*    value={enteredDate}*/}
+          {/*    min="1879-03-14"*/}
+          {/*    max="2004-14-04"*/}
+          {/*    onChange={dateChangeHandler}*/}
+          {/*  />*/}
+          {/*</div>*/}
         </div>
         <div className="signUp__actions">
           <button type="button" onClick={cancelHandler}>

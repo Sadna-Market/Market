@@ -59,7 +59,7 @@ const AndRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div>
-      <h3>AND Rule</h3>
+      <h3>AND Rule1</h3>
       <div>{command}</div>
     </div>
   );

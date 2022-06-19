@@ -32,7 +32,7 @@ const AndRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div>
-      <h3>AND Rule</h3>
+      <h3>AND Rule1</h3>
       <h2>Sign the rules to Combile with AND, when you continue press</h2>
       <button onClick={confirmHandler}>continue</button>
       <div>
