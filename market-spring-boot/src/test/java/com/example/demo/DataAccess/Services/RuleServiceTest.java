@@ -38,6 +38,7 @@ class RuleServiceTest {
         rule1.setRule(rule);
         rule1.setStore(dataStore);
         assertTrue(ruleService.insertDiscountRule(rule1));
+        int x = 5;
     }
 
     @Test

@@ -19,6 +19,7 @@ import com.example.demo.Service.ServiceObj.DiscountRules.SimpleStoreDiscountRule
 import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 import com.example.demo.Service.ServiceObj.Predicate.UserPredicateSL;
 import com.example.demo.Service.ServiceObj.ServiceCreditCard;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import org.junit.jupiter.api.*;
 import java.util.List;
 @DisplayName("Purchase Cart Tests  - AT")
@@ -57,7 +58,7 @@ public class PurchaseTest extends MarketTests {
 
         CreditCard creditCard = new CreditCard("1111222233334444", "11/23", "111");
         Address address = new Address("Tel-Aviv", "Nordau 3", 3);
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertFalse(response.errorOccurred());
 //        String recipe = response.value;
 
@@ -99,7 +100,7 @@ public class PurchaseTest extends MarketTests {
         assertFalse(guestID.errorOccurred());
         uuid = guestID.value;
 
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertTrue(response.errorOccurred());
 
 
@@ -140,7 +141,7 @@ public class PurchaseTest extends MarketTests {
         assertFalse(guestID.errorOccurred());
         uuid = guestID.value;
 
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertTrue(response.errorOccurred());
 
         //post conditions
@@ -191,9 +192,8 @@ public class PurchaseTest extends MarketTests {
         assertTrue(market.addToCart(uuid, existing_storeID, item1));
 
         //main action
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertFalse(response.errorOccurred());
-        String recipe = response.value;
 
         //main expected fail action
         memberID = market.login(uuid, registeredUser);
@@ -244,7 +244,7 @@ public class PurchaseTest extends MarketTests {
         assertFalse(guestID.errorOccurred());
         uuid = guestID.value;
 
-        ATResponseObj<String> response = market.purchaseCart(uuid, new CreditCard("xxx", "xx", "xxx"), new Address("x", "ss", -1));
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, new CreditCard("xxx", "xx", "xxx"), new Address("x", "ss", -1));
         assertTrue(response.errorOccurred());
 
         //post conditions
@@ -291,7 +291,7 @@ public class PurchaseTest extends MarketTests {
 
         CreditCard creditCard = new CreditCard("1111222233334444", "11/23", "111");
         Address address = new Address("Tel-Aviv", "Nordau 3", 3);
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertFalse(response.errorOccurred());
 
         //post conditions
@@ -339,9 +339,9 @@ public class PurchaseTest extends MarketTests {
 
         CreditCard creditCard = new CreditCard("1111222233334444", "11/23", "111");
         Address address = new Address("Tel-Aviv", "Nordau 3", 3);
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertFalse(response.errorOccurred());
-        String recipe = response.value;
+        ServiceDetailsPurchase recipe = response.value;
 
         //post conditions
         ATResponseObj<String> managerID = market.login(uuid, member);//manager of existing store
@@ -352,8 +352,8 @@ public class PurchaseTest extends MarketTests {
         int amountItem2 = market.getAmountOfProductInStore(existing_storeID, item2);
         assertEquals(0, amountItem1);
         assertEquals(2, amountItem2);
-        assertNotEquals("", recipe);
-        assertNotNull(recipe);
+
+        assertEquals(20,recipe.finalPrice);
 
         ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);//guest cannot call this func
         List<History> recipes = res.value;
@@ -392,7 +392,7 @@ public class PurchaseTest extends MarketTests {
 
         CreditCard creditCard = new CreditCard("1111222233334444", "11/23", "111");
         Address address = new Address("Tel-Aviv", "Nordau 3", 3);
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
 //        boolean res = response.errorMsg.equals("error"); // need to check why it sometimes null
         assertEquals("error", response.errorMsg);
         //post conditions
@@ -434,7 +434,7 @@ public class PurchaseTest extends MarketTests {
 
         CreditCard creditCard = new CreditCard("1111222233334444", "11/23", "111");
         Address address = new Address("Tel-Aviv", "Nordau 3", 3);
-        ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+        ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
         assertFalse(response.errorOccurred());
 
         //post conditions

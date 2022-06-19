@@ -375,7 +375,7 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("orderShoppingCart/{uuid}")
-    public SLResponseOBJ<String> orderShoppingCart(@PathVariable("uuid") String uuid, @RequestBody apiUser apiUser) {
+    public SLResponseOBJ<ServiceDetailsPurchase> orderShoppingCart(@PathVariable("uuid") String uuid, @RequestBody apiUser apiUser) {
         System.out.println(uuid);
         System.out.println(apiUser.city);
         System.out.println(apiUser.adress);

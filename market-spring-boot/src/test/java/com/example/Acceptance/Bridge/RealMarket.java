@@ -387,8 +387,8 @@ public class RealMarket implements MarketBridge {
      * @param address    address to send the items for supply service
      * @return certificated of payment and supply
      */
-    public ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address) {
-        SLResponseOBJ<String> res = market.orderShoppingCart(uuid,
+    public ATResponseObj<ServiceDetailsPurchase> purchaseCart(String uuid, CreditCard creditCard, Address address) {
+        SLResponseOBJ<ServiceDetailsPurchase> res = market.orderShoppingCart(uuid,
                 address.city,
                 address.street,
                 address.apartment,
