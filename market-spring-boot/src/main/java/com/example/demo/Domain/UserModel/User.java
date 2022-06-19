@@ -88,7 +88,7 @@ public class User {
 
     public User(String email, String password, String phoneNumber, LocalDate dateOfBirth) {
         this.email = email;
-        this.Password = Validator.getInstance().encryptAES(password);
+        this.Password = password;
         this.phoneNumber = phoneNumber;
         shoppingCart = new ShoppingCart();
         this.dateOfBirth = dateOfBirth;
@@ -186,12 +186,12 @@ public class User {
     }
 
     public DResponseObj<Boolean> changePassword(String password) {
-        this.Password = Validator.getInstance().encryptAES(password);
+        this.Password = password;
         return new DResponseObj<>(true);
     }
 
     public DResponseObj<Boolean> isPasswordEquals(String password) {
-        return new DResponseObj<>(this.Password.equals(Validator.getInstance().encryptAES(password)));
+        return new DResponseObj<>(this.Password.equals(password));
     }
 
     public DResponseObj<ShoppingCart> GetSShoppingCart() {
@@ -217,7 +217,7 @@ public class User {
     public DataUser getDataObject(){
         DataUser dataUser = new DataUser();
         dataUser.setUsername(email);
-        dataUser.setPassword(this.Password);
+        dataUser.setPassword(Validator.getInstance().encryptAES(this.Password));
         dataUser.setDateOfBirth(this.dateOfBirth);
         dataUser.setPhoneNumber(phoneNumber);
         dataUser.setDataShoppingCart(this.shoppingCart.getDataObject());

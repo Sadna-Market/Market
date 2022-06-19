@@ -53,7 +53,7 @@ public class UserManager {
      */
     ConcurrentHashMap<UUID, User> LoginUsers;
 
-    static Logger logger = Logger.getLogger(ShoppingBag.class);
+    static Logger logger = Logger.getLogger(UserManager.class);
 
     @Autowired
     public UserManager(IAlertService alertService) { //For real application dependency injection
@@ -179,7 +179,7 @@ public class UserManager {
             alertService.modifyDelayIfExist(LogUser.email, newMemberUUid);
             return new DResponseObj<>(newMemberUUid);
         } else {
-            logger.debug("UserManager Login email: " + email + " the password is not correct");
+            logger.debug("Login email: " + email + " the password is not correct");
 
             DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOT_VALID_PASSWORD);
             return a;
@@ -671,7 +671,8 @@ public class UserManager {
     public void load() {
         List<DataUser> dataUsers = dataUserService.getAllUsers();
         dataUsers.forEach(duser -> {
-            User user = new User(duser.getUsername(),duser.getPassword(),duser.getPhoneNumber(),duser.getDateOfBirth());
+            var decrypted = Validator.getInstance().decryptAES(duser.getPassword());
+            User user = new User(duser.getUsername(),decrypted,duser.getPhoneNumber(),duser.getDateOfBirth());
             user.setHistories(
                     duser.getHistories().stream()
                             .map(dhistory -> new History(dhistory.getHistoryId(),

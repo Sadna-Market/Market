@@ -6,6 +6,7 @@ import com.example.Acceptance.Obj.PasswordGenerator;
 import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.UserModel.User;
+import com.example.demo.Domain.UserModel.Validator;
 import com.example.demo.Service.Facade;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +55,7 @@ class UserServiceTest {
 
         //check
         assertEquals(u.getUsername(), "exmaple@gmail.com");
-        assertEquals(u.getPassword(), "1qaz2wsx#EDC");
+        assertEquals("1qaz2wsx#EDC", Validator.getInstance().decryptAES(u.getPassword()));
         assertEquals(u.getDateOfBirth(), LocalDate.of(1993, 8, 18));
         assertEquals(u.getPhoneNumber(), "0505555555");
         assertNotEquals(0, u.getDataShoppingCart().getShoppingCartId());
@@ -178,10 +179,11 @@ class UserServiceTest {
 
     @Test
     @Transactional
-    void removeUser() {
+    void removeUser() throws InterruptedException {
         String uuid = market.guestVisit().value;
         SLResponseOBJ<Boolean> res = market.addNewMember(uuid, "niv200@gmail.com", "Shalom123$", "0523251252", "16/3/2012");
         assertNotEquals(false,res.value,String.valueOf(res.errorMsg));
+        Thread.sleep(5);
         SLResponseOBJ<String> result = market.login(uuid, "sysManager@gmail.com", "Shalom123$");
         assertFalse(result.errorOccurred());
         uuid = result.value;
