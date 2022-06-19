@@ -63,7 +63,7 @@ const Status = (props) => {
             </>
           ) : status === "Approved" ? (
             <>
-              <button onClick={() => setStatus("Cancel")}>Confirm</button>
+              <button onClick={() => props.onConfirm()}>Confirm</button>
             </>
           ) : (
             <></>

@@ -4,21 +4,37 @@ import AllOffers from "./AllOffers";
 import MainBID from "./MainBID";
 import CeateBID from "./CreateBID";
 import MyBIDs from "./MyBIDs";
+import BuyBID from "./BuyBID";
 
 const BID = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
   let permission = <></>;
+  const confirmHandler = (productID, amount) => {
+    setComand(
+      <BuyBID
+        uuid={UUID}
+        storeID={storeID}
+        productID={productID}
+        amount={amount}
+        onBID={BIDHandler}
+      />
+    );
+  };
   const [command, setComand] = useState(
-    <MainBID uuid={UUID} storeID={storeID} />
+    <MyBIDs uuid={UUID} storeID={storeID} onConfirm={confirmHandler} />
   );
 
   const BIDHandler = () => {
-    setComand(<MainBID uuid={UUID} storeID={storeID} />);
+    setComand(
+      <MyBIDs uuid={UUID} storeID={storeID} onConfirm={confirmHandler} />
+    );
   };
 
   const MyBIDHandler = () => {
-    setComand(<MyBIDs uuid={UUID} storeID={storeID} />);
+    setComand(
+      <MyBIDs uuid={UUID} storeID={storeID} onConfirm={confirmHandler} />
+    );
   };
 
   const createBIDHandler = () => {
@@ -44,10 +60,10 @@ const BID = (props) => {
     <div>
       <h3>BID Store #{storeID}</h3>
       <div>
-      <button onClick={createBIDHandler}> Create BID</button>
-      <button onClick={MyBIDHandler}> My BIDs</button>
+        <button onClick={createBIDHandler}> Create BID</button>
+        <button onClick={MyBIDHandler}> My BIDs</button>
         {permission}
-        </div>
+      </div>
       <div>{command}</div>
     </div>
   );

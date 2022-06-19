@@ -8,12 +8,12 @@ const MyBIDs = (props) => {
   let storeID = props.storeID;
   //todo: get all my products
   let products = [
-    { id: 1, name: "Sony 5",amount:10, status: "Waiting" },
-    { id: 2, name: "TV",amount:10, status: "Rejected" },
-    { id: 3, name: "Car KIA RIO",amount:10, status: "Counter" },
-    { id: 4, name: "AC/DC",amount:10, status: "Approved" },
-    { id: 5, name: "MAMA Yokero",amount:10, status: "Waiting" },
-    { id: 6, name: "Iphone 13",amount:10, status: "bought" },
+    { id: 1, name: "Sony 5", amount: 10, status: "Waiting" },
+    { id: 2, name: "TV", amount: 10, status: "Rejected" },
+    { id: 3, name: "Car KIA RIO", amount: 10, status: "Counter" },
+    { id: 4, name: "AC/DC", amount: 10, status: "Approved" },
+    { id: 5, name: "MAMA Yokero", amount: 10, status: "Waiting" },
+    { id: 6, name: "Iphone 13", amount: 10, status: "bought" },
   ];
 
   let productIDs = products.map((expense) => (
@@ -24,6 +24,7 @@ const MyBIDs = (props) => {
       uuid={UUID}
       storeID={storeID}
       amount={expense.amount}
+      onConfirm={() => props.onConfirm(expense.id, expense.amount)}
     />
   ));
 
