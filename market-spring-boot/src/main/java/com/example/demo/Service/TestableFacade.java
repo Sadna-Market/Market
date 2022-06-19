@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -37,7 +38,7 @@ public class TestableFacade extends Facade {
         SupplyService.getInstance().reset();
         PermissionManager.getInstance().reset();
         this.userManager = new UserManager();
-        this.market = new Market(this.userManager);
+        this.market = new Market(userManager,new DataServices());
         this.market.init();
     }
 

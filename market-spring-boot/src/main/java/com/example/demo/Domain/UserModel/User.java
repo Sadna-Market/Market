@@ -203,9 +203,7 @@ public class User {
     }
 
     public DResponseObj<Boolean> addHistoies(List<History> histories) {
-        for (History h : histories) {
-            this.histories.add(h);
-        }
+        this.histories.addAll(histories);
         return new DResponseObj<>(true, -1);
     }
 
@@ -220,7 +218,6 @@ public class User {
         dataUser.setPassword(Validator.getInstance().encryptAES(this.Password));
         dataUser.setDateOfBirth(this.dateOfBirth);
         dataUser.setPhoneNumber(phoneNumber);
-        dataUser.setDataShoppingCart(this.shoppingCart.getDataObject());
         return dataUser;
     }
 

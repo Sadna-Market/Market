@@ -3,7 +3,7 @@ package com.example.demo.DataAccess.Services;
 import com.example.Acceptance.Obj.ATResponseObj;
 import com.example.Acceptance.Obj.Address;
 import com.example.Acceptance.Obj.PasswordGenerator;
-import com.example.demo.DataAccess.Entity.DataShoppingCart;
+//import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.Validator;
@@ -46,9 +46,6 @@ class UserServiceTest {
     void insertUser() {
         //pre
         DataUser u = user.getDataObject();
-        DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags(new HashSet<>());
-        u.setDataShoppingCart(dataShoppingCart);
 
         //action
         assertTrue(userService.insertUser(u));
@@ -58,7 +55,7 @@ class UserServiceTest {
         assertEquals("1qaz2wsx#EDC", Validator.getInstance().decryptAES(u.getPassword()));
         assertEquals(u.getDateOfBirth(), LocalDate.of(1993, 8, 18));
         assertEquals(u.getPhoneNumber(), "0505555555");
-        assertNotEquals(0, u.getDataShoppingCart().getShoppingCartId());
+//        assertNotEquals(0, u.getDataShoppingCart().getShoppingCartId());
 
     }
 
@@ -67,9 +64,6 @@ class UserServiceTest {
     void deleteUser() {
         //pre
         DataUser u = user.getDataObject();
-        DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags(new HashSet<>());
-        u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
         assertTrue(userService.deleteUser(u.getUsername()));
@@ -85,9 +79,6 @@ class UserServiceTest {
         //pre
         String newPhone = "0522222222";
         DataUser u = user.getDataObject();
-        DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags(new HashSet<>());
-        u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
         u.setPhoneNumber(newPhone);
@@ -103,9 +94,6 @@ class UserServiceTest {
     @Transactional
     void getUserByUsername() {
         DataUser u = user.getDataObject();
-        DataShoppingCart dataShoppingCart = new DataShoppingCart();
-        dataShoppingCart.setShoppingBags(new HashSet<>());
-        u.setDataShoppingCart(dataShoppingCart);
         assertTrue(userService.insertUser(u));
         //action
         DataUser afterUser = userService.getUserByUsername(u.getUsername());
@@ -128,21 +116,6 @@ class UserServiceTest {
         DataUser u3 = user3.getDataObject();
         DataUser u4 = user4.getDataObject();
         DataUser u5 = user5.getDataObject();
-        DataShoppingCart dataShoppingCart1 = new DataShoppingCart();
-        dataShoppingCart1.setShoppingBags(new HashSet<>());
-        u1.setDataShoppingCart(dataShoppingCart1);
-        DataShoppingCart dataShoppingCart2 = new DataShoppingCart();
-        dataShoppingCart2.setShoppingBags(new HashSet<>());
-        u2.setDataShoppingCart(dataShoppingCart2);
-        DataShoppingCart dataShoppingCart3 = new DataShoppingCart();
-        dataShoppingCart3.setShoppingBags(new HashSet<>());
-        u3.setDataShoppingCart(dataShoppingCart3);
-        DataShoppingCart dataShoppingCart4 = new DataShoppingCart();
-        dataShoppingCart4.setShoppingBags(new HashSet<>());
-        u4.setDataShoppingCart(dataShoppingCart4);
-        DataShoppingCart dataShoppingCart5 = new DataShoppingCart();
-        dataShoppingCart5.setShoppingBags(new HashSet<>());
-        u5.setDataShoppingCart(dataShoppingCart5);
         assertTrue(userService.insertUser(u1));
         assertTrue(userService.insertUser(u2));
         assertTrue(userService.insertUser(u3));

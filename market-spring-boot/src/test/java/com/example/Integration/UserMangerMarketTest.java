@@ -1,5 +1,6 @@
 package com.example.Integration;
 
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Market.Market;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserMangerMarketTest {
     static Logger logger=Logger.getLogger(UserMangerMarketTest.class);
-    Market market=new Market(new UserManager());
+    Market market=new Market(new UserManager(),new DataServices());
 
 
     @BeforeEach
@@ -31,7 +32,7 @@ public class UserMangerMarketTest {
 
     @AfterEach
     void tearDown(){
-        market =new Market(new UserManager());
+        market =new Market(new UserManager(), new DataServices());
         logger.info("the test finished  to run right now");
     }
 

@@ -23,7 +23,7 @@ public class ProductTypeService {
         this.productTypeRepository = productTypeRepository;
     }
 
-//    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean insertProductType(DataProductType productType) {
         try {
             DataProductType dataProductType = productTypeRepository.saveAndFlush(productType);

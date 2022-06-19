@@ -33,7 +33,7 @@ public class UserService {
     public boolean insertUser(DataUser user) {
         try {
             DataUser u = userRepository.saveAndFlush(user);
-            user.getDataShoppingCart().setShoppingCartId(u.getDataShoppingCart().getShoppingCartId());
+//            user.getDataShoppingCart().setShoppingCartId(u.getDataShoppingCart().getShoppingCartId());
             logger.info(String.format("inserted %s successfully to db", user.getUsername()));
             return true;
         } catch (Exception e) {

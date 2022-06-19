@@ -15,11 +15,11 @@ public class DataShoppingBag {
     @EmbeddedId
     private ShoppingBagId shoppingBagId;
 
-    @ManyToOne
-    @JoinColumn(name = "shopping_cart",
-            referencedColumnName = "shopping_cart_id",
-            foreignKey = @ForeignKey(name = "shopping_cart_fk"))
-    private DataShoppingCart dataShoppingCart;
+//    @ManyToOne
+//    @JoinColumn(name = "shopping_cart",
+//            referencedColumnName = "shopping_cart_id",
+//            foreignKey = @ForeignKey(name = "shopping_cart_fk"))
+//    private DataShoppingCart dataShoppingCart;
 
     @ManyToOne
     @MapsId("storeId")
@@ -39,13 +39,13 @@ public class DataShoppingBag {
                     @JoinColumn(name = "store_id", foreignKey = @ForeignKey(name = "store_fk"))})
     private Map<Integer, Integer> productQuantity = new HashMap<>();
 
-    public DataShoppingCart getDataShoppingCart() {
-        return dataShoppingCart;
-    }
-
-    public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
-        this.dataShoppingCart = dataShoppingCart;
-    }
+//    public DataShoppingCart getDataShoppingCart() {
+//        return dataShoppingCart;
+//    }
+//
+//    public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
+//        this.dataShoppingCart = dataShoppingCart;
+//    }
 
     public ShoppingBagId getShoppingBagId() {
         return shoppingBagId;
