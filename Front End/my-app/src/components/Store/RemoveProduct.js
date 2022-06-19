@@ -1,43 +1,56 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const RemoveProduct = (props) => {
-  let UUID = props.uuid;
-  let storeID = props.storeID;
+    console.log("RemoveProduct" )
 
-  const [productID, setProductID] = useState("");
-  const changeProductHandler = (event) => {
-    setProductID(event.target.value);
-  };
+    let UUID = props.uuid;
+    let storeID = props.storeID;
+    const apiClientHttp = createApiClientHttp();
+    const [enteredError, SetError] = useState("");
 
-  const cleanHandler = () => {
-    setProductID("");
-  };
+    const [productID, setProductID] = useState("");
+    const changeProductHandler = (event) => {
+        setProductID(event.target.value);
+    };
 
-  //remove product from store
-  const removeHandler = () => {
-    cleanHandler();
-    props.onStore();
-  };
+    const cleanHandler = () => {
+        setProductID("");
+    };
 
-  return (
-    <div>
-      <h3>Remove Product From Store {storeID}</h3>
-      <div className="products__controls">
-        <div className="products__control">
-          <label>ProductID</label>
-          <input
-            type="number"
-            min="0"
-            value={productID}
-            placeholder="Write ProductID to remove"
-            onChange={changeProductHandler}
-          />
+
+    async function removeHandler() {
+        const deleteProductFromStoreResponse = await apiClientHttp.deleteProductFromStore(UUID, storeID, productID);
+        if (deleteProductFromStoreResponse.errorMsg !== -1) {
+            SetError(errorCode.get(deleteProductFromStoreResponse.errorMsg))
+        } else {
+            cleanHandler();
+            props.onStore();
+        }
+
+    }
+
+    return (
+        <div>
+            <h3>Remove Product From Store {storeID}</h3>
+            <div style={{ color: 'red',backgroundColor: "black",fontSize: 30 }}>{enteredError}</div>
+            <div className="products__controls">
+                <div className="products__control">
+                    <label>ProductID</label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={productID}
+                        placeholder="Write ProductID to remove"
+                        onChange={changeProductHandler}
+                    />
+                </div>
+            </div>
+            <button onClick={cleanHandler}>Clean</button>
+            <button onClick={removeHandler}>Remove Product</button>
         </div>
-      </div>
-      <button onClick={cleanHandler}>Clean</button>
-      <button onClick={removeHandler}>Remove Product</button>
-    </div>
-  );
+    );
 };
 
 export default RemoveProduct;

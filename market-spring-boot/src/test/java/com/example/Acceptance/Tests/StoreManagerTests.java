@@ -31,7 +31,7 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - success test")
     void managerAction_Success() {
         User newManager = generateUser();
-        assertTrue(market.register(uuid, newManager.username, newManager.password));
+        assertTrue(market.register(uuid, newManager.username, newManager.password, newManager.dateOfBirth));
         assertTrue(market.isMember(member));
         ATResponseObj<String> memberID = market.login(uuid, member); //member is contributor
         assertFalse(memberID.errorOccurred());
@@ -39,7 +39,7 @@ public class StoreManagerTests extends MarketTests {
         assertTrue(market.assignNewManager(uuid, existing_storeID, newManager));
         assertTrue(market.isManager(existing_storeID, newManager));
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertFalse(historyPurchase.errorOccurred());
     }
 
@@ -47,13 +47,13 @@ public class StoreManagerTests extends MarketTests {
     @DisplayName("req: #2.5 - fail test [no permission]")
     void managerAction_Fail1() {
         User user = generateUser();
-        assertTrue(market.register(uuid, user.username, user.password));
+        assertTrue(market.register(uuid, user.username, user.password,user.dateOfBirth));
         assertTrue(market.isMember(user));
         ATResponseObj<String> memberID = market.login(uuid, user);
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
+        ATResponseObj<List<History>> historyPurchase = market.getHistoryPurchase(uuid, existing_storeID);
         assertTrue(historyPurchase.errorOccurred());
     }
 
@@ -65,7 +65,7 @@ public class StoreManagerTests extends MarketTests {
         assertFalse(memberID.errorOccurred());
         uuid = memberID.value;
 
-        ATResponseObj<List<String>> historyPurchase = market.getHistoryPurchase(uuid, -1);
+        ATResponseObj<List<History>> historyPurchase = market.getHistoryPurchase(uuid, -1);
         assertTrue(historyPurchase.errorOccurred());
     }
 }

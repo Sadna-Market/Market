@@ -3,6 +3,8 @@ import StoreID from "../Store/StoreID";
 import UserID from "./UserID";
 
 const UserList = (props) => {
+  console.log("UserList")
+
   let users = [
     { email: "a@gmail.com", State: "Connect" },
     { email: "b@gmail.com", State: "Disconnect" },

@@ -2,6 +2,11 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
+import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 
 import java.util.List;
 
@@ -18,7 +23,7 @@ public class ProxyMarket implements MarketBridge {
      * @param sysManager
      * @return true if success else false
      */
-    public ATResponseObj<String> initSystem(User sysManager) {
+    public ATResponseObj<Boolean> initSystem(User sysManager) {
         return realMarket.initSystem(sysManager);
     }
 
@@ -127,8 +132,8 @@ public class ProxyMarket implements MarketBridge {
      * @param password password
      * @return true if success else false
      */
-    public boolean register(String uuid, String username, String password) {
-        return realMarket.register(uuid, username, password);
+    public boolean register(String uuid, String username, String password, String dateOfBirth) {
+        return realMarket.register(uuid, username, password,dateOfBirth);
     }
 
     /**
@@ -325,7 +330,7 @@ public class ProxyMarket implements MarketBridge {
      * @param storeID the id of the store to get the history
      * @return list of all purchases accepted certificates
      */
-    public ATResponseObj<List<String>> getHistoryPurchase(String uuid, int storeID) {
+    public ATResponseObj<List<History>> getHistoryPurchase(String uuid, int storeID) {
         return realMarket.getHistoryPurchase(uuid, storeID);
     }
 
@@ -409,6 +414,21 @@ public class ProxyMarket implements MarketBridge {
     public boolean assignNewOwner(String uuid, int storeID, User newOwner) {
         return realMarket.assignNewOwner(uuid, storeID, newOwner);
     }
+
+
+    /**
+     * remove store owner and the permission that this owner is grantor
+     *
+     * @param userId
+     * @param storeId
+     * @param ownerEmail
+     * @return true if success, else false
+     */
+    @Override
+    public boolean removeStoreOwner(String userId, int storeId, String ownerEmail) {
+        return realMarket.removeStoreOwner(userId,storeId,ownerEmail);
+    }
+
 
     /**
      * checks if user is manager in store
@@ -518,5 +538,125 @@ public class ProxyMarket implements MarketBridge {
      */
     public boolean connectExternalService(String payment) {
         return realMarket.connectExternalService(payment);
+    }
+
+    /**
+     * add buy rule to store
+     * @param uuid
+     * @param storeId
+     * @param buyRule
+     * @return
+     */
+    public boolean addNewBuyRule(String uuid, int storeId, BuyRuleSL buyRule) {
+        return realMarket.addNewBuyRule(uuid,storeId,buyRule);
+    }
+
+    /**
+     * remove buy rule from store
+     * @param uuid
+     * @param storeId
+     * @param buyRuleID
+     * @return
+     */
+    @Override
+    public boolean removeBuyRule(String uuid, int storeId, int buyRuleID) {
+        return realMarket.removeBuyRule(uuid,storeId,buyRuleID);
+    }
+
+    /**
+     * add discount rule to store
+     * @param uuid
+     * @param storeId
+     * @param discountRule
+     * @return
+     */
+    @Override
+    public boolean addNewDiscountRule(String uuid, int storeId, DiscountRuleSL discountRule) {
+        return realMarket.addNewDiscountRule(uuid,storeId,discountRule);
+    }
+
+    /**
+     * remove discount rule from store
+     * @param uuid
+     * @param storeId
+     * @param discountRuleID
+     * @return
+     */
+    @Override
+    public boolean removeDiscountRule(String uuid, int storeId, int discountRuleID) {
+        return realMarket.removeDiscountRule(uuid,storeId,discountRuleID);
+    }
+
+    /**
+     * get buy rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all buy rules
+     */
+    @Override
+    public ATResponseObj<List<BuyRuleSL>> getBuyPolicy(String uuid, int storeId) {
+        return realMarket.getBuyPolicy(uuid,storeId);
+    }
+
+    /**
+     * get discount rule of this store
+     *
+     * @param uuid
+     * @param storeId
+     * @return list of all discount rules
+     */
+    @Override
+    public ATResponseObj<List<DiscountRuleSL>> getDiscountPolicy(String uuid, int storeId) {
+        return realMarket.getDiscountPolicy(uuid,storeId);
+    }
+
+    /**
+     * gets all logged in members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedInMembers(String uuid) {
+        return realMarket.getLoggedInMembers(uuid);
+    }
+
+    /**
+     * gets all logged out members info in the market
+     *
+     * @param uuid
+     * @return
+     */
+    public ATResponseObj<List<User>> getLoggedOutMembers(String uuid) {
+        return realMarket.getLoggedOutMembers(uuid);
+    }
+
+    /**
+     * Cancel a membership in the market
+     * This can only be done by the System manager
+     * Note: if the user to cancel is the founder of a store then store will be removed from the market and Owners/Managers will be informed.
+     *
+     * @param uuid       the uuid of the System manager
+     * @param cancelUser the user to cancel
+     * @return true if success, else false
+     */
+    public boolean cancelMembership(String uuid, User cancelUser) {
+        return realMarket.cancelMembership(uuid,cancelUser);
+    }
+
+    public ATResponseObj<List<ServiceStore>> getAllStores() {
+        return realMarket.getAllStores();
+    }
+
+    public boolean isOwnerUUID(String uuid, int storeID) {
+        return realMarket.isOwnerUUID(uuid,storeID);
+    }
+
+    public boolean isSysManagerUUID(String uuid) {
+        return realMarket.isSysManagerUUID(uuid);
+    }
+
+    public boolean isManagerUUID(String uuid, int storeID) {
+        return realMarket.isManagerUUID(uuid,storeID);
     }
 }

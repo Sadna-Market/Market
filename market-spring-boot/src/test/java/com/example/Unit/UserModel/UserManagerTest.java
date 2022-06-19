@@ -1,11 +1,21 @@
 package com.example.Unit.UserModel;
 
 
+import com.example.demo.Domain.Market.PermissionManager;
+import com.example.demo.Domain.Market.permissionType;
+import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.Store;
+import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 class UserManagerTest {
@@ -26,7 +36,7 @@ class UserManagerTest {
     @Test
     void loginExistMember() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         Assertions.assertTrue(userManager.getMembers().value.containsKey(emails[0]));
         uuid = userManager.Login(uuid,emails[0],passwords[0]).value;
         Assertions.assertTrue(userManager.getLoginUsers().value.containsKey(uuid));
@@ -34,14 +44,14 @@ class UserManagerTest {
     @Test
     void loginWithLoggedUser() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         userManager.Login(uuid,emails[0],passwords[0]);
         Assertions.assertTrue(userManager.Login(uuid,emails[0],passwords[0]).errorOccurred()); }
 
     @Test
     void loginWithWrongUUID() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         Assertions.assertTrue(userManager.Login(UUID.randomUUID(),emails[0],passwords[0]).errorOccurred()); }
     @Test
     void loginUserThatDonotHavaAmember() {
@@ -51,21 +61,21 @@ class UserManagerTest {
     @Test
     void loginWithWrongPassword() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         Assertions.assertTrue(userManager.Login(UUID.randomUUID(),emails[0],"wrong").errorOccurred()); }
 
 
     @Test
     void loginWithWrongEmail() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         Assertions.assertTrue(userManager.Login(UUID.randomUUID(),"wrong",passwords[0]).errorOccurred()); }
 
 
     @Test
     void logoutLoggedUser() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         uuid=userManager.Login(uuid,emails[0],passwords[0]).value;
         uuid = userManager.Logout(uuid).value;
         Assertions.assertFalse(userManager.getLoginUsers().value.containsKey(uuid));
@@ -74,7 +84,7 @@ class UserManagerTest {
     @Test
     void logoutUserNotLogged() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         userManager.Login(uuid,emails[0],passwords[0]);
         Assertions.assertTrue(userManager.Logout(UUID.randomUUID()).errorOccurred());
     }
@@ -101,23 +111,23 @@ class UserManagerTest {
     void addNewMemberInTheSystem() {
         //add new member
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         Assertions.assertTrue(userManager.getMembers().value.containsKey(emails[0]));
 
         //add member with user id that does not exist
         uuid = UUID.randomUUID();
-        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1]);
+        userManager.AddNewMember(uuid,emails[1],passwords[1],PhoneNum[1], LocalDate.of(1998,11,15));
         Assertions.assertFalse(userManager.getMembers().value.containsKey(emails[1]));
 
         //add member with incorrect password
         uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[1],passwords[3],PhoneNum[1]);
+        userManager.AddNewMember(uuid,emails[1],passwords[3],PhoneNum[1], LocalDate.of(1998,11,15));
         Assertions.assertFalse(userManager.getMembers().value.containsKey(emails[1]));
 
 
         //add member with incorrect email
         uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[3],passwords[1],PhoneNum[1]);
+        userManager.AddNewMember(uuid,emails[3],passwords[1],PhoneNum[1], LocalDate.of(1998,11,15));
         Assertions.assertFalse(userManager.getMembers().value.containsKey(emails[3]));
     }
 
@@ -126,7 +136,7 @@ class UserManagerTest {
     void isLogin() {
         Assertions.assertFalse(userManager.isLogged(UUID.randomUUID()).value);
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         uuid = userManager.Login(uuid,emails[0],passwords[0]).value;
         Assertions.assertTrue(userManager.isLogged(uuid).value);
 
@@ -150,7 +160,7 @@ class UserManagerTest {
     @Test
     void isLogged() {
         UUID uuid = userManager.GuestVisit().value;
-        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0]);
+        userManager.AddNewMember(uuid,emails[0],passwords[0],PhoneNum[0], LocalDate.of(1998,11,15));
         userManager.Login(uuid,emails[0],passwords[0]);
         userManager.isLogged(uuid);
     }

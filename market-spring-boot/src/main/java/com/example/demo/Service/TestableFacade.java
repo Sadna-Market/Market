@@ -225,23 +225,7 @@ public class TestableFacade extends Facade {
 
 
 
-    public SLResponseOBJ<Boolean> isOwner(String email , int storeId){
-        DResponseObj<Store> s = market.getStore(storeId);
-        if (s.errorOccurred()){
-            return new SLResponseOBJ<>(false,s.errorMsg);
-        }
-        DResponseObj<Boolean> res =  userManager.isOwner(email,s.value);
-        return new SLResponseOBJ<>(res);
-    }
 
-    public SLResponseOBJ<Boolean> isManager(String email , int storeId){
-        DResponseObj<Store> s = market.getStore(storeId);
-        if (s.errorOccurred()){
-            return new SLResponseOBJ<>(false,s.errorMsg);
-        }
-        DResponseObj<Boolean> res =  userManager.isManager(email,s.value);
-        return new SLResponseOBJ<>(res);
-    }
 
 
 

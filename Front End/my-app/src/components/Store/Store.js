@@ -13,11 +13,22 @@ import PolicyStore from "./DiscountPolicy";
 import BuyingPolicy from "./BuyingPolicy";
 import DiscountPolicy from "./DiscountPolicy";
 import "./Store.css";
+
 import BID from "./BID/BID";
 
+
+  import BID from "./BID/BID";
+import {createApiClientHttp} from "../../client/clientHttp";
+import {errorCode} from "../../ErrorCodeGui"
+
 const Store = (props) => {
-  let storeID = props.storeID;
+    let apiClientHttp = createApiClientHttp();
+    const [enteredError, SetError] = useState("");
+    console.log("Store" )
+
+    let storeID = props.storeID;
   let UUID = props.uuid;
+    console.log("UUID " +UUID)
 
   const addProductHandler = () => {
     setCommand(
@@ -70,7 +81,8 @@ const Store = (props) => {
     );
   };
 
-  //todo: check that hasParmission!!!!!
+  //todo: check that hasParmission!!!! to like in the storlist eith refresh ..
+    // check if uuid is pwner
   const closeStoreHandler = () => {
     setCommand(
       <CloseStore
@@ -95,7 +107,8 @@ const Store = (props) => {
 
   // const [permission, setPermission] = useState("");
   let permission = "";
-  if (UUID == 7) {
+  //check ig uuid is manager in this store
+  if (UUID != 7) {
     permission = (
       <>
         <button onClick={addProductHandler}> Add Product</button>
@@ -114,6 +127,7 @@ const Store = (props) => {
   }
 
   //todo: get info
+    // call to func that take store id and return all this
   let name = "Amazing Store";
   let founder = "Alvis Presly";
   let isOpen = "Open";
@@ -129,9 +143,25 @@ const Store = (props) => {
     </>
   );
 
-  const rulesHandler = () => {
-    setCommand(<Rules uuid={UUID} storeID={storeID} />);
-  };
+    async function rulesHandler(){
+        console.log(":UUID " + UUID + "storeID " +storeID)
+
+        const getStoreRolesResponse = await apiClientHttp.getStoreRoles(UUID,storeID);
+        if (getStoreRolesResponse.errorMsg!== -1) {
+            SetError(errorCode.get(getStoreRolesResponse.errorMsg))
+        } else {
+            // console.log(":getStoreRolesResponse. "+ getStoreRolesResponse[0].type)
+            
+            console.log(":getStoreRolesResponse.value22 " + getStoreRolesResponse)
+            let str = JSON.stringify(getStoreRolesResponse);
+            //:getStoreRolesResponse.value {"errorMsg":-1,"value":{"owner":["sysManager@gmail.com"],"manager":[],"founder":["1dfssdf"]}}
+            console.log(":getStoreRolesResponse.value "+ str)
+            // getStoreRolesResponse.value
+            setCommand(<Rules uuid={UUID} storeID={storeID} rules={getStoreRolesResponse.value}/>);
+
+        }
+
+  }
 
   const BIDHandler = () => {
     setCommand(<BID uuid={UUID} storeID={storeID} />);

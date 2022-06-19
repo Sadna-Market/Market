@@ -3,6 +3,8 @@ import RuleInfo from "./RuleInfo";
 import RuleList from "./RuleList";
 
 const AllRules = (props) => {
+  console.log("AllRules")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   const [searchRule, setRule] = useState("");

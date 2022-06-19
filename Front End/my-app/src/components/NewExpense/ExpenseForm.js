@@ -4,6 +4,8 @@ import "./ExpenseForm.css";
 
 
 const ExpenseForm = (props) => {
+  console.log("ExpenseForm")
+
 
   const [enteredName, SetName] = useState("");
   const nameChangeHandler = (event) => {

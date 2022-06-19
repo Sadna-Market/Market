@@ -1,6 +1,5 @@
 package com.example.demo.Service.ServiceObj;
 
-
 import com.example.demo.Domain.StoreModel.ProductStore;
 
 public class ServiceProductStore {

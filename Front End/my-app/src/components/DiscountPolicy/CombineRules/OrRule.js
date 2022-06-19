@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import CombineRuleList from "./CombineRuleList";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass  from "../../RulesHelperClasses/DiscountRules"
 const OrRule = (props) => {
-  let UUID = props.uuid;
+    console.log("OrRule")
+    const [enteredError, SetError] = useState("");
+    const apiClientHttp = createApiClientHttp();
+    let UUID = props.uuid;
   let storeID = props.storeID;
   let list = [];
 

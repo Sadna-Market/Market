@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const RemoveManager = (props) => {
+  console.log("RemoveManager" )
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
+
   let UUID = props.uuid;
   let storeID = props.storeID;
 
@@ -14,16 +20,26 @@ const RemoveManager = (props) => {
   };
 
   //todo: remove to be manager
-  const ManHandler = () => {
-    cleanHandler();
-    props.onStore();
-  };
+  async function ManHandler(){
+    // const addNewStoreMangerResponse = await apiClientHttp.removeStoreOwner(UUID, storeID, email);
+    // if (addNewStoreMangerResponse.errorMsg !== -1) {
+    //   SetError(errorCode.get(addNewStoreMangerResponse.errorMsg))
+    // } else {
+      cleanHandler();
+      props.onStore();
+    // }
+  }
 
   //todo: remove to be owner
-  const OwnHandler = () => {
-    cleanHandler();
-    props.onStore();
-  };
+  async function OwnHandler(){
+    const removeStoreOwnerResponse = await apiClientHttp.removeStoreOwner(UUID, storeID, email);
+    if (removeStoreOwnerResponse.errorMsg !== -1) {
+      SetError(errorCode.get(removeStoreOwnerResponse.errorMsg))
+    } else {
+      cleanHandler();
+      props.onStore();
+    }
+  }
 
   return (
     <div>
