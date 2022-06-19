@@ -4,6 +4,7 @@ import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.DataAccess.Services.UserService;
 import com.example.demo.Domain.AlertService.AlertServiceDemo;
 import com.example.demo.Domain.AlertService.IAlertService;
+import com.example.demo.Domain.AlertService.Notification;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -578,21 +579,22 @@ public class UserManager {
      */
     public void notifyUsers(List<User> userList, String msg) {
         List<UUID> loggedInUsers = new ArrayList<>();
-        List<String> notLoggedInUsers = new ArrayList<>();
+        List<Notification> notLoggedInUsers = new ArrayList<>();
         userList.forEach(user -> {
             DResponseObj<UUID> usersIsLoggedIn = isLogged(user.getEmail().value);
             if (!usersIsLoggedIn.errorOccurred()) {
                 loggedInUsers.add(usersIsLoggedIn.value);
             } else {
-                notLoggedInUsers.add(user.getEmail().value);
+                notLoggedInUsers.add(new Notification(msg,user.getEmail().value));
             }
         });
         loggedInUsers.forEach(uuid -> {
             alertService.notifyUser(uuid, msg);
         });
-        notLoggedInUsers.forEach(username -> {
-            alertService.notifyUser(username, msg);
-        });
+        alertService.notifyUsers(notLoggedInUsers);
+//        notLoggedInUsers.forEach(username -> {
+//            alertService.notifyUser(username, msg);
+//        });
     }
 
 

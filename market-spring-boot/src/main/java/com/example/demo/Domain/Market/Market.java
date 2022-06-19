@@ -1190,7 +1190,7 @@ public class Market {
     private void notifyOwnersAndManagersStoreDeleted(List<Store> storesToDelete) {
         storesToDelete.forEach(store -> {
             logger.info(String.format("notifying owners/managers of deletion of store %d", store.getStoreId().value));
-            String msg = "Store [%d] was deleted permanently by System Manager";
+            String msg = String.format("Store [%d] was deleted permanently by System Manager",store.getStoreId().value);
             List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
             List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
             ownersAndManagers.addAll(managersOfStore);

@@ -18,6 +18,7 @@ public class Notification {
         this.text = text;
     }
 
+    //for db delayed
     public Notification(String text, String sendTo) {
         sentDate = LocalDate.now();
         this.text = text;
