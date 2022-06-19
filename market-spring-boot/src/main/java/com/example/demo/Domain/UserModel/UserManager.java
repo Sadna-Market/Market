@@ -4,6 +4,7 @@ import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.DataAccess.Services.UserService;
 import com.example.demo.Domain.AlertService.AlertServiceDemo;
 import com.example.demo.Domain.AlertService.IAlertService;
+import com.example.demo.Domain.AlertService.Notification;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -53,7 +54,7 @@ public class UserManager {
      */
     ConcurrentHashMap<UUID, User> LoginUsers;
 
-    static Logger logger = Logger.getLogger(ShoppingBag.class);
+    static Logger logger = Logger.getLogger(UserManager.class);
 
     @Autowired
     public UserManager(IAlertService alertService) { //For real application dependency injection
@@ -179,7 +180,7 @@ public class UserManager {
             alertService.modifyDelayIfExist(LogUser.email, newMemberUUid);
             return new DResponseObj<>(newMemberUUid);
         } else {
-            logger.debug("UserManager Login email: " + email + " the password is not correct");
+            logger.debug("Login email: " + email + " the password is not correct");
 
             DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOT_VALID_PASSWORD);
             return a;
@@ -578,21 +579,22 @@ public class UserManager {
      */
     public void notifyUsers(List<User> userList, String msg) {
         List<UUID> loggedInUsers = new ArrayList<>();
-        List<String> notLoggedInUsers = new ArrayList<>();
+        List<Notification> notLoggedInUsers = new ArrayList<>();
         userList.forEach(user -> {
             DResponseObj<UUID> usersIsLoggedIn = isLogged(user.getEmail().value);
             if (!usersIsLoggedIn.errorOccurred()) {
                 loggedInUsers.add(usersIsLoggedIn.value);
             } else {
-                notLoggedInUsers.add(user.getEmail().value);
+                notLoggedInUsers.add(new Notification(msg,user.getEmail().value));
             }
         });
         loggedInUsers.forEach(uuid -> {
             alertService.notifyUser(uuid, msg);
         });
-        notLoggedInUsers.forEach(username -> {
-            alertService.notifyUser(username, msg);
-        });
+        alertService.notifyUsers(notLoggedInUsers);
+//        notLoggedInUsers.forEach(username -> {
+//            alertService.notifyUser(username, msg);
+//        });
     }
 
 
@@ -671,7 +673,8 @@ public class UserManager {
     public void load() {
         List<DataUser> dataUsers = dataUserService.getAllUsers();
         dataUsers.forEach(duser -> {
-            User user = new User(duser.getUsername(),duser.getPassword(),duser.getPhoneNumber(),duser.getDateOfBirth());
+            var decrypted = Validator.getInstance().decryptAES(duser.getPassword());
+            User user = new User(duser.getUsername(),decrypted,duser.getPhoneNumber(),duser.getDateOfBirth());
             user.setHistories(
                     duser.getHistories().stream()
                             .map(dhistory -> new History(dhistory.getHistoryId(),

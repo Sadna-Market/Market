@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class User {
     ShoppingCart shoppingCart;
-    String Password;
+    String Password; //this password is encrypted
     String email;
     String phoneNumber;
     LocalDate dateOfBirth;
@@ -40,14 +40,6 @@ public class User {
 
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
-    }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
     }
 
     public void setEmail(String email) {
@@ -225,7 +217,7 @@ public class User {
     public DataUser getDataObject(){
         DataUser dataUser = new DataUser();
         dataUser.setUsername(email);
-        dataUser.setPassword(this.Password);
+        dataUser.setPassword(Validator.getInstance().encryptAES(this.Password));
         dataUser.setDateOfBirth(this.dateOfBirth);
         dataUser.setPhoneNumber(phoneNumber);
         dataUser.setDataShoppingCart(this.shoppingCart.getDataObject());
