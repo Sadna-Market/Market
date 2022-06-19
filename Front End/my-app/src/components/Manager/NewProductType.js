@@ -23,6 +23,7 @@ const NewProductType = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setName("");
     setDesc("");
     setCategory("");
@@ -42,6 +43,7 @@ const NewProductType = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>New ProductType</h3>
       <h3>{enteredError}</h3>
       <div className="products__controls">

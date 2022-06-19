@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
+import * as RulesClass from "../../RulesHelperClasses/BuyingRules"
 
 const CategoryDiscount = (props) => {
   let listOfRules = props.rules;
   let UUID = props.uuid;
   let storeID = props.storeID;
   let kind = props.kind; // AND/OR
+  const [enteredError, SetError] = useState("");
+  const apiClientHttp = createApiClientHttp();
 
   const [discount, setDiscount] = useState("");
   const changeDiscountHandler = (event) => {
@@ -21,11 +26,53 @@ const CategoryDiscount = (props) => {
     setCategoryID("");
   };
 
-  //todo: add new Category Discout rule with all the list
-  const addHandler = () => {
-    cleanHandler();
-    props.onRule(11);
-  };
+  async function addHandler(){
+    let map=[]
+    if (kind==='AND') {
+      map = {"combineAnd":props.rules,'category': categoryID,'discount':discount}
+      const sendRulesResponse = await apiClientHttp.combineANDDiscountRules(UUID,storeID,map);
+      let str = JSON.stringify(sendRulesResponse);
+       console.log("sendRulesResponse    "+str)
+
+       if (sendRulesResponse.errorMsg !== -1) {
+         SetError(errorCode.get(sendRulesResponse.errorMsg))
+       } else {
+         cleanHandler();
+         props.onRule(-1);
+
+       }
+    }
+    else if (kind==='OR'){
+      map = {"combineOr":props.rules,'category': categoryID,'discount':discount}
+      const sendRulesResponse = await apiClientHttp.combineORDiscountRules(UUID,storeID,map);
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
+
+      if (sendRulesResponse.errorMsg !== -1) {
+        SetError(errorCode.get(sendRulesResponse.errorMsg))
+      } else {
+        cleanHandler();
+        props.onRule(-1);
+
+      }
+    }
+    else if (kind==='XOR'){
+      map = {"combineXor":props.rules,'category': categoryID,'discount':discount}
+      const sendRulesResponse = await apiClientHttp.combineXorDiscountRules(UUID,storeID,map);
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
+
+      if (sendRulesResponse.errorMsg !== -1) {
+        SetError(errorCode.get(sendRulesResponse.errorMsg))
+      } else {
+        cleanHandler();
+        props.onRule(-1);
+
+      }
+    }
+
+
+  }
 
   return (
     <div>

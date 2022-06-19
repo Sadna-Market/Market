@@ -64,15 +64,15 @@ public class apiDiscountPparser {
         Map<String, Object> ConditionOnStoreDiscount = (Map<String, Object>) cond;
         switch (ConditionOnStoreDiscount.size() - 2) {
             case 3: {
-                ShoppingBagPredicateSL a = new ShoppingBagPredicateSL(Integer.valueOf((String) ConditionOnStoreDiscount.get("minQuantity")),
+                ShoppingBagPredicateSL a = new ShoppingBagPredicateSL(Integer.valueOf((String) ConditionOnStoreDiscount.get("discount")),
                         Integer.valueOf((String) ConditionOnStoreDiscount.get("minProductTypes")));
-                return new ConditionStoreDiscountRuleSL(a, Integer.valueOf((String) ConditionOnStoreDiscount.get("maxQuantity")));
+                return new ConditionStoreDiscountRuleSL(a, Integer.valueOf((String) ConditionOnStoreDiscount.get("discount")));
             }
             case 4: {
-                ShoppingBagPredicateSL a = new ShoppingBagPredicateSL(Integer.valueOf((String) ConditionOnStoreDiscount.get("minQuantity")),
+                ShoppingBagPredicateSL a = new ShoppingBagPredicateSL(Integer.valueOf((String) ConditionOnStoreDiscount.get("discount")),
                         Integer.valueOf((String) ConditionOnStoreDiscount.get("minProductTypes")),
                         Integer.valueOf((String) ConditionOnStoreDiscount.get("totalPrice")));
-                return new ConditionStoreDiscountRuleSL(a, Integer.valueOf((String) ConditionOnStoreDiscount.get("maxQuantity")));
+                return new ConditionStoreDiscountRuleSL(a, Integer.valueOf((String) ConditionOnStoreDiscount.get("discount")));
             }
         }
         throw new IllegalArgumentException();
@@ -137,21 +137,46 @@ public class apiDiscountPparser {
         throw new IllegalArgumentException();
     }
 
+    public List<Integer> combineAnd(Map<String,Object> map){
+        return (List<Integer>) map.get("combineAnd");
+    }
+
+    public List<Integer> combineOr(Map<String,Object> map){
+        return (List<Integer>) map.get("combineOr");
+    }
+
+    public List<Integer> combineXor(Map<String,Object> map){
+        return (List<Integer>) map.get("combineXor");
+    }
+
     public DiscountRuleSL DiscountParse(Map<String,Object> map){
         if(map.containsKey("or"))
         {
-            return DiscountOr(map);
+            return DiscountOr((Map<String, Object>) map.get("or"));
         }
         if(map.containsKey("and"))
         {
-            return DiscountAnd(map);
+            return DiscountAnd((Map<String, Object>) map.get("and"));
         }
         if(map.containsKey("xor")){
-            return DiscountXor(map);
+            return DiscountXor((Map<String, Object>) map.get("xor"));
         }
+        if (map.containsKey("add")){
+            return DiscountAdd((Map<String, Object>) map.get("add"));
+        }
+
         return simpleDiscountParse(map);
     }
 
+    private DiscountRuleSL DiscountAdd(Map<String,Object> or){
+        List<Map<String,Object>> cl= (List<Map<String, Object>>) or.get("list");
+        List<DiscountRuleSL> simpleDisRules = new LinkedList<>();
+        for(Map<String,Object> m : cl) {
+            DiscountRuleSL b=simpleDiscountParse(m);
+            simpleDisRules.add(b);
+        }
+        return new AddDiscountRuleSL(simpleDisRules);
+    }
 
     private DiscountRuleSL DiscountOr(Map<String,Object> or){
         List<Map<String,Object>> cl= (List<Map<String, Object>>) or.get("list");
@@ -167,6 +192,7 @@ public class apiDiscountPparser {
         List<Map<String,Object>> cl= (List<Map<String, Object>>) and.get("list");
         List<DiscountRuleSL> simpleDisRules = new LinkedList<>();
         for(Map<String,Object> m : cl) {
+
             DiscountRuleSL b=simpleDiscountParse(m);
             simpleDisRules.add(b);
         }
@@ -180,6 +206,7 @@ public class apiDiscountPparser {
             DiscountRuleSL b=simpleDiscountParse(m);
             simpleDisRules.add(b);
         }
+        System.out.println((String) Xor.get("decision"));
         return new XorDiscountRuleSL(simpleDisRules,(String) Xor.get("decision"));
     }
 

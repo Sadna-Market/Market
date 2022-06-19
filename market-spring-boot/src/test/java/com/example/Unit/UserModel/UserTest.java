@@ -2,6 +2,7 @@ package com.example.Unit.UserModel;
 
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Domain.UserModel.UserManager;
+import com.example.demo.Service.Facade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,25 @@ class UserTest {
         store = new Store(1,"Best Store", null, null, "dor@gmail.com");
 
 
+    }
+    @Test
+    void removeMangager(){
+        Facade facade = new Facade();
+        String uuid1 = facade.guestVisit().value;
+        String uuid2 = facade.guestVisit().value;
+        System.out.println(uuid1);
+        System.out.println(facade.addNewMember(uuid1,emails[0],passwords[0],PhoneNum[0], "25/10/1984").errorMsg);
+        System.out.println(facade.addNewMember(uuid2,emails[1],passwords[1],PhoneNum[1], "25/10/1984").errorMsg);
+        uuid1=facade.login(uuid1,emails[0],passwords[0]).value;
+        uuid2=facade.login(uuid2,emails[0],passwords[0]).value;
+        System.out.println(uuid1);
+        facade.openNewStore(uuid1,"dali",emails[0],null,null,null);
+        Assertions.assertTrue(facade.isOwner(emails[0],1).value);
+        Assertions.assertFalse(facade.isManager(emails[1],1).value);
+        Assertions.assertTrue(facade.addNewStoreManger(uuid1,1,emails[1]).value);
+        Assertions.assertTrue(facade.isManager(emails[1],1).value);
+        Assertions.assertTrue(facade.removeStoreMenager(uuid1,1,emails[1]).value);
+        Assertions.assertFalse(facade.isManager(emails[1],1).value);
     }
 
     @Test

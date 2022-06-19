@@ -1,15 +1,23 @@
 package com.example.demo.Domain.UserModel;
 
 import com.example.demo.Domain.Response.DResponseObj;
+import org.apache.log4j.Logger;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validator {
-
+    private static final Logger logger = Logger.getLogger(Validator.class);
     private static Validator validations=null;
+    private static final String INITIAL_VECTOR = System.getenv("iv");
+    private static final String SECRET = System.getenv("secret");
     private Validator(){
 
     }
@@ -79,8 +87,7 @@ public class Validator {
     }
 
     public static DResponseObj<Boolean> isValidCreditDate(String CreditDATE) {
-        String regex = "^(?=.*[0-9])"
-                + ".{4}$";
+        String regex = "^(0[1-9]|1[0-2]){1}\\/?([0-9]{2})$";
         Pattern p = Pattern.compile(regex);
         if (CreditDATE == null||CreditDATE=="") {
             return new DResponseObj<>(false);
@@ -123,5 +130,31 @@ public class Validator {
         // Return if the password
         // matched the ReGex
         return new DResponseObj<>( m.matches(),-1);
+    }
+    public String encryptAES(String plaintText){
+        try{
+            IvParameterSpec iv = new IvParameterSpec(INITIAL_VECTOR.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET.getBytes(StandardCharsets.UTF_8),"AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE,secretKeySpec,iv);
+            byte[] encrypted = cipher.doFinal(plaintText.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encrypted);
+        }catch (Exception e){
+            logger.error(String.format("failed to encrypt password, ERROR: %s",e.getMessage()));
+            return plaintText;
+        }
+    }
+    public String decryptAES(String encrypted){
+        try{
+            IvParameterSpec iv = new IvParameterSpec(INITIAL_VECTOR.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec secretKeySpec = new SecretKeySpec(SECRET.getBytes(StandardCharsets.UTF_8),"AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE,secretKeySpec,iv);
+            byte[] original = cipher.doFinal(Base64.getDecoder().decode(encrypted));
+            return new String(original);
+        }catch (Exception e){
+            logger.error(String.format("failed to decrypt password, ERROR: %s",e.getMessage()));
+            return encrypted;
+        }
     }
 }

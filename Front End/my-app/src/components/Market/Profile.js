@@ -26,7 +26,7 @@ const Profile = (props) => {
             SetError(errorCode.get(getUserInfoResponse.errorMsg))
         } else {
             setCommand(getUserInfoResponse.value);
-
+            SetError("")
         }
         let str = JSON.stringify(getUserInfoResponse);
 
@@ -36,6 +36,7 @@ const Profile = (props) => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
             <h3> My Profile </h3>
             <button onClick={changePassHandler}> Change Password</button>
             <button onClick={historyHander}> My History</button>

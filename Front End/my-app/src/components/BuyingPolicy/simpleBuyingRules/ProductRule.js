@@ -28,6 +28,7 @@ const ProductRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setminQuantity("");
     setmaxQuantity("");
     setproductID("");
@@ -38,7 +39,9 @@ const ProductRule = (props) => {
     let rule = new RulesClass.productRule(UUID,storeID,productID,minQuantity,maxQuantity)
     if (props.compose===undefined) { //false case - no comopse - realy simple
 
-      const sendRulesResponse = await apiClientHttp.sendRules(rule);
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, {'productRule':rule});
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
 
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
@@ -51,11 +54,12 @@ const ProductRule = (props) => {
     }
     
     cleanHandler();
-    props.onRule(rule);
+    props.onRule({'productRule':rule});
   }
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add Product Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

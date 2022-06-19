@@ -1,23 +1,27 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.Entity.DataUser;
+import com.example.demo.DataAccess.Services.UserService;
 import com.example.demo.Domain.AlertService.AlertServiceDemo;
 import com.example.demo.Domain.AlertService.IAlertService;
+import com.example.demo.Domain.AlertService.Notification;
 import com.example.demo.Domain.ErrorCode;
-import com.example.demo.Domain.Market.Permission;
-import com.example.demo.Domain.Market.PermissionManager;
-import com.example.demo.Domain.Market.permissionType;
-import com.example.demo.Domain.Market.userTypes;
+import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.History;
+import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
+import java.util.stream.Collectors;
 //*
 
 /**
@@ -31,6 +35,9 @@ import java.util.concurrent.locks.StampedLock;
 public class UserManager {
 
     private IAlertService alertService;
+
+    @Autowired
+    private UserService dataUserService;
 
     private StampedLock LockUsers = new StampedLock();
 
@@ -47,15 +54,16 @@ public class UserManager {
      */
     ConcurrentHashMap<UUID, User> LoginUsers;
 
-    static Logger logger = Logger.getLogger(ShoppingBag.class);
+    static Logger logger = Logger.getLogger(UserManager.class);
 
     @Autowired
-    public UserManager(IAlertService alertService){ //For real application dependency injection
+    public UserManager(IAlertService alertService) { //For real application dependency injection
         this.alertService = alertService;
         this.members = new ConcurrentHashMap<>();
         this.GuestVisitors = new ConcurrentHashMap<>();
         this.LoginUsers = new ConcurrentHashMap<>();
     }
+
 
     public UserManager() { //For AT only.
         this.alertService = new AlertServiceDemo();
@@ -68,6 +76,29 @@ public class UserManager {
         return members.containsKey(email) ? new DResponseObj<>(true, -1) : new DResponseObj<>(false, ErrorCode.NOTMEMBER);
     }
 
+    public DResponseObj<List<HashMap<String, Object>>> getAllusers() {
+        List<HashMap<String, Object>> res = new LinkedList<>();
+        for (User mem : members.values()) {
+            if (isLogged(mem)) {
+                HashMap<String, Object> h = new HashMap<>();
+                h.put("email", mem.email);
+                h.put("isLogged", true);
+                res.add(h);
+            } else {
+                HashMap<String, Object> h = new HashMap<>();
+                h.put("email", mem.email);
+                h.put("isLogged", false);
+                res.add(h);
+            }
+        }
+        return new DResponseObj<>(res);
+    }
+
+
+    public Boolean isLogged(User user) {
+        return LoginUsers.values().contains(user);
+    }
+
     public DResponseObj<UUID> GuestVisit() {
         logger.debug("UserManager GuestVisit");
         UUID newid = UUID.randomUUID();
@@ -78,10 +109,11 @@ public class UserManager {
 
     public DResponseObj<Boolean> isOwner(String email, Store store) {
         if (!members.containsKey(email)) {
+            logger.debug("not a member, email:" + email);
             return new DResponseObj<>(ErrorCode.NOTMEMBER);
         }
         User u = members.get(email);
-        logger.debug("UserManager isOwner");
+        logger.debug("UserManager isOwner email: " + email + " store:" + store);
         PermissionManager permissionManager = PermissionManager.getInstance();
         DResponseObj<userTypes> res = permissionManager.getGranteeUserType(u, store);
         return res.value.equals(userTypes.owner) ? new DResponseObj<>(true, -1) : new DResponseObj<>(false, ErrorCode.NOTOWNER);
@@ -90,10 +122,11 @@ public class UserManager {
 
     public DResponseObj<Boolean> isManager(String email, Store store) {
         if (!members.containsKey(email)) {
+            logger.debug("not a member, email:" + email);
             return new DResponseObj<>(ErrorCode.NOTMEMBER);
         }
         User u = members.get(email);
-        logger.debug("UserManager isManager");
+        logger.debug("UserManager isManager email: " + email + " store:" + store);
         PermissionManager permissionManager = PermissionManager.getInstance();
         DResponseObj<userTypes> res = permissionManager.getGranteeUserType(u, store);
         return res.value.equals(userTypes.manager) ? new DResponseObj<>(true, -1) : new DResponseObj<>(false, ErrorCode.NOT_MANAGER);
@@ -103,10 +136,12 @@ public class UserManager {
     public DResponseObj<Boolean> GuestLeave(UUID guestId) {
         logger.debug("UserManager GuestLeave");
         if (!GuestVisitors.containsKey(guestId)) {
+            logger.debug("uuid is not in the guests");
             DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
             a.errorMsg = ErrorCode.NOTONLINE;
             return a;
         } else {
+            logger.debug("usermenager GuestLeave");
             GuestVisitors.remove(guestId);
             DResponseObj<Boolean> a = new DResponseObj<Boolean>(true);
 
@@ -116,8 +151,28 @@ public class UserManager {
 
 
     public DResponseObj<UUID> Login(UUID userID, String email, String password) {
-        logger.debug("UserManager Login");
-        if (GuestVisitors.containsKey(userID) && members.containsKey(email) && !LoginUsers.containsKey(userID)  && !isEmailLoged(email) && members.get(email).isPasswordEquals(password).value) {
+        logger.debug("UserManager Login email: " + email);
+        if (!GuestVisitors.containsKey(userID)) {
+            logger.debug("UserManager Login email: " + email + " NOT online");
+            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOTONLINE);
+            return a;
+        }
+        if (!members.containsKey(email)) {
+            logger.debug("UserManager Login email: " + email + " not a member");
+            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOTMEMBER);
+            return a;
+        }
+        if (LoginUsers.containsKey(userID)) {
+            logger.debug("UserManager Login email: " + email + "aallready logged");
+            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.ALLRADYLOGED);
+            return a;
+        }
+        if (isEmailLoged(email)) {
+            logger.debug("UserManager Login email: " + email + "aallready logged");
+            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.ALLRADYLOGED);
+            return a;
+        }
+        if (members.get(email).isPasswordEquals(password).value) {
             User LogUser = members.get(email);
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
@@ -125,18 +180,27 @@ public class UserManager {
             alertService.modifyDelayIfExist(LogUser.email, newMemberUUid);
             return new DResponseObj<>(newMemberUUid);
         } else {
-            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
+            logger.debug("Login email: " + email + " the password is not correct");
+
+            DResponseObj<UUID> a = new DResponseObj<>(ErrorCode.NOT_VALID_PASSWORD);
             return a;
         }
 
     }
-    public boolean isEmailLoged(String email){
-        for(User u :LoginUsers.values()){
-            if(u.email.equals(email)){
+
+    public boolean isEmailLoged(String email) {
+        for (User u : LoginUsers.values()) {
+            if (u.email.equals(email)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public DResponseObj<Boolean> resetShoppingCart(UUID uuid) {
+        DResponseObj<User> u = getOnlineUser(uuid);
+        if (u.errorOccurred()) return new DResponseObj<>(false, u.errorMsg);
+        return u.value.resetCart();
     }
 
     public DResponseObj<Boolean> ishasSystemManager() {
@@ -191,6 +255,15 @@ public class UserManager {
 
             User user = new User(email, Password, phoneNumber, dateOfBirth);
             members.put(email, user);
+            //db
+            if (dataUserService != null) { //because no autowire in AT
+                DataUser dataUser = user.getDataObject();
+                if (!dataUserService.insertUser(dataUser)) {
+                    logger.error(String.format("didnt save user %s", user.email));
+                    return new DResponseObj<>(false, ErrorCode.DB_ERROR);
+                }
+            }
+            //
             return new DResponseObj<>(true);
         } finally {
             LockUsers.unlockWrite(stamp);
@@ -230,53 +303,71 @@ public class UserManager {
         return a;
     }
 
-    public DResponseObj<List<String>> getAllMembers(UUID userId){
+    public DResponseObj<List<String>> getAllMembers(UUID userId) {
         DResponseObj<Boolean> res = isLogged(userId);
-        if(res.errorOccurred()|| !res.value) return new DResponseObj<>(ErrorCode.NOTLOGGED);
-        if(!LoginUsers.containsKey(userId)) return new DResponseObj<>(ErrorCode.NOTMEMBER);
+        if (res.errorOccurred() || !res.value) return new DResponseObj<>(ErrorCode.NOTLOGGED);
+        if (!LoginUsers.containsKey(userId)) return new DResponseObj<>(ErrorCode.NOTMEMBER);
         User admin = LoginUsers.get(userId);
-        DResponseObj<Boolean> isadminres=PermissionManager.getInstance().isSystemManager(admin.email);
-        if(isadminres.errorOccurred() || !isadminres.value) return new DResponseObj<>(ErrorCode.NOTADMIN);
+        DResponseObj<Boolean> isadminres = PermissionManager.getInstance().isSystemManager(admin.email);
+        if (isadminres.errorOccurred() || !isadminres.value) return new DResponseObj<>(ErrorCode.NOTADMIN);
         List<String> em = new LinkedList<>();
-        for(User u : members.values()){
+        for (User u : members.values()) {
             em.add(u.email);
         }
-        return new DResponseObj<>(em,-1);
+        return new DResponseObj<>(em, -1);
     }
 
-    public DResponseObj<Boolean> removeMember(UUID userId,String email){
+    public DResponseObj<Boolean> removeMember(UUID userId, String email) {
         DResponseObj<Boolean> res = isLogged(userId);
-        if(res.errorOccurred()|| !res.value) return new DResponseObj<>(false,ErrorCode.NOTLOGGED);
-        if(!LoginUsers.containsKey(userId)) return new DResponseObj<>(false,ErrorCode.NOTMEMBER);
+        if (res.errorOccurred() || !res.value) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
+        if (!LoginUsers.containsKey(userId)) return new DResponseObj<>(false, ErrorCode.NOTMEMBER);
         User admin = LoginUsers.get(userId);
-        DResponseObj<Boolean> isadminres=PermissionManager.getInstance().isSystemManager(admin.email);
-        if(isadminres.errorOccurred() || !isadminres.value) return new DResponseObj<>(false,ErrorCode.NOTADMIN);
+        DResponseObj<Boolean> isadminres = PermissionManager.getInstance().isSystemManager(admin.email);
+        if (isadminres.errorOccurred() || !isadminres.value) return new DResponseObj<>(false, ErrorCode.NOTADMIN);
 
-        if (!members.containsKey(email)) return new DResponseObj<>(false,ErrorCode.NOTMEMBER);
-        if(admin.email.equals(email))return new DResponseObj<>(false,ErrorCode.NOTVALIDINPUT);
+        if (!members.containsKey(email)) return new DResponseObj<>(false, ErrorCode.NOTMEMBER);
+        if (admin.email.equals(email)) return new DResponseObj<>(false, ErrorCode.NOTVALIDINPUT);
         members.remove(email);
-        return new DResponseObj<>(true ,-1);
+        //db
+        if (dataUserService != null) {
+            if (!dataUserService.deleteUser(email)) {
+                logger.error(String.format("failed to remove user %s", email));
+                return new DResponseObj<>(false, ErrorCode.DB_ERROR);
+            }
+        }
+        return new DResponseObj<>(true, -1);
     }
 
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, Store store, String ownerEmail) {
         logger.debug("UserManager removeStoreOwner");
-        if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false,ErrorCode.NOTLOGGED);
+        if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         User loggedUser = LoginUsers.get(userId);
-        if (!isOwner(userId, store).value) return new DResponseObj<>(false,ErrorCode.NOTOWNER);
+        if (!isOwner(userId, store).value) return new DResponseObj<>(false, ErrorCode.NOTOWNER);
         User ownerToRemove = members.get(ownerEmail);
-        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove,store,loggedUser);
-        if(!removePermission.errorOccurred()){
+        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove, store, loggedUser);
+        if (!removePermission.errorOccurred()) {
             //change all permission grantor to the founder (because we delete the grantor user)
             String founder = store.getFounder().value;
             User founderUser = getMember(founder).value;
             for (Permission permission : ownerToRemove.getGrantorPermission().value) {
-                if(permission.getStore().value.getStoreId().value.equals(store.getStoreId().value)) {
+                if (permission.getStore().value.getStoreId().value.equals(store.getStoreId().value)) {
                     permission.setGrantor(founderUser);
                     founderUser.addGrantorPermission(permission);
                     ownerToRemove.removeGrantorPermission(permission);
                 }
             }
         }
+        return removePermission;
+    }
+
+
+    public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String MenagerEmail) {
+        logger.debug("UserManager removeStoreManager");
+        if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
+        User loggedUser = LoginUsers.get(userId);
+        if (!isOwner(userId, store).value) return new DResponseObj<>(false, ErrorCode.NOTOWNER);
+        User MenagerToRemove = members.get(MenagerEmail);
+        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(MenagerToRemove, store, loggedUser);
         return removePermission;
     }
 
@@ -427,6 +518,14 @@ public class UserManager {
         if (res.errorOccurred()) {
             return new DResponseObj<>(res.errorMsg);
         }
+        //db
+        if (dataUserService != null) {
+            var dataUser = u.getDataObject();
+            if (!dataUserService.updateUser(dataUser)) {
+                logger.error("couldn't change password in db");
+                return new DResponseObj<>(false, ErrorCode.DB_ERROR);
+            }
+        }
         return new DResponseObj<>(true, -1);
     }
 
@@ -480,21 +579,22 @@ public class UserManager {
      */
     public void notifyUsers(List<User> userList, String msg) {
         List<UUID> loggedInUsers = new ArrayList<>();
-        List<String> notLoggedInUsers = new ArrayList<>();
+        List<Notification> notLoggedInUsers = new ArrayList<>();
         userList.forEach(user -> {
             DResponseObj<UUID> usersIsLoggedIn = isLogged(user.getEmail().value);
             if (!usersIsLoggedIn.errorOccurred()) {
                 loggedInUsers.add(usersIsLoggedIn.value);
             } else {
-                notLoggedInUsers.add(user.getEmail().value);
+                notLoggedInUsers.add(new Notification(msg,user.getEmail().value));
             }
         });
         loggedInUsers.forEach(uuid -> {
             alertService.notifyUser(uuid, msg);
         });
-        notLoggedInUsers.forEach(username -> {
-            alertService.notifyUser(username, msg);
-        });
+        alertService.notifyUsers(notLoggedInUsers);
+//        notLoggedInUsers.forEach(username -> {
+//            alertService.notifyUser(username, msg);
+//        });
     }
 
 
@@ -563,6 +663,41 @@ public class UserManager {
         User s = members.remove(toCancelUser.email);
         if (s == null)
             logger.warn(String.format("failed to delete. %s is not a member already", toCancelUser.email));
+        if (dataUserService != null) {
+            if (!dataUserService.deleteUser(toCancelUser.email)) {
+                logger.error(String.format("failed to delete from db. %s is not a member already", toCancelUser.email));
+            }
+        }
+    }
+    @PostConstruct
+    public void load() {
+        List<DataUser> dataUsers = dataUserService.getAllUsers();
+        dataUsers.forEach(duser -> {
+            var decrypted = Validator.getInstance().decryptAES(duser.getPassword());
+            User user = new User(duser.getUsername(),decrypted,duser.getPhoneNumber(),duser.getDateOfBirth());
+            user.setHistories(
+                    duser.getHistories().stream()
+                            .map(dhistory -> new History(dhistory.getHistoryId(),
+                                    dhistory.getSupplyId(),
+                                    dhistory.getFinalPrice(),
+                                    dhistory.getProducts().stream().map( dataProductStoreHistory->{
+                                        var dataProductType = dataProductStoreHistory.getProductType();
+                                        ProductType productType = new ProductType(dataProductType.getProductTypeId(),
+                                                dataProductType.getProductName(),
+                                                dataProductType.getDescription(),
+                                                dataProductType.getCategory());
+                                        return new ProductStore(productType,
+                                                dataProductStoreHistory.getQuantity(),
+                                                dataProductStoreHistory.getPrice());
+                                    }).collect(Collectors.toList()),
+                                    duser.getUsername())).collect(Collectors.toList())
+            );
+            members.put(user.email,user);
+        });
+    }
+    //for db test
+    public void deleteAllMembers(){
+        members.clear();
     }
 
 }

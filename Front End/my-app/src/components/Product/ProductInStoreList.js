@@ -37,7 +37,7 @@ const ProductInStoreList = props =>{
             console.log(":allProducts. " +allProducts)
             let str = JSON.stringify(getAllProductsInStoreResponse);
             console.log(":str. " + str)
-
+            SetError("")
             Setproducts(allProducts);
         }
     }
@@ -68,7 +68,8 @@ const ProductInStoreList = props =>{
   
     return (
       <div>
-        <ul className="products-list">{expensesContent}</ul>
+          <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+          <ul className="products-list">{expensesContent}</ul>
       </div>
     );
 };

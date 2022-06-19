@@ -40,8 +40,9 @@ const SignUp = (props) => {
     const addNewMemberResponse = await apiClientHttp.addNewMember(guestVisitResponse.value,enteredEmail, enteredPassword, enteredPhone,'10/01/1996');
 
     if (addNewMemberResponse.errorMsg !== -1) {
-      SetError(errorCode.get(SetError.errorMsg))
+      SetError(errorCode.get(addNewMemberResponse.errorMsg))
     } else {
+      SetError("")
       props.onSaveExpenseData();
     }
     console.log(addNewMemberResponse)
@@ -49,6 +50,7 @@ const SignUp = (props) => {
   }
 
   const cancelHandler = () => {
+    SetError("")
     SetName("");
     SetEmail("");
     setPassword("");
@@ -57,9 +59,12 @@ const SignUp = (props) => {
 
   return (
     <div className="signUp">
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <h3>Registration</h3>
 
       <form onSubmit={submitHandler}>
+
         <div className="signUp__controls">
           <div className="signUp__control">
             <label>Name</label>
@@ -111,6 +116,7 @@ const SignUp = (props) => {
           <button type="submit"> confirm</button>
         </div>
       </form>
+
     </div>
   );
 };

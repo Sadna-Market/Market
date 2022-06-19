@@ -120,11 +120,21 @@ public interface IMarket {
 
     //2.4.5
     public SLResponseOBJ<Boolean> removeStoreOwner(String UserId, int StoreId, String OwnerEmail);
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
 
     //2.4.6
     public SLResponseOBJ<Boolean> addNewStoreManger(String UserId, int StoreId, String mangerEmil);
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
+    public SLResponseOBJ<List<HashMap<String,Object>>> getAllusers();
 
-    //2.4.7
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+
+    public SLResponseOBJ<Integer> getStoreRate(String UUID,int Store);
+    public SLResponseOBJ<Boolean> newStoreRate(String UUID,int Store,int rate);
+
+        //2.4.7
     public SLResponseOBJ<Boolean> setManagerPermissions(String userId, int storeId, String
             mangerEmil, String per , boolean onof);
     //2.4.9
@@ -161,9 +171,13 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
     public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
     public SLResponseOBJ<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard);
-    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
-    
+    public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid,int storeID);
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid,int storeID);
+    public SLResponseOBJ<Boolean> reopenStore(String uuid,int storeID);
+
     public SLResponseOBJ<List<String>> getAllMembers(String userId);
+
 
 
 

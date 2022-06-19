@@ -55,7 +55,7 @@ public class XorDiscountRule extends CompositionDiscountRule {
         }
         stringRule.append(rules.get(rules.size()-1).getDiscountRule().value);
         stringRule.append("\n\tdecision rule is ");
-        if (decision.equals("Big discount")) {
+        if (decision.equals("Big Discount")) {
             stringRule.append(decision);
         } else {
             stringRule.append("first");
@@ -71,6 +71,6 @@ public class XorDiscountRule extends CompositionDiscountRule {
             if(discountRuleSL.errorOccurred()) return discountRuleSL;
             rulesSL.add(discountRuleSL.value);
         }
-        return new DResponseObj<>(new XorDiscountRuleSL(rulesSL,decision));
+        return new DResponseObj<>(new XorDiscountRuleSL(rulesSL,decision,id));
     }
 }

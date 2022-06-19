@@ -77,7 +77,7 @@ public class SystemTests extends MarketTests {
     @Test
     @DisplayName("req: #1.3 - success test")
     void PaymentService_Success() {
-        CreditCard creditCard = new CreditCard("1111222233334444", "1122", "111");
+        CreditCard creditCard = new CreditCard("1111222233334444", "11/22", "111");
 
         ATResponseObj<String> response = market.pay(creditCard, 10);
 
@@ -187,7 +187,7 @@ public class SystemTests extends MarketTests {
         assertFalse(res.errorOccurred());
         uuid = res.value;
 
-        String read = readFile(uuid);
+        String read = readFile(newManager.username);
         assertFalse(read.isEmpty());
     }
 

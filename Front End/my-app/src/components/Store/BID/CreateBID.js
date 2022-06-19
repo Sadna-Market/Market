@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
 const CeateBID = (props) => {
+  console.log("CeateBID")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
   let UUID = props.uuid;
   let storeID = props.storeID;
 
@@ -21,20 +25,34 @@ const CeateBID = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setQuantity("");
     setPrice("");
     setproductID("");
   };
 
-  //todo: add BID
-  const addHandler = () => {
-    cleanHandler();
-    //add BID
-    props.onBID();
-  };
+  //todo: add BID//
+  //        createBID:async(uuid,storeID,productID,quantity,totalPrice)=>{
+  async function addHandler(){
+    const createBIDResponse = await apiClientHttp.createBID(UUID,storeID,productID,quantity,price);
+    console.log("createBIDResponse")
+    console.log(createBIDResponse)
+
+    if (createBIDResponse.errorMsg !== -1) {
+      SetError(errorCode.get(createBIDResponse.errorMsg))
+    } else {
+      cleanHandler();
+      //add BID
+      props.onBID();
+
+    }
+
+  }
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
       <h3>Add Product to BID #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

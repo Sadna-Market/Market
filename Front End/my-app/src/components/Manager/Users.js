@@ -12,38 +12,38 @@ const Users = props =>{
     const [searchUser, setUser] = useState("");
 
     const enterToStoreHandler = storeID => {
-      props.onShowStore(storeID);
+        props.onShowStore(storeID);
     };
-    const [command, setCommand] = useState(<UserList search={searchUser} onEnterToStore={enterToStoreHandler}/>);
-  
+    const [command, setCommand] = useState(<UserList search={searchUser} onEnterToStore={enterToStoreHandler} uuid={UUID}/>);
+
     const searchButtonHolder = () => {
-      setCommand(<UserList search={searchUser} onEnterToStore={enterToStoreHandler} />);
-      setUser(() => "");
+        setCommand(<UserList search={searchUser} onEnterToStore={enterToStoreHandler} uuid={UUID}/>);
+        setUser(() => "");
     };
-  
-  
-  
+
+
+
     const findStoreHandler = (event) => {
         setUser(() => event.target.value);
     };
-  
+
     return (
-      <div className="marketButton">
-        <h3>Users</h3>
-        <div className="bar__controls">
-          <div className="bar__control">
-            <label>Search User</label>
-            <input
-              type="text"
-              value={searchUser}
-              onChange={findStoreHandler}
-              placeholder="user Email"
-            />
-            <button onClick={searchButtonHolder}>Search</button>
-          </div>
+        <div className="marketButton">
+            <h3>Users</h3>
+            <div className="bar__controls">
+                <div className="bar__control">
+                    <label>Search User</label>
+                    <input
+                        type="text"
+                        value={searchUser}
+                        onChange={findStoreHandler}
+                        placeholder="user Email"
+                    />
+                    <button onClick={searchButtonHolder}>Search</button>
+                </div>
+            </div>
+            {command}
         </div>
-        {command}
-      </div>
     );
 };
 

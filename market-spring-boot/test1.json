@@ -16,7 +16,8 @@
       "storeId": "1",
       "productID": "1",
       "minQuantity": "1",
-      "maxQuantity": "1"
+      "maxQuantity": "1",
+      "canbuy": "true"
     }
   },
   {
@@ -132,6 +133,7 @@
   {
     "UserRule" :{ "uuid":"1", "storeId": "1", "userEmail": "1" }
   }
+
 
 ]
 

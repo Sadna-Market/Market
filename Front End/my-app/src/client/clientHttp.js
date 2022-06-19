@@ -264,11 +264,11 @@ export const createApiClientHttp = () => {
             return await axios.get(path).then((res)=>{
                 return res.data;
             })
-
         },
 
 
         removeProductFromShoppingBag :async (uuid,storeid,productid)=>{
+            console.log("uuid,storeid,productid ",uuid,storeid,productid)
             let path = apiUrl.concat(`removeProductFromShoppingBag/${uuid}/${storeid}/${productid}`);
             return await axios.delete(path).then((res)=>{
                 return res.data;
@@ -288,6 +288,8 @@ export const createApiClientHttp = () => {
 
 
         orderShoppingCart: async (uuid,city,adress,apartment,CreditCard,CreditDate,pin)=>{
+            console.log("client http UUID, city, adress,apartment,cardNumber,cardDate, cardPin",uuid,city,adress,apartment,CreditCard,CreditDate,pin)
+
             let path = apiUrl.concat(`orderShoppingCart/${uuid}`);
             let body = {
 
@@ -637,9 +639,9 @@ export const createApiClientHttp = () => {
 
         addNewBuyRule:async(uuid,storeid,obj)=>{
             let path = apiUrl.concat(`addNewBuyRule/${uuid}/${storeid}`);
-            console.log(obj)
-            let body={data:obj}
-            return await axios.get(path,body).then((res)=>{
+
+
+            return await axios.post(path,obj).then((res)=>{
                 return res.data;
             })
         },
@@ -652,10 +654,10 @@ export const createApiClientHttp = () => {
             })
         },
         addNewDiscountRule:async(uuid,storeid,obj)=>{
+            console.log("uuid,storeid,obj",uuid,storeid,obj)
             let path = apiUrl.concat(`addNewDiscountRule/${uuid}/${storeid}`);
             console.log(obj)
-            let body={data:obj}
-            return await axios.get(path,body).then((res)=>{
+            return await axios.post(path,obj).then((res)=>{
                 return res.data;
             })
         },
@@ -702,15 +704,165 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
 
-        }
+        },
+        ///testssss
+        removeStoreMenager:async(uuid,storeid,manageremail)=>{
+            let path = apiUrl.concat(`removeStoreMenager/${uuid}/${storeid}/${manageremail}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+
+        },
+
+        getRate:async(uuid,productTypeID)=>{
+            let path = apiUrl.concat(`getRate/${uuid}/${productTypeID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+
+        },
+
+        setRate:async(uuid,productTypeID,rate)=>{
+            let path = apiUrl.concat(`setRate/${uuid}/${productTypeID}/${rate}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        },
+        getProductTypeInfo:async(productTypeId)=>{
+            let path = apiUrl.concat(`getProductTypeInfo/${productTypeId}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        combineANDDiscountRules:async(uuid,storeid,obj)=>{
+            let path = apiUrl.concat(`combineANDDiscountRules/${uuid}/${storeid}`);
+            return await axios.post(path,obj).then((res)=>{
+                return res.data;
+            })
+        } ,
+        combineORDiscountRules:async(uuid,storeid,obj)=>{
+            let path = apiUrl.concat(`combineORDiscountRules/${uuid}/${storeid}`);
+            return await axios.post(path,obj).then((res)=>{
+                return res.data;
+            })
+        } ,
+        combineXorDiscountRules:async(uuid,storeid,desicion,obj)=>{
+            console.log("client  combineXorDiscountRules  uuid,storeid,desicion,obj ",uuid,storeid,desicion,obj)
+            let path = apiUrl.concat(`combineXorDiscountRules/${uuid}/${storeid}/${desicion}`);
+            return await axios.post(path,obj).then((res)=>{
+                return res.data;
+            })
+        } ,
+        getBIDStatus:async(uuid,userEmail,storeID,productID)=>{
+            let path = apiUrl.concat(`getBIDStatus/${uuid}/${userEmail}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        BuyBID:async(userId,storeID,productID,city,adress,apartment,creditcard,creditDate,pin)=>{
+            let path = apiUrl.concat(`BuyBID/${userId}/${storeID}/${productID}/${city}/${adress}/${apartment}`);
+            return await axios.post(path,{"creditCard":creditcard,"creditDate":creditDate,"pin":pin}).then((res)=>{
+                return res.data;
+            })
+        } ,
+        responseCounterBID:async(uuid,storeID,productID,approve)=>{
+            let path = apiUrl.concat(`responseCounterBID/${uuid}/${storeID}/${productID}/${approve}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        counterBID:async(uuid,userEmail,storeID,productID,newTotalPrice)=>{
+            let path = apiUrl.concat(`counterBID/${uuid}/${userEmail}/${storeID}/${productID}/${newTotalPrice}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        rejectBID:async(uuid,userEmail,storeID,productID)=>{
+            let path = apiUrl.concat(`rejectBID/${uuid}/${userEmail}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        approveBID:async(uuid,userEmail,storeID,productID)=>{
+            let path = apiUrl.concat(`approveBID/${uuid}/${userEmail}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        removeBID:async(uuid,storeID,productID)=>{
+            let path = apiUrl.concat(`removeBID/${uuid}/${storeID}/${productID}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        createBID:async(uuid,storeID,productID,quantity,totalPrice)=>{
+            let path = apiUrl.concat(`createBID/${uuid}/${storeID}/${productID}/${quantity}/${totalPrice}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        getAllusers:async()=>{
+            let path = apiUrl.concat(`getAllusers`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        cancelMembership:async(uuid,cancelMemberUsername)=>{
+            let path = apiUrl.concat(`cancelMembership/${uuid}/${cancelMemberUsername}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        getStoreRate:async(uuid,Store)=>{
+            let path = apiUrl.concat(`getStoreRate/${uuid}/${Store}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+        newStoreRate:async(uuid,Store,rate)=>{
+            let path = apiUrl.concat(`newStoreRate/${uuid}/${Store}/${rate}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        reopenStore:async(uuid,Store)=>{
+            let path = apiUrl.concat(`reopenStore/${uuid}/${Store}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
 
 
 
+        getMyBIDs:async(uuid,Store)=>{
+            let path = apiUrl.concat(`getMyBIDs/${uuid}/${Store}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        getAllOffersBIDS:async(uuid,Store)=>{
+            let path = apiUrl.concat(`getAllOffersBIDS/${uuid}/${Store}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
+
+        getStoreInfo:async(Store)=>{
+            let path = apiUrl.concat(`getStoreInfo/${Store}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        } ,
     }
 }
 /*
 CategoryRule {
-  uuid: 'UUID',
+  uuid: 'UUID',11
   storeId: 'storeID',
   categoryID: 'category',
   minAge: 'minAge',

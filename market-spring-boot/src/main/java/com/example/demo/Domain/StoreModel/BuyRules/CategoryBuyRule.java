@@ -35,7 +35,7 @@ public class CategoryBuyRule extends LeafBuyRule{
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
-        return new DResponseObj<>(new CategoryBuyRuleSL(new CategoryPredicateSL((CategoryPred) pred)));
+        return new DResponseObj<>(new CategoryBuyRuleSL(new CategoryPredicateSL((CategoryPred) pred),id));
 
     }
 }

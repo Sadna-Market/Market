@@ -29,6 +29,7 @@ const NewProductInStore = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setProductID("");
     setPrice("");
     setquan("");
@@ -53,6 +54,7 @@ const NewProductInStore = (props) => {
 //text   const [productName, setproductName] = useState("");
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add new ProductType to the Store {storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

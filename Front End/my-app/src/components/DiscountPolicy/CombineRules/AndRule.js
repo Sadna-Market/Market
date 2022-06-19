@@ -23,6 +23,7 @@ const AndRule = (props) => {
 
   //todo: AndRULE
   const confirmHandler = () => {
+
     //do..... with the list
     props.onCategory(list, "AND");
   };

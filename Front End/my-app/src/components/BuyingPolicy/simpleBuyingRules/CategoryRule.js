@@ -32,6 +32,7 @@ const CategoryRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setCategory("");
     setminAge("");
     setminHour("");
@@ -43,8 +44,10 @@ const CategoryRule = (props) => {
     let rule = new RulesClass.CategoryRule(UUID,storeID,minAge,category,minHour,maxHour)
     if (props.compose===undefined) { //false case - no comopse - realy simple
 
-      const sendRulesResponse = await apiClientHttp.sendRules(rule);
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, {'CategoryRule':rule});
 
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
       } else {
@@ -55,11 +58,12 @@ const CategoryRule = (props) => {
       }
     }
     cleanHandler();
-    props.onRule(rule);
+    props.onRule({'CategoryRule':rule});
   }
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add Category Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

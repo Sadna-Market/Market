@@ -21,6 +21,7 @@ const ShoppingBagRule = (props) => {
   };
 
   const cleanHandler = () => {
+    SetError("")
     setminQuantity("");
     setminProductTypes("");
   };
@@ -31,8 +32,9 @@ const ShoppingBagRule = (props) => {
     let rule = new RulesClass.ShoppingRule(UUID,storeID,minQuantity,minProductTypes)
     if (props.compose===undefined) { //false case - no comopse - realy simple
 
-      const sendRulesResponse = await apiClientHttp.sendRules(rule);
-
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, {'ShoppingRule':rule});
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
       } else {
@@ -44,13 +46,14 @@ const ShoppingBagRule = (props) => {
     }
     else{
     cleanHandler();
-    props.onRule(rule);
+    props.onRule({'ShoppingRule':rule});
 
     }
   }
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add Shopping Bag Rule For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">

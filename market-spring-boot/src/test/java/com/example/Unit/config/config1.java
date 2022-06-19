@@ -5,6 +5,9 @@ import com.example.demo.Service.ServiceObj.ServiceProductStore;
 import com.example.demo.Service.ServiceObj.ServiceStore;
 import com.example.demo.Service.ServiceObj.ServiceUser;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import com.example.demo.configuration.JsonInit;
+import com.example.demo.configuration.StateInit.JsonReader;
+import com.example.demo.configuration.config;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,6 +47,8 @@ public class config1 {
 
     @Test
     public void config() {
+        config c = config.get_instance();
+        if(c.get_System_state_path().equals("state_system._tests1")){
         SLResponseOBJ<String> UUID = f.guestVisit();
         SLResponseOBJ<String> res = f.login(UUID.value, "sysManager@gmail.com", "Shalom123$");
         System.out.println(res.errorMsg);
@@ -90,4 +95,5 @@ public class config1 {
         assertTrue(f.login(UUID.value,"u4@gmail.com","abcA!123").errorOccurred());
         assertFalse(f.login(UUID.value,"u5@gmail.com","abcA!123").errorOccurred());
     }
+}
 }

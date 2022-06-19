@@ -64,7 +64,7 @@ public class OrDiscountRule extends CompositionDiscountRule {
             if(discountRuleSL.errorOccurred()) return discountRuleSL;
             rulesSL.add(discountRuleSL.value);
         }
-        return new DResponseObj<>(new OrDiscountRuleSL(rulesSL,category,discount));
+        return new DResponseObj<>(new OrDiscountRuleSL(rulesSL,category,discount,id));
     }
 
 }

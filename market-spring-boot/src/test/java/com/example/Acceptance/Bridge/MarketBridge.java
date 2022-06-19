@@ -2,13 +2,14 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
-import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.ServiceBID;
+import com.example.demo.Service.ServiceObj.ServiceCreditCard;
 import com.example.demo.Service.ServiceObj.ServiceStore;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface MarketBridge {
@@ -363,6 +364,14 @@ public interface MarketBridge {
     boolean closeStore(String uuid, int storeID);
 
     /**
+     * reopen store
+     * @param uuid
+     * @param storeID
+     * @return  true if success, else false
+     */
+    boolean reopenStore(String uuid, int storeID);
+
+    /**
      * checks if store is closed
      * @param storeID id of store
      * @return true is store is closed, else false
@@ -496,4 +505,108 @@ public interface MarketBridge {
     boolean isOwnerUUID(String uuid, int storeID);
     boolean isSysManagerUUID(String uuid);
     boolean isManagerUUID(String uuid, int storeID);
-}
+
+    /**
+     * create new BID in store by user
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param quantity
+     * @param totalPrice
+     * @return  true if success, else false
+     */
+    public ATResponseObj<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice);
+
+    /**
+     * remove BID from store
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @return  true if success, else false
+     */
+    public ATResponseObj<Boolean> removeBID(String uuid, int storeID, int productID);
+
+    /**
+     * manager/owner approve BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return  true if success, else false
+     */
+    public ATResponseObj<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
+
+    /**
+     * manager/owner reject BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    public ATResponseObj<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID);
+
+    /**
+     * manager/owner counter BID with new price
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @param newTotalPrice
+     * @return true if success, else false
+     */
+    public ATResponseObj<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
+
+    /**
+     * user response to counter BID (approve/reject)
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param approve
+     * @return true if success, else false
+     */
+    public ATResponseObj<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
+
+    /**
+     * user buy BID that approved by all owners
+     * @param userId
+     * @param storeID
+     * @param productID
+     * @param city
+     * @param adress
+     * @param apartment
+     * @param creditCard
+     * @return  true if success, else false
+     */
+    public ATResponseObj<Boolean> BuyBID(String userId,int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard);
+
+    /**
+     * get status of specific BID
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return  true if success, else false
+     */
+    public ATResponseObj<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
+
+
+    /**
+     * get all bids in the store if has permission
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    public ATResponseObj<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID);
+
+
+    /**
+     * get all bids of user in the store
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID);
+
+
+    }

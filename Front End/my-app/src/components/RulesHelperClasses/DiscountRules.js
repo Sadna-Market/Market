@@ -1,17 +1,17 @@
-class DRule{
+export class DRule{
     constructor(uuid, storeId){
         this.uuid=uuid;
         this.storeId=storeId;
     }
 }
-class FullDiscount extends DRule{
+export class FullDiscount extends DRule{
     constructor(uuid, storeId,discount){
         super(uuid,storeId);
         this.discount=discount;
     }
 }
 
-class ProductDiscount extends DRule{
+export class ProductDiscount extends DRule{
     constructor(uuid, storeId,discount,productID){
         super(uuid,storeId);
         this.discount=discount;
@@ -20,7 +20,7 @@ class ProductDiscount extends DRule{
 }
 
 
-class categoryDiscount extends DRule{
+export class categoryDiscount extends DRule{
     constructor(uuid, storeId,discount,categoryID){
         super(uuid,storeId);
         this.discount=discount;
@@ -29,18 +29,18 @@ class categoryDiscount extends DRule{
     }
 }
 
-class conditionOnStoreDiscount extends DRule{
-    constructor(uuid, storeId,discount,minQuantity,maxQuantity,totalPrice){
+export class conditionOnStoreDiscount extends DRule{
+    constructor(uuid, storeId,discount,minQuantity,minProductTypes,totalPrice){
         super(uuid,storeId);
         this.discount=discount;
         this.minQuantity=minQuantity;
-        this.maxQuantity=maxQuantity;
+        this.minProductTypes=minProductTypes;
         this.totalPrice=totalPrice;
 
     }
 
 }
-class conditionOnProductDiscount extends DRule{
+export class conditionOnProductDiscount extends DRule{
     constructor(uuid, storeId,discount,productID,minQuantity,maxQuantity){
         super(uuid,storeId);
         this.discount=discount;
@@ -51,7 +51,7 @@ class conditionOnProductDiscount extends DRule{
     }
 
 }
-class conditionOnCategoryDiscount extends DRule {
+export class conditionOnCategoryDiscount extends DRule {
     constructor(uuid, storeId, discount,categoryID,minimumAge, minimumHour, maximumHour) {
         super(uuid, storeId);
         this.discount = discount;

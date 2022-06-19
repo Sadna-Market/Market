@@ -4,6 +4,8 @@ import Offer from "./Offer";
 import Option from "./Option";
 
 const Options = (props) => {
+  console.log("Options")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   //todo: get all my products

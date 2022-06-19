@@ -15,7 +15,8 @@ const RuleID = (props) => {
 
   //todo: remove Rule
   const removeHandler = () => {
-    props.onRemove();
+    console.log("removeHandler "+ruleID)
+    props.onRemove(ruleID);
   };
 
   const infoHandler = () => {

@@ -3,9 +3,10 @@ package com.example.Acceptance.Tests;
 import com.example.Acceptance.Bridge.MarketBridge;
 import com.example.Acceptance.Bridge.ProxyMarket;
 import com.example.Acceptance.Obj.*;
+import com.example.demo.DemoApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
 public class MarketTests {
     protected MarketBridge market;
     private int counter;

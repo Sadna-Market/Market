@@ -17,8 +17,24 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface Iapi {
+    public SLResponseOBJ<Boolean> removeStoreMenager(String userId, int storeId, String menagerEmail) ;
+    public SLResponseOBJ<Integer> getRate(String uuid,int productTypeID);
+    public SLResponseOBJ<Boolean> setRate(String uuid,int productTypeID,int rate);
+    public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) ;
+    public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) ;
+    public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) ;
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() ;
+
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1
+    public SLResponseOBJ<ServiceStore> getStoreInfo(int storeId);
+    public SLResponseOBJ<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid,int storeID);
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(String uuid,int storeID);
+    public SLResponseOBJ<Boolean> reopenStore(String uuid,int storeID);
+
+
+
     public SLResponseOBJ<Boolean> initMarket(  apiUser user) ;
 
     public SLResponseOBJ<Boolean> removeBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
@@ -133,6 +149,17 @@ public interface Iapi {
     public SLResponseOBJ<HashMap<String,List<String>>> getStoreRoles(String UserId, int StoreId);
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId);
+
+    public SLResponseOBJ<Boolean> createBID(String uuid,  int storeID,int productID, int quantity, int totalPrice);
+    public SLResponseOBJ<Boolean> removeBID(String uuid, int storeID, int productID);
+    public SLResponseOBJ<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID);
+    public SLResponseOBJ<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice);
+    public SLResponseOBJ<Boolean> responseCounterBID(String uuid, int storeID, int productID , boolean approve);
+    public SLResponseOBJ<Boolean> BuyBID(@PathVariable("userId")String userId,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("city") String city, @PathVariable("adress")String adress,@PathVariable("apartment") int apartment,@RequestBody Map<String,Object> map) ;
+//    public SLResponseOBJ<HashMap<String,Boolean>> getApprovesList(String uuid, String userEmail, int storeID, int productID);
+public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
+
 
 
     //2.6.5 && //2.4.13

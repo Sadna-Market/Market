@@ -11,10 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrDiscountRuleSL extends CompositionDiscountRuleSL {
+
+    public String kind = "Or Discount Rule";
+
     public int category;
 
     public OrDiscountRuleSL(List<DiscountRuleSL> rules, int category, double dis) {
         super(rules, dis);
+        this.category = category;
+    }
+
+    //for convert
+    public OrDiscountRuleSL(List<DiscountRuleSL> rules, int category, double dis,int id) {
+        super(rules, dis,id);
         this.category = category;
     }
 
