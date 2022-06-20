@@ -24,11 +24,13 @@ const AddRule = (props) => {
   //todo: create Add with list
   async function  finishHandler(){
     let andMap ={"and":list}
-      const sendRulesResponse = await apiClientHttp.sendRules(andMap);
+    
+      const sendRulesResponse = await apiClientHttp.addNewBuyRule(UUID,storeID, andMap);
 
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
       } else {
+        SetError("")
         // props.onRule(sendRulesResponse.value);
         props.onRule();
       }
@@ -36,6 +38,7 @@ const AddRule = (props) => {
   }
 
   const moreHandler = (ruleID) => {
+    SetError("")
     list.push(ruleID);
     console.log(list);
     setComaand(<MoreRule onMore={newRule} onFinish={finishHandler} compose={true}/>);
@@ -58,6 +61,7 @@ const AddRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Add Rule</h3>
       <div>{command}</div>
     </div>

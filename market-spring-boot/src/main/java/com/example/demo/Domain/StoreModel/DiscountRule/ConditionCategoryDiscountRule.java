@@ -45,6 +45,6 @@ public class ConditionCategoryDiscountRule extends SimpleCategoryDiscountRule {
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
-        return new DResponseObj<>(new ConditionCategoryDiscountRuleSL(new CategoryPredicateSL(pred),percentDiscount));
+        return new DResponseObj<>(new ConditionCategoryDiscountRuleSL(new CategoryPredicateSL(pred),percentDiscount,id));
     }
 }

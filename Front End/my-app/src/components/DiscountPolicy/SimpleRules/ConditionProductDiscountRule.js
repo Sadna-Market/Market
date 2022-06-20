@@ -9,7 +9,7 @@ const ConditionProductDiscountRule = (props) => {
   let UUID = props.uuid;
   let storeID = props.storeID;
 
-  const [discount, setDiscount] = useState("");
+  const [discount, setDiscount] = useState("1");
   const changeDiscountHandler = (event) => {
     setDiscount(event.target.value);
   };
@@ -30,7 +30,8 @@ const ConditionProductDiscountRule = (props) => {
   };
 
   const cleanHandler = () => {
-    setDiscount("");
+    SetError("")
+    // setDiscount("");
     setPRoductID("");
     setmaxQuantity("");
     setminQuantity("");
@@ -41,7 +42,11 @@ const ConditionProductDiscountRule = (props) => {
     let rule = new RulesClass.conditionOnProductDiscount(UUID, storeID, discount, productID, minQuantity, maxQuantity)
     if (props.compose === undefined) { //false case - no comopse - realy simple
 
-      const sendRulesResponse = await apiClientHttp.sendDRules(rule);
+      const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID, {'conditionOnProductDiscount':rule});
+
+      let str = JSON.stringify(sendRulesResponse);
+      console.log("sendRulesResponse    "+str)
+
 
       if (sendRulesResponse.errorMsg !== -1) {
         SetError(errorCode.get(sendRulesResponse.errorMsg))
@@ -53,12 +58,26 @@ const ConditionProductDiscountRule = (props) => {
       }
     } else {
       cleanHandler();
-      props.onRule(rule);
+      props.onRule({'conditionOnProductDiscount':rule});
     }
   }
-
+  let DiscountCommand=""
+  if (props.compose === undefined) {
+    DiscountCommand=
+    <div className="products__control">
+      <label>Discount</label>
+      <input
+          type="number"
+          min="0"
+          value={discount}
+          placeholder="write number between 1-100%"
+          onChange={changeDiscountHandler}
+      />
+    </div>
+  }
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Category Discount For store #{storeID}</h3>
       <div className="products__controls">
         <div className="products__control">
@@ -71,16 +90,7 @@ const ConditionProductDiscountRule = (props) => {
             onChange={changeProductIDHandler}
           />
         </div>
-        <div className="products__control">
-          <label>Discount</label>
-          <input
-            type="number"
-            min="0"
-            value={discount}
-            placeholder="write number between 1-100%"
-            onChange={changeDiscountHandler}
-          />
-        </div>
+        {DiscountCommand}
         <div className="products__control">
           <label>Min Quantity</label>
           <input

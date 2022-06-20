@@ -3,6 +3,7 @@ import BIDItem from "./BIDItem";
 import Offer from "./Offer";
 
 const AllOffers = (props) => {
+  console.log("AllOffers")
   let UUID = props.uuid;
   //todo: get all my products
   let products = [

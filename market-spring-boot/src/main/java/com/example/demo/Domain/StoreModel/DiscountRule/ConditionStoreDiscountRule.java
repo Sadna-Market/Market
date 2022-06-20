@@ -43,6 +43,6 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
-        return new DResponseObj<>(new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(pred),percentDiscount));
+        return new DResponseObj<>(new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(pred),percentDiscount,id));
     }
 }

@@ -28,12 +28,13 @@ const ConditionRule = (props) => {
   //todo: create rule
     async function confirmHandler(){
         let combineAndMap ={"combineCondition":list}
-        const sendRulesResponse = await apiClientHttp.sendRules(combineAndMap);
+        const sendRulesResponse = await apiClientHttp.addNewBuyRule(combineAndMap);
 
         if (sendRulesResponse.errorMsg !== -1) {
             SetError(errorCode.get(sendRulesResponse.errorMsg))
         } else {
             // props.onRule(sendRulesResponse.value);
+            SetError("")
             props.onRule();
         }
   }
@@ -51,7 +52,9 @@ const ConditionRule = (props) => {
   //const [command, setCommand] = useState();
   return (
     <div className="condition">
-      <h3>Condition Rule</h3>
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
+        <h3>Condition Rule</h3>
       <h2>if Rule #</h2>
       <input
               type="number"

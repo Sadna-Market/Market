@@ -1,6 +1,7 @@
 package com.example.demo.Domain.UserModel;
 
 
+import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.PermissionManager;
 import com.example.demo.Domain.Market.permissionType;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class User {
     ShoppingCart shoppingCart;
-    String Password;
+    String Password; //this password is encrypted
     String email;
     String phoneNumber;
     LocalDate dateOfBirth;
@@ -33,6 +34,58 @@ public class User {
     private List<Permission> safeAccessPermission = Collections.synchronizedList(accessPermission);
     private List<Permission> safeGrantorPermission = Collections.synchronizedList(grantorPermission);
 
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public List<History> getHistories() {
+        return histories;
+    }
+
+    public void setHistories(List<History> histories) {
+        this.histories = histories;
+    }
+
+    public void setAccessPermission(List<Permission> accessPermission) {
+        this.accessPermission = accessPermission;
+    }
+
+    public void setGrantorPermission(List<Permission> grantorPermission) {
+        this.grantorPermission = grantorPermission;
+    }
+
+    public List<Permission> getSafeAccessPermission() {
+        return safeAccessPermission;
+    }
+
+    public void setSafeAccessPermission(List<Permission> safeAccessPermission) {
+        this.safeAccessPermission = safeAccessPermission;
+    }
+
+    public List<Permission> getSafeGrantorPermission() {
+        return safeGrantorPermission;
+    }
+
+    public void setSafeGrantorPermission(List<Permission> safeGrantorPermission) {
+        this.safeGrantorPermission = safeGrantorPermission;
+    }
+
     public User(String email, String password, String phoneNumber, LocalDate dateOfBirth) {
         this.email = email;
         this.Password = password;
@@ -43,6 +96,10 @@ public class User {
 
     }
 
+    public DResponseObj<Boolean> resetCart (){
+        shoppingCart=new ShoppingCart();
+        return new DResponseObj<Boolean>(true);
+    }
     public User() {
         shoppingCart = new ShoppingCart();
         email = "guest";
@@ -146,13 +203,22 @@ public class User {
     }
 
     public DResponseObj<Boolean> addHistoies(List<History> histories) {
-        for (History h : histories) {
-            this.histories.add(h);
-        }
+        this.histories.addAll(histories);
         return new DResponseObj<>(true, -1);
     }
 
     public DResponseObj<String> getPhoneNumber() {
         return new DResponseObj<>(phoneNumber,-1);
     }
+
+
+    public DataUser getDataObject(){
+        DataUser dataUser = new DataUser();
+        dataUser.setUsername(email);
+        dataUser.setPassword(Validator.getInstance().encryptAES(this.Password));
+        dataUser.setDateOfBirth(this.dateOfBirth);
+        dataUser.setPhoneNumber(phoneNumber);
+        return dataUser;
+    }
+
 }

@@ -47,6 +47,6 @@ public class AndBuyRule extends CompositionBuyRule {
             if(buyRuleSL.errorOccurred()) return buyRuleSL;
             rulesSL.add(buyRuleSL.value);
         }
-        return new DResponseObj<>(new AndBuyRuleSL(rulesSL));
+        return new DResponseObj<>(new AndBuyRuleSL(rulesSL,id));
     }
 }

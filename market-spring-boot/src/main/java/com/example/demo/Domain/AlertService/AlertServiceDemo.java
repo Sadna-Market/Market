@@ -22,25 +22,40 @@ public class AlertServiceDemo implements IAlertService {
         writeToFile(uuid, msg);
     }
 
-    public void notifyUser(String username, String msg) {
-        var notification = new Notification(msg);
-        if (delayedNotification.containsKey(username)) {
-            delayedNotification.get(username).add(notification);
-        } else {
-            List<Notification> lst = new ArrayList<>();
-            lst.add(notification);
-            delayedNotification.put(username, lst);
-        }
+//    public void notifyUser(String username, String msg) {
+//        var notification = new Notification(msg);
+//        if (delayedNotification.containsKey(username)) {
+//            delayedNotification.get(username).add(notification);
+//        } else {
+//            List<Notification> lst = new ArrayList<>();
+//            lst.add(notification);
+//            delayedNotification.put(username, lst);
+//        }
+//    }
+    //use db
+    public void notifyUsers(List<Notification> toPersist) {
+        toPersist.forEach(notification -> {
+            writeToFile(notification.getSentTo(),notification.getText());
+        });
     }
 
     public void modifyDelayIfExist(String username, UUID uuid) {
         if (delayedNotification.containsKey(username)) {
-            writeToFile(uuid, delayedNotification.get(username).get(0).text);
+            writeToFile(uuid, delayedNotification.get(username).get(0).getText());
         }
     }
 
     private void writeToFile(UUID uuid, String msg) {
         String path = System.getProperty("user.dir").concat("\\src\\main\\Alerts\\").concat(uuid.toString()).concat(".txt");
+        try (FileWriter fileWriter = new FileWriter(path)) {
+            fileWriter.write(msg);
+        } catch (Exception e) {
+            logger.error("couldn't write to file");
+        }
+    }
+
+    private void writeToFile(String email, String msg) {
+        String path = System.getProperty("user.dir").concat("\\src\\main\\Alerts\\").concat(email).concat(".txt");
         try (FileWriter fileWriter = new FileWriter(path)) {
             fileWriter.write(msg);
         } catch (Exception e) {

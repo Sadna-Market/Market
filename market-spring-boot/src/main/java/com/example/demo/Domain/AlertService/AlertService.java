@@ -1,14 +1,14 @@
 package com.example.demo.Domain.AlertService;
 
+import com.example.demo.DataAccess.Entity.DataNotification;
+import com.example.demo.DataAccess.Services.NotificationService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +23,18 @@ public class AlertService implements IAlertService {
 
     private NotificationDispatcher dispatcher;
 
+    @Autowired
+    private final NotificationService dataNotificationService;
 
-    ConcurrentHashMap<String, List<Notification>> delayedNotification; //username-notifications
+
+    //ConcurrentHashMap<String, List<Notification>> delayedNotification; //username-notifications
     ConcurrentHashMap<UUID, String> sessionMapper; //uuid-sessionID
 
     @Autowired
-    public AlertService(NotificationDispatcher dispatcher) {
+    public AlertService(NotificationDispatcher dispatcher, NotificationService dataNotificationService) {
         this.dispatcher = dispatcher;
-        delayedNotification = new ConcurrentHashMap<>();
+        this.dataNotificationService = dataNotificationService;
+       // delayedNotification = new ConcurrentHashMap<>();
         sessionMapper = new ConcurrentHashMap<>();
     }
 
@@ -55,23 +59,17 @@ public class AlertService implements IAlertService {
 
 
     /**
-     * used to send for e member that is not connected to the system yet.
-     * <p>
-     * Note: in the future this will go to DB
-     *
-     * @param username
-     * @param msg
-     * @return
+     * gets a list of notifications to persist to db at once
+     * @param toPersist
      */
-    public void notifyUser(String username, String msg) {
-        var notification = new Notification(msg);
-        if (delayedNotification.containsKey(username)) {
-            delayedNotification.get(username).add(notification);
-        } else {
-            List<Notification> lst = new ArrayList<>();
-            lst.add(notification);
-            delayedNotification.put(username, lst);
+    public void notifyUsers(List<Notification> toPersist) {
+        List<DataNotification> dataNotificationList = toPersist.stream()
+                .map(Notification::getDataObject)
+                .collect(Collectors.toList());
+        if(!dataNotificationService.insertNotifications(dataNotificationList)){
+            logger.error("failed to persist all notification list");
         }
+        logger.info("inserted list of notifications to db");
     }
 
     /**
@@ -104,14 +102,38 @@ public class AlertService implements IAlertService {
      * @param username
      * @param uuid
      */
+//    public void modifyDelayIfExist(String username, UUID uuid) {
+//        if (delayedNotification.containsKey(username)) {
+//            String sessionID = sessionMapper.get(uuid);
+//            dispatcher.importDelayedNotifications(sessionID, delayedNotification.remove(username));
+//            logger.info(String.format("imported all delayed notifications of %s", username));
+//            return;
+//        }
+//        logger.info(String.format("user %s didn't have pending notifications", username));
+//    }
+
+    /**
+     * this function is called when a member is logged in
+     *
+     * @param username
+     * @param uuid
+     */
     public void modifyDelayIfExist(String username, UUID uuid) {
-        if (delayedNotification.containsKey(username)) {
-            String sessionID = sessionMapper.get(uuid);
-            dispatcher.importDelayedNotifications(sessionID, delayedNotification.remove(username));
-            logger.info(String.format("imported all delayed notifications of %s", username));
+        List<DataNotification> dataNotificationList = dataNotificationService.getAllUserNotifications(username);
+        if(dataNotificationList == null){
+            logger.error(String.format("failed to get all notifications from db of %s",username));
             return;
         }
-        logger.info(String.format("user %s didn't have pending notifications", username));
+        if(dataNotificationList.isEmpty()){
+            logger.info(String.format("user %s didn't have pending notifications", username));
+            return;
+        }
+        List<Notification> notifications = dataNotificationList.stream()
+                .map(dataNotification -> new Notification(dataNotification.getMessage()))
+                .collect(Collectors.toList());
+        var sessionID = sessionMapper.get(uuid);
+        dispatcher.importDelayedNotifications(sessionID,notifications);
+        logger.info(String.format("imported all delayed notifications of %s", username));
     }
 
     @EventListener

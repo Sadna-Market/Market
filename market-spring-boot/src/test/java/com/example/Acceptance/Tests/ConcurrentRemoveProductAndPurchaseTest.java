@@ -3,6 +3,7 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class ConcurrentRemoveProductAndPurchaseTest extends MarketTests {
         });
         Thread purchaseProduct = new Thread(() -> {
             ATResponseObj<String> id = market.login(market.guestVisit(), buyer);
-            ATResponseObj<String> res = market.purchaseCart(id.value, new CreditCard("1111222233333334444", "1124", "111"), new Address("Tel-Aviv", "Nordau", 5));
+            ATResponseObj<ServiceDetailsPurchase> res = market.purchaseCart(id.value, new CreditCard("1111222233333334444", "1124", "111"), new Address("Tel-Aviv", "Nordau", 5));
             buySuccess = !res.errorOccurred();
         });
         removeProduct.start();

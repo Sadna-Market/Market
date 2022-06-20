@@ -38,6 +38,92 @@ public class api implements Iapi {
         return iMarket.initMarket(user.email, user.Password, user.phoneNumber, user.datofbirth);
 
     }
+    @Override
+    @PostMapping("removeStoreMenager/{uuid}/{storeid}/{menagerEmail}")
+    public SLResponseOBJ<Boolean> removeStoreMenager(@PathVariable("uuid")String userId,@PathVariable("storeid") int storeId,@PathVariable("menagerEmail") String menagerEmail) {
+        return iMarket.removeStoreMenager(userId, storeId, menagerEmail);
+    }
+
+    @Override
+    @PostMapping("getRate/{uuid}/{productTypeID}")
+    public SLResponseOBJ<Integer> getRate(@PathVariable("uuid")String uuid,@PathVariable("productTypeID") int productTypeID) {
+        System.out.println(uuid);
+        System.out.println(productTypeID);
+        return iMarket.getRate(uuid, productTypeID);
+    }
+
+    @Override
+    @PostMapping("setRate/{uuid}/{productTypeID}/{rate}")
+    public SLResponseOBJ<Boolean> setRate(@PathVariable("uuid")String uuid,@PathVariable("productTypeID") int productTypeID,@PathVariable("rate") int rate) {
+        System.out.println(uuid);
+        System.out.println(productTypeID);
+        System.out.println(rate);
+        return iMarket.setRate(uuid, productTypeID, rate);
+    }
+
+    @Override
+    @PostMapping("cancelMembership/{uuid}/{cancelMemberUsername}")
+    public SLResponseOBJ<Boolean> cancelMembership(@PathVariable("uuid")String uuid,@PathVariable("cancelMemberUsername") String cancelMemberUsername) {
+        return iMarket.cancelMembership(uuid, cancelMemberUsername);
+    }
+
+    @Override
+    @PostMapping("getStoreRate/{uuid}/{Store}")
+    public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) {
+        return iMarket.getStoreRate(uuid,Store);
+    }
+
+    @Override
+    @PostMapping("newStoreRate/{uuid}/{Store}/{rate}")
+    public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) {
+        return iMarket.newStoreRate(uuid,Store,rate);
+    }
+
+    @Override
+    @PostMapping("getAllusers")
+    public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() {
+        System.out.println(iMarket.getAllusers().value);
+        return iMarket.getAllusers();
+    }
+
+    @Override
+    @PostMapping("getProductTypeInfo/{productTypeID}")
+    public SLResponseOBJ<ServiceProductType> getProductTypeInfo(@PathVariable("productTypeID")Integer productTypeId) {
+        System.out.println(productTypeId);
+        return iMarket.getProductTypeInfo(productTypeId);
+
+    }
+
+    @Override
+    @PostMapping("getStoreInfo/{storeId}")
+    public SLResponseOBJ<ServiceStore> getStoreInfo(@PathVariable("storeId") int storeId) {
+        System.out.println(storeId);
+        return iMarket.getStoreInfo(storeId);
+    }
+
+    @Override
+    @PostMapping("getAllOffersBIDS/{uuid}/{storeID}")
+    public SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        return iMarket.getAllOffersBIDS(uuid, storeID);
+    }
+
+    @Override
+    @PostMapping("getMyBIDs/{uuid}/{storeID}")
+    public SLResponseOBJ<List<ServiceBID>> getMyBIDs(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        return iMarket.getMyBIDs(uuid, storeID);
+    }
+
+    @Override
+    @PostMapping("reopenStore/{uuid}/{storeID}")
+    public SLResponseOBJ<Boolean> reopenStore(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        return iMarket.reopenStore(uuid, storeID);
+    }
 
     @Override
     @PostMapping("guestVisit")
@@ -248,7 +334,7 @@ public class api implements Iapi {
     @Override
     @PostMapping("addProductToShoppingBag/{uuid}/{storeId}/{productId}/{quantity}")
     public SLResponseOBJ<Boolean> addProductToShoppingBag(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @PathVariable("productId") int productId, @PathVariable("quantity") int quantity) {//ok
-        System.out.println(uuid);
+        System.out.println(uuid+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
         System.out.println(storeId);
         System.out.println(productId);
         System.out.println(quantity);
@@ -289,7 +375,7 @@ public class api implements Iapi {
 
     @Override
     @PostMapping("orderShoppingCart/{uuid}")
-    public SLResponseOBJ<String> orderShoppingCart(@PathVariable("uuid") String uuid, @RequestBody apiUser apiUser) {
+    public SLResponseOBJ<ServiceDetailsPurchase> orderShoppingCart(@PathVariable("uuid") String uuid, @RequestBody apiUser apiUser) {
         System.out.println(uuid);
         System.out.println(apiUser.city);
         System.out.println(apiUser.adress);
@@ -426,8 +512,107 @@ public class api implements Iapi {
     @Override
     @GetMapping("getAllMembers/{uuid}")
     public SLResponseOBJ<List<String>> getAllMembers(@PathVariable("uuid") String userId) {
+        System.out.println(userId);
         return iMarket.getAllMembers(userId);
     }
+
+    @Override
+    @PostMapping("createBID/{uuid}/{storeID}/{productID}/{quantity}/{totalPrice}")
+    public SLResponseOBJ<Boolean> createBID(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("quantity") int quantity,@PathVariable("totalPrice") int totalPrice) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        System.out.println(productID);
+        System.out.println(quantity);
+        System.out.println(totalPrice);
+
+        return iMarket.createBID(uuid, storeID, productID, quantity, totalPrice);
+    }
+
+    @Override
+    @PostMapping("removeBID/{uuid}/{storeID}/{productID}")
+    public SLResponseOBJ<Boolean> removeBID(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+        System.out.println(uuid);
+        System.out.println(storeID);
+        System.out.println(productID);
+        return iMarket.removeBID(uuid, storeID, productID);
+    }
+
+    @Override
+    @PostMapping("approveBID/{uuid}/{userEmail}/{storeID}/{productID}")
+    public SLResponseOBJ<Boolean> approveBID(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+        System.out.println(uuid);
+        System.out.println(userEmail);
+        System.out.println(storeID);
+        System.out.println(productID);
+        return iMarket.approveBID(uuid, userEmail, storeID, productID);
+    }
+
+    @Override
+    @PostMapping("rejectBID/{uuid}/{userEmail}/{storeID}/{productID}")
+    public SLResponseOBJ<Boolean> rejectBID(@PathVariable("uuid")String uuid, @PathVariable("userEmail")String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+        System.out.println(uuid);
+        System.out.println(userEmail);
+        System.out.println(storeID);
+        System.out.println(productID);
+        return iMarket.rejectBID(uuid, userEmail, storeID, productID);
+    }
+
+    @Override
+    @PostMapping("counterBID/{uuid}/{userEmail}/{storeID}/{productID}/{newTotalPrice}")
+    public SLResponseOBJ<Boolean> counterBID(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("newTotalPrice") int newTotalPrice) {
+        System.out.println(uuid);
+        System.out.println(userEmail);
+        System.out.println(storeID);
+        System.out.println(productID);
+        System.out.println(newTotalPrice);
+        return iMarket.counterBID(uuid, userEmail, storeID, productID, newTotalPrice);
+    }
+
+    @Override
+    @PostMapping("responseCounterBID/{uuid}/{storeID}/{productID}/{approve}")
+    public SLResponseOBJ<Boolean> responseCounterBID(@PathVariable("uuid")String uuid,@PathVariable("storeID") int storeID, @PathVariable("productID")int productID,@PathVariable("approve") boolean approve) {
+        System.out.println(uuid);
+        System.out.println(productID);
+        System.out.println(storeID);
+        System.out.println(approve);
+        return iMarket.responseCounterBID(uuid, storeID, productID, approve);
+    }
+
+    @Override
+    @PostMapping("BuyBID/{userId}/{storeID}/{productID}/{city}/{adress}/{apartment}")
+    public SLResponseOBJ<Boolean> BuyBID(@PathVariable("userId")String userId,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID,@PathVariable("city") String city, @PathVariable("adress")String adress,@PathVariable("apartment") int apartment,@RequestBody Map<String,Object> map) {
+        System.out.println(userId);
+        System.out.println(productID);
+        System.out.println(storeID);
+        System.out.println(city);
+//        System.out.println(creditCard.creditDate);
+//        System.out.println(creditCard.creditCard);
+//        System.out.println(creditCard.pin);
+        return iMarket.BuyBID(userId, storeID, productID, city, adress, apartment, new ServiceCreditCard((String) map.get("creditCard"),(String) map.get("creditDate"),(String)map.get("pin")));
+    }
+
+    @Override
+    @PostMapping("getBIDStatus/{uuid}/{userEmail}/{storeID}/{productID}")
+    public SLResponseOBJ<String> getBIDStatus(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+        System.out.println(uuid);
+        System.out.println(userEmail);
+        System.out.println(storeID);
+        System.out.println(productID);
+        return iMarket.getBIDStatus(uuid, userEmail, storeID, productID);
+        }
+
+
+//    @Override
+//    @PostMapping("getApprovesList/{uuid}/{userEmail}/{storeID}/{productID}")
+//    public SLResponseOBJ<HashMap<String, Boolean>> getApprovesList(@PathVariable("uuid")String uuid,@PathVariable("userEmail") String userEmail,@PathVariable("storeID") int storeID,@PathVariable("productID") int productID) {
+//        System.out.println(uuid);
+//        System.out.println(userEmail);
+//        System.out.println(storeID);
+//        System.out.println(productID);
+//        return iMarket.getApprovesList(uuid, userEmail, storeID, productID);
+//    }
+
+
 
     @Override
     @GetMapping("getStoreOrderHistory/{uuid}/{storeId}")
@@ -517,19 +702,60 @@ public class api implements Iapi {
     }
 
 
-    @Override
-    @GetMapping("addNewDiscountRule/{uuid}/{storeId}")
-    public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
+    @PostMapping("combineANDDiscountRules/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> combineANDDiscountRules(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
+        System.out.println(uuid);
+        System.out.println(storeId);
+        System.out.println(map);
+        System.out.println(uuid);
+        System.out.println(uuid);
+        return iMarket.combineANDORDiscountRules(uuid,storeId,"and", (List<Integer>) map.get("combineAnd"),Integer.valueOf((String) map.get("category")),Integer.valueOf((String)map.get("discount")));
+    }
+    @PostMapping("combineORDiscountRules/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> combineORDiscountRules(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map) {
+        System.out.println(uuid);
+        System.out.println(storeId);
+        System.out.println(map);
+        System.out.println(uuid);
+        System.out.println(uuid);
+        return iMarket.combineANDORDiscountRules(uuid,storeId,"or", (List<Integer>) map.get("combineOr"),Integer.valueOf((String) map.get("category")),Integer.valueOf((String)map.get("discount")));
+    }
 
+    @PostMapping("combineXorDiscountRules/{uuid}/{storeId}/{desicion}")
+    public SLResponseOBJ<Boolean> combineXorDiscountRules(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId,@PathVariable("desicion")String desicion, @RequestBody Map<String, Object> map) {
+        System.out.println(uuid);
+        System.out.println(storeId);
+        System.out.println(map);
+        System.out.println(desicion);
+        System.out.println(uuid);
+        return iMarket.combineXORDiscountRules(uuid,storeId,desicion , (List<Integer>) map.get("combineXor"));
+    }
+
+    @Override
+    @PostMapping("addNewDiscountRule/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @RequestBody Map<String, Object> map ) {
+        System.out.println(uuid);
+        System.out.println(storeId);
+        System.out.println(map);
+        System.out.println(uuid);
+        System.out.println(uuid);
         apiDiscountPparser p = new apiDiscountPparser();
+
         return iMarket.addNewDiscountRule(uuid, storeId, p.DiscountParse(map));
     }
+
+
 
     @Override
     @GetMapping("removeNewDiscountRule/{uuid}/{storeId}/{DiscountRuleID}")
     public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId, @PathVariable("DiscountRuleID") int DiscountRuleID) {
         return iMarket.removeDiscountRule(uuid, storeId, DiscountRuleID);
     }
+
+
+
+
+
 
     @Override
     @GetMapping("getBuyPolicy/{uuid}/{storeId}")

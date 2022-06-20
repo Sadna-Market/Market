@@ -7,10 +7,18 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class SimpleCategoryDiscountRuleSL extends LeafDiscountRuleSL {
 
+    public String kind = "Simple Category Discount Rule";
+
     public int categoryId;
 
     public SimpleCategoryDiscountRuleSL(double percentDiscount, int categoryId){
         super(percentDiscount);
+        this.categoryId = categoryId;
+    }
+
+    //for convert
+    public SimpleCategoryDiscountRuleSL(double percentDiscount, int categoryId,int id){
+        super(percentDiscount,id);
         this.categoryId = categoryId;
     }
 

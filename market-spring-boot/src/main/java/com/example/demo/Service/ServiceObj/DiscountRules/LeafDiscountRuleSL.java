@@ -12,6 +12,12 @@ public abstract class LeafDiscountRuleSL implements DiscountRuleSL {
         this.percentDiscount = percentDiscount;
     }
 
+    //for convert
+    public LeafDiscountRuleSL(double percentDiscount,int id){
+        this.percentDiscount = percentDiscount;
+        this.id = id;
+    }
+
     public abstract SLResponseOBJ<String> getDiscountRule();
 
     public abstract SLResponseOBJ<DiscountRule> convertToDiscountRuleDL();

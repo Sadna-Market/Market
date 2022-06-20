@@ -14,6 +14,13 @@ public abstract class CompositionDiscountRuleSL implements DiscountRuleSL {
         discount = dis;
     }
 
+    //for convert
+    public CompositionDiscountRuleSL(List<DiscountRuleSL> rules, double dis,int id){
+        this.rules = rules;
+        discount = dis;
+        this.id = id;
+    }
+
     public abstract SLResponseOBJ<String> getDiscountRule();
 
     public abstract SLResponseOBJ<DiscountRule> convertToDiscountRuleDL();

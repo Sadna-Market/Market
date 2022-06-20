@@ -1,10 +1,7 @@
 package com.example.demo.DataAccess.Entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "ProductType")
 @Table(name = "product_type")
@@ -37,8 +34,26 @@ public class DataProductType {
     @Column(name = "category")
     private int category;
 
-    @ManyToMany(mappedBy = "productTypes")
-    public Set<DataStore> stores = new HashSet<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "store")
+    @CollectionTable(name = "product_type_and_store",
+            joinColumns = {@JoinColumn(name = "product_type_id", foreignKey = @ForeignKey(name = "product_type_fk"))})
+    private Set<Integer> stores = new HashSet<>();
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "productType",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private Set<DataProductStore> productStores = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "productType",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private Set<DataProductStoreHistory> productStoreHistory = new HashSet<>();
 
     public DataProductType() {
     }
@@ -91,11 +106,40 @@ public class DataProductType {
         this.category = category;
     }
 
-    public Set<DataStore> getStores() {
+    public Set<Integer> getStores() {
         return stores;
     }
 
-    public void setStores(Set<DataStore> stores) {
+    public void setStores(Set<Integer> stores) {
         this.stores = stores;
+    }
+
+    public void update(DataProductType other) {
+        this.productTypeId = other.getProductTypeId();
+        this.productName = other.getProductName();
+        this.category = other.getCategory();
+        this.counter_rates = other.getCounter_rates();
+        this.description = other.getDescription();
+        this.rate = other.getRate();
+        this.stores.clear();
+        this.stores.addAll(other.getStores());
+        this.productStores.clear();
+        this.productStores.addAll(other.getProductStores());
+    }
+
+    public Set<DataProductStore> getProductStores() {
+        return productStores;
+    }
+
+    public void setProductStores(Set<DataProductStore> productStores) {
+        this.productStores = productStores;
+    }
+
+    public Set<DataProductStoreHistory> getProductStoreHistory() {
+        return productStoreHistory;
+    }
+
+    public void setProductStoreHistory(Set<DataProductStoreHistory> productStoreHistory) {
+        this.productStoreHistory = productStoreHistory;
     }
 }

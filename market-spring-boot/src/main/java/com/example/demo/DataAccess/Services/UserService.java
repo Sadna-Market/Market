@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 // https://docs.spring.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html - docu for api
 @Service
-@Transactional(rollbackFor = {Exception.class}, timeout = 10)
 public class UserService {
     private static Logger logger = Logger.getLogger(UserService.class);
 
@@ -23,10 +23,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-
+    /**
+     * This insertion creates a User row in db
+     * Note: ShoppingCartID is generated! the id is in the user object that called this function.
+     * @param user
+     * @return true if success, else false
+     */
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean insertUser(DataUser user) {
         try {
             DataUser u = userRepository.saveAndFlush(user);
+//            user.getDataShoppingCart().setShoppingCartId(u.getDataShoppingCart().getShoppingCartId());
             logger.info(String.format("inserted %s successfully to db", user.getUsername()));
             return true;
         } catch (Exception e) {
@@ -34,10 +41,34 @@ public class UserService {
             return false;
         }
     }
-
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean deleteUser(String username){
+        try{
+            userRepository.deleteById(username);
+            logger.info(String.format("deleted %s successfully from db", username));
+            return true;
+        }catch (Exception e){
+            logger.error(String.format("failed to delete %s from db, ERROR: %s", username, e.getMessage()));
+            return false;
+        }
+    }
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean updateUser(DataUser user){
+        try{
+            DataUser u = userRepository.findByUsername(user.getUsername());
+            u.update(user);
+            userRepository.save(u);
+            logger.info(String.format("updated %s successfully in db", user.getUsername()));
+            return true;
+        }catch (Exception e){
+            logger.error(String.format("failed to updated %s in db, ERROR: %s", user.getUsername(), e.getMessage()));
+            return false;
+        }
+    }
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public DataUser getUserByUsername(String username) {
         try {
-            DataUser u = userRepository.getById(username);
+            DataUser u = userRepository.findByUsername(username);
             logger.info(String.format("fetched %s successfully from db", u.getUsername()));
             return u;
         } catch (Exception e) {
@@ -45,7 +76,7 @@ public class UserService {
             return null;
         }
     }
-
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public List<DataUser> getAllUsers() {
         try {
             List<DataUser> users = userRepository.findAll();

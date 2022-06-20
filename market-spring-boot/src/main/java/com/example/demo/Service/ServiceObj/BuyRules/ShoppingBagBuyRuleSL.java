@@ -10,8 +10,16 @@ import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
 public class ShoppingBagBuyRuleSL extends LeafBuyRuleSL {
 
+    public String kind = "ShoppingBag Buy Rule";
+
     public ShoppingBagBuyRuleSL(ShoppingBagPredicateSL pred) {
-        super(pred);
+        super(pred,-1);
+    }
+
+
+    //for convert
+    public ShoppingBagBuyRuleSL(ShoppingBagPredicateSL pred,int id) {
+        super(pred,id);
     }
 
     @Override

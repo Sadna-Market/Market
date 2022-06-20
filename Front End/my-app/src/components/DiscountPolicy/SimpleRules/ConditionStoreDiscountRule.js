@@ -7,10 +7,11 @@ const ConditionStoreDiscountRule = (props) => {
     console.log("ConditionStoreDiscountRule")
     const apiClientHttp = createApiClientHttp();
     const [enteredError, SetError] = useState("");
+    // const [DiscountCommand, SetDiscountCommand] = useState("");
     let UUID = props.uuid;
     let storeID = props.storeID;
 
-    const [discount, setDiscount] = useState("");
+    const [discount, setDiscount] = useState("1");
     const changeDiscountHandler = (event) => {
         setDiscount(event.target.value);
     };
@@ -25,24 +26,27 @@ const ConditionStoreDiscountRule = (props) => {
         setminQuantity(event.target.value);
     };
 
-    const [maxQuantity, setmaxQuantity] = useState("");
+    const [minProductTypes, setminProductTypes] = useState("");
     const changeMaxQuanHandler = (event) => {
-        setmaxQuantity(event.target.value);
+        setminProductTypes(event.target.value);
     };
 
     const cleanHandler = () => {
-        setDiscount("");
+        SetError("")
+        // setDiscount("");
         setTotalPrice("");
-        setmaxQuantity("");
+        setminProductTypes("");
         setminQuantity("");
     };
 
     //todo: add new Category Discout rule
     async function addHandler() {
-        let rule = new RulesClass.conditionOnStoreDiscount(UUID, storeID, discount, minQuantity, maxQuantity, totalPrice)
-        if (props.compose === undefined) { //false case - no comopse - realy simple
+        let rule = new RulesClass.conditionOnStoreDiscount(UUID, storeID, discount, minQuantity, minProductTypes, totalPrice)
+        let str = JSON.stringify(rule);
+        console.log("sendRulesResponse    "+str)
 
-            const sendRulesResponse = await apiClientHttp.sendDRules(rule);
+        if (props.compose === undefined) { //false case - no comopse - realy simple
+            const sendRulesResponse = await apiClientHttp.addNewDiscountRule(UUID,storeID, {'conditionOnStoreDiscount':rule});
 
             if (sendRulesResponse.errorMsg !== -1) {
                 SetError(errorCode.get(sendRulesResponse.errorMsg))
@@ -54,24 +58,32 @@ const ConditionStoreDiscountRule = (props) => {
             }
         } else {
             cleanHandler();
-            props.onRule(rule);
+            props.onRule({'conditionOnStoreDiscount':rule});
         }
     }
+    //const [DiscountCommand, SetDiscountCommand] = useState("");
+    let DiscountCommand="1"
+    console.log("props.compose",props.compose)
+    if (props.compose === undefined){
+        DiscountCommand=
+            <div className="products__control">
+                <label>Discount</label>
+                <input
+                    type="number"
+                    min="0"
+                    value={discount}
+                    placeholder="write number between 1-100%"
+                    onChange={changeDiscountHandler}
+                />
+            </div>
 
+    }
     return (
         <div>
-            <h3>Category Discount For store #{storeID}</h3>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+            <h3>Condition on Store  #{storeID}</h3>
             <div className="products__controls">
-                <div className="products__control">
-                    <label>Discount</label>
-                    <input
-                        type="number"
-                        min="0"
-                        value={discount}
-                        placeholder="write number between 1-100%"
-                        onChange={changeDiscountHandler}
-                    />
-                </div>
+                {DiscountCommand}
                 <div className="products__control">
                     <label>Min Quantity</label>
                     <input
@@ -83,12 +95,12 @@ const ConditionStoreDiscountRule = (props) => {
                     />
                 </div>
                 <div className="products__control">
-                    <label>Max Quantity</label>
+                    <label>Min Product Types</label>
                     <input
                         type="number"
                         min="0"
-                        value={maxQuantity}
-                        placeholder="write Maximum Quantity"
+                        value={minProductTypes}
+                        placeholder="write Min Product Types"
                         onChange={changeMaxQuanHandler}
                     />
                 </div>

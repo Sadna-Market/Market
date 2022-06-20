@@ -2,12 +2,15 @@ package com.example.Acceptance.Bridge;
 
 
 import com.example.Acceptance.Obj.*;
-import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
-import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.ServiceBID;
+import com.example.demo.Service.ServiceObj.ServiceCreditCard;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import com.example.demo.Service.ServiceObj.ServiceStore;
+import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ProxyMarket implements MarketBridge {
@@ -319,7 +322,7 @@ public class ProxyMarket implements MarketBridge {
      * @param address    address to send the items for supply service
      * @return certificated of payment and supply
      */
-    public ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address) {
+    public ATResponseObj<ServiceDetailsPurchase> purchaseCart(String uuid, CreditCard creditCard, Address address) {
         return realMarket.purchaseCart(uuid, creditCard, address);
     }
 
@@ -476,6 +479,18 @@ public class ProxyMarket implements MarketBridge {
      */
     public boolean closeStore(String uuid, int storeID) {
         return realMarket.closeStore(uuid, storeID);
+    }
+
+    /**
+     * reopen store
+     *
+     * @param uuid
+     * @param storeID
+     * @return true if success, else false
+     */
+    @Override
+    public boolean reopenStore(String uuid, int storeID) {
+        return realMarket.reopenStore(uuid,storeID);
     }
 
     /**
@@ -658,5 +673,145 @@ public class ProxyMarket implements MarketBridge {
 
     public boolean isManagerUUID(String uuid, int storeID) {
         return realMarket.isManagerUUID(uuid,storeID);
+    }
+
+    /**
+     * create new BID in store by user
+     *
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param quantity
+     * @param totalPrice
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> createBID(String uuid, int storeID, int productID, int quantity, int totalPrice) {
+        return realMarket.createBID(uuid,storeID,productID,quantity,totalPrice);
+    }
+
+    /**
+     * remove BID from store
+     *
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> removeBID(String uuid, int storeID, int productID) {
+        return realMarket.removeBID(uuid,storeID,productID);
+    }
+
+    /**
+     * manager/owner approve BID
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> approveBID(String uuid, String userEmail, int storeID, int productID) {
+        return realMarket.approveBID(uuid,userEmail,storeID,productID);
+    }
+
+    /**
+     * manager/owner reject BID
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> rejectBID(String uuid, String userEmail, int storeID, int productID) {
+        return realMarket.rejectBID(uuid,userEmail,storeID,productID);
+    }
+
+    /**
+     * manager/owner counter BID with new price
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @param newTotalPrice
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> counterBID(String uuid, String userEmail, int storeID, int productID, int newTotalPrice) {
+        return realMarket.counterBID(uuid,userEmail,storeID,productID,newTotalPrice);
+    }
+
+    /**
+     * user response to counter BID (approve/reject)
+     *
+     * @param uuid
+     * @param storeID
+     * @param productID
+     * @param approve
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> responseCounterBID(String uuid, int storeID, int productID, boolean approve) {
+        return realMarket.responseCounterBID(uuid,storeID,productID,approve);
+    }
+
+    /**
+     * user buy BID that approved by all owners
+     *
+     * @param userId
+     * @param storeID
+     * @param productID
+     * @param city
+     * @param adress
+     * @param apartment
+     * @param creditCard
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<Boolean> BuyBID(String userId, int storeID, int productID, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+        return realMarket.BuyBID(userId,storeID,productID,city,adress,apartment,creditCard);
+    }
+
+    /**
+     * get status of specific BID
+     *
+     * @param uuid
+     * @param userEmail
+     * @param storeID
+     * @param productID
+     * @return true if success, else false
+     */
+    @Override
+    public ATResponseObj<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
+        return realMarket.getBIDStatus(uuid,userEmail,storeID,productID);
+    }
+
+    /**
+     * get all bids in the store if has permission
+     *
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public ATResponseObj<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        return realMarket.getAllOffersBIDS(uuid,storeID);
+    }
+
+    /**
+     * get all bids of user in the store
+     *
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+        return realMarket.getMyBIDs(uuid,storeID);
     }
 }

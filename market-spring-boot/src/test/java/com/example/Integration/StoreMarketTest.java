@@ -1,6 +1,7 @@
 package com.example.Integration;
 
 
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Market.Market;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StoreMarketTest {
     static Logger logger=Logger.getLogger(StoreMarketTest.class);
-    Market market=new Market(new UserManager());
+    Market market=new Market(new UserManager(),new DataServices());
 
 
     @BeforeEach
@@ -33,7 +34,7 @@ public class StoreMarketTest {
 
     @AfterEach
     void tearDown(){
-        market =new Market(new UserManager());
+        market =new Market(new UserManager(),new DataServices());
         logger.info("the test finished  to run right now");
     }
 
@@ -229,11 +230,11 @@ public class StoreMarketTest {
     }
 
 
-    @DisplayName("closeStore  - successful -StoreID")
+    @DisplayName("closeStore  - successful")
     @ParameterizedTest
     @ValueSource(ints = {1,2,4,6})
     void deleteStore2(int i) {
-        assertFalse(market.closeStore(UUID.randomUUID(),i).errorOccurred());
+        assertTrue(market.closeStore(UUID.randomUUID(),i).errorOccurred());
     }
 
     @DisplayName("deleteStore3  - failure -StoreID")

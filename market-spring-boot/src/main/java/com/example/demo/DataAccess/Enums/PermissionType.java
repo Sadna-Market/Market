@@ -58,7 +58,7 @@ public enum PermissionType {
     removeBuyRule,
     addNewDiscountRule,
     removeDiscountRule,
-
+    ManageBID,
     //3 .קביעת אילוצי עקיבות עבור חנות://next versions
     addNewStoreOwner, //4 .מינוי בעל-חנות:
     removeStoreOwner,
@@ -67,17 +67,18 @@ public enum PermissionType {
     setManagerPermissions, //7 .שינוי הרשאות של מנהל-חנות:
     //8 .הסרת מינוי של מנהל-חנות//next versions
     closeStore, //9 .סגירת חנות:
+    reopenStore,
     //10 .פתיחת חנות שנסגרה//next versions
     getStoreRoles, //11 .בקשה למידע על תפקידים בחנות:
-
 
     // system manager
     getUserInfo,
     getAllLoggedInUsers,
     getAllLoggedOutUsers,
-    cancelMembership
+    cancelMembership,
     //1 .סגירת חנות לצמיתות://next versions:
     //next versions3// .קבלת מידע ומתן תגובה:
     //4 .קבלת מידע על היסטוריית רכישות בחנות:
     //next versions// 5 .קבלת מידע על התנהלות המערכת:
+
 }

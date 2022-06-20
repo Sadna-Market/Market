@@ -61,7 +61,7 @@ public class ConditioningBuyRule extends CompositionBuyRule {
         DResponseObj<BuyRuleSL> thenRule =  predThen.convertToBuyRuleSL();
         if(ifRule.errorOccurred()) return ifRule;
         if(thenRule.errorOccurred()) return thenRule;
-        return new DResponseObj<>(new ConditioningBuyRuleSL(ifRule.value,thenRule.value));
+        return new DResponseObj<>(new ConditioningBuyRuleSL(ifRule.value,thenRule.value,id));
     }
 
     /*class Tuple<E, T> {

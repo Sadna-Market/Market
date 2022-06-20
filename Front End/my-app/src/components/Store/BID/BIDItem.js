@@ -3,6 +3,8 @@ import Card from "../../UI/Card";
 import "./BIDItem.css";
 
 const BIDItem = (props) => {
+  console.log("BIDItem")
+
   let UUID = props.uuid;
   let productID = props.id;
   let storeID = props.storeID;
@@ -18,6 +20,7 @@ const BIDItem = (props) => {
 
   //todo:send offer
   const clickHandler = () => {
+    
     //send offer
   };
   return (

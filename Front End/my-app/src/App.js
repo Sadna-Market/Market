@@ -51,6 +51,7 @@ function App(props) {
         var message = payload.body;
         console.log("Server message: [" + message + "]"); //for testing
         setAppNotification(message)
+        // setAppNotification("dasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf")
         //do what ever we want to do with the message (string)
     }
 

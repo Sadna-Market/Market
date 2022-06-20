@@ -7,6 +7,8 @@ import MyBIDs from "./MyBIDs";
 import BuyBID from "./BuyBID";
 
 const BID = (props) => {
+  console.log("BID")
+
   let UUID = props.uuid;
   let storeID = props.storeID;
   let permission = <></>;
@@ -46,7 +48,7 @@ const BID = (props) => {
   };
 
   //check permission
-  if (UUID == 7) {
+  if (UUID !== 7) {
     permission = (
       <>
         {/* <button onClick={BIDHandler}> All BID</button> */}

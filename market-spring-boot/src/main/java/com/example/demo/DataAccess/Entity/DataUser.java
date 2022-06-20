@@ -7,9 +7,9 @@ import java.util.Set;
 
 @Entity(name = "User")
 @Table(name = "users",
-    uniqueConstraints = {
-        @UniqueConstraint(name = "unique_username", columnNames = "username")
-    })
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_username", columnNames = "username")
+        })
 public class DataUser {
 
     @Id
@@ -24,39 +24,42 @@ public class DataUser {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @OneToOne
-    @JoinColumn(name = "data_shopping_cart_id", foreignKey = @ForeignKey(name = "data_shopping_cart_fk"))
-    private DataShoppingCart dataShoppingCart;
+//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//    @JoinColumn(name = "data_shopping_cart_id", foreignKey = @ForeignKey(name = "data_shopping_cart_fk"))
+//    private DataShoppingCart dataShoppingCart;
 
     @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "userHistory",
+            mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
     private Set<DataHistory> histories = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "grantee",
-            orphanRemoval = true
-    )
-   private Set<DataPermission> accessPermission = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "grantor",
-            orphanRemoval = true
-    )
-   private Set<DataPermission> grantorPermission = new HashSet<>();
-
-
-    public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
-        this.dataShoppingCart = dataShoppingCart;
-    }
-
-    public DataShoppingCart getDataShoppingCart() {
-        return dataShoppingCart;
-    }
+//    @OneToMany(fetch = FetchType.EAGER,
+//            mappedBy = "grantee",
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+//            orphanRemoval = true
+//    )
+//    private Set<DataPermission> accessPermission = new HashSet<>();
+//
+//    @OneToMany(fetch = FetchType.EAGER,
+//            mappedBy = "grantor",
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+//            orphanRemoval = true
+//    )
+//    private Set<DataPermission> grantorPermission = new HashSet<>();
 
     public DataUser() {
     }
+//    public void setDataShoppingCart(DataShoppingCart dataShoppingCart) {
+//        this.dataShoppingCart = dataShoppingCart;
+//    }
+//
+//    public DataShoppingCart getDataShoppingCart() {
+//        return dataShoppingCart;
+//    }
+
+
 
     public String getUsername() {
         return username;
@@ -98,19 +101,26 @@ public class DataUser {
         this.histories = histories;
     }
 
-    public Set<DataPermission> getAccessPermission() {
-        return accessPermission;
+//    public Set<DataPermission> getAccessPermission() {
+//        return accessPermission;
+//    }
+//
+//    public void setAccessPermission(Set<DataPermission> accessPermission) {
+//        this.accessPermission = accessPermission;
+//    }
+//
+//    public Set<DataPermission> getGrantorPermission() {
+//        return grantorPermission;
+//    }
+//
+//    public void setGrantorPermission(Set<DataPermission> grantorPermission) {
+//        this.grantorPermission = grantorPermission;
+//    }
+
+    public void update(DataUser user) {
+        this.password = user.getPassword();
+        this.phoneNumber = user.getPhoneNumber();
+        this.dateOfBirth = user.getDateOfBirth();
     }
 
-    public void setAccessPermission(Set<DataPermission> accessPermission) {
-        this.accessPermission = accessPermission;
-    }
-
-    public Set<DataPermission> getGrantorPermission() {
-        return grantorPermission;
-    }
-
-    public void setGrantorPermission(Set<DataPermission> grantorPermission) {
-        this.grantorPermission = grantorPermission;
-    }
 }

@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import Card from "../UI/Card";
+import createApiClientHttp from "../../client/clientHttp.js";
+import {errorCode} from "../../ErrorCodeGui"
 
 const ProductInStore = (props) => {
   console.log("ProductInStore")
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
 
   const [add, setAdd] = useState("");
   let UUID = props.UUID;
@@ -24,13 +28,26 @@ const ProductInStore = (props) => {
   };
 
   //todo: add to cart!
-  const clickHandler = () => {
-    setAdd("");
-  };
+  //        addProductToShoppingBag :async (uuid,storeid,productid,quantity)=>{
+  async function clickHandler() {
+    console.log("UUID    "+UUID,'storeID',storeID,'productID',productID,'quantity',add)
+
+    const addProductToShoppingBagResponse = await apiClientHttp.addProductToShoppingBag(UUID, storeID, productID,add);
+    if (addProductToShoppingBagResponse.errorMsg !== -1) {
+      SetError(errorCode.get(addProductToShoppingBagResponse.errorMsg))
+    } else {
+      let str = JSON.stringify(addProductToShoppingBagResponse);
+      console.log("addProductToShoppingBagResponse    "+str)
+      setAdd("");
+      SetError("")
+    }
+  }
   return (
     <li>
       <Card className="product-item">
         <div className="product-item__description">
+          <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+
           <h2>{name}</h2>
           <h2>Price: ${price}</h2>
           <h2>quantity: {quantity}</h2>

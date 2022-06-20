@@ -3,6 +3,9 @@ package com.example.demo.Domain;
 import com.example.demo.Domain.Response.DResponseObj;
 
 public class ErrorCode {
+    public static final int STORE_IS_NOT_CLOSED = 5;
+    public static final int ALLREADYINAPPROVESLIST = 6;
+    public static final int ALLREADYAPPROVEDTHISBID = 7 ;
     public static int STORE_IS_CLOSED = 8;
     public static int CAN_NOT_REMOVE_FOUNDER_PERMISSION = 9;
     public static int NOTLOGGED = 10;
@@ -84,8 +87,14 @@ public class ErrorCode {
     public static int SUPPLY_FAIL = 406;
     public static int CANCELSUPPLYAPIFAIL = 407;
 
+
     public static int UNEXPECTED986 = 408;
     public static int UNEXPECTED984  = 409;
+
+    public static int STORE_IS_NOT_EXIST = 600;
+    public static int ALLRADYLOGED = 601;
+
+    public static int DB_ERROR = 1000;
 
 
 }

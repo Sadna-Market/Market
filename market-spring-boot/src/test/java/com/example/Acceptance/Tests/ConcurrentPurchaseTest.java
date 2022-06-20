@@ -3,6 +3,7 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class ConcurrentPurchaseTest extends MarketTests {
     public void purchase() throws InterruptedException {
         ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
         item1.itemID = IPHONE_5_ID;
-        CreditCard creditCard = new CreditCard("1111222233334444", "1125", "111");
+        CreditCard creditCard = new CreditCard("1111222233334444", "11/25", "111");
         User registeredUser = generateUser();
         assertTrue(market.register(uuid, registeredUser.username, registeredUser.password,registeredUser.dateOfBirth));
         //pre conditions
@@ -55,13 +56,13 @@ public class ConcurrentPurchaseTest extends MarketTests {
         //main action
 
         Thread guestBuy = new Thread(() -> {
-            ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+            ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
             guestSuccessBuy = !response.errorOccurred();
         });
         //main action
         Thread memberBuy = new Thread(() -> {
             ATResponseObj<String> id = market.login(market.guestVisit(), registeredUser);
-            ATResponseObj<String> response = market.purchaseCart(id.value, creditCard, address);
+            ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(id.value, creditCard, address);
             registeredUserSuccessBuy = !response.errorOccurred();
         });
         memberBuy.start();

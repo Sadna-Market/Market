@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.DataAccess.Entity.DataProductType;
+import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.Domain.Market.Market;
 import com.example.demo.Service.Facade;
 import com.example.demo.Service.IMarket;
@@ -8,11 +10,13 @@ import com.example.demo.configuration.JsonInit;
 import com.example.demo.configuration.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
