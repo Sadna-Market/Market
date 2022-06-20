@@ -43,6 +43,7 @@ public class ProductType {
         this.productName = productName;
         this.description = description;
     }
+    public ProductType(){}
 
     public DResponseObj<Integer> getRate() {
         long stamp = rateLock.readLock();
@@ -209,5 +210,13 @@ public class ProductType {
 
     public void setProductID(int productID) {
         this.productID = productID;
+    }
+
+    public ProductType fromData(DataProductType dataProductType){
+        this.productID = dataProductType.getProductTypeId();
+        this.productName = dataProductType.getProductName();
+        this.description = dataProductType.getDescription();
+        this.category = dataProductType.getCategory();
+        return this;
     }
 }

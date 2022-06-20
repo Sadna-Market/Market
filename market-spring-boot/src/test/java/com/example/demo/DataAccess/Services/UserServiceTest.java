@@ -1,9 +1,6 @@
 package com.example.demo.DataAccess.Services;
 
-import com.example.Acceptance.Obj.ATResponseObj;
-import com.example.Acceptance.Obj.Address;
 import com.example.Acceptance.Obj.PasswordGenerator;
-//import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.Validator;
@@ -164,28 +161,28 @@ class UserServiceTest {
         assertFalse(res.errorOccurred());
     }
 
-    @Test
-    @Transactional
-    void load() {
-        int numOfUsers = 10;
-        String uuid = market.guestVisit().value;
-        for (int i = 0; i < numOfUsers; i++) {
-            String email = "niv" + i + "@gmail.com";
-            String pass = "Shalom123$";
-            String phone = "052325125" + i;
-            String date = "16/3/181" + i;
-            SLResponseOBJ<Boolean> res = market.addNewMember(uuid,
-                    email,
-                    pass,
-                    phone,
-                    date);
-            assertFalse(res.errorOccurred());
-        }
-        market.deleteAllMembers();
-        market.loadMembers();
-        for (int i = 0; i < numOfUsers; i++) {
-            String email = "niv" + i + "@gmail.com";
-            assertTrue(market.isMember2(email));
-        }
-    }
+//    @Test
+//    @Transactional
+//    void load() {
+//        int numOfUsers = 10;
+//        String uuid = market.guestVisit().value;
+//        for (int i = 0; i < numOfUsers; i++) {
+//            String email = "niv" + i + "@gmail.com";
+//            String pass = "Shalom123$";
+//            String phone = "052325125" + i;
+//            String date = "16/3/181" + i;
+//            SLResponseOBJ<Boolean> res = market.addNewMember(uuid,
+//                    email,
+//                    pass,
+//                    phone,
+//                    date);
+//            assertFalse(res.errorOccurred());
+//        }
+//        market.deleteAllMembers();
+//        market.loadMembers();
+//        for (int i = 0; i < numOfUsers; i++) {
+//            String email = "niv" + i + "@gmail.com";
+//            assertTrue(market.isMember2(email));
+//        }
+//    }
 }

@@ -564,8 +564,16 @@ public class Market {
         long stamp = lock_stores.writeLock();
         logger.debug("catch the WriteLock");
         try {
-            Store store = new Store(storeCounter++, name, discountPolicy, buyPolicy, founder);
-            stores.put(store.getStoreId().value, store);
+            int storeId = storeCounter++;
+            Store store = new Store(name, discountPolicy, buyPolicy, founder);
+            //db
+            if(dataServices!= null && dataServices.getStoreService() != null){
+                var dataStore = store.getDataObject();
+                dataServices.getStoreService().insertStore(dataStore);
+                storeId = dataStore.getStoreId();
+                store.setStoreId(storeId);
+            }
+            stores.put(storeId, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
             return new DResponseObj<>(store.getStoreId().value, -1);
@@ -1360,7 +1368,7 @@ public class Market {
         if (canBuyBID.errorOccurred()) return new DResponseObj<>(canBuyBID.getErrorMsg());
         int quantity = canBuyBID.value.getQuantity();
         int finalPrice = canBuyBID.value.getTotalPrice();
-        ShoppingBag BID = new ShoppingBag(s.value);
+        ShoppingBag BID = new ShoppingBag(s.value,user.value.getEmail().value);
         BID.addProduct(productID, quantity);
         DResponseObj<Boolean> res = purchase.orderBID(user.getValue(), storeID, BID, finalPrice, city, adress, apartment, cardNumber, exp, pin);
         if (res.errorOccurred()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);

@@ -15,8 +15,6 @@ public class ShoppingBagId implements Serializable {
     @Column(name = "store_id")
     private Integer storeId;
 
-    public ShoppingBagId() {
-    }
 
     public String getUsername() {
         return username;

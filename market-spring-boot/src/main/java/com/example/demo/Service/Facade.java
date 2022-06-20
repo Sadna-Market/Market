@@ -11,6 +11,7 @@ import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
+import com.example.demo.Domain.UserModel.ShoppingBag;
 import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Domain.UserModel.UserManager;
@@ -41,16 +42,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Facade implements IMarket {
     UserManager userManager;
     Market market;
+    private DataServices dataServices;
 
     @Autowired
     public Facade(UserManager userManager, DataServices dataServices) {
         this.userManager = userManager;
+        this.dataServices = dataServices;
         this.market = new Market(this.userManager, dataServices);
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
+        setDataRefs();
     }
+
 
     public Facade() {
         this.userManager = new UserManager();
@@ -1857,11 +1862,15 @@ public class Facade implements IMarket {
         userManager.deleteAllMembers();
     }
 
-    public void loadMembers(){
-        userManager.load();
-    }
+//    public void loadMembers(){
+//        userManager.load();
+//    }
 
     public boolean isMember2(String user){
         return userManager.isMember(user).value;
+    }
+
+    private void setDataRefs() {
+        ShoppingBag.setDataServices(dataServices);
     }
 }

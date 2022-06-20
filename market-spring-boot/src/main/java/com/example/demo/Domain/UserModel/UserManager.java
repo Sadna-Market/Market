@@ -671,32 +671,26 @@ public class UserManager {
             }
         }
     }
-    @PostConstruct
-    public void load() {
-        List<DataUser> dataUsers = dataServices.getUserService().getAllUsers();
-        dataUsers.forEach(duser -> {
-            var decrypted = Validator.getInstance().decryptAES(duser.getPassword());
-            User user = new User(duser.getUsername(),decrypted,duser.getPhoneNumber(),duser.getDateOfBirth());
-            user.setHistories(
-                    duser.getHistories().stream()
-                            .map(dhistory -> new History(dhistory.getHistoryId(),
-                                    dhistory.getSupplyId(),
-                                    dhistory.getFinalPrice(),
-                                    dhistory.getProducts().stream().map( dataProductStoreHistory->{
-                                        var dataProductType = dataProductStoreHistory.getProductType();
-                                        ProductType productType = new ProductType(dataProductType.getProductTypeId(),
-                                                dataProductType.getProductName(),
-                                                dataProductType.getDescription(),
-                                                dataProductType.getCategory());
-                                        return new ProductStore(productType,
-                                                dataProductStoreHistory.getQuantity(),
-                                                dataProductStoreHistory.getPrice());
-                                    }).collect(Collectors.toList()),
-                                    duser.getUsername())).collect(Collectors.toList())
-            );
-            members.put(user.email,user);
-        });
-    }
+//    @PostConstruct
+//    public void load() {
+//        List<DataUser> dataUsers = dataServices.getUserService().getAllUsers();
+//        dataUsers.forEach(duser -> {
+//            var decrypted = Validator.getInstance().decryptAES(duser.getPassword());
+//            User user = new User(duser.getUsername(),decrypted,duser.getPhoneNumber(),duser.getDateOfBirth());
+//            user.setHistories(
+//                    duser.getHistories()
+//                            .stream()
+//                            .map(dhistory -> new History().fromData(dhistory)).collect(Collectors.toList()));
+//            user.getShoppingCart().load();
+//            /*
+//            user.setAccessPermission(...);
+//            user.setGrantorPermission(...);
+//            */
+//            //TODO: add the permissions to loader too.
+//            members.put(user.email,user);
+//        });
+//    }
+
     //for db test
     public void deleteAllMembers(){
         members.clear();

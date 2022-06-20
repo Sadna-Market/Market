@@ -1,25 +1,31 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
-
 
 public class ShoppingCart {
     static Logger logger= Logger.getLogger(ShoppingBag.class);
     ConcurrentHashMap<Integer, ShoppingBag> shoppingBagHash; //<store id , shopping bag>
+    String username;
 
-    public ShoppingCart(){
+    private static DataServices dataServices;
+
+    public ShoppingCart(String username){
         shoppingBagHash=new ConcurrentHashMap<>();
+        this.username = username;
     }
 
     public DResponseObj<Boolean> addNewProductToShoppingBag(int ProductId, Store store, int quantity){
         logger.debug("ShoppingCart addNewProductToShoppingBag");
         if(!shoppingBagHash.containsKey(store.getStoreId().value)){
-            shoppingBagHash.put(store.getStoreId().value,new ShoppingBag(store));
+            shoppingBagHash.put(store.getStoreId().value,new ShoppingBag(store,username));
         }
         ShoppingBag shoppingBag = shoppingBagHash.get(store.getStoreId().value);
         return new DResponseObj<Boolean>( shoppingBag.addProduct(ProductId,quantity).value);
@@ -80,6 +86,21 @@ public class ShoppingCart {
 
         }
     }
+
+    public static void setDataServices(DataServices dataServices) {
+        ShoppingCart.dataServices = dataServices;
+    }
+
+
+//    public void load() {
+//        var dataShoppingBags = dataServices.getShoppingBagService().getUserShoppingBags(username);
+//        dataShoppingBags.forEach(shoppingBag -> {
+//            shoppingBagHash.put(
+//                shoppingBag.getShoppingBagId().getStoreId(),
+//                new ShoppingBag().fromData(shoppingBag)
+//            );
+//        });
+//    }
 
 //    public DataShoppingCart getDataObject() {
 //        DataShoppingCart dataShoppingCart = new DataShoppingCart();
