@@ -84,5 +84,8 @@ public class ErrorCode {
     public static int SUPPLY_FAIL = 406;
     public static int CANCELSUPPLYAPIFAIL = 407;
 
+    public static int UNEXPECTED986 = 408;
+    public static int UNEXPECTED984  = 409;
+
 
 }
