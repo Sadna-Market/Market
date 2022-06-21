@@ -193,6 +193,7 @@ const Store = (props) => {
     if (isManager) {
         permission = (
             <>
+                <button onClick={rulesHandler}>Rules</button>
                 <button onClick={addProductHandler}> Add Product</button>
                 <button onClick={removeProductHandler}> Remove Product</button>
                 <button onClick={editProductHandler}> Edit Product</button>
@@ -208,6 +209,7 @@ const Store = (props) => {
     } else if (isOwner) {
         permission = (
             <>
+                <button onClick={rulesHandler}>Rules</button>
                 <button onClick={addProductHandler}> Add Product</button>
                 <button onClick={removeProductHandler}> Remove Product</button>
                 <button onClick={editProductHandler}> Edit Product</button>
@@ -266,7 +268,6 @@ const Store = (props) => {
                 <h2>Founder: {founder}</h2>
                 <h2>Rate: {rate}</h2>
             </h3>
-            <button onClick={rulesHandler}>Rules</button>
             <button onClick={BIDHandler}>BID</button>
             {permission}
             <div>{command}</div>
