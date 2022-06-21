@@ -38,7 +38,7 @@ const MyCart = (props) => {
                         storeID:store.storeId,
                         price: productsMap[key].price,
                         productName:  productsMap[key].name,
-                        amount: productsMap[key].quantity,//total amount
+                        amount: productsMap[key].quantity,//total amount//
                     })
                 }
             }
