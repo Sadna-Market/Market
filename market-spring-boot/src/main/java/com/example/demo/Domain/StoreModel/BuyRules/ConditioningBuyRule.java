@@ -6,22 +6,26 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.BuyRules.AndBuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.ConditioningBuyRuleSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("ConditioningBuyRule")
 public class ConditioningBuyRule extends CompositionBuyRule {
-    private BuyRule predIf;
-    private BuyRule predThen;
+    public BuyRule predIf;
+    public BuyRule predThen;
 
 /*
     public ConditioningBuyRule(List<BuyRule> rules) {
         super(rules);
     }
 */
-
-    public ConditioningBuyRule(BuyRule predIf , BuyRule predThen) {
+    @JsonCreator
+    public ConditioningBuyRule(@JsonProperty("predIf") BuyRule predIf ,@JsonProperty("predThen") BuyRule predThen) {
         super(null);
         //check before that lists size equal;
         this.predIf = predIf;
@@ -44,6 +48,7 @@ public class ConditioningBuyRule extends CompositionBuyRule {
         }
         return true; // pass all conditions*/
     }
+/*
 
     @Override
     public DResponseObj<String> getBuyRule() {
@@ -54,6 +59,7 @@ public class ConditioningBuyRule extends CompositionBuyRule {
         stringRule += "then: " + predThen.getBuyRule().value;
         return new DResponseObj<>(stringRule);
     }
+*/
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {

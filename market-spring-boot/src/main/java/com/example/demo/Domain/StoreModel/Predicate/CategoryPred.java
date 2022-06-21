@@ -3,11 +3,15 @@ package com.example.demo.Domain.StoreModel.Predicate;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Qualifier("CategoryPred")
 public class CategoryPred implements Predicate{
 
 
@@ -31,7 +35,8 @@ public class CategoryPred implements Predicate{
         this.maxHour = 24;
     }
 
-    public CategoryPred(int category, int minAge, int minHour, int maxHour){
+    @JsonCreator
+    public CategoryPred(@JsonProperty("category") int category,@JsonProperty("minAge") int minAge,@JsonProperty("minHour") int minHour,@JsonProperty("maxHour") int maxHour){
         this.category = category;
         this.minAge = minAge;
         this.minHour = minHour;
@@ -51,6 +56,7 @@ public class CategoryPred implements Predicate{
         }
         return new DResponseObj<>(true);
     }
+/*
 
     @Override
     public String getPredicateBuyRule() {
@@ -65,6 +71,7 @@ public class CategoryPred implements Predicate{
         if(minHour != 0 || maxHour !=24) s+=  " and time is between " + minHour+":00 to "+ maxHour +":00";
         return s;
     }
+*/
 
     public int getCategory() {
         return category;

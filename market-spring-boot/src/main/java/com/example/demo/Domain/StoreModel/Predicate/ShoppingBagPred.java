@@ -3,14 +3,19 @@ package com.example.demo.Domain.StoreModel.Predicate;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Qualifier("ShoppingBagPred")
 public class ShoppingBagPred implements Predicate{
     private final int minProductQuantity;
     private final int minProductTypes;
     private final double totalPrice;
+
 
     //for buy rule
     public ShoppingBagPred(int minProductQuantity, int minProductTypes){
@@ -19,8 +24,9 @@ public class ShoppingBagPred implements Predicate{
         totalPrice = -1; //sign not to check it
     }
 
+    @JsonCreator
     //for discount rule
-    public ShoppingBagPred(int minProductQuantity, int minProductTypes, double totalPrice){
+    public ShoppingBagPred(@JsonProperty("minProductQuantity") int minProductQuantity,@JsonProperty("minProductTypes") int minProductTypes,@JsonProperty("totalPrice") double totalPrice){
         this.minProductQuantity = minProductQuantity;
         this.minProductTypes = minProductTypes;
         this.totalPrice = totalPrice;
@@ -47,6 +53,7 @@ public class ShoppingBagPred implements Predicate{
                 new DResponseObj<>(true) : new DResponseObj<>(false, ErrorCode.NOT_PASS_THE_MIN_QUANTITY_TO_BUY);
     }
 
+/*
     @Override
     public String getPredicateBuyRule() {
         return "The minimum quantity of products to buy is "+minProductQuantity + " and the minimum products types is "+minProductTypes;
@@ -56,6 +63,7 @@ public class ShoppingBagPred implements Predicate{
     public String getPredicateDiscountRule(){
         return "If the shopping bag contains at least "+minProductTypes+" types of products and at least "+minProductQuantity +" quantity of products and the total price is more than "+totalPrice;
     }
+*/
 
 
     public int getMinProductQuantity() {

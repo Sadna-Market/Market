@@ -20,7 +20,7 @@ public class DataBuyRule {
     @Column(name = "buy_rule_id")
     private Integer buyRuleId;
 
-    @Column(name = "rule")
+    @Column(name = "rule",columnDefinition="TEXT")
     private String rule;
 
     @ManyToOne

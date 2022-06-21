@@ -29,7 +29,7 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
         return new DResponseObj<>(0.0, res.getErrorMsg());
     }
 
-    @Override
+/*    @Override
     public DResponseObj<String> getDiscountRule() {
         String stringRule = "";
         if (id == 0) stringRule += pred.getPredicateDiscountRule();
@@ -39,7 +39,7 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
             stringRule += " so all products in store have a " + percentDiscount + "% discount";
         }
         return new DResponseObj<>(stringRule);
-    }
+    }*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {

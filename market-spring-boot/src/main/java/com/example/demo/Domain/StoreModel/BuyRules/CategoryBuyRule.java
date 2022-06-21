@@ -10,12 +10,17 @@ import com.example.demo.Service.ServiceObj.BuyRules.CategoryBuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.ShoppingBagBuyRuleSL;
 import com.example.demo.Service.ServiceObj.Predicate.CategoryPredicateSL;
 import com.example.demo.Service.ServiceObj.Predicate.ShoppingBagPredicateSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("CategoryBuyRule")
 public class CategoryBuyRule extends LeafBuyRule{
 
-    public CategoryBuyRule(CategoryPred pred){
+    @JsonCreator
+    public CategoryBuyRule(@JsonProperty("pred") CategoryPred pred){
         super(pred);
     }
 
@@ -24,6 +29,7 @@ public class CategoryBuyRule extends LeafBuyRule{
         return pred.passRule(user,age,shoppingBag);
     }
 
+/*
     @Override
     public DResponseObj<String> getBuyRule() {
         String stringRule = "";
@@ -32,6 +38,7 @@ public class CategoryBuyRule extends LeafBuyRule{
         stringRule += pred.getPredicateBuyRule();
         return new DResponseObj<>(stringRule);
     }
+*/
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
