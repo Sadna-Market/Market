@@ -69,6 +69,7 @@ const MyCart = (props) => {
             SetError(errorCode.get(removeProductFromShoppingBagResponse.errorMsg))
         } else {
             setTatal(total - price);
+            getMyCart()
         }
     }
 

@@ -42,6 +42,7 @@ const BuyCart = (props) => {
     setCity("");
     setAdress("");
     setApart("");
+    setCardNumber("");
   };
 
   async function buyHandler(){
@@ -53,83 +54,92 @@ const BuyCart = (props) => {
     if (orderShoppingCartResponse.errorMsg !== -1) {
       SetError(errorCode.get(orderShoppingCartResponse.errorMsg))
     } else {
-      SetConfirmation("The Order completed successfully!")
+      console.log("orderShoppingCartResponse")
+
+      console.log(orderShoppingCartResponse.value)
+      SetConfirmation("The Order completed successfully! \n TID :" +orderShoppingCartResponse.value.TID+ " Final Price :" + orderShoppingCartResponse.value.finalPrice)
       cleanHandler();
-      props.onMarket();
     }
   }
+  async function finishBuyHandler() {
+    props.onMarket();
+
+  }
+
   // useEffect(() => {
   //   getAllStores();
   // }, [enteredConfirmation.refresh]);
+  // let permission = "";
 
   return (
-    <div className="products">
-      <div style={{ color: 'red',backgroundColor: "green",fontSize: 30 }}>{enteredConfirmation}</div>
-      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+      <div className="products">
+        <div style={{ color: 'red',backgroundColor: "green",fontSize: 30 }}>{enteredConfirmation}</div>
+        <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
+        <button onClick={finishBuyHandler}>Return to the Market</button>
 
-      <h3>Credit Card</h3>
-      <div className="products__controls">
-        <div className="products__control">
-          <label>CreditCard</label>
-          <input
-            type="number"
-            value={cardNumber}
-            placeholder="Write CraditCard"
-            onChange={changeCardHandler}
-          />
+        <h3>Credit Card</h3>
+        <div className="products__controls">
+          <div className="products__control">
+            <label>CreditCard</label>
+            <input
+                type="number"
+                value={cardNumber}
+                placeholder="Write CraditCard"
+                onChange={changeCardHandler}
+            />
+          </div>
+          <div className="products__control">
+            <label>Date of Card</label>
+            <input
+                type="text"
+                value={cardDate}
+                placeholder="Write Date"
+                onChange={changeDateHandler}
+            />
+          </div>
+          <div className="products__control">
+            <label>Pin</label>
+            <input
+                type="number"
+                value={cardPin}
+                placeholder="Write pin"
+                onChange={changePinHandler}
+            />
+          </div>
         </div>
-        <div className="products__control">
-          <label>Date of Card</label>
-          <input
-            type="text"
-            value={cardDate}
-            placeholder="Write Date"
-            onChange={changeDateHandler}
-          />
+        <h3>Address</h3>
+        <div className="products__controls">
+          <div className="products__control">
+            <label>City</label>
+            <input
+                type="text"
+                value={city}
+                placeholder="Write City"
+                onChange={changeCityHandler}
+            />
+          </div>
+          <div className="products__control">
+            <label>Adress</label>
+            <input
+                type="text"
+                value={adress}
+                placeholder="Write Adress"
+                onChange={changeAdressHandler}
+            />
+          </div>
+          <div className="products__control">
+            <label>Apartment</label>
+            <input
+                type="number"
+                value={apartment}
+                placeholder="Write number of Apartment"
+                onChange={changeApartHandler}
+            />
+          </div>
         </div>
-        <div className="products__control">
-          <label>Pin</label>
-          <input
-            type="number"
-            value={cardPin}
-            placeholder="Write pin"
-            onChange={changePinHandler}
-          />
-        </div>
+        <button onClick={cleanHandler}>Clean</button>
+        <button onClick={buyHandler}>Buy</button>
       </div>
-      <h3>Address</h3>
-      <div className="products__controls">
-        <div className="products__control">
-          <label>City</label>
-          <input
-            type="text"
-            value={city}
-            placeholder="Write City"
-            onChange={changeCityHandler}
-          />
-        </div>
-        <div className="products__control">
-          <label>Adress</label>
-          <input
-            type="text"
-            value={adress}
-            placeholder="Write Adress"
-            onChange={changeAdressHandler}
-          />
-        </div>
-        <div className="products__control">
-          <label>Apartment</label>
-          <input
-            type="number"
-            value={apartment}
-            placeholder="Write number of Apartment"
-            onChange={changeApartHandler}
-          />
-        </div>
-      </div>
-      <button onClick={cleanHandler}>Clean</button>
-      <button onClick={buyHandler}>Buy</button>
-    </div>
   );
 };
 
