@@ -309,7 +309,7 @@ public class Store {
     public DResponseObj<Boolean> addNewBuyRule(BuyRule buyRule) {
         if(buyPolicy == null)
             buyPolicy = new BuyPolicy();
-        return buyPolicy.addNewBuyRule(buyRule);
+        return buyPolicy.addNewBuyRule(buyRule,storeId);
     }
 
     //requirement II.4.2
