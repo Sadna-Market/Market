@@ -3,17 +3,22 @@ package com.example.demo.Domain.StoreModel.Predicate;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Qualifier("ProductPred")
 public class ProductPred implements Predicate{
     private final int productID;
     private final int minQuantity;
     private final int maxQuantity;
     private final boolean canBuy;
 
-    public ProductPred(int productID,int minQuantity,int maxQuantity, boolean canBuy){
+    @JsonCreator
+    public ProductPred(@JsonProperty("productID") int productID, @JsonProperty("minQuantity")int minQuantity,@JsonProperty("maxQuantity") int maxQuantity, @JsonProperty("canBuy")boolean canBuy){
         this.productID = productID;
         this.minQuantity = minQuantity;
         this.maxQuantity = maxQuantity;
@@ -45,7 +50,7 @@ public class ProductPred implements Predicate{
         return new DResponseObj<>(true);
     }
 
-    @Override
+/*    @Override
     public String getPredicateBuyRule() {
         String s = "productID " + productID +" : the minimum quantity to buy is "+ minQuantity + " ,the maximum quantity is "+maxQuantity;
         if(!canBuy) s+= " and no one can buy this product";
@@ -55,7 +60,7 @@ public class ProductPred implements Predicate{
     @Override
     public String getPredicateDiscountRule() {
         return "If you buy from product "+productID+" at least "+minQuantity+" and at most "+maxQuantity;
-    }
+    }*/
 
     public int getProductID(){
         return productID;

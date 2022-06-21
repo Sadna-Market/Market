@@ -40,6 +40,7 @@ public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
 //
     }
 
+/*
     @Override
     public DResponseObj<String> getDiscountRule() {
         String stringRule = "";
@@ -51,6 +52,7 @@ public class ConditionProductDiscountRule extends  SimpleProductDiscountRule{
         }
         return new DResponseObj<>(stringRule);
     }
+*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
