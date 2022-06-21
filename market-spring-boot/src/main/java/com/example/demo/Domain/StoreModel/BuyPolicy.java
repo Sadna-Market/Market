@@ -40,6 +40,7 @@ public class BuyPolicy {
         int id = idCounter.getAndIncrement();
         rules.put(id,buyRule);
         buyRule.setID(id);
+        logger.info("added new buyRule - id: "+id);
         //db
         if (dataServices != null && dataServices.getRuleService() != null) { //because no autowire in AT
             DataBuyRule dataBuyRule = buyRule.getDataObject();
@@ -51,7 +52,6 @@ public class BuyPolicy {
             }
             buyRule.setID(buyRuleID);
         }
-        logger.info("added new buyRule - id: "+id);
         return new DResponseObj<>(true);
     }
 

@@ -24,9 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 })
 public abstract class CompositionBuyRule implements BuyRule {
 
-
-    public List<BuyRule> rules;
-    public int id;
+    protected List<BuyRule> rules;
+    protected int id;
 
     @JsonCreator
     public CompositionBuyRule(@JsonProperty("rules") List<BuyRule> rules){
@@ -35,19 +34,6 @@ public abstract class CompositionBuyRule implements BuyRule {
         else
             this.rules = Collections.synchronizedList(new LinkedList<>());
     }
-
-
-
-/*    public CompositionBuyRule(List<BuyRule> rules){
-        if(rules != null)
-            this.rules = Collections.synchronizedList(rules);
-        else
-            this.rules = Collections.synchronizedList(new LinkedList<>());
-    }
-
-    @JsonCreator
-    public CompositionBuyRule() {
-    }*/
 
 
     public void addRule(BuyRule buyRule){
@@ -65,10 +51,14 @@ public abstract class CompositionBuyRule implements BuyRule {
         this.id = id;
     }
 
-/*    @Override
-    public abstract DResponseObj<String> getBuyRule();*/
+    public abstract DResponseObj<BuyRuleSL> convertToBuyRuleSL();
 
-    public abstract     DResponseObj<BuyRuleSL> convertToBuyRuleSL();
-    ;
+    public List<BuyRule> getRules() {
+        return rules;
+    }
+
+    public int getId() {
+        return id;
+    }
 
 }

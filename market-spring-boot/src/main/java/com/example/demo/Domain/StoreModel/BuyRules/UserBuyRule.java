@@ -58,6 +58,8 @@ public class UserBuyRule extends LeafBuyRule{
         return new DResponseObj<>(new UserBuyRuleSL(new UserPredicateSL((UserPred) pred),id));
     }
 
-
+    public UserPred getPred() {
+        return (UserPred) pred;
+    }
 
 }

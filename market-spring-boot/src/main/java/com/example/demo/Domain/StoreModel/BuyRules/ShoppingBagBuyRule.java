@@ -3,6 +3,7 @@ package com.example.demo.Domain.StoreModel.BuyRules;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.Predicate.ShoppingBagPred;
+import com.example.demo.Domain.StoreModel.Predicate.UserPred;
 import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.ShoppingBagBuyRuleSL;
@@ -43,4 +44,7 @@ public class ShoppingBagBuyRule extends LeafBuyRule {
         return new DResponseObj<>(new ShoppingBagBuyRuleSL(new ShoppingBagPredicateSL((ShoppingBagPred) pred),id));
     }
 
+    public ShoppingBagPred getPred() {
+        return (ShoppingBagPred) pred;
+    }
 }

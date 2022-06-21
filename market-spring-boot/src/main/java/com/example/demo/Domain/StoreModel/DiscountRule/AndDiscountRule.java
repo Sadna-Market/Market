@@ -5,17 +5,22 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.DiscountRules.AddDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.AndDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("AndDiscountRule")
 public class AndDiscountRule extends CompositionDiscountRule {
 
     protected int category;
 
-    public AndDiscountRule(List<DiscountRule> rules,int category,double dis){
+    @JsonCreator
+    public AndDiscountRule(@JsonProperty("rules") List<DiscountRule> rules,@JsonProperty("category") int category,@JsonProperty("dis") double dis){
         super(rules,dis);
         this.category =category;
     }
@@ -34,6 +39,7 @@ public class AndDiscountRule extends CompositionDiscountRule {
         return new DResponseObj<>(dis);
     }
 
+/*
     @Override
     public DResponseObj<String> getDiscountRule() {
         StringBuilder stringRule = new StringBuilder();
@@ -47,6 +53,7 @@ public class AndDiscountRule extends CompositionDiscountRule {
         if(id != 0) stringRule.append("\n\tSo all products from Category ").append(category).append(" have a ").append(discount).append("% discount");
         return new DResponseObj<>(stringRule.toString());
     }
+*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
@@ -58,4 +65,8 @@ public class AndDiscountRule extends CompositionDiscountRule {
         }
         return new DResponseObj<>(new AndDiscountRuleSL(rulesSL,category,discount,id));
     }
+    public int getCategory() {
+        return category;
+    }
+
 }

@@ -7,17 +7,23 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.DiscountRules.AddDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.OrDiscountRuleSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("OrDiscountRule")
 public class OrDiscountRule extends CompositionDiscountRule {
+
 
     protected int category;
 
-    public OrDiscountRule(List<DiscountRule> rules, int category, double dis) {
+    @JsonCreator
+    public OrDiscountRule(@JsonProperty("rules") List<DiscountRule> rules,@JsonProperty("category") int category,@JsonProperty("dis") double dis) {
         super(rules, dis);
         this.category = category;
     }
@@ -41,7 +47,7 @@ public class OrDiscountRule extends CompositionDiscountRule {
         return new DResponseObj<>(dis);
     }
 
-    @Override
+/*    @Override
     public DResponseObj<String> getDiscountRule() {
         StringBuilder stringRule = new StringBuilder();
         if (id != 0)
@@ -54,7 +60,7 @@ public class OrDiscountRule extends CompositionDiscountRule {
         if (id != 0)
             stringRule.append("\n\tSo all products from Category ").append(category).append(" have a ").append(discount).append("% discount");
         return new DResponseObj<>(stringRule.toString());
-    }
+    }*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
@@ -65,6 +71,10 @@ public class OrDiscountRule extends CompositionDiscountRule {
             rulesSL.add(discountRuleSL.value);
         }
         return new DResponseObj<>(new OrDiscountRuleSL(rulesSL,category,discount,id));
+    }
+
+    public int getCategory() {
+        return category;
     }
 
 }

@@ -16,8 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @JsonTypeName("ConditioningBuyRule")
 public class ConditioningBuyRule extends CompositionBuyRule {
-    public BuyRule predIf;
-    public BuyRule predThen;
+
+    protected BuyRule predIf;
+    protected BuyRule predThen;
 
 /*
     public ConditioningBuyRule(List<BuyRule> rules) {
@@ -41,25 +42,7 @@ public class ConditioningBuyRule extends CompositionBuyRule {
             return new DResponseObj<>(false,thenPass.errorMsg);
         return new DResponseObj<>(true);
 
-        /*if(!condition.item1.passRule(user,shoppingBag)) return false;
-         for (Tuple<Predicate,Predicate> condition : conditions){
-            if(!condition.item1.passRule(user,shoppingBag)) continue;
-            if(!condition.item1.passRule(user,shoppingBag)) return false;
-        }
-        return true; // pass all conditions*/
     }
-/*
-
-    @Override
-    public DResponseObj<String> getBuyRule() {
-        String stringRule = "";
-        if(id != 0)
-            stringRule += "Conditioning Buy Rule #"+id+":\n\t";
-        stringRule += "if: " + predIf.getBuyRule().value +"\n\t";
-        stringRule += "then: " + predThen.getBuyRule().value;
-        return new DResponseObj<>(stringRule);
-    }
-*/
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
@@ -70,15 +53,14 @@ public class ConditioningBuyRule extends CompositionBuyRule {
         return new DResponseObj<>(new ConditioningBuyRuleSL(ifRule.value,thenRule.value,id));
     }
 
-    /*class Tuple<E, T> {
-        E item1;
-        T item2;
 
-        public Tuple(E item1, T item2) {
-            this.item1 = item1;
-            this.item2 = item2;
-        }
-    }*/
+    public BuyRule getPredIf() {
+        return predIf;
+    }
+
+    public BuyRule getPredThen() {
+        return predThen;
+    }
 
 }
 

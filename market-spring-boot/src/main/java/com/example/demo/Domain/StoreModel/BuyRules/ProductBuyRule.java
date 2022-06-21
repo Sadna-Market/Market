@@ -4,6 +4,7 @@ import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Predicate.CategoryPred;
 import com.example.demo.Domain.StoreModel.Predicate.Predicate;
 import com.example.demo.Domain.StoreModel.Predicate.ProductPred;
+import com.example.demo.Domain.StoreModel.Predicate.ShoppingBagPred;
 import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.ProductBuyRuleSL;
@@ -43,5 +44,9 @@ public class ProductBuyRule extends LeafBuyRule{
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {
         return new DResponseObj<>(new ProductBuyRuleSL(new ProductPredicateSL((ProductPred) pred),id));
+    }
+
+    public ProductPred getPred() {
+        return (ProductPred) pred;
     }
 }

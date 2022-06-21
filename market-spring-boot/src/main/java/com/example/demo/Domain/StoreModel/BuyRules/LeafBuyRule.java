@@ -22,8 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
         @JsonSubTypes.Type(value= ShoppingBagBuyRule.class, name="ShoppingBagBuyRule")
 })
 public abstract class LeafBuyRule implements BuyRule {
-    public Predicate pred;
-    public int id;
+
+    protected Predicate pred;
+    protected int id;
 
     @JsonCreator
     public LeafBuyRule(@JsonProperty("pred") Predicate pred) {
@@ -50,6 +51,14 @@ public abstract class LeafBuyRule implements BuyRule {
     }
 
     public abstract     DResponseObj<BuyRuleSL> convertToBuyRuleSL();
-    ;
+
+    public Predicate getPred() {
+        return pred;
+    }
+
+    public int getId() {
+        return id;
+    }
+
 }
 
