@@ -30,15 +30,15 @@ const MyCart = (props) => {
             let shoppingBagHash = getShoppingCartResponse.value.shoppingBagHash
             for (const key in shoppingBagHash) { //key = storeID
                 let store = (shoppingBagHash[key].store);//{"storeId":1,"name":"sys","founder":"sysManager@gmail.com","isOpen":true,"rate":5}
-                let productQuantity = (shoppingBagHash[key].productQuantity); //{1:20, 2:50} product id and quantity
-                for (const key in productQuantity) {
+                let productsMap = (shoppingBagHash[key].products); //{1:20, 2:50} product id and quantity
+
+                for (const key in productsMap) {
                     products.push({
-                        id: key,
+                        id: [key],//productid
                         storeID:store.storeId,
-                        // price: store.price,
-                        // productName: store.productName,
-                        price: 1,
-                        amount: productQuantity[key],
+                        price: productsMap[key].price,
+                        productName:  productsMap[key].name,
+                        amount: productsMap[key].quantity,//total amount
                     })
                 }
             }
