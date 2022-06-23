@@ -6,14 +6,19 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.DiscountRules.AddDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("AddDiscountRule")
 public class AddDiscountRule extends CompositionDiscountRule{
 
-    public AddDiscountRule(List<DiscountRule> rules){
+    @JsonCreator
+    public AddDiscountRule(@JsonProperty("rules") List<DiscountRule> rules){
         super(rules,0.0);
     }
     @Override
@@ -28,6 +33,7 @@ public class AddDiscountRule extends CompositionDiscountRule{
 
     }
 
+/*
     @Override
     public DResponseObj<String> getDiscountRule() {
         StringBuilder stringRule = new StringBuilder();
@@ -40,6 +46,7 @@ public class AddDiscountRule extends CompositionDiscountRule{
         stringRule.append(rules.get(rules.size()-1).getDiscountRule().value);
         return new DResponseObj<>(stringRule.toString());
     }
+*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {

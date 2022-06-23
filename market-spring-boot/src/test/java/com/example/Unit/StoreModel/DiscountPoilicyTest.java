@@ -60,7 +60,7 @@ public class DiscountPoilicyTest {
     @DisplayName("addNewDiscountRule  -  successful")
     void addNewDiscountRule() {
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(psRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(psRule,1).errorOccurred());
         assertEquals(1, discountPolicy.rulesSize());
     }
 
@@ -68,7 +68,7 @@ public class DiscountPoilicyTest {
     @DisplayName("removeNewBuyRule  -  successful")
     void removeBuyRule() {
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(psRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(psRule,1).errorOccurred());
         assertEquals(1, discountPolicy.rulesSize());
         assertFalse(discountPolicy.removeDiscountRule(1).errorOccurred());
         assertEquals(0, discountPolicy.rulesSize());
@@ -83,7 +83,7 @@ public class DiscountPoilicyTest {
     @Test
     @DisplayName("checkDiscountPolicyShoppingBagWithRules  -  successful")
     void checkBuyPolicyShoppingBagProductRule2() {
-        assertFalse(discountPolicy.addNewDiscountRule(psRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(psRule,1).errorOccurred());
         DResponseObj<Double> res = discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products);
         assertFalse(res.errorOccurred());
         assertEquals(ps.getPrice().value*5*0.5,res.getValue());
@@ -99,7 +99,7 @@ public class DiscountPoilicyTest {
         pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps, i);
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(pcRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(pcRule,1).errorOccurred());
         DResponseObj<Double> res =discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products);
         assertEquals(0.0,res.getValue());
     }
@@ -111,7 +111,7 @@ public class DiscountPoilicyTest {
         pcRule = new ConditionProductDiscountRule(new ProductPred(1, 3, 8),40);
         products.replace(ps, i);
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(pcRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(pcRule,1).errorOccurred());
         DResponseObj<Double> res =discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products);
         assertEquals(i*ps.getPrice().value*40/100,res.getValue());
     }
@@ -121,7 +121,7 @@ public class DiscountPoilicyTest {
     @DisplayName("checkDiscountPolicyShoppingBagRule2  -  successful")
     void checkDiscountPolicyStoreRule1() {
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(ssRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(ssRule,1).errorOccurred());
         products.put(new ProductStore(new ProductTypeStab(2, "milk", "", 2), 25, 3.5), 6);
         assertEquals(19.25,discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products).value);
     }
@@ -132,7 +132,7 @@ public class DiscountPoilicyTest {
     void checkDiscountPolicyStoreRule2() {
         scRule = new ConditionStoreDiscountRule(new ShoppingBagPred(3, 2, 20),50);
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(scRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(scRule,1).errorOccurred());
         products.put(new ProductStore(new ProductTypeStab(2, "milk", "", 2), 25, 3.5), 6);
         assertEquals(19.25,discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products).value);
     }
@@ -143,7 +143,7 @@ public class DiscountPoilicyTest {
     void checkDiscountPolicyStoreRule3() {
         scRule = new ConditionStoreDiscountRule(new ShoppingBagPred(3, 2, 20),50);
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(scRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(scRule,1).errorOccurred());
         assertEquals(0.0,discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products).value);
     }
 
@@ -152,7 +152,7 @@ public class DiscountPoilicyTest {
     @DisplayName("checkDiscountPolicyShoppingBagRule2  -  successful")
     void checkDiscountPolicyCategoryRule1() {
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(csRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(csRule,1).errorOccurred());
         assertEquals(1.75,discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products).value);
     }
 
@@ -162,7 +162,7 @@ public class DiscountPoilicyTest {
     void checkDiscountPolicyCategoryRule2() {
         ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(ccRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(ccRule,1).errorOccurred());
         products.put(new ProductStore(new ProductType(2, "milk", "", 2), 25, 3.5), 6);
         assertEquals(8.75,discountPolicy.checkDiscountPolicyShoppingBag("dor", 20, products).value);
     }
@@ -173,7 +173,7 @@ public class DiscountPoilicyTest {
     void checkDiscountPolicyCategoryRule3() {
         ccRule = new ConditionCategoryDiscountRule(new CategoryPred(5,18),50);
         assertEquals(0, discountPolicy.rulesSize());
-        assertFalse(discountPolicy.addNewDiscountRule(ccRule).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(ccRule,1).errorOccurred());
         products.put(new ProductStore(new ProductType(2, "milk", "", 2), 25, 3.5), 6);
         assertEquals(0.0,discountPolicy.checkDiscountPolicyShoppingBag("dor", 15, products).value);
     }
@@ -189,7 +189,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         AndDiscountRule and = new AndDiscountRule(discountRuleList,5,50);
-        assertFalse(discountPolicy.addNewDiscountRule(and).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(and,1).errorOccurred());
         assertEquals(8.75,discountPolicy.checkDiscountPolicyShoppingBag("niv", 20, products).value);
     }
 
@@ -203,7 +203,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         AndDiscountRule and = new AndDiscountRule(discountRuleList,5,50);
-        assertFalse(discountPolicy.addNewDiscountRule(and).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(and,1).errorOccurred());
         assertEquals(0.0,discountPolicy.checkDiscountPolicyShoppingBag("niv", i, products).value);
     }
 
@@ -217,7 +217,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         OrDiscountRule or = new OrDiscountRule(discountRuleList,5,50);
-        assertFalse(discountPolicy.addNewDiscountRule(or).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(or,1).errorOccurred());
         assertEquals(8.75,discountPolicy.checkDiscountPolicyShoppingBag("niv", 20, products).value);
     }
 
@@ -231,7 +231,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         OrDiscountRule or = new OrDiscountRule(discountRuleList,5,50);
-        assertFalse(discountPolicy.addNewDiscountRule(or).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(or,1).errorOccurred());
         assertEquals(8.75,discountPolicy.checkDiscountPolicyShoppingBag("niv", i, products).value);
     }
 
@@ -246,7 +246,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         OrDiscountRule or = new OrDiscountRule(discountRuleList,5,50);
-        assertFalse(discountPolicy.addNewDiscountRule(or).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(or,1).errorOccurred());
         assertEquals(0.0,discountPolicy.checkDiscountPolicyShoppingBag("niv", i, products).value);
     }
 
@@ -260,7 +260,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
-        assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(xor,1).errorOccurred());
         assertEquals(8.75,discountPolicy.checkDiscountPolicyShoppingBag("niv", 20, products).value);
     }
 
@@ -274,7 +274,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
-        assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(xor,1).errorOccurred());
         assertEquals(3.5*5*(0.4),discountPolicy.checkDiscountPolicyShoppingBag("niv", i, products).value);
     }
 
@@ -289,7 +289,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
-        assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(xor,1).errorOccurred());
         assertEquals(i*3.5*(0.5),discountPolicy.checkDiscountPolicyShoppingBag("niv", 20, products).value);
     }
 
@@ -304,7 +304,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(ccRule);
         discountRuleList.add(pcRule);
         XorDiscountRule xor = new XorDiscountRule(discountRuleList,"Big Discount");
-        assertFalse(discountPolicy.addNewDiscountRule(xor).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(xor,1).errorOccurred());
         assertEquals(0.0,discountPolicy.checkDiscountPolicyShoppingBag("niv", 15, products).value);
     }
 
@@ -317,7 +317,7 @@ public class DiscountPoilicyTest {
         discountRuleList.add(csRule);
         discountRuleList.add(ssRule);
         AddDiscountRule add = new AddDiscountRule(discountRuleList);
-        assertFalse(discountPolicy.addNewDiscountRule(add).errorOccurred());
+        assertFalse(discountPolicy.addNewDiscountRule(add,1).errorOccurred());
         assertEquals(3.5*i*0.6,discountPolicy.checkDiscountPolicyShoppingBag("niv", 15, products).value);
     }
 
@@ -326,19 +326,19 @@ public class DiscountPoilicyTest {
     @DisplayName("combineDiscountRules - failure")
     void combineANDORDiscountRules(int i) {
         List<Integer> l = new ArrayList<>(); l.add(i); l.add(i+1);
-        assertFalse(discountPolicy.combineANDORDiscountRules("and",l,i,4).value);
-        assertFalse(discountPolicy.combineANDORDiscountRules("or",l,1,i).value);
+        assertFalse(discountPolicy.combineANDORDiscountRules("and",l,i,4,1).value);
+        assertFalse(discountPolicy.combineANDORDiscountRules("or",l,1,i,1).value);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {2,9,15})
     @DisplayName("combineDiscountRules - success")
     void combineANDORDiscountRulesSuccess(int i) {
-        assertTrue(discountPolicy.addNewDiscountRule(ssRule).value);
-        assertTrue(discountPolicy.addNewDiscountRule(psRule).value);
+        assertTrue(discountPolicy.addNewDiscountRule(ssRule,1).value);
+        assertTrue(discountPolicy.addNewDiscountRule(psRule,1).value);
         List<Integer> l = new ArrayList<>(); l.add(1); l.add(2);
-        assertTrue(discountPolicy.combineANDORDiscountRules("and",l,i,4).value);
-        assertFalse(discountPolicy.combineANDORDiscountRules("or",l,1,i).value);
+        assertTrue(discountPolicy.combineANDORDiscountRules("and",l,i,4,1).value);
+        assertFalse(discountPolicy.combineANDORDiscountRules("or",l,1,i,1).value);
     }
 
     @ParameterizedTest
@@ -346,19 +346,19 @@ public class DiscountPoilicyTest {
     @DisplayName("combineXorDiscountRules - failure")
     void combineXorDiscountRules(int i) {
         List<Integer> l = new ArrayList<>(); l.add(i); l.add(i+1);
-        assertFalse(discountPolicy.combineXORDiscountRules(l,"Big discount").value);
-        assertFalse(discountPolicy.combineXORDiscountRules(l,"asd").value);
+        assertFalse(discountPolicy.combineXORDiscountRules(l,"Big discount",1).value);
+        assertFalse(discountPolicy.combineXORDiscountRules(l,"asd",1).value);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {2,9,15})
     @DisplayName("combineXorDiscountRules - success")
     void combineXorDiscountRulesSuccess(int i) {
-        assertTrue(discountPolicy.addNewDiscountRule(ssRule).value);
-        assertTrue(discountPolicy.addNewDiscountRule(psRule).value);
+        assertTrue(discountPolicy.addNewDiscountRule(ssRule,1).value);
+        assertTrue(discountPolicy.addNewDiscountRule(psRule,1).value);
         List<Integer> l = new ArrayList<>(); l.add(1); l.add(2);
-        assertTrue(discountPolicy.combineXORDiscountRules(l,"Big discount").value);
-        assertFalse(discountPolicy.combineXORDiscountRules(l,"Big discount").value);
+        assertTrue(discountPolicy.combineXORDiscountRules(l,"Big discount",1).value);
+        assertFalse(discountPolicy.combineXORDiscountRules(l,"Big discount",1).value);
     }
 }
 

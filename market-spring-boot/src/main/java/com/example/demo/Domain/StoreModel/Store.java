@@ -309,7 +309,7 @@ public class Store {
     public DResponseObj<Boolean> addNewBuyRule(BuyRule buyRule) {
         if(buyPolicy == null)
             buyPolicy = new BuyPolicy();
-        return buyPolicy.addNewBuyRule(buyRule);
+        return buyPolicy.addNewBuyRule(buyRule,storeId);
     }
 
     //requirement II.4.2
@@ -323,7 +323,7 @@ public class Store {
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule) {
         if(discountPolicy == null)
             discountPolicy = new DiscountPolicy();
-        return discountPolicy.addNewDiscountRule(discountRule);
+        return discountPolicy.addNewDiscountRule(discountRule,storeId);
     }
 
     //requirement II.4.2
@@ -336,13 +336,13 @@ public class Store {
     //requirement II.4.2
     public DResponseObj<Boolean> combineANDORDiscountRules(String operator, List<Integer> rules, int category, int discount) {
         if(discountPolicy == null) return new DResponseObj<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
-        return discountPolicy.combineANDORDiscountRules(operator,rules,category,discount);
+        return discountPolicy.combineANDORDiscountRules(operator,rules,category,discount,storeId);
     }
 
     //requirement II.4.2
     public DResponseObj<Boolean> combineXORDiscountRules(List<Integer> rules, String decision) {
         if(discountPolicy == null) return new DResponseObj<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
-        return discountPolicy.combineXORDiscountRules(rules,decision);
+        return discountPolicy.combineXORDiscountRules(rules,decision,storeId);
     }
 
 
