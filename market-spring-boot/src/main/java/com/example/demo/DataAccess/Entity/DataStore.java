@@ -208,4 +208,21 @@ public class DataStore {
     public void setBuyRules(Set<DataDiscountRule> buyRules) {
         this.buyRules = buyRules;
     }
+
+
+    @Override
+    public String toString() {
+        return "DataStore{" +
+                "storeId=" + storeId +
+                ", name='" + name + '\'' +
+                ", productStores=" + productStores +
+                ", founder='" + founder + '\'' +
+                ", isOpen=" + isOpen +
+                ", rate=" + rate +
+                ", numOfRated=" + numOfRated +
+                ", history=" + history +
+                ", discountRules=" + discountRules +
+                ", buyRules=" + buyRules +
+                '}';
+    }
 }

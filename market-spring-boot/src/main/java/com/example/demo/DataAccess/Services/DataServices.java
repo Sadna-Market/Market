@@ -27,6 +27,17 @@ public class DataServices {
     @Autowired
     private HistoryService historyService;
 
+    @Autowired
+    private ShoppingBagService shoppingBagService;
+
+    public ShoppingBagService getShoppingBagService() {
+        return shoppingBagService;
+    }
+
+    public void setShoppingBagService(ShoppingBagService shoppingBagService) {
+        this.shoppingBagService = shoppingBagService;
+    }
+
     public UserService getUserService() {
         return userService;
     }

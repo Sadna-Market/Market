@@ -109,7 +109,7 @@ public class UserManagerStab extends UserManager {
 
     public DResponseObj<ShoppingCart> getUserShoppingCart(UUID userId)
     {
-        return new DResponseObj<>(new ShoppingCart());
+        return new DResponseObj<>(new ShoppingCart(""));
     }
 
     /** ch

@@ -1,12 +1,14 @@
 package com.example.demo.DataAccess.Services;
 
-//import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.DataAccess.Entity.DataStore;
-import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.StoreModel.BuyPolicy;
 import com.example.demo.Domain.StoreModel.DiscountPolicy;
 import com.example.demo.Domain.StoreModel.Store;
-import com.example.demo.Domain.UserModel.User;
+import com.example.demo.Service.Facade;
+import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
+import com.example.demo.Service.ServiceObj.ServiceBuyStrategy;
+import com.example.demo.Service.ServiceObj.ServiceDiscountPolicy;
+import com.example.demo.Service.ServiceObj.ServiceStore;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +26,14 @@ class StoreServiceTest {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private Facade market;
+
+//    @BeforeEach
+//    void setUp() throws InterruptedException {
+//        Thread.sleep(500);
+//    }
 
     @Test
     @Transactional
@@ -67,6 +74,9 @@ class StoreServiceTest {
 
         //check
         List<DataStore> afterStores = storeService.getAllStores();
+        if(afterStores.size()!=1){
+            afterStores.forEach(System.out::println);
+        }
         assertEquals(1, afterStores.size());
         DataStore afterStore = afterStores.get(0);
         assertEquals(44, afterStore.getRate());
@@ -124,4 +134,30 @@ class StoreServiceTest {
             assertEquals(dataStore.getHistory().size(), afterStore.getHistory().size());
         }
     }
+
+    @Test
+    void openStores() {
+        //action
+        String uuid = market.guestVisit().value;
+        uuid = market.login(uuid,"sysManager@gmail.com","Shalom123$").value;
+        for (int i = 0; i < 5; i++) {
+            var name = "myStore"+i;
+            var founder = "sysManager@gmail.com";
+            market.openNewStore(uuid,name,founder,new ServiceDiscountPolicy(),new ServiceBuyPolicy(),new ServiceBuyStrategy());
+        }
+        var stores = market.getAllStores().value;
+
+        List<DataStore> afterStores = storeService.getAllStores();
+        //check
+        assertEquals(5, afterStores.size());
+        for (int i = 0; i < 5; i++) {
+            ServiceStore dataStore = stores.get(i);
+            DataStore afterStore = afterStores.get(i);
+            assertEquals(dataStore.getName(), afterStore.getName());
+            assertEquals(dataStore.getFounder(), afterStore.getFounder());
+            assertEquals(dataStore.isOpen(), afterStore.getOpen());
+            assertEquals(dataStore.getRate(), afterStore.getRate());
+        }
+    }
+
 }

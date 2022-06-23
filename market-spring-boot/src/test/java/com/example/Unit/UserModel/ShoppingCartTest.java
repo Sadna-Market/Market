@@ -17,7 +17,7 @@ class ShoppingCartTest {
     ShoppingCart shoppingCart;
     @BeforeEach
     void beg(){
-        shoppingCart = new ShoppingCart();
+        shoppingCart = new ShoppingCart("");
     }
 
     @Test

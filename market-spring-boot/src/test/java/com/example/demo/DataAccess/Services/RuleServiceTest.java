@@ -114,7 +114,6 @@ class RuleServiceTest {
         assertEquals(dataBuyRule.getBuyRuleId(), dataBuyRule1.getBuyRuleId());
         assertEquals(dataBuyRule.getStore(), dataBuyRule1.getStore());
         assertEquals(dataBuyRule.getRule(), dataBuyRule1.getRule());
-
     }
 
     @Test

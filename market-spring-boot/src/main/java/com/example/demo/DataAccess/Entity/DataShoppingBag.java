@@ -31,7 +31,7 @@ public class DataShoppingBag {
     private DataStore store;
 
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "product_id")
     @Column(name = "quantity")
     @CollectionTable(name = "shopping_bag_product_quantity",
@@ -73,5 +73,10 @@ public class DataShoppingBag {
 
     public void setProductQuantity(Map<Integer, Integer> productQuantity) {
         this.productQuantity = productQuantity;
+    }
+
+    public void update(DataShoppingBag shoppingBag) {
+        this.productQuantity.clear();
+        this.productQuantity.putAll(shoppingBag.getProductQuantity());
     }
 }

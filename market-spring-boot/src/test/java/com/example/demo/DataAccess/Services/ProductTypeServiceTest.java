@@ -8,6 +8,7 @@ import com.example.demo.Domain.StoreModel.DiscountPolicy;
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Service.Facade;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +122,7 @@ class ProductTypeServiceTest {
     }
 
     @Test
+    @Transactional
     void addNewProductType(){
         String uuid = market.guestVisit().value;
         SLResponseOBJ<String> result = market.login(uuid, "sysManager@gmail.com", "Shalom123$");

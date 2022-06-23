@@ -6,6 +6,7 @@ import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.UserModel.ShoppingBag;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.log4j.Logger;
@@ -15,14 +16,13 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
 public class BuyPolicy {
 
     private ConcurrentHashMap<Integer,BuyRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
 
-    @Autowired
-    private DataServices dataServices;
+
+    private static DataServices dataServices;
 
     static Logger logger=Logger.getLogger(BuyPolicy.class);
 
@@ -91,4 +91,8 @@ public class BuyPolicy {
     public DataBuyRule getDataObject() {
         return new DataBuyRule();
     }
+    public static void setDataServices(DataServices dataServices) {
+        BuyPolicy.dataServices = dataServices;
+    }
+
 }

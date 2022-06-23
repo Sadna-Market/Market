@@ -90,18 +90,16 @@ public class User {
         this.email = email;
         this.Password = password;
         this.phoneNumber = phoneNumber;
-        shoppingCart = new ShoppingCart();
+        shoppingCart = new ShoppingCart(email);
         this.dateOfBirth = dateOfBirth;
-
-
     }
 
     public DResponseObj<Boolean> resetCart (){
-        shoppingCart=new ShoppingCart();
+        shoppingCart=new ShoppingCart(this.email);
         return new DResponseObj<Boolean>(true);
     }
     public User() {
-        shoppingCart = new ShoppingCart();
+        shoppingCart = new ShoppingCart(this.email);
         email = "guest";
         this.Password = "guest";
         this.phoneNumber = "0000000000";

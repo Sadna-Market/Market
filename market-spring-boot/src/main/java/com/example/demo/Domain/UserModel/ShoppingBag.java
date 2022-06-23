@@ -1,11 +1,16 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.CompositeKeys.ShoppingBagId;
 import com.example.demo.DataAccess.Entity.DataShoppingBag;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.lang.annotation.ElementType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
@@ -13,13 +18,18 @@ import java.util.concurrent.locks.StampedLock;
 public class ShoppingBag {
     static Logger logger = Logger.getLogger(ShoppingBag.class);
     private Store store;
+    private String username;
     private ConcurrentHashMap<Integer, Integer> productQuantity;
 
+    private static DataServices dataServices;
 
-    public ShoppingBag(Store store) {
+    public ShoppingBag(Store store, String username) {
         this.productQuantity = new ConcurrentHashMap<>();
         this.store = store;
+        this.username = username;
     }
+
+    public ShoppingBag(){}
 
     public DResponseObj<Boolean> isContainProduct(int pid) {
         return new DResponseObj<>(productQuantity.containsKey(pid),-1);
@@ -38,8 +48,17 @@ public class ShoppingBag {
     public DResponseObj<Boolean> addProduct(int productId, int quantity) {
         logger.debug(" ShoppingBag addProduct");
         productQuantity.put(productId, productQuantity.getOrDefault(productId, 0) + quantity);
+        //db
+        saveToDB();
         return new DResponseObj<>(true);
 
+    }
+
+    private void saveToDB() {
+        if(dataServices != null && dataServices.getShoppingBagService() != null){
+            var dataShoppingBag = getDataObject();
+            dataServices.getShoppingBagService().insertShoppingBag(dataShoppingBag);
+        }
     }
 
     public DResponseObj<Boolean> setProductQuantity(int productId, int quantity) {
@@ -48,6 +67,7 @@ public class ShoppingBag {
             return new DResponseObj<>(false);
         } else {
             productQuantity.replace(productId, quantity);
+            saveToDB();
             return new DResponseObj<>(true);
         }
     }
@@ -58,6 +78,7 @@ public class ShoppingBag {
             return new DResponseObj<>(false,-1);
         } else {
             productQuantity.remove(productId);
+            saveToDB();
             return new DResponseObj<>(true,-1);
         }
     }
@@ -84,8 +105,25 @@ public class ShoppingBag {
 
     public DataShoppingBag getDataObject() {
         DataShoppingBag dataShoppingBag = new DataShoppingBag();
+        ShoppingBagId id = new ShoppingBagId();
+        id.setStoreId(this.store.getStoreId().value);
+        id.setUsername(this.username);
+        dataShoppingBag.setShoppingBagId(id);
         dataShoppingBag.setStore(this.store.getDataObject());
         dataShoppingBag.setProductQuantity(this.productQuantity);
         return dataShoppingBag;
     }
+
+    public static void setDataServices(DataServices dataServices) {
+        ShoppingBag.dataServices = dataServices;
+    }
+
+//    public ShoppingBag fromData(DataShoppingBag shoppingBag) {
+//        this.username = shoppingBag.getShoppingBagId().getUsername();
+//        /*this.store =
+//        *
+//        //TODO: very big problem */
+//        this.productQuantity = new ConcurrentHashMap<>(shoppingBag.getProductQuantity());
+//        return this;
+//    }
 }
