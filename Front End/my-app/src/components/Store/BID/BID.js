@@ -1,17 +1,33 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import AddProduct from "./CreateBID";
 import AllOffers from "./AllOffers";
 import MainBID from "./MainBID";
 import CeateBID from "./CreateBID";
 import MyBIDs from "./MyBIDs";
 import BuyBID from "./BuyBID";
-
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
 const BID = (props) => {
   console.log("BID")
-
+  const [isOwner, SetisOwner] = useState(false);
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
   let UUID = props.uuid;
   let storeID = props.storeID;
   let permission = <></>;
+
+  async function checkIsOwner() {
+    const isOwnerUUIDResponse = await apiClientHttp.isOwnerUUID(UUID, storeID);
+
+    if (isOwnerUUIDResponse.errorMsg !== -1) {
+      SetError(errorCode.get(isOwnerUUIDResponse.errorMsg))
+    } else {
+      SetisOwner(isOwnerUUIDResponse.value)
+    }
+  }
+  useEffect(() => {
+    checkIsOwner();
+  }, [isOwner.refresh]);
   const confirmHandler = (productID, amount) => {
     setComand(
       <BuyBID
@@ -48,12 +64,20 @@ const BID = (props) => {
   };
 
   //check permission
-  if (UUID !== 7) {
+  if (isOwner) {
     permission = (
       <>
         {/* <button onClick={BIDHandler}> All BID</button> */}
         <button onClick={allOffers}> All Offers</button>
       </>
+    );
+  }
+  else {
+    permission = (
+        <>
+          {/* <button onClick={BIDHandler}> All BID</button> */}
+          <button onClick={MyBIDHandler}> My BIDs</button>
+        </>
     );
   }
 
@@ -63,7 +87,6 @@ const BID = (props) => {
       <h3>BID Store #{storeID}</h3>
       <div>
         <button onClick={createBIDHandler}> Create BID</button>
-        <button onClick={MyBIDHandler}> My BIDs</button>
         {permission}
       </div>
       <div>{command}</div>
