@@ -23,7 +23,7 @@ public class DiscountPolicy {
 
     private static DataServices dataServices;
 
-    public static void setDataService(DataServices dataService) { DiscountPolicy.dataServices = dataService;}
+    public static void setDataServices(DataServices dataService) { DiscountPolicy.dataServices = dataService;}
 
 
     private ConcurrentHashMap<Integer, DiscountRule> rules;
