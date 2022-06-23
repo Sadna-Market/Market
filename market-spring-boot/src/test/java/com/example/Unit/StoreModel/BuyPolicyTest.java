@@ -56,7 +56,7 @@ class BuyPolicyTest {
     void addNewBuyRule() {
         ProductBuyRule prule = new ProductBuyRule(new ProductPred(1,3,8,true));
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(prule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(prule,1).errorOccurred());
         assertEquals(1, buyPolicy.rulesSize());
     }
 
@@ -65,7 +65,7 @@ class BuyPolicyTest {
     void removeBuyRule() {
         ProductBuyRule prule = new ProductBuyRule(new ProductPred(1,3,8,true));
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(prule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(prule,1).errorOccurred());
         assertEquals(1, buyPolicy.rulesSize());
         assertFalse(buyPolicy.removeBuyRule(1).errorOccurred());
         assertEquals(0, buyPolicy.rulesSize());
@@ -82,7 +82,7 @@ class BuyPolicyTest {
     void checkBuyPolicyShoppingBagProductRule2() {
         ProductBuyRule prule = new ProductBuyRule(new ProductPred(1,3,8,true));
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(prule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(prule,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -91,7 +91,7 @@ class BuyPolicyTest {
     void checkBuyPolicyShoppingBagProductRule3() {
         ProductBuyRule prule = new ProductBuyRule(new ProductPred(1,3,8,false));
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(prule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(prule,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -102,7 +102,7 @@ class BuyPolicyTest {
         ProductBuyRule p = new ProductBuyRule(new ProductPred(1,3,8,true));
         products.replace(ps,i);
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(p).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(p,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -110,7 +110,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules  -  successful")
     void checkBuyPolicyShoppingBagUserRule2() {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(uRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(uRule,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("niv",20,products).errorOccurred());
     }
 
@@ -118,7 +118,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules- user can't buy - fail")
     void checkBuyPolicyShoppingBagUserRule3() {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(uRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(uRule,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -126,7 +126,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules  -  successful")
     void checkBuyPolicyShoppingBagRule2() {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(sRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(sRule,1).errorOccurred());
         products.put(new ProductStore(new ProductTypeStab(2,"milk","",2),25,3.5),10);
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
@@ -135,7 +135,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules- not enough products - fail")
     void checkBuyPolicyShoppingBagRule3() {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(sRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(sRule,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -144,7 +144,7 @@ class BuyPolicyTest {
     @ValueSource(ints = {0,2,4})
     void checkBuyPolicyShoppingBagRule4(int i) {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(sRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(sRule,1).errorOccurred());
         products.put(new ProductStore(new ProductTypeStab(2,"milk","",2),25,3.5),i);
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
@@ -154,7 +154,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules  -  successful")
     void checkBuyPolicyShoppingBagCategoryRule2() {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(cRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(cRule,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -163,7 +163,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules- too young - fail")
     void checkBuyPolicyShoppingBagCategoryRule3() {
         assertEquals(0, buyPolicy.rulesSize());
-        assertFalse(buyPolicy.addNewBuyRule(cRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(cRule,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",16,products).errorOccurred());
     }
 
@@ -172,7 +172,7 @@ class BuyPolicyTest {
     void checkBuyPolicyShoppingBagCategoryRule4() {
         assertEquals(0, buyPolicy.rulesSize());
         CategoryBuyRule ccRule = new CategoryBuyRule(new CategoryPred(5,20, 5,6));
-        assertFalse(buyPolicy.addNewBuyRule(ccRule).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(ccRule,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",20,products).errorOccurred());
     }
 
@@ -183,7 +183,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         AndBuyRule and = new AndBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(and).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(and,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("niv",20,products).errorOccurred());
     }
 
@@ -195,7 +195,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         AndBuyRule and = new AndBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(and).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(and,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("niv",16,products).errorOccurred());
     }
 
@@ -206,7 +206,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         AndBuyRule and = new AndBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(and).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(and,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",26,products).errorOccurred());
     }
 
@@ -218,7 +218,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         AndBuyRule and = new AndBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(and).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(and,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",i,products).errorOccurred());
     }
 
@@ -229,7 +229,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         OrBuyRule or = new OrBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(or).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(or,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("niv",20,products).errorOccurred());
     }
 
@@ -241,7 +241,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         OrBuyRule or = new OrBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(or).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(or,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("niv",16,products).errorOccurred());
     }
 
@@ -252,7 +252,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         OrBuyRule or = new OrBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(or).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(or,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("dor",26,products).errorOccurred());
     }
 
@@ -264,7 +264,7 @@ class BuyPolicyTest {
         buyRuleList.add(uRule);
         buyRuleList.add(cRule);
         OrBuyRule or = new OrBuyRule(buyRuleList);
-        assertFalse(buyPolicy.addNewBuyRule(or).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(or,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("dor",i,products).errorOccurred());
     }
 
@@ -272,7 +272,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules  -  successful")
     void checkBuyPolicyShoppingBagConditionRule2() {
         ConditioningBuyRule condition = new ConditioningBuyRule(uRule,cRule);
-        assertFalse(buyPolicy.addNewBuyRule(condition).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(condition,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("niv",20,products).errorOccurred());
     }
 
@@ -281,7 +281,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules- too young - successful")
     void checkBuyPolicyShoppingBagConditionRule3(int i) {
         ConditioningBuyRule condition = new ConditioningBuyRule(uRule,cRule);
-        assertFalse(buyPolicy.addNewBuyRule(condition).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(condition,1).errorOccurred());
         assertTrue(buyPolicy.checkBuyPolicyShoppingBag("niv",i,products).errorOccurred());
     }
 
@@ -289,7 +289,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules- user cant buy- fail")
     void checkBuyPolicyShoppingBagConditionRule4() {
         ConditioningBuyRule condition = new ConditioningBuyRule(uRule,cRule);
-        assertFalse(buyPolicy.addNewBuyRule(condition).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(condition,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("dor",26,products).errorOccurred());
     }
 
@@ -298,7 +298,7 @@ class BuyPolicyTest {
     @DisplayName("checkBuyPolicyWithRules- user cant buy and too young - fail")
     void checkBuyPolicyShoppingBagConditionRule5(int i) {
         ConditioningBuyRule condition = new ConditioningBuyRule(uRule,cRule);
-        assertFalse(buyPolicy.addNewBuyRule(condition).errorOccurred());
+        assertFalse(buyPolicy.addNewBuyRule(condition,1).errorOccurred());
         assertFalse(buyPolicy.checkBuyPolicyShoppingBag("dor",i,products).errorOccurred());
     }
 

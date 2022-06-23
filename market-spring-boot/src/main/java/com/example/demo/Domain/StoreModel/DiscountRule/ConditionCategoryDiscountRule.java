@@ -9,14 +9,19 @@ import com.example.demo.Service.ServiceObj.DiscountRules.ConditionProductDiscoun
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.Predicate.CategoryPredicateSL;
 import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("ConditionCategoryDiscountRule")
 public class ConditionCategoryDiscountRule extends SimpleCategoryDiscountRule {
 
     protected CategoryPred pred;
 
-    public ConditionCategoryDiscountRule(CategoryPred pred, double percentDiscount) {
+    @JsonCreator
+    public ConditionCategoryDiscountRule(@JsonProperty("pred") CategoryPred pred,@JsonProperty("percentDiscount") double percentDiscount) {
         super(percentDiscount, pred.getCategory());
         this.pred = pred;
     }
@@ -30,7 +35,7 @@ public class ConditionCategoryDiscountRule extends SimpleCategoryDiscountRule {
         return new DResponseObj<>(0.0, res.getErrorMsg());
     }
 
-    @Override
+/*    @Override
     public DResponseObj<String> getDiscountRule() {
         String stringRule = "";
         if (id == 0) stringRule += pred.getPredicateDiscountRule();
@@ -41,10 +46,16 @@ public class ConditionCategoryDiscountRule extends SimpleCategoryDiscountRule {
         }
 
         return new DResponseObj<>(stringRule);
-    }
+    }*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
         return new DResponseObj<>(new ConditionCategoryDiscountRuleSL(new CategoryPredicateSL(pred),percentDiscount,id));
     }
+
+
+    public CategoryPred getPred() {
+        return pred;
+    }
+
 }

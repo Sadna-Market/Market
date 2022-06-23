@@ -387,8 +387,8 @@ public class RealMarket implements MarketBridge {
      * @param address    address to send the items for supply service
      * @return certificated of payment and supply
      */
-    public ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address) {
-        SLResponseOBJ<String> res = market.orderShoppingCart(uuid,
+    public ATResponseObj<ServiceDetailsPurchase> purchaseCart(String uuid, CreditCard creditCard, Address address) {
+        SLResponseOBJ<ServiceDetailsPurchase> res = market.orderShoppingCart(uuid,
                 address.city,
                 address.street,
                 address.apartment,
@@ -948,6 +948,34 @@ public class RealMarket implements MarketBridge {
     @Override
     public ATResponseObj<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID) {
         SLResponseOBJ<String> res = market.getBIDStatus(uuid,userEmail,storeID,productID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * get all bids in the store if has permission
+     *
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public ATResponseObj<HashMap<Integer, List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID) {
+        SLResponseOBJ<HashMap<Integer, List<ServiceBID>>> res = market.getAllOffersBIDS(uuid,storeID);
+        if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
+        return new ATResponseObj<>(res.value);
+    }
+
+    /**
+     * get all bids of user in the store
+     *
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    @Override
+    public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
+        SLResponseOBJ<List<ServiceBID>> res = market.getMyBIDs(uuid,storeID);
         if(res.errorOccurred()) return new ATResponseObj<>(null,String.valueOf(res.errorMsg));
         return new ATResponseObj<>(res.value);
     }

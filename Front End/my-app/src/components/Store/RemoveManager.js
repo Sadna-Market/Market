@@ -53,7 +53,7 @@ const RemoveManager = (props) => {
       <h3>Remove Owner \ Manager</h3>
       <div className="products__controls">
         <div className="products__control">
-          <label>The Email To Add</label>
+          <label>User email To Remove</label>
           <input
             type="text"
             value={email}

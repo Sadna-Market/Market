@@ -39,11 +39,11 @@ const AndCombineRule = (props) => {
       <AndRule uuid={UUID} storeID={storeID} onCategory={categoryHandler} />
     );
   };
-  const addHandler = () => {
-    setCommand(
-      <AddRule uuid={UUID} storeID={storeID} onRule={() => props.onRule()} />
-    );
-  };
+  // const addHandler = () => {
+  //   setCommand(
+  //     <AddRule uuid={UUID} storeID={storeID} onRule={() => props.onRule()} />
+  //   );
+  // };
   const orHandler = () => {
     setCommand(
       <OrRule uuid={UUID} storeID={storeID} onCategory={categoryHandler} />
@@ -61,7 +61,7 @@ const AndCombineRule = (props) => {
         <button onClick={andHandler}>AND</button>
         <button onClick={orHandler}>OR</button>
         <button onClick={xorHandler}>XOR</button>
-        <button onClick={addHandler}>ADD</button>
+        {/*<button onClick={addHandler}>ADD</button>*/}
       </div>
     </>
   );

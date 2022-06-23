@@ -24,6 +24,7 @@ public class ServiceShoppingCart {
     public ServiceShoppingCart() {
     }
 
+        //only for test use
         public List<List<Integer>> get() {
         List<List<Integer>> lst = new LinkedList<>();
         shoppingBagHash.forEach((i, bag) -> {

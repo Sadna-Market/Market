@@ -309,7 +309,7 @@ public class Store {
     public DResponseObj<Boolean> addNewBuyRule(BuyRule buyRule) {
         if(buyPolicy == null)
             buyPolicy = new BuyPolicy();
-        return buyPolicy.addNewBuyRule(buyRule);
+        return buyPolicy.addNewBuyRule(buyRule,storeId);
     }
 
     //requirement II.4.2
@@ -323,7 +323,7 @@ public class Store {
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule) {
         if(discountPolicy == null)
             discountPolicy = new DiscountPolicy();
-        return discountPolicy.addNewDiscountRule(discountRule);
+        return discountPolicy.addNewDiscountRule(discountRule,storeId);
     }
 
     //requirement II.4.2
@@ -336,13 +336,13 @@ public class Store {
     //requirement II.4.2
     public DResponseObj<Boolean> combineANDORDiscountRules(String operator, List<Integer> rules, int category, int discount) {
         if(discountPolicy == null) return new DResponseObj<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
-        return discountPolicy.combineANDORDiscountRules(operator,rules,category,discount);
+        return discountPolicy.combineANDORDiscountRules(operator,rules,category,discount,storeId);
     }
 
     //requirement II.4.2
     public DResponseObj<Boolean> combineXORDiscountRules(List<Integer> rules, String decision) {
         if(discountPolicy == null) return new DResponseObj<>(false,ErrorCode.INVALID_ARGS_FOR_RULE);
-        return discountPolicy.combineXORDiscountRules(rules,decision);
+        return discountPolicy.combineXORDiscountRules(rules,decision,storeId);
     }
 
 
@@ -377,19 +377,24 @@ public class Store {
     public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
         DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
         if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
-        if(findBID(email,productID) != null) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
+        BID exist = findBID(email,productID);
+        if(exist != null && ((exist.getStatus().equals(BID.StatusEnum.WaitingForApprovals)) || (exist.getStatus().equals(BID.StatusEnum.CounterBID)))) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
         ConcurrentHashMap<String,Boolean> approves =  createApprovesHashMap();
         DResponseObj<ProductStore> productStore = inventory.getProductInfo(productID);
         if(productStore.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         String productName = productStore.value.getProductType().getProductName().value;
         BID b = new BID(email,productID,productName,quantity,totalPrice,approves);
+        if(exist != null) bids.remove(exist);
         bids.add(b);
         return new DResponseObj<>(true);
     }
 
     private ConcurrentHashMap<String,Boolean> createApprovesHashMap(){
         ConcurrentHashMap<String,Boolean> approves = new ConcurrentHashMap<>();
-        getOwners().forEach(email -> approves.put(email,false));
+        getOwners().forEach(email -> {
+            if(!approves.containsKey(email))
+                approves.put(email,false);
+        });
         return approves;
     }
 
@@ -445,16 +450,14 @@ public class Store {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
         if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
-        b.reject();
-        return new DResponseObj<>(true);
+        return b.reject(ownerEmail);
     }
 
     public DResponseObj<Boolean> counterBID(String ownerEmail, String userEmail, int productID, int newTotalPrice) {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
         if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
-        b.counter(newTotalPrice);
-        return new DResponseObj<>(true);
+        return b.counter(ownerEmail,newTotalPrice);
     }
 
     public DResponseObj<Boolean> responseCounterBID(String userEmail, int productID, boolean approve) {
@@ -580,7 +583,7 @@ public class Store {
 
     public DResponseObj<List<BuyRule>> getBuyPolicy() {
         return buyPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
-         new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
+                new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
     }
 
     public DResponseObj<List<DiscountRule>> getDiscountPolicy() {

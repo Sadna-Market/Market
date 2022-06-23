@@ -3,10 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.Domain.ErrorCode;
-import com.example.demo.Domain.Market.Market;
-import com.example.demo.Domain.Market.PermissionManager;
-import com.example.demo.Domain.Market.ProductType;
-import com.example.demo.Domain.Market.permissionType;
+import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
@@ -694,7 +691,7 @@ public class Facade implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<String> orderShoppingCart(String userId, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+    public SLResponseOBJ<ServiceDetailsPurchase> orderShoppingCart(String userId, String city, String adress, int apartment, ServiceCreditCard creditCard) {
 
         /**
          * @requirement II. 2 .5
@@ -722,11 +719,11 @@ public class Facade implements IMarket {
                 creditCard.pin == null ||
                 creditCard.pin.equals(""))
             return new SLResponseOBJ<>(ErrorCode.NOTSTRING);
-        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res =
+        DResponseObj<DetailsPurchase> res =
                 market.order(UUID.fromString(userId), city, adress, apartment, creditCard.creditCard, creditCard.creditDate, creditCard.pin);
         if (res.errorOccurred()) return new SLResponseOBJ<>(null, res.errorMsg);
         //TODO: make res.val to string of certificates external servieces.
-        return new SLResponseOBJ<>("is ok", -1);
+        return new SLResponseOBJ<>(new ServiceDetailsPurchase(res.value), -1);
     }
 
 

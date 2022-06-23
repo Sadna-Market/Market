@@ -5,6 +5,9 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.DiscountRules.AddDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.XorDiscountRuleSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +15,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 // same like maximum
+@JsonTypeName("XorDiscountRule")
 public class XorDiscountRule extends CompositionDiscountRule {
 
     protected String decision;
 
-    public XorDiscountRule(List<DiscountRule> rules, String decision) {
+    @JsonCreator
+    public XorDiscountRule(@JsonProperty("rules") List<DiscountRule> rules,@JsonProperty("decision") String decision) {
         super(rules, 0.0);
         this.decision = decision;
     }
@@ -44,6 +49,7 @@ public class XorDiscountRule extends CompositionDiscountRule {
     }
 
 
+/*
     @Override
     public DResponseObj<String> getDiscountRule() {
         StringBuilder stringRule = new StringBuilder();
@@ -62,6 +68,7 @@ public class XorDiscountRule extends CompositionDiscountRule {
         }
         return new DResponseObj<>(stringRule.toString());
     }
+*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
@@ -72,5 +79,9 @@ public class XorDiscountRule extends CompositionDiscountRule {
             rulesSL.add(discountRuleSL.value);
         }
         return new DResponseObj<>(new XorDiscountRuleSL(rulesSL,decision,id));
+    }
+
+    public String getDecision() {
+        return decision;
     }
 }

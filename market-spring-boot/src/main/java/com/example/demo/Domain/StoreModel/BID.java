@@ -40,17 +40,27 @@ public class BID {
         Boolean success = approves.replace(ownerEmail,true);
         return success == null ? new DResponseObj<>(false,ErrorCode.NOPERMISSION) :
                 success ? new DResponseObj<>(false,ErrorCode.ALLREADYAPPROVEDTHISBID):
-                new DResponseObj<>(true);
+                        new DResponseObj<>(true);
     }
 
-    public void reject() {
-        status = StatusEnum.BIDRejected;
+    public DResponseObj<Boolean> reject(String ownerEmail) {
+        if(approves.containsKey(ownerEmail)) {
+            status = StatusEnum.BIDRejected;
+            return new DResponseObj<>(true);
+        }
+        return new DResponseObj<>(false,ErrorCode.NOPERMISSION);
     }
-    public void counter(int newTotalPrice) {
-        approves.replaceAll((K,V) -> V = false);
-        lastPrice = newTotalPrice;
-        status = StatusEnum.CounterBID;
+    public DResponseObj<Boolean> counter(String ownerEmail, int newTotalPrice) {
+        if(approves.containsKey(ownerEmail)) {
+            approves.replaceAll((K, V) -> V = false);
+            approves.replace(ownerEmail, true);
+            lastPrice = newTotalPrice;
+            status = StatusEnum.CounterBID;
+            return new DResponseObj<>(true);
+        }
+        return new DResponseObj<>(false);
     }
+
     public void responseCounter(boolean approve) {
         if(approve){
             status = StatusEnum.WaitingForApprovals;

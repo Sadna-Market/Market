@@ -26,7 +26,22 @@ const Bar = (props) => {
     setPassword(event.target.value);
   };
 
+  async function guestVisitHandler(event) {
+    event.preventDefault();
 
+    const guestVisitResponse = await apiClientHttp.guestVisit();
+
+    if (guestVisitResponse.errorMsg!== -1) {
+      SetError(errorCode.get(guestVisitResponse.errorMsg))
+    } else {
+      setUserName("guest");
+      SetError("")
+      setIsLogin(false);
+      props.onGuestVisit(guestVisitResponse.value);
+    }
+    console.log(guestVisitResponse)
+
+  }
   //todo: login after that the UUID put on onLogin(<UUID>)
   async function loginHandler(event) {
     event.preventDefault();
@@ -111,10 +126,10 @@ const Bar = (props) => {
           >
             Sign-Up
           </button>
-          {/*<button className="bar__button" onClick={initHandler}>*/}
-          {/*  {" "}*/}
-          {/*  Init-Market*/}
-          {/*</button>*/}
+          <button className="bar__button" onClick={guestVisitHandler}>
+            {" "}
+            Visit as a guest
+          </button>
 
         </div>
       </div>

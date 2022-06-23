@@ -51,6 +51,7 @@ function App(props) {
         var message = payload.body;
         console.log("Server message: [" + message + "]"); //for testing
         setAppNotification(message)
+        // setAppNotification("dasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf\ndasss1123213123sssssssssssssssssssssssssssf")
         //do what ever we want to do with the message (string)
     }
 
@@ -62,28 +63,32 @@ function App(props) {
     const [enteredError, SetError] = useState("");
 
     // const [UUID, SetUUID] = useState("-1");
-    let UUID='-1'
+    let UUID='-5'
     //
-    // async function guestVisit() {
-    //     const guestVisitResponse = await apiClientHttp.guestVisit();
-    //     if (guestVisitResponse.errorMsg !== -1) {
-    //         SetError(guestVisitResponse.errorMsg)
-    //     } else {
-    //         console.log("guestVisitResponse "+guestVisitResponse)
-    //         console.log("guestVisitResponse val "+guestVisitResponse.value)
-    //         SetUUID(guestVisitResponse.value)
-    //         UUID=guestVisitResponse.value
-    //
-    //     }
-    // }
-    // // guestVisit();
-    // useEffect(() => {
-    //     guestVisit();
-    // }, [UUID.refresh]);
+    async function guestVisitHandler(newUUID) {//args?????
+        UUID=newUUID
+        setBarcommand(
+            <Bar
+                onGuestVisit={guestVisitHandler}
+                uuid={newUUID}
+                onLogin={loginHandler}
+                onLogout={logoutHandler}
+                onSignUp={signUpHandler}
+                onInitMarket={InitMarketHendler}
+            />
+        );
+        console.log("guestVisitHandler newUUID "+newUUID)
+
+        console.log("guestVisitHandler UUID "+UUID)
+        connect();
+        setCommand(<Market uuid={newUUID} useremail={"guest"} isLogin={false} isSystemManager={false}/>);
+
+    }
+
     console.log("App UUID "+UUID)
 
 
-    const [command, setCommand] = useState(<Market uuid={UUID} isLogin={false}/>);
+    const [command, setCommand] = useState("");
 
     const [updateMarket, b] = useState("");
 
@@ -92,6 +97,7 @@ function App(props) {
         UUID=newUUID
        setBarcommand(
             <Bar
+                onGuestVisit={guestVisitHandler}
                 uuid={newUUID}
                 onLogin={loginHandler}
                 onLogout={logoutHandler}
@@ -116,6 +122,7 @@ function App(props) {
         // UUID='-1';
         setBarcommand(
             <Bar
+                onGuestVisit={guestVisitHandler}
                 uuid={uuid1}
                 onLogin={loginHandler}
                 onLogout={logoutHandler}
@@ -156,7 +163,14 @@ function App(props) {
     };
 
     const loginAfterRegisterHolder = () => {
-        setCommand(<Market uuid={UUID}/>);
+        setCommand(
+            <div className="market ">
+                <h2> sign up successfully </h2>
+
+            </div>);
+
+
+        // setCommand(<Market uuid={UUID}/>);
     };
 
     const signUpHandler = () => {
@@ -173,6 +187,7 @@ function App(props) {
         <Bar
             uuid={UUID}
             onLogin={loginHandler}
+            onGuestVisit={guestVisitHandler}
             onLogout={logoutHandler}
             onSignUp={signUpHandler}
             onInitMarket={InitMarketHendler}

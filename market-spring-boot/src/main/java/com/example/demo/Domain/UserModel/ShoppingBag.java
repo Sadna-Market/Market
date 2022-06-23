@@ -4,6 +4,7 @@ import com.example.demo.DataAccess.CompositeKeys.ShoppingBagId;
 import com.example.demo.DataAccess.Entity.DataShoppingBag;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Domain.StoreModel.Store;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,19 @@ public class ShoppingBag {
 
     public DResponseObj<ConcurrentHashMap<Integer, Integer>> getProductQuantity() {
         return new DResponseObj<>(productQuantity);
+    }
+
+    public DResponseObj<ConcurrentHashMap<Integer, ProductStore>> getProducts() {
+        ConcurrentHashMap<Integer,ProductStore> products = new ConcurrentHashMap<>();
+        productQuantity.forEach((id,quantity) -> {
+            DResponseObj<ProductStore> ps = store.getProductInStoreInfo(id);
+            if(!ps.errorOccurred()){
+                ProductStore productStore = ps.value;
+                ProductStore productUser = new ProductStore(productStore.getProductType(),quantity,productStore.getPrice().value);
+                products.put(id,productUser);
+            }
+        });
+        return new DResponseObj<>(products);
     }
     public DResponseObj<Boolean> isEmpty(){
         return new DResponseObj<>(productQuantity.isEmpty(),-1);

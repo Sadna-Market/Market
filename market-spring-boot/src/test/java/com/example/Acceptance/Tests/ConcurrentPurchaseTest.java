@@ -3,6 +3,7 @@ package com.example.Acceptance.Tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.Acceptance.Obj.*;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -55,13 +56,13 @@ public class ConcurrentPurchaseTest extends MarketTests {
         //main action
 
         Thread guestBuy = new Thread(() -> {
-            ATResponseObj<String> response = market.purchaseCart(uuid, creditCard, address);
+            ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(uuid, creditCard, address);
             guestSuccessBuy = !response.errorOccurred();
         });
         //main action
         Thread memberBuy = new Thread(() -> {
             ATResponseObj<String> id = market.login(market.guestVisit(), registeredUser);
-            ATResponseObj<String> response = market.purchaseCart(id.value, creditCard, address);
+            ATResponseObj<ServiceDetailsPurchase> response = market.purchaseCart(id.value, creditCard, address);
             registeredUserSuccessBuy = !response.errorOccurred();
         });
         memberBuy.start();

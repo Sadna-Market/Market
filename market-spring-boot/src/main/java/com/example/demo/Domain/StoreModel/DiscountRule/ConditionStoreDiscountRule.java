@@ -9,13 +9,19 @@ import com.example.demo.Service.ServiceObj.DiscountRules.ConditionStoreDiscountR
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.SimpleStoreDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.Predicate.ShoppingBagPredicateSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("ConditionStoreDiscountRule")
 public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
+
     protected ShoppingBagPred pred;
 
-    public ConditionStoreDiscountRule(ShoppingBagPred pred,double percentDiscount) {
+    @JsonCreator
+    public ConditionStoreDiscountRule(@JsonProperty("pred") ShoppingBagPred pred,@JsonProperty("percentDiscount") double percentDiscount) {
         super(percentDiscount);
         this.pred = pred;
     }
@@ -29,7 +35,7 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
         return new DResponseObj<>(0.0, res.getErrorMsg());
     }
 
-    @Override
+/*    @Override
     public DResponseObj<String> getDiscountRule() {
         String stringRule = "";
         if (id == 0) stringRule += pred.getPredicateDiscountRule();
@@ -39,10 +45,15 @@ public class ConditionStoreDiscountRule extends SimpleStoreDiscountRule{
             stringRule += " so all products in store have a " + percentDiscount + "% discount";
         }
         return new DResponseObj<>(stringRule);
-    }
+    }*/
 
     @Override
     public DResponseObj<DiscountRuleSL> convertToDiscountRuleSL() {
         return new DResponseObj<>(new ConditionStoreDiscountRuleSL(new ShoppingBagPredicateSL(pred),percentDiscount,id));
     }
+
+    public ShoppingBagPred getPred() {
+        return pred;
+    }
+
 }

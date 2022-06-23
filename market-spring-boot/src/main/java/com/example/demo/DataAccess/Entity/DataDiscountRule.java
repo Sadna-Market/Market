@@ -24,7 +24,7 @@ public class DataDiscountRule {
     )
     private Integer discountRuleId;
 
-    @Column(name = "rule")
+    @Column(name = "rule",columnDefinition="TEXT")
     private String rule;
 
     @ManyToOne

@@ -51,6 +51,10 @@ public class PaymentService extends AbsExternalService{
         logger.debug("start PAy with API");
         if (cardNumber==null || exp==null || pin==null || pin.length()!=3 || exp.length()!=5 || cardNumber.equals(""))
             return new DResponseObj<>(ErrorCode.CARD_NOTRIGHT);
+        if(pin.equals("984"))
+            return new DResponseObj<>(ErrorCode.UNEXPECTED984);
+        if(pin.equals("986"))
+            return new DResponseObj<>(ErrorCode.UNEXPECTED986);
         String[] splited = exp.split("/");
         if(splited.length!=2)
             return new DResponseObj<>(ErrorCode.CARD_NOTRIGHT);

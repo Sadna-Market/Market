@@ -7,15 +7,20 @@ import com.example.demo.Service.ServiceObj.BuyRules.AndBuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.AndDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@JsonTypeName("AndBuyRule")
 public class AndBuyRule extends CompositionBuyRule {
 
 
-    public AndBuyRule(List<BuyRule> rules) {
+    @JsonCreator
+    public AndBuyRule(@JsonProperty("rules") List<BuyRule> rules){
         super(rules);
     }
 
@@ -28,6 +33,7 @@ public class AndBuyRule extends CompositionBuyRule {
         }
         return new DResponseObj<>(true); //passes all rules
     }
+/*
 
     @Override
     public DResponseObj<String> getBuyRule() {
@@ -38,6 +44,7 @@ public class AndBuyRule extends CompositionBuyRule {
             stringRule.append(rule.getBuyRule().value).append("\n\t");
         return new DResponseObj<>(stringRule.toString());
     }
+*/
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {

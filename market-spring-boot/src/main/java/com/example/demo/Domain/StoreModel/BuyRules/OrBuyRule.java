@@ -6,17 +6,37 @@ import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Service.ServiceObj.BuyRules.AndBuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.BuyRules.OrBuyRuleSL;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+@JsonTypeName("OrBuyRule")
 public class OrBuyRule extends CompositionBuyRule{
 
-
-    public OrBuyRule(List<BuyRule> rules) {
+    @JsonCreator
+    public OrBuyRule(@JsonProperty("rules") List<BuyRule> rules){
         super(rules);
     }
+
+
+/*
+    public OrBuyRule(List<BuyRule> rules){
+        super(rules);
+    }
+
+    @JsonCreator
+    public OrBuyRule(){
+        super();
+    }
+*/
 
     @Override
     public DResponseObj<Boolean> passRule(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag) {
@@ -28,6 +48,7 @@ public class OrBuyRule extends CompositionBuyRule{
         return new DResponseObj<>(false, pass.getErrorMsg()); //not passes all rules
     }
 
+/*
     @Override
     public DResponseObj<String> getBuyRule() {
         StringBuilder stringRule = new StringBuilder();
@@ -37,6 +58,7 @@ public class OrBuyRule extends CompositionBuyRule{
             stringRule.append(rule.getBuyRule().value).append("\n\t");
         return new DResponseObj<>(stringRule.toString());
     }
+*/
 
     @Override
     public DResponseObj<BuyRuleSL> convertToBuyRuleSL() {

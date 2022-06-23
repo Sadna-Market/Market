@@ -4,10 +4,13 @@ package com.example.Acceptance.Bridge;
 import com.example.Acceptance.Obj.*;
 import com.example.demo.Service.ServiceObj.BuyRules.BuyRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
+import com.example.demo.Service.ServiceObj.ServiceBID;
 import com.example.demo.Service.ServiceObj.ServiceCreditCard;
+import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import com.example.demo.Service.ServiceObj.ServiceStore;
 import com.example.demo.Service.ServiceResponse.SLResponseOBJ;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface MarketBridge {
@@ -237,7 +240,7 @@ public interface MarketBridge {
      * @param address address to send the items for supply service
      * @return certificated of payment and supply
      */
-    ATResponseObj<String> purchaseCart(String uuid, CreditCard creditCard, Address address);
+    ATResponseObj<ServiceDetailsPurchase> purchaseCart(String uuid, CreditCard creditCard, Address address);
 
     /**
      * query to get the history of all purchases of a store with storeID
@@ -587,4 +590,24 @@ public interface MarketBridge {
      * @return  true if success, else false
      */
     public ATResponseObj<String> getBIDStatus(String uuid, String userEmail, int storeID, int productID);
-}
+
+
+    /**
+     * get all bids in the store if has permission
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    public ATResponseObj<HashMap<Integer,List<ServiceBID>>> getAllOffersBIDS(String uuid, int storeID);
+
+
+    /**
+     * get all bids of user in the store
+     * @param uuid
+     * @param storeID
+     * @return list of bids or error msg
+     */
+    public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID);
+
+
+    }

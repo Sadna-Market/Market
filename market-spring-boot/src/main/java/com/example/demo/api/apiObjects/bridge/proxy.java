@@ -314,9 +314,9 @@ public class proxy implements IMarket {
     }
 
     @Override
-    public SLResponseOBJ<String> orderShoppingCart(String userId, String city, String adress, int apartment, ServiceCreditCard creditCard) {
+    public SLResponseOBJ<ServiceDetailsPurchase> orderShoppingCart(String userId, String city, String adress, int apartment, ServiceCreditCard creditCard) {
         if(REAL==null){
-            return new SLResponseOBJ<>(userId+city+adress+" "+apartment,-1);
+            return new SLResponseOBJ<>(null,-1);
         }
         return REAL.orderShoppingCart(userId,city,adress,apartment,creditCard);
     }

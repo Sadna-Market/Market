@@ -504,7 +504,7 @@ public class Market {
     //2.2.5
     //pre: user is online
     //post: start process of sealing with the User
-    public DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> order(UUID userId, String City, String Street, int apartment, String cardNumber, String exp, String pin) {
+    public DResponseObj<DetailsPurchase> order(UUID userId, String City, String Street, int apartment, String cardNumber, String exp, String pin) {
         //check valid Card
         DResponseObj<Boolean> checkValidCard = checkValidCard(cardNumber, exp, pin);
         if (checkValidCard.errorOccurred()) return new DResponseObj<>(checkValidCard.getErrorMsg());
@@ -526,18 +526,18 @@ public class Market {
         if (shoppingCart.errorOccurred()) return new DResponseObj<>(shoppingCart.getErrorMsg());
         if (shoppingCart.value.getHashShoppingCart().value.isEmpty())
             return new DResponseObj<>(null, ErrorCode.EMPTY_CART);
-        DResponseObj<ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>> res = purchase.order(user.getValue(), City, Street, apartment, cardNumber, exp, pin);
-        if (res.errorOccurred() || res.value.isEmpty()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
-        notifyOwnersPurchase(user.value, res.value);
+        DResponseObj<DetailsPurchase> res = purchase.order(user.getValue(), City, Street, apartment, cardNumber, exp, pin);
+        if (res.errorOccurred()) return new DResponseObj<>(null, ErrorCode.ORDER_FAIL);
+        notifyOwnersPurchase(user.value, res.value.getBoughtInStores());
         userManager.resetShoppingCart(userId);
         return res;
     }
 
-    private void notifyOwnersPurchase(User buyer, ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> stores) {
+    private void notifyOwnersPurchase(User buyer, List<Integer> stores) {
         //in the future we can make a message factory. for now lets keep it simple.
         logger.info("notifying all stores that had a purchase.");
         String msg = String.format("User: %s has purchased items from your store", buyer.getEmail().value);
-        stores.forEach((storeID, purchaseMap) -> {
+        stores.forEach(storeID -> {
             logger.info(String.format("notifying store[%d] owners of purchase", storeID));
             Store store = this.stores.get(storeID);
             List<User> owners = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
@@ -1325,10 +1325,14 @@ public class Market {
         DResponseObj<Boolean> responseCounterBID = s.value.responseCounterBID(userEmail, productID, approve);
         if (responseCounterBID.errorOccurred()) return responseCounterBID;
         logger.info(String.format("[%s] accept countered BID in storeID [%d] , productID [%d]", userEmail, storeID, productID));
-        String msg;
-        msg = approve ? String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID) :
+        String msgToOwners;
+        msgToOwners = approve ? String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID) :
                 String.format("[%s] rejected his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID);
-        notifyOwnersAndManagersWithPermBID(s.value, msg);
+        notifyOwnersAndManagersWithPermBID(s.value, msgToOwners);
+        if(approve && s.value.allApprovedBID(userEmail,productID)){
+            String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", s.value.getStoreId().value, productID);
+            notifyUser(userEmail, msg);
+        }
         return new DResponseObj<>(true);
     }
 
@@ -1367,7 +1371,7 @@ public class Market {
         DResponseObj<BID> canBuyBID = s.value.canBuyBID(user.getValue().getEmail().value, productID); //return quantity to buy
         if (canBuyBID.errorOccurred()) return new DResponseObj<>(canBuyBID.getErrorMsg());
         int quantity = canBuyBID.value.getQuantity();
-        int finalPrice = canBuyBID.value.getTotalPrice();
+        int finalPrice = canBuyBID.value.getLastPrice();
         ShoppingBag BID = new ShoppingBag(s.value,user.value.getEmail().value);
         BID.addProduct(productID, quantity);
         DResponseObj<Boolean> res = purchase.orderBID(user.getValue(), storeID, BID, finalPrice, city, adress, apartment, cardNumber, exp, pin);

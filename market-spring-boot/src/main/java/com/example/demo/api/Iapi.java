@@ -104,7 +104,7 @@ public interface Iapi {
     public SLResponseOBJ<Boolean> setProductQuantityShoppingBag(String userId, int productId, int storeId, int quantity);
 
     //2.2.5
-    public SLResponseOBJ<String> orderShoppingCart(String uuid,@RequestBody apiUser apiUser) ;
+    public SLResponseOBJ<ServiceDetailsPurchase> orderShoppingCart(String uuid,@RequestBody apiUser apiUser) ;
 
     //2.3.1
     public SLResponseOBJ<String> logout(String userId);

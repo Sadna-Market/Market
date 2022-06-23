@@ -22,6 +22,8 @@ const Status = (props) => {
   const confirmHandler = (event) => {//buy
     // BuyBID:async(userId,storeID,productID,city,adress,apartment,creditcard,creditDate,pin)=>{
     setStatus("Cancel")
+    props.onChange()
+
   };
   async function cancelHandler(){
     const removeBIDResponse = await apiClientHttp.removeBID(UUID,storeID,productID,);
@@ -32,6 +34,7 @@ const Status = (props) => {
       SetError(errorCode.get(removeBIDResponse.errorMsg))
     } else {
       SetError("")
+      props.onChange()
 
     }
   }
@@ -43,8 +46,31 @@ const Status = (props) => {
   // cancel - removebid
   // without the $
   //to present price (הצעת הנגד)
+  async function reject(){
+    //        responseCounterBID:async(uuid,storeID,productID,approve)=>{
+    const responseCounterBIDResponse = await apiClientHttp.responseCounterBID(UUID,storeID,productID,false);
+    console.log(responseCounterBIDResponse)
 
+    if (responseCounterBIDResponse.errorMsg !== -1) {
+      SetError(errorCode.get(responseCounterBIDResponse.errorMsg))
+    } else {
+      SetError("")
+      props.onChange()
 
+    }
+  }
+  async function Confirm(){
+    const responseCounterBIDResponse = await apiClientHttp.responseCounterBID(UUID,storeID,productID,true);
+    console.log(responseCounterBIDResponse)
+
+    if (responseCounterBIDResponse.errorMsg !== -1) {
+      SetError(errorCode.get(responseCounterBIDResponse.errorMsg))
+    } else {
+      SetError("")
+      props.onChange()
+
+    }
+  }
   //todo: send offer
 
   const sendHandler = () => {
@@ -52,9 +78,19 @@ const Status = (props) => {
   };
   //get the price and the amount
   const [status, setStatus] = useState(props.status);
+  const [originPrice, setoriginPrice] = useState(props.originPrice);
+  const [counterPrice, setcounterPrice] = useState(props.counterPrice);
 
   let name = props.name;
-
+//            originPrice={expense.originPrice}
+//             counterPrice={expense.counterPrice}
+//             id={expense.id}
+//             name={expense.name}
+//             status={expense.status}
+//             uuid={UUID}
+//             storeID={storeID}
+//             amount={expense.amount}
+//             onConfirm={() => props.onConfirm(expense.id, expense.amount)}
   return (
     <li>
       <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
@@ -62,10 +98,13 @@ const Status = (props) => {
       <Card className="product-item">
         <div className="product-item__price">#{productID}</div>
         <div className="product-item__description">
-          <h2>{name}</h2>
+          <h2>product name: {name}</h2>
           <h2>amount: {props.amount}</h2>
           <h2>Status: {status} </h2>
-          {/* {status === "Counter"?             
+          <h2>Origin Price: {originPrice} </h2>
+          <h2>counter Price: {counterPrice}</h2>
+
+          {/* {status === "Counter"?
             <>
               <h2>Your Offer</h2>
               $<input type="number" value={offer} onChange={offerHandler}></input>
@@ -83,31 +122,50 @@ const Status = (props) => {
         </>:
         <></>
              } */}
-          {status === "Counter" ? (
+          {/*{status === "Counter" ? (*/}
+          {/*  <>*/}
+          {/*    <h2>Your Offer</h2>$*/}
+          {/*    <input*/}
+          {/*      type="number"*/}
+          {/*      value={offer}*/}
+          {/*      onChange={offerHandler}*/}
+          {/*    ></input>*/}
+          {/*    <button onClick={sendHandler}>Send</button>*/}
+          {/*  </>*/}
+          {/*) : */}
+
+              {status === "Approved" ? (
             <>
-              <h2>Your Offer</h2>$
-              <input
-                type="number"
-                value={offer}
-                onChange={offerHandler}
-              ></input>
-              <button onClick={sendHandler}>Send</button>
+              <button onClick={() => props.onConfirm()}>Buy</button>
+              <button onClick={cancelHandler}>Cancel</button>
+
             </>
-          ) : status === "Approved" ? (
-            <>
-              <button onClick={confirmHandler}>Confirm</button>
-            </>
-          ) : (
+          ) :
+
+                  (
             <></>
           )}
         </div>
         <div>
-          {status === "Waiting" ||
-          status === "Approved" ||
-          status === "Counter" ? (
+          {status === "Waiting" ? (
+              <>
             <button onClick={cancelHandler}>Cancel</button>
-          ) : (
+            </>
+            ) : (
             <></>
+          )}
+        </div>
+        <div>
+          {
+          status === "Counter" ? (
+              <>
+                <button onClick={Confirm}>Confirm</button>
+                <button onClick={reject}>Reject</button>
+                <button onClick={cancelHandler}>Cancel</button>
+
+              </>
+          ) : (
+              <></>
           )}
         </div>
       </Card>
