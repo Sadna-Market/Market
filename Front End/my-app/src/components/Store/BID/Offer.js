@@ -126,6 +126,17 @@ const Offer = (props) => {
                         )}
                     </div>
                     <div>
+                        {props.status === "Bought" ? (
+                            <>
+
+                                <h2>  Bought!</h2>
+
+                            </>
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div>
                         {props.status === "Rejected" ? (
                             <>
 
@@ -136,7 +147,6 @@ const Offer = (props) => {
                             <></>
                         )}
                     </div>
-
 
                     {/*<div className="BIDitem__control">*/}
                     {/*  <button onClick={clickHandler}>Offers</button>*/}
