@@ -18,9 +18,12 @@ import com.example.demo.Service.ServiceObj.DiscountRules.DiscountRuleSL;
 import com.example.demo.Service.ServiceObj.DiscountRules.SimpleStoreDiscountRuleSL;
 import com.example.demo.Service.ServiceObj.Predicate.ProductPredicateSL;
 import com.example.demo.Service.ServiceObj.Predicate.UserPredicateSL;
+import com.example.demo.Service.ServiceObj.ServiceBID;
 import com.example.demo.Service.ServiceObj.ServiceCreditCard;
 import com.example.demo.Service.ServiceObj.ServiceDetailsPurchase;
 import org.junit.jupiter.api.*;
+
+import java.util.HashMap;
 import java.util.List;
 @DisplayName("Purchase Cart Tests  - AT")
 public class PurchaseTest extends MarketTests {
@@ -459,71 +462,111 @@ public class PurchaseTest extends MarketTests {
 
     @Test
     @DisplayName("Requirement: Purchase BID - success test")
+    void purchaseBID_Success0() {
+        // user create BID -> founder approve ->  buy success -> try buy again(fail)
+        User userBID = generateUser();
+        assertTrue(market.register(uuid, userBID.username, userBID.password, userBID.dateOfBirth));
+        ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5_ID;
+        ATResponseObj<String> userBIDID = market.login(uuid, userBID); //userBID is member
+        assertFalse(userBIDID.errorOccurred());
+        uuid =userBIDID.value;
+        assertTrue(market.createBID(uuid,existing_storeID, IPHONE_5_ID ,1,100).value);      // userBID create BID
+        assertEquals(1, market.getMyBIDs(uuid, existing_storeID).value.get(0).approves.size());  //approves size 1
+        ATResponseObj<String> founderID = market.logout(uuid);
+        assertFalse(founderID.errorOccurred());
+        uuid =founderID.value;
+        founderID =market.login(uuid, member); //member is contributor
+
+        ATResponseObj<HashMap<Integer, List<ServiceBID>>> allBIDS = market.getAllOffersBIDS(founderID.value,existing_storeID);
+        assertEquals(1, allBIDS.value.get(1).get(0).approves.size());  //approves size 1
+        assertFalse( allBIDS.value.get(1).get(0).approves.get(member.username));  //not approved yet
+        assertTrue(market.approveBID(founderID.value,userBID.username,existing_storeID,IPHONE_5_ID).value);
+        ATResponseObj<HashMap<Integer, List<ServiceBID>>> allBIDS2 = market.getAllOffersBIDS(founderID.value,existing_storeID);
+        assertEquals(1, allBIDS2.value.get(1).get(0).approves.size());  //approves size 1
+        assertTrue( allBIDS2.value.get(1).get(0).approves.get(member.username));  //approved
+        assertEquals("Approved", allBIDS2.value.get(1).get(0).status);
+
+        ATResponseObj<String> userID = market.logout(founderID.value);
+        assertFalse(userID.errorOccurred());
+        uuid =userID.value;
+        userID =market.login(uuid, userBID);
+
+        ServiceCreditCard creditCard = new ServiceCreditCard("1111222233334444", "11/23", "111");
+        assertTrue(market.BuyBID(userID.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).value);
+    }
+
+    /**
+     * Requirement: Purchase BID
+     */
+
+    @Test
+    @DisplayName("Requirement: Purchase BID - success test")
     void purchaseBID_Success1() {
-    // user create BID -> founder add new owner -> founder approve -> user try to buy(fail) -> newOwner approve -> buy success -> try buy again(fail)
+        // user create BID -> founder add new owner -> founder approve -> user try to buy(fail) -> newOwner approve -> buy success -> try buy again(fail)
 
-    User userBID = generateUser();
-    assertTrue(market.register(uuid, userBID.username, userBID.password, userBID.dateOfBirth));
-    User newOwner = generateUser();
-    assertTrue(market.register(uuid, newOwner.username, newOwner.password, newOwner.dateOfBirth));
+        User userBID = generateUser();
+        assertTrue(market.register(uuid, userBID.username, userBID.password, userBID.dateOfBirth));
+        User newOwner = generateUser();
+        assertTrue(market.register(uuid, newOwner.username, newOwner.password, newOwner.dateOfBirth));
 
-    ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
-    item1.itemID = IPHONE_5_ID;
-    // userBID create BID
-    ATResponseObj<String> userBIDID = market.login(uuid, userBID); //userBID is member
-    assertFalse(userBIDID.errorOccurred());
-    uuid =userBIDID.value;
-    assertTrue(market.createBID(uuid,existing_storeID, IPHONE_5_ID ,1,100).value);
+        ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
+        item1.itemID = IPHONE_5_ID;
+        // userBID create BID
+        ATResponseObj<String> userBIDID = market.login(uuid, userBID); //userBID is member
+        assertFalse(userBIDID.errorOccurred());
+        uuid =userBIDID.value;
+        assertTrue(market.createBID(uuid,existing_storeID, IPHONE_5_ID ,1,100).value);
 
-    ATResponseObj<String> founderID = market.logout(uuid);
-    assertFalse(founderID.errorOccurred());
-    uuid =founderID.value;
-    founderID =market.login(uuid, member); //member is contributor
-    //assign another owner
-    assertTrue(market.assignNewOwner(founderID.value, existing_storeID, newOwner));
-    assertTrue(market.isOwner(existing_storeID, newOwner));
-    assertTrue(market.approveBID(founderID.value,userBID.username,existing_storeID,IPHONE_5_ID).value);
+        ATResponseObj<String> founderID = market.logout(uuid);
+        assertFalse(founderID.errorOccurred());
+        uuid =founderID.value;
+        founderID =market.login(uuid, member); //member is contributor
+        //assign another owner
+        assertTrue(market.assignNewOwner(founderID.value, existing_storeID, newOwner));
+        assertTrue(market.isOwner(existing_storeID, newOwner));
+        assertTrue(market.approveBID(founderID.value,userBID.username,existing_storeID,IPHONE_5_ID).value);
 
-    ATResponseObj<String> userID = market.logout(founderID.value);
-    assertFalse(userID.errorOccurred());
-    uuid =userID.value;
-    userID =market.login(uuid, userBID);
+        ATResponseObj<String> userID = market.logout(founderID.value);
+        assertFalse(userID.errorOccurred());
+        uuid =userID.value;
+        userID =market.login(uuid, userBID);
 
-    ServiceCreditCard creditCard = new ServiceCreditCard("1111222233334444", "11/23", "111");
-    assertTrue(market.BuyBID(userID.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).errorOccurred());
+        ServiceCreditCard creditCard = new ServiceCreditCard("1111222233334444", "11/23", "111");
+        assertTrue(market.BuyBID(userID.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).errorOccurred());
 
-    ATResponseObj<String> newOwnerID = market.logout(userID.value);
-    assertFalse(newOwnerID.errorOccurred());
-    uuid =newOwnerID.value;
-    newOwnerID =market.login(uuid, newOwner);
+        ATResponseObj<String> newOwnerID = market.logout(userID.value);
+        assertFalse(newOwnerID.errorOccurred());
+        uuid =newOwnerID.value;
+        newOwnerID =market.login(uuid, newOwner);
 
-    assertTrue(market.approveBID(newOwnerID.value,userBID.username,existing_storeID,IPHONE_5_ID).value);
+        assertTrue(market.approveBID(newOwnerID.value,userBID.username,existing_storeID,IPHONE_5_ID).value);
 
-    ATResponseObj<String> userID2 = market.logout(newOwnerID.value);
-    assertFalse(userID2.errorOccurred());
-    uuid =userID2.value;
-    userID2 =market.login(uuid, userBID);
+        ATResponseObj<String> userID2 = market.logout(newOwnerID.value);
+        assertFalse(userID2.errorOccurred());
+        uuid =userID2.value;
+        userID2 =market.login(uuid, userBID);
 
-    assertTrue(market.BuyBID(userID2.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).value);
-    assertTrue(market.BuyBID(userID2.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).errorOccurred());
+        assertTrue(market.BuyBID(userID2.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).value);
+        assertTrue(market.BuyBID(userID2.value,existing_storeID,IPHONE_5_ID,"haifa","ads",1,creditCard).errorOccurred());
 
 
-    ATResponseObj<String> managerID = market.logout(userID2.value);
-    assertFalse(managerID.errorOccurred());
-    uuid =managerID.value;
-    managerID = market.login(uuid, member);
-    //post conditions
-    assertFalse(managerID.errorOccurred());
-    uuid = managerID.value;
-    assertEquals(1, market.getHistoryPurchase(uuid, existing_storeID).value.size());
-    int amountItem1 = market.getAmountOfProductInStore(existing_storeID, item1);
-    assertEquals(0, amountItem1);
+        ATResponseObj<String> managerID = market.logout(userID2.value);
+        assertFalse(managerID.errorOccurred());
+        uuid =managerID.value;
+        managerID = market.login(uuid, member);
+        //post conditions
+        assertFalse(managerID.errorOccurred());
+        uuid = managerID.value;
+        assertEquals(1, market.getHistoryPurchase(uuid, existing_storeID).value.size());
+        int amountItem1 = market.getAmountOfProductInStore(existing_storeID, item1);
+        assertEquals(0, amountItem1);
 
-    ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);
-    List<History> recipes = res.value;
-    assertEquals(1, recipes.size());
-    assertTrue(recipes.stream().anyMatch(h -> h.getFinalPrice() == 100));
-}
+        ATResponseObj<List<History>> res = market.getHistoryPurchase(uuid, existing_storeID);
+        List<History> recipes = res.value;
+        assertEquals(1, recipes.size());
+        assertTrue(recipes.stream().anyMatch(h -> h.getFinalPrice() == 100));
+    }
 
     /**
      * Requirement: Purchase BID

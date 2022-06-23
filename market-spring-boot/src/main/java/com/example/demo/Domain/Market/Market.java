@@ -1317,10 +1317,14 @@ public class Market {
         DResponseObj<Boolean> responseCounterBID = s.value.responseCounterBID(userEmail, productID, approve);
         if (responseCounterBID.errorOccurred()) return responseCounterBID;
         logger.info(String.format("[%s] accept countered BID in storeID [%d] , productID [%d]", userEmail, storeID, productID));
-        String msg;
-        msg = approve ? String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID) :
+        String msgToOwners;
+        msgToOwners = approve ? String.format("[%s] approved his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID) :
                 String.format("[%s] rejected his countered BID in storeID [%d] for productID [%d]", userEmail, storeID, productID);
-        notifyOwnersAndManagersWithPermBID(s.value, msg);
+        notifyOwnersAndManagersWithPermBID(s.value, msgToOwners);
+        if(approve && s.value.allApprovedBID(userEmail,productID)){
+            String msg = String.format("your BID in storeID [%d] for ProductID [%d] approved, pay and get the product", s.value.getStoreId().value, productID);
+            notifyUser(userEmail, msg);
+        }
         return new DResponseObj<>(true);
     }
 
