@@ -377,19 +377,24 @@ public class Store {
     public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
         DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
         if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
-        if(findBID(email,productID) != null) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
+        BID exist = findBID(email,productID);
+        if(exist != null && ((exist.getStatus().equals(BID.StatusEnum.WaitingForApprovals)) || (exist.getStatus().equals(BID.StatusEnum.CounterBID)))) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
         ConcurrentHashMap<String,Boolean> approves =  createApprovesHashMap();
         DResponseObj<ProductStore> productStore = inventory.getProductInfo(productID);
         if(productStore.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         String productName = productStore.value.getProductType().getProductName().value;
         BID b = new BID(email,productID,productName,quantity,totalPrice,approves);
+        if(exist != null) bids.remove(exist);
         bids.add(b);
         return new DResponseObj<>(true);
     }
 
     private ConcurrentHashMap<String,Boolean> createApprovesHashMap(){
         ConcurrentHashMap<String,Boolean> approves = new ConcurrentHashMap<>();
-        getOwners().forEach(email -> approves.put(email,false));
+        getOwners().forEach(email -> {
+            if(!approves.containsKey(email))
+                approves.put(email,false);
+        });
         return approves;
     }
 
