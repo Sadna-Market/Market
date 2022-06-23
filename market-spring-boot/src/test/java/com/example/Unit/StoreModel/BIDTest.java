@@ -36,7 +36,7 @@ class BIDTest {
     @Test
     void rejectS() {
         assertEquals(b.getStatus(), BID.StatusEnum.WaitingForApprovals);
-        b.reject();
+        b.reject("niv@gmail.com");
         assertEquals(b.getStatus(), BID.StatusEnum.BIDRejected);
     }
 

@@ -450,16 +450,14 @@ public class Store {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
         if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
-        b.reject();
-        return new DResponseObj<>(true);
+        return b.reject(ownerEmail);
     }
 
     public DResponseObj<Boolean> counterBID(String ownerEmail, String userEmail, int productID, int newTotalPrice) {
         BID b = findBID(userEmail,productID);
         if (b==null) return new DResponseObj<>(false,ErrorCode.BIDNOTEXISTS);
         if (b.getStatus() != BID.StatusEnum.WaitingForApprovals) return new DResponseObj<>(false,ErrorCode.STATUSISNOTWAITINGAPPROVES);
-        b.counter(ownerEmail,newTotalPrice);
-        return new DResponseObj<>(true);
+        return b.counter(ownerEmail,newTotalPrice);
     }
 
     public DResponseObj<Boolean> responseCounterBID(String userEmail, int productID, boolean approve) {
@@ -585,7 +583,7 @@ public class Store {
 
     public DResponseObj<List<BuyRule>> getBuyPolicy() {
         return buyPolicy == null ? new DResponseObj<>(new ArrayList<>()) :
-         new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
+                new DResponseObj<>(new ArrayList<>(buyPolicy.getRules().values()));
     }
 
     public DResponseObj<List<DiscountRule>> getDiscountPolicy() {
