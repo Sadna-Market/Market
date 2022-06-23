@@ -28,7 +28,7 @@ public class RuleService {
         this.storeRepository = storeRepository;
     }
 
-   // @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     //return int id of buy rule (-1 if error)
     public int insertDiscountRule(DataDiscountRule discountRule,int storeID) {
         try {
@@ -48,7 +48,8 @@ public class RuleService {
             return -1;
         }
     }
-    // @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+
+     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     //return int id of buy rule (-1 if error)
     public int insertBuyRule(DataBuyRule buyRule,int storeID) {
         try {
@@ -93,7 +94,7 @@ public class RuleService {
         }
     }
 
-    //@Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public DataBuyRule getBuyRuleByID(int buyRuleID) {
         try {
             Optional<DataBuyRule> buyRule = buyRuleRepository.findById(buyRuleID);
@@ -109,7 +110,7 @@ public class RuleService {
         }
     }
 
-    //@Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public DataDiscountRule getDiscountRuleByID(int discountRuleID) {
         try {
             Optional<DataDiscountRule> discountRule = discountRuleRepository.findById(discountRuleID);

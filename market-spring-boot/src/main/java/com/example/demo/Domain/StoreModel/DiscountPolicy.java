@@ -19,16 +19,18 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
 public class DiscountPolicy {
+
+    private static DataServices dataServices;
+
+    public static void setDataService(DataServices dataService) { DiscountPolicy.dataServices = dataService;}
+
 
     private ConcurrentHashMap<Integer, DiscountRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
 
     static Logger logger=Logger.getLogger(DiscountPolicy.class);
 
-    @Autowired
-    private DataServices dataServices;
 
     public DiscountPolicy(ServiceDiscountPolicy discountPolicy) {
         this.rules = new ConcurrentHashMap<>();

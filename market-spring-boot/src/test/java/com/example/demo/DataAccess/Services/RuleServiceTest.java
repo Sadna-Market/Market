@@ -168,9 +168,9 @@ class RuleServiceTest {
         DiscountRule rule3 = new ConditionProductDiscountRule(new ProductPred(1,2,3),30);
         DiscountRule rule4 = new AddDiscountRule(List.of(rule1,rule2));
         DiscountRule and = new AndDiscountRule(List.of(or,rule3,rule4),2,90);
-        DiscountRule cond = new XorDiscountRule(List.of(and,rule1),"Big Discount");
+        DiscountRule xor = new XorDiscountRule(List.of(and,rule1),"Big Discount");
 
-        DataDiscountRule dataDiscountRule = cond.getDataObject();
+        DataDiscountRule dataDiscountRule = xor.getDataObject();
         assertNotEquals(-1,ruleService.insertDiscountRule(dataDiscountRule,dataStore.getStoreId()));
 
         //check get the json rule from db is create the correct BuyRule
@@ -208,6 +208,85 @@ class RuleServiceTest {
         assertEquals(20, ((ConditionCategoryDiscountRule) orRules.get(1)).getPred().getMaxHour());
 
     }
+
+
+
+    @Test
+    @Transactional
+    void insertXORDiscountRule() throws JsonProcessingException {
+        Store store = new Store("myStore", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
+        DataStore dataStore = store.getDataObject();
+        storeService.insertStore(dataStore);
+
+        DiscountRule rule1 = new ConditionStoreDiscountRule(new ShoppingBagPred(1,2,3),50);
+        DiscountRule rule2 = new ConditionCategoryDiscountRule(new CategoryPred(1,17,2,20),40);
+        DiscountRule or = new OrDiscountRule(List.of(rule1,rule2),1,60);
+        DiscountRule rule3 = new ConditionProductDiscountRule(new ProductPred(1,2,3),30);
+        DiscountRule rule4 = new AddDiscountRule(List.of(rule1,rule2));
+        DiscountRule and = new AndDiscountRule(List.of(rule3,rule4),2,90);
+
+        DiscountPolicy discountPolicy = new DiscountPolicy();
+        discountPolicy.addNewDiscountRule(and,1);
+        discountPolicy.addNewDiscountRule(or,1);
+        assertNotNull(ruleService.getDiscountRuleByID(1));
+        assertNotNull(ruleService.getDiscountRuleByID(2));
+
+        discountPolicy.combineXORDiscountRules(List.of(1,2),"first",1);
+        assertNull(ruleService.getDiscountRuleByID(1));
+        assertNull(ruleService.getDiscountRuleByID(2));
+        DataDiscountRule xor = ruleService.getDiscountRuleByID(3);
+
+        //check get the json rule from db is create the correct BuyRule
+        ObjectMapper mapper = new ObjectMapper();
+        DiscountRule convertedToObj = mapper.readValue(xor.getRule(), DiscountRule.class);
+
+        //check convert to object good
+        assertTrue(convertedToObj instanceof XorDiscountRule);
+        assertEquals(0.0, convertedToObj.getPercentDiscount());
+        assertEquals("first", ((XorDiscountRule) convertedToObj).getDecision());
+        List<DiscountRule> xorRules = ((XorDiscountRule) convertedToObj).getRules();
+        assertTrue(xorRules.get(0) instanceof  AndDiscountRule);
+        assertTrue(xorRules.get(1) instanceof  OrDiscountRule);
+    }
+
+    @Test
+    @Transactional
+    void insertANDORDiscountRule() throws JsonProcessingException {
+        Store store = new Store("myStore", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
+        DataStore dataStore = store.getDataObject();
+        storeService.insertStore(dataStore);
+
+        DiscountRule rule1 = new ConditionStoreDiscountRule(new ShoppingBagPred(1,2,3),50);
+        DiscountRule rule2 = new ConditionCategoryDiscountRule(new CategoryPred(1,17,2,20),40);
+        DiscountRule or = new OrDiscountRule(List.of(rule1,rule2),1,60);
+        DiscountRule rule3 = new ConditionProductDiscountRule(new ProductPred(1,2,3),30);
+        DiscountRule rule4 = new AddDiscountRule(List.of(rule1,rule2));
+        DiscountRule and = new AndDiscountRule(List.of(rule3,rule4),2,90);
+
+        DiscountPolicy discountPolicy = new DiscountPolicy();
+        discountPolicy.addNewDiscountRule(and,1);
+        discountPolicy.addNewDiscountRule(or,1);
+        assertNotNull(ruleService.getDiscountRuleByID(1));
+        assertNotNull(ruleService.getDiscountRuleByID(2));
+
+        discountPolicy.combineANDORDiscountRules("or",List.of(1,2),3,50,1);
+        assertNull(ruleService.getDiscountRuleByID(1));
+        assertNull(ruleService.getDiscountRuleByID(2));
+        DataDiscountRule orCombined = ruleService.getDiscountRuleByID(3);
+
+        //check get the json rule from db is create the correct BuyRule
+        ObjectMapper mapper = new ObjectMapper();
+        DiscountRule convertedToObj = mapper.readValue(orCombined.getRule(), DiscountRule.class);
+
+        //check convert to object good
+        assertTrue(convertedToObj instanceof OrDiscountRule);
+        assertEquals(50, convertedToObj.getPercentDiscount());
+        assertEquals(3, ((OrDiscountRule) convertedToObj).getCategory());
+        List<DiscountRule> orCombinedRules = ((OrDiscountRule) convertedToObj).getRules();
+        assertTrue(orCombinedRules.get(0) instanceof  AndDiscountRule);
+        assertTrue(orCombinedRules.get(1) instanceof  OrDiscountRule);
+    }
+
 
     @Test
     @Transactional
@@ -298,89 +377,6 @@ class RuleServiceTest {
             assertEquals(dataDiscountRule.getRule(), afterDiscountRule.getRule());
         }
     }
-
-
-    /*@Test
-    //@Transactional
-    void insertBuyPolicy() throws JsonProcessingException {
-        Store store1 = new Store("myStore1", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
-        var dataStore = store1.getDataObject();
-        assertTrue(storeService.insertStore(dataStore));
-
-        *//*
-           Rule r = new Rule();
-         * DataDiscountRule ddr = ruleBL.getDataObject();
-         * ruleService.insertDiscountRule(ddr);
-         * r.setId(ddr.getId); generated id
-         * *//*
-
-        BuyRule u = new UserBuyRule(new UserPred("dor@gmail.com"));
-        BuyRule u2 = new UserBuyRule(new UserPred("daniel@gmail.com"));
-        BuyRule or = new OrBuyRule(List.of(u,u2));
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-        String json = ow.writeValueAsString(u);
-
-        DataBuyRule dataBuyRule = new DataBuyRule();
-        dataBuyRule.setRule(json);
-        dataBuyRule.setStore(dataStore);
-        assertTrue(ruleService.insertBuyRule(dataBuyRule,1));
-        int x =3;
-        //DataBuyRule dataBuyRule1 = ruleService.getBuyRuleByID(dataBuyRule.getBuyRuleId());
-        //check
-*//*        assertEquals(dataBuyRule.getBuyRuleId(), dataBuyRule1.getBuyRuleId());
-        assertEquals(dataBuyRule.getStore(), dataBuyRule1.getStore());
-        assertEquals(dataBuyRule.getRule(), dataBuyRule1.getRule());*//*
-
-    }*/
-/*
-    @Test
-    //@Transactional
-    void getBuyRuleID() throws JsonProcessingException {
-        Store store1 = new Store("myStore1", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
-        var dataStore = store1.getDataObject();
-        assertTrue(storeService.insertStore(dataStore));
-
-        BuyRule rule = new ShoppingBagBuyRule(new ShoppingBagPred(1,2,3));
-        BuyRule rule2 = new UserBuyRule(new UserPred("dor@gmail.com"));
-        BuyRule rule3 = new ProductBuyRule(new ProductPred(1,2,3,true));
-
-        BuyRule or = new OrBuyRule(List.of(rule,rule2));
-        BuyRule rule4 = new CategoryBuyRule(new CategoryPred(1,2,3,4));
-        BuyRule and = new AndBuyRule(List.of(or,rule3,rule4));
-
-        BuyRule cond = new ConditioningBuyRule(or,and);
-
-        DataBuyRule dataBuyRule = cond.getDataObject();
-        assertTrue(ruleService.insertBuyRule(dataBuyRule,dataStore.getStoreId()));
-        cond.setID(dataBuyRule.getBuyRuleId());
-        *//*
-           Rule r = new Rule();
-         * DataDiscountRule ddr = ruleBL.getDataObject();
-         * ruleService.insertDiscountRule(ddr);
-         * r.setId(ddr.getId); generated id
-         * *//*
-
-
-        //action
-        DataBuyRule dataBuyRule1 = ruleService.getBuyRuleByID(dataBuyRule.getBuyRuleId());
-        //check
-        assertEquals(dataBuyRule.getBuyRuleId(), dataBuyRule1.getBuyRuleId());
-        //assertEquals(dataBuyRule.getStore(), dataBuyRule1.getStore());
-        assertEquals(dataBuyRule.getRule(), dataBuyRule1.getRule());
-
-*//*
-        mapper.disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
-*//*
-
-        ObjectMapper mapper = new ObjectMapper();
-        //OrBuyRule link = mapper.readValue(dataBuyRule1.getRule(), OrBuyRule.class);
-        BuyRule link = mapper.readValue(dataBuyRule1.getRule(), BuyRule.class);
-
-        int x = 5;
-    }*/
-
 
 
 
