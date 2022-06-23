@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+import createApiClientHttp from "../../../client/clientHttp.js";
+import {errorCode} from "../../../ErrorCodeGui"
 
 const BuyBID = (props) => {
   let UUID = props.uuid;
   let productID = props.productID;
   let storeID = props.storeID;
   let amount = props.amount;
+  const apiClientHttp = createApiClientHttp();
+  const [enteredError, SetError] = useState("");
 
   const [cardNumber, setCardNumber] = useState("");
   const changeCardHandler = (event) => {
@@ -42,9 +46,20 @@ const BuyBID = (props) => {
   };
 
   //todo: orderto BID!
-  const buyHandler = () => {
-    props.onBID();
-    cleanHandler();
+  //        BuyBID:async(userId,storeID,productID,city,adress,apartment,creditcard,creditDate,pin)=>{
+  async function  buyHandler(){
+    const BuyBIDResponse = await apiClientHttp.BuyBID(UUID,storeID,productID,city,adress,apartment,cardNumber,cardDate,cardPin);
+    console.log(BuyBIDResponse)
+
+    if (BuyBIDResponse.errorMsg !== -1) {
+      SetError(errorCode.get(BuyBIDResponse.errorMsg))
+    } else {
+      SetError("")
+      props.onBID();
+      cleanHandler();
+    }
+
+
   };
 
   return (
