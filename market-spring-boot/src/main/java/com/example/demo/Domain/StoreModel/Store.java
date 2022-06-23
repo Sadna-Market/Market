@@ -384,6 +384,7 @@ public class Store {
         if(productStore.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         String productName = productStore.value.getProductType().getProductName().value;
         BID b = new BID(email,productID,productName,quantity,totalPrice,approves);
+        if(exist != null) bids.remove(exist);
         bids.add(b);
         return new DResponseObj<>(true);
     }
