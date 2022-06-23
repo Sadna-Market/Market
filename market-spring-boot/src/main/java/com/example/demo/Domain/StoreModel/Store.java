@@ -377,7 +377,8 @@ public class Store {
     public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
         DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
         if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
-        if(findBID(email,productID) != null) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
+        BID exist = findBID(email,productID);
+        if(exist != null && ((exist.getStatus().equals(BID.StatusEnum.WaitingForApprovals)) || (exist.getStatus().equals(BID.StatusEnum.CounterBID)))) return new DResponseObj<>(false,ErrorCode.BIDALLREADYEXISTS);
         ConcurrentHashMap<String,Boolean> approves =  createApprovesHashMap();
         DResponseObj<ProductStore> productStore = inventory.getProductInfo(productID);
         if(productStore.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
@@ -389,7 +390,10 @@ public class Store {
 
     private ConcurrentHashMap<String,Boolean> createApprovesHashMap(){
         ConcurrentHashMap<String,Boolean> approves = new ConcurrentHashMap<>();
-        getOwners().forEach(email -> approves.put(email,false));
+        getOwners().forEach(email -> {
+            if(!approves.containsKey(email))
+                approves.put(email,false);
+        });
         return approves;
     }
 
