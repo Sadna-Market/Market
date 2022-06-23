@@ -67,6 +67,8 @@ const MyBIDs = (props) => {
             storeID={storeID}
             amount={expense.amount}
             onConfirm={() => props.onConfirm(expense.id, expense.amount)}
+            onChange={getAllBIDS}
+
         />
     ));
 

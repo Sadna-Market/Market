@@ -22,6 +22,8 @@ const Status = (props) => {
   const confirmHandler = (event) => {//buy
     // BuyBID:async(userId,storeID,productID,city,adress,apartment,creditcard,creditDate,pin)=>{
     setStatus("Cancel")
+    props.onChange()
+
   };
   async function cancelHandler(){
     const removeBIDResponse = await apiClientHttp.removeBID(UUID,storeID,productID,);
@@ -32,6 +34,7 @@ const Status = (props) => {
       SetError(errorCode.get(removeBIDResponse.errorMsg))
     } else {
       SetError("")
+      props.onChange()
 
     }
   }
@@ -52,6 +55,7 @@ const Status = (props) => {
       SetError(errorCode.get(responseCounterBIDResponse.errorMsg))
     } else {
       SetError("")
+      props.onChange()
 
     }
   }
@@ -63,6 +67,7 @@ const Status = (props) => {
       SetError(errorCode.get(responseCounterBIDResponse.errorMsg))
     } else {
       SetError("")
+      props.onChange()
 
     }
   }
@@ -93,10 +98,11 @@ const Status = (props) => {
       <Card className="product-item">
         <div className="product-item__price">#{productID}</div>
         <div className="product-item__description">
-          <h2>{name}</h2>
+          <h2>product name: {name}</h2>
           <h2>amount: {props.amount}</h2>
           <h2>Status: {status} </h2>
-          <h2>OriginPrice: {originPrice} </h2>
+          <h2>Origin Price: {originPrice} </h2>
+          <h2>counter Price: {counterPrice}</h2>
 
           {/* {status === "Counter"?
             <>
@@ -153,7 +159,6 @@ const Status = (props) => {
           {
           status === "Counter" ? (
               <>
-                <h2>CounterPrice: {counterPrice} </h2>
                 <button onClick={Confirm}>Confirm</button>
                 <button onClick={reject}>Reject</button>
                 <button onClick={cancelHandler}>Cancel</button>
