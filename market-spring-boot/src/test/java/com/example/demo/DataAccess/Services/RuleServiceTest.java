@@ -24,7 +24,7 @@ class RuleServiceTest {
     private StoreService storeService;
 
     @Test
-    //@Transactional
+    @Transactional
     void insertDiscountRule() {
         String rule = "this is a rule";
         Store store1 = new Store("myStore1", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
@@ -41,7 +41,7 @@ class RuleServiceTest {
     }
 
     @Test
-    //@Transactional
+    @Transactional
     void insertBuyPolicy() {
         String rule = "this is a rule";
         Store store1 = new Store("myStore1", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");

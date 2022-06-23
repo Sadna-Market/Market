@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -53,6 +54,7 @@ class ShoppingBagServiceTest {
     }
 
     @Test
+    @Transactional
     void insertShoppingBag() {
         ShoppingBag shoppingBag = new ShoppingBag(store, user.getEmail().value);
         shoppingBag.addProduct(1, 3);
@@ -70,6 +72,7 @@ class ShoppingBagServiceTest {
     }
 
     @Test
+    @Transactional
     void deleteShoppingBag() {
         ShoppingBag shoppingBag = new ShoppingBag(store, user.getEmail().value);
         shoppingBag.addProduct(1, 3);
@@ -84,6 +87,7 @@ class ShoppingBagServiceTest {
     }
 
     @Test
+    @Transactional
     void updateShoppingBag() {
         ShoppingBag shoppingBag = new ShoppingBag(store, user.getEmail().value);
         var dataShoppingBag = shoppingBag.getDataObject();
@@ -112,6 +116,7 @@ class ShoppingBagServiceTest {
     }
 
     @Test
+    @Transactional
     void addToShoppingBag() {
         user.getShoppingCart().addNewProductToShoppingBag(1, store, 100);
         var bags = shoppingBagService.getUserShoppingBags(user.getEmail().value);

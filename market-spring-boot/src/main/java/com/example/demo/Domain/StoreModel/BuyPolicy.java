@@ -1,9 +1,11 @@
 package com.example.demo.Domain.StoreModel;
 
 import com.example.demo.DataAccess.Entity.DataBuyRule;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.UserModel.ShoppingBag;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import org.apache.log4j.Logger;
 
@@ -15,7 +17,7 @@ public class BuyPolicy {
     private ConcurrentHashMap<Integer,BuyRule> rules;
     private AtomicInteger idCounter = new AtomicInteger(1);
 
-
+    private static DataServices dataServices;
     static Logger logger=Logger.getLogger(BuyPolicy.class);
 
     public BuyPolicy(ServiceBuyPolicy buyPolicy) {
@@ -64,4 +66,8 @@ public class BuyPolicy {
     public DataBuyRule getDataObject() {
         return new DataBuyRule();
     }
+    public static void setDataServices(DataServices dataServices) {
+        BuyPolicy.dataServices = dataServices;
+    }
+
 }

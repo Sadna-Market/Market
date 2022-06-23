@@ -23,7 +23,7 @@ public class ShoppingBagService {
         this.shoppingBagRepository = shoppingBagRepository;
     }
 
-    // @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean insertShoppingBag(DataShoppingBag shoppingBag) {
         try {
             DataShoppingBag dataShoppingBag = shoppingBagRepository.saveAndFlush(shoppingBag);
@@ -38,7 +38,7 @@ public class ShoppingBagService {
         }
     }
 
-    //@Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean deleteShoppingBag(ShoppingBagId shoppingBagId) {
         try {
             shoppingBagRepository.deleteById(shoppingBagId);
@@ -53,7 +53,8 @@ public class ShoppingBagService {
             return false;
         }
     }
-    //@Transactional(rollbackFor = {Exception.class}, timeout = 10)
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean updateShoppingBag(DataShoppingBag shoppingBag) {
         var shoppingBagId = shoppingBag.getShoppingBagId();
         try {

@@ -1,12 +1,9 @@
 package com.example.demo.DataAccess.Services;
 
-//import com.example.demo.DataAccess.Entity.DataShoppingCart;
 import com.example.demo.DataAccess.Entity.DataStore;
-import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.Domain.StoreModel.BuyPolicy;
 import com.example.demo.Domain.StoreModel.DiscountPolicy;
 import com.example.demo.Domain.StoreModel.Store;
-import com.example.demo.Domain.UserModel.User;
 import com.example.demo.Service.Facade;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.example.demo.Service.ServiceObj.ServiceBuyStrategy;
@@ -19,9 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,6 +29,11 @@ class StoreServiceTest {
 
     @Autowired
     private Facade market;
+
+//    @BeforeEach
+//    void setUp() throws InterruptedException {
+//        Thread.sleep(500);
+//    }
 
     @Test
     @Transactional
@@ -75,6 +74,9 @@ class StoreServiceTest {
 
         //check
         List<DataStore> afterStores = storeService.getAllStores();
+        if(afterStores.size()!=1){
+            afterStores.forEach(System.out::println);
+        }
         assertEquals(1, afterStores.size());
         DataStore afterStore = afterStores.get(0);
         assertEquals(44, afterStore.getRate());
@@ -135,11 +137,6 @@ class StoreServiceTest {
 
     @Test
     void openStores() {
-        Store store1 = new Store("myStore1", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
-        Store store2 = new Store("myStore2", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
-        Store store3 = new Store("myStore3", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
-        Store store4 = new Store("myStore4", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
-        Store store5 = new Store("myStore5", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
         //action
         String uuid = market.guestVisit().value;
         uuid = market.login(uuid,"sysManager@gmail.com","Shalom123$").value;

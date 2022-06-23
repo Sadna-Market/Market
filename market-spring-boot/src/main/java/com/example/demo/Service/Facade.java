@@ -1872,5 +1872,7 @@ public class Facade implements IMarket {
 
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
+        DiscountPolicy.setDataServices(dataServices);
+        BuyPolicy.setDataServices(dataServices);
     }
 }

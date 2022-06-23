@@ -34,7 +34,7 @@ class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User("exmaple@gmail.com", "1qaz2wsx#EDC", "0505555555", LocalDate.of(1993, 8, 18));
+        user = new User("exmaple1111@gmail.com", "1qaz2wsx#EDC", "0505555555", LocalDate.of(1993, 8, 18));
     }
 
 
@@ -48,7 +48,7 @@ class UserServiceTest {
         assertTrue(userService.insertUser(u));
 
         //check
-        assertEquals(u.getUsername(), "exmaple@gmail.com");
+        assertEquals(u.getUsername(), "exmaple1111@gmail.com");
         assertEquals("1qaz2wsx#EDC", Validator.getInstance().decryptAES(u.getPassword()));
         assertEquals(u.getDateOfBirth(), LocalDate.of(1993, 8, 18));
         assertEquals(u.getPhoneNumber(), "0505555555");
@@ -101,7 +101,7 @@ class UserServiceTest {
     }
 
     @Test
-    @Transactional
+    //@Transactional
     void getAllUsers() {
         User user1 = new User("exmaple1@gmail.com", "1qaz2wsx#EDC", "1111111111", LocalDate.of(1993, 8, 18));
         User user2 = new User("exmaple2@gmail.com", "1qaz2wsx#EDC", "0000000000", LocalDate.of(1993, 8, 18));
@@ -127,7 +127,7 @@ class UserServiceTest {
     @Transactional
     void registration_Success() {
         String uuid = market.guestVisit().value;
-        SLResponseOBJ<Boolean> res = market.addNewMember(uuid, "niv@gmail.com", "Shalom123$", "0523251252", "16/3/2012");
+        SLResponseOBJ<Boolean> res = market.addNewMember(uuid, "niv123@gmail.com", "Shalom123$", "0523251252", "16/3/2012");
         assertFalse(res.errorOccurred());
     }
 
