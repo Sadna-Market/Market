@@ -79,6 +79,7 @@ public class AlertService implements IAlertService {
      * @param sessionID the sessionID that WebSocket generated
      */
     public void addListener(UUID uuid, String sessionID) {
+        logger.debug(String.format("added (%s,%s) to sessionMapper",uuid,sessionID));
         sessionMapper.put(uuid, sessionID);
         if(!dispatcher.addNewSession(sessionID)){
             logger.error(String.format("failed to add session %s when adding to be listener",sessionID));
@@ -92,8 +93,12 @@ public class AlertService implements IAlertService {
      * @param sessionID
      */
     public void removeListener(UUID uuid, String sessionID) {
-        sessionMapper.remove(uuid);
-        dispatcher.removeSession(sessionID);
+        if(sessionMapper.remove(uuid)!=null){
+            logger.debug(String.format("removed (%s,%s) to sessionMapper",uuid,sessionID));
+            dispatcher.removeSession(sessionID);
+        }else {
+            logger.error(String.format("failed to remove (%s,%s) to sessionMapper - not found in mapper", uuid, sessionID));
+        }
     }
 
     /**

@@ -179,7 +179,7 @@ public interface IMarket {
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId);
 
-
+    public void modifyDelayMessages(String uuid);
 
 
 

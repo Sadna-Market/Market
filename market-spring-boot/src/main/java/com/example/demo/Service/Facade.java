@@ -1850,6 +1850,11 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<List<String>>(res);
     }
 
+    public void modifyDelayMessages(String uuid) {
+        if(uuid != null)
+            userManager.modifyDelayMessages(UUID.fromString(uuid));
+    }
+
     @Override
     public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() {
         return new SLResponseOBJ<>(userManager.getAllusers());

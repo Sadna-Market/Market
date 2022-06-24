@@ -812,4 +812,10 @@ public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int sto
         return REAL.getAllMembers(userId);
 
     }
+
+    public void modifyDelayMessages(String uuid) {
+        if(REAL != null){
+            REAL.modifyDelayMessages(uuid);
+        }
+    }
 }
