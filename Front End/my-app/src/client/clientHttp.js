@@ -858,6 +858,12 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         } ,
+        modifyDelayMessages:async(uuid)=>{
+            let path = apiUrl.concat(`modifyDelayMessages/${uuid}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        }
     }
 }
 /*
