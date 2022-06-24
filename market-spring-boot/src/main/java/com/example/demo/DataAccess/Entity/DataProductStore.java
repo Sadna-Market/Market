@@ -37,7 +37,7 @@ public class DataProductStore {
     private double price;
 
     @ManyToOne
-    @JoinColumn(name = "store",
+    @JoinColumn(name = "store_id",
             nullable = false,
             referencedColumnName = "store_id",
             foreignKey = @ForeignKey(

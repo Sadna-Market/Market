@@ -42,6 +42,23 @@ class ProductTypeServiceTest {
     }
 
     @Test
+    void updateRateProductType() {
+        var res = market.guestVisit();
+        assertFalse(res.errorOccurred());
+        res = market.login(res.value,"sysManager@gmail.com","Shalom123$");
+        assertFalse(res.errorOccurred());
+        String uuid = res.value;
+        var id = market.addNewProductType(uuid,"banana","banana",1);
+        assertFalse(id.errorOccurred());
+        //action
+        market.setRate(uuid,id.value,8);
+        var data = productTypeService.getProductTypeById(id.value);
+        assertEquals(8,data.getRate());
+        assertEquals(1,data.getCounter_rates());
+        //check
+    }
+
+    @Test
     @Transactional
     void deleteProductType() {
         ProductType productType = new ProductType("myProduct","blbabla",3);

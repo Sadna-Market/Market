@@ -573,6 +573,7 @@ public class Market {
                 storeId = dataStore.getStoreId();
             }
             store.setStoreId(storeId);
+            store.getInventory().value.setStoreId(storeId);
             stores.put(storeId, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
@@ -837,6 +838,12 @@ public class Market {
             Store st = stores.remove(getStoreID.value);
             closeStores.put(getStoreID.getValue(), st);
             logger.info("market update that Store #" + storeId + " close");
+            //db
+            if(dataServices!=null && dataServices.getStoreService()!=null){
+                if(!dataServices.getStoreService().updateStoreIsOpen(storeId,false)){
+                    logger.error(String.format("failed to updated store %d to close in db",storeId));
+                }
+            }
             notifyOwnersAndManagersStoreClosed(st, "close");
             return new DResponseObj<>(true);
         } finally {
@@ -866,6 +873,12 @@ public class Market {
             Store st = closeStores.remove(storeId);
             stores.put(storeId, st);
             logger.info("market update that Store #" + storeId + " reopen");
+            //db
+            if(dataServices!=null && dataServices.getStoreService()!=null){
+                if(!dataServices.getStoreService().updateStoreIsOpen(storeId,true)){
+                    logger.error(String.format("failed to updated store %d to close in db",storeId));
+                }
+            }
             notifyOwnersAndManagersStoreClosed(s, "reopen");
             return new DResponseObj<>(true);
         } finally {

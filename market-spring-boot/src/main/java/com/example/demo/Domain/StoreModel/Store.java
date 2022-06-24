@@ -2,6 +2,7 @@ package com.example.demo.Domain.StoreModel;
 
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Enums.PermissionType;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.ProductType;
@@ -36,6 +37,7 @@ public class Store {
 
     private final StampedLock historyLock = new StampedLock();
     static Logger logger=Logger.getLogger(Store.class);
+    private static DataServices dataServices;
 
     /////////////////////////////////////////////// Constructors ///////////////////////////////////////////////////
 
@@ -278,6 +280,12 @@ public class Store {
             this.rate = rate;
         else
             this.rate = ((this.rate*(numOfRated-1)) + rate) / numOfRated;
+        //db
+        if (dataServices != null && dataServices.getStoreService() != null) {
+            if (!dataServices.getStoreService().updateStoreRate(storeId, rate, numOfRated)) {
+                logger.error(String.format("failed to updated rate %d of store %s in db", rate, name));
+            }
+        }
         logger.info("storeId: "+storeId+" rate update to: " + rate );
         return new DResponseObj<>(true);
     }
@@ -609,6 +617,10 @@ public class Store {
 
     public void setRate(int rate) {
         this.rate = rate;
+    }
+
+    public static void setDataServices(DataServices dataServices){
+        Store.dataServices = dataServices;
     }
 }
 
