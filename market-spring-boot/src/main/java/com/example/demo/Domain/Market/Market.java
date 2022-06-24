@@ -571,8 +571,8 @@ public class Market {
                 var dataStore = store.getDataObject();
                 dataServices.getStoreService().insertStore(dataStore);
                 storeId = dataStore.getStoreId();
-                store.setStoreId(storeId);
             }
+            store.setStoreId(storeId);
             stores.put(storeId, store);
             userManager.addFounder(userId, store);
             logger.info("new Store join to the Market");
