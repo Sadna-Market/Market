@@ -45,8 +45,8 @@ public class AlertService implements IAlertService {
      * @param msg  the message to pop to the client through the websocket
      * @return true if success, else false
      */
-    public void notifyUser(UUID uuid, String msg) {
-        var notification = new Notification(msg);
+    public void notifyUser(UUID uuid, String msg,String email) {
+        var notification = new Notification(msg,email);
         if (sessionMapper.containsKey(uuid)) {
             String sessionID = sessionMapper.get(uuid);
             if (!dispatcher.addNotification(sessionID, notification)) {
@@ -54,7 +54,7 @@ public class AlertService implements IAlertService {
                 return;
             }
         }
-        logger.error("didnt find sessionID in sessionMapper");
+        logger.error(String.format("didnt find sessionID of uuid [%s] in sessionMapper",uuid));
     }
 
 
@@ -134,7 +134,7 @@ public class AlertService implements IAlertService {
             return;
         }
         List<Notification> notifications = dataNotificationList.stream()
-                .map(dataNotification -> new Notification(dataNotification.getMessage()))
+                .map(dataNotification -> new Notification(dataNotification.getMessage(),username))
                 .collect(Collectors.toList());
         var sessionID = sessionMapper.get(uuid);
         dispatcher.importDelayedNotifications(sessionID,notifications);
