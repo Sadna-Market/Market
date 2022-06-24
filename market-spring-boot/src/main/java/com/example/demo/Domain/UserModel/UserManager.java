@@ -180,6 +180,7 @@ public class UserManager {
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
             GuestVisitors.remove(userID);
+            logger.debug(String.format("removed guest uuid %s, added member %s with uuid: %s",userID,LogUser.email,newMemberUUid));
             return new DResponseObj<>(newMemberUUid);
         } else {
             logger.debug("Login email: " + email + " the password is not correct");
@@ -192,6 +193,7 @@ public class UserManager {
 
     public void modifyDelayMessages(UUID uuid){
         var user = LoginUsers.get(uuid);
+        logger.debug(String.format("modifying messages of user %s that has uuid: %s",user.email,uuid));
         alertService.modifyDelayIfExist(user.email, uuid);
     }
 
@@ -619,7 +621,7 @@ public class UserManager {
             }
         });
         loggedInUsers.forEach(uuid -> {
-            alertService.notifyUser(uuid, msg);
+            alertService.notifyUser(uuid, msg,LoginUsers.get(uuid).email);
         });
         alertService.notifyUsers(notLoggedInUsers);
 //        notLoggedInUsers.forEach(username -> {

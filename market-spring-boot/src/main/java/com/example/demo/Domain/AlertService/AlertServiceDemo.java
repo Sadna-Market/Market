@@ -18,7 +18,7 @@ public class AlertServiceDemo implements IAlertService {
         sessionMapper = new ConcurrentHashMap<>();
     }
 
-    public void notifyUser(UUID uuid, String msg) {
+    public void notifyUser(UUID uuid, String msg,String username) {
         writeToFile(uuid, msg);
     }
 

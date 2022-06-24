@@ -113,6 +113,7 @@ function App(props) {
         connect();
         console.log("after login")
         console.log("email"+email)
+        await new Promise(r => setTimeout(r, 2000));
         const modifyDelayMessagesResponse = await apiClientHttp.modifyDelayMessages(UUID);
         console.log("modifyDelayMessagesResponse",modifyDelayMessagesResponse)
         if (modifyDelayMessagesResponse.errorMsg !== -1) {
