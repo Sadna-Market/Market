@@ -21,6 +21,10 @@ public class ShoppingCart {
         shoppingBagHash=new ConcurrentHashMap<>();
         this.username = username;
     }
+    public ShoppingCart(String username,ConcurrentHashMap<Integer,ShoppingBag> shoppingBagHash){
+        this.shoppingBagHash= shoppingBagHash;
+        this.username = username;
+    }
 
     public DResponseObj<Boolean> addNewProductToShoppingBag(int ProductId, Store store, int quantity){
         logger.debug("ShoppingCart addNewProductToShoppingBag");

@@ -3,6 +3,7 @@ package com.example.demo.Domain.Market;
 import Stabs.PurchaseStab;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
+import com.example.demo.DataAccess.Mappers.StoreMapper;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -49,13 +50,27 @@ public class Market {
         this.userManager = userManager;
         ExternalService.getInstance();
         purchase = new Purchase();
+        initAllSoresFromTheDb ();
     }
 
     /*************************************************Functions*********************************************************/
     public DResponseObj<Boolean> isStoreClosed(int StoreID) {
         return new DResponseObj<>(closeStores.containsKey(StoreID));
     }
-
+    public void initAllSoresFromTheDb(){
+        if(dataServices.getShoppingBagService()!=null) {
+            StoreMapper storeMapper = StoreMapper.getInstance(dataServices.getStoreService());
+            Map<Integer, Store> allStores = storeMapper.getAllStores();
+            for (Integer storeId : allStores.keySet()) {
+                Store s = allStores.get(storeId);
+                if (s.isOpen().value) {
+                    this.stores.put(storeId, s);
+                } else {
+                    this.closeStores.put(storeId, s);
+                }
+            }
+        }
+    }
     //1.1
     //pre: -
     //post: the external Services connect
