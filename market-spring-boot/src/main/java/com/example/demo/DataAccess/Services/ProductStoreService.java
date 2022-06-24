@@ -7,6 +7,7 @@ import com.example.demo.DataAccess.Repository.StoreRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class ProductStoreService {
         this.storeRepository = storeRepository;
     }
 
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean insertProductStore(DataProductStore productStore, int storeId) {
         try {
             Optional<DataStore> store = storeRepository.findById(storeId);

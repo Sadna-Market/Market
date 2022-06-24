@@ -29,7 +29,7 @@ public class UserService {
      * @param user
      * @return true if success, else false
      */
-   // @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+   @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean insertUser(DataUser user) {
         try {
             DataUser u = userRepository.saveAndFlush(user);
@@ -76,7 +76,7 @@ public class UserService {
             return null;
         }
     }
-   // @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public List<DataUser> getAllUsers() {
         try {
             List<DataUser> users = userRepository.findAll();
