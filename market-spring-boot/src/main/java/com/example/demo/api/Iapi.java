@@ -24,7 +24,7 @@ public interface Iapi {
     public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) ;
     public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) ;
     public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() ;
-
+    public SLResponseOBJ<Boolean> modifyDelayMessages(String uuid);
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1

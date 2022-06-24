@@ -105,6 +105,7 @@ public class UserManager {
         logger.debug("UserManager GuestVisit");
         UUID newid = UUID.randomUUID();
         User guest = new User();
+        logger.debug(String.format("%s -> guest",newid));
         GuestVisitors.put(newid, guest);
         return new DResponseObj<>(newid);
     }
@@ -179,7 +180,6 @@ public class UserManager {
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
             GuestVisitors.remove(userID);
-            alertService.modifyDelayIfExist(LogUser.email, newMemberUUid);
             return new DResponseObj<>(newMemberUUid);
         } else {
             logger.debug("Login email: " + email + " the password is not correct");
@@ -188,6 +188,11 @@ public class UserManager {
             return a;
         }
 
+    }
+
+    public void modifyDelayMessages(UUID uuid){
+        var user = LoginUsers.get(uuid);
+        alertService.modifyDelayIfExist(user.email, uuid);
     }
 
     public boolean isEmailLoged(String email) {
@@ -297,7 +302,13 @@ public class UserManager {
             User loggedUser = LoginUsers.get(userId);
             if (isOwner(userId, store).value) {
                 User newOwner = members.get(newOwnerEmail);
-                return loggedUser.addNewStoreOwner(newOwner, store);
+                var res =  loggedUser.addNewStoreOwner(newOwner, store);
+                if(res.errorOccurred()) return  res;
+                logger.info(String.format("notifying %s for his permission setup", newOwnerEmail));
+                String msg = String.format("You have been granted with an owner permission in store %d by %s",
+                      store.getStoreId().value, loggedUser.email);
+                notifyUsers(List.of(newOwner), msg);
+                return res;
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
@@ -358,18 +369,28 @@ public class UserManager {
                     ownerToRemove.removeGrantorPermission(permission);
                 }
             }
+            //notify
+            logger.info(String.format("notifying %s for his permission removal", ownerEmail));
+            String msg = String.format("Your permission as owner in store %d was removed by %s",
+                    store.getStoreId().value, loggedUser.email);
+            notifyUsers(List.of(ownerToRemove), msg);
         }
         return removePermission;
     }
 
 
-    public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String MenagerEmail) {
+    public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String ManagerEmail) {
         logger.debug("UserManager removeStoreManager");
         if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         User loggedUser = LoginUsers.get(userId);
         if (!isOwner(userId, store).value) return new DResponseObj<>(false, ErrorCode.NOTOWNER);
-        User MenagerToRemove = members.get(MenagerEmail);
-        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(MenagerToRemove, store, loggedUser);
+        User ManagerToRemove = members.get(ManagerEmail);
+        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(ManagerToRemove, store, loggedUser);
+        if(removePermission.errorOccurred()) return removePermission;
+        logger.info(String.format("notifying %s for his permission removal", ManagerEmail));
+        String msg = String.format("Your permission as manager in store %d was removed by %s",
+                store.getStoreId().value, loggedUser.email);
+        notifyUsers(List.of(ManagerToRemove), msg);
         return removePermission;
     }
 
@@ -403,7 +424,14 @@ public class UserManager {
             User loggedUser = LoginUsers.get(uuid);
             if (isOwner(uuid, store).value) {
                 User newManager = members.get(newMangerEmail);
-                return loggedUser.addNewStoreManager(newManager, store);
+                var res = loggedUser.addNewStoreManager(newManager, store);
+                if(res.errorOccurred()) return res;
+                if(res.errorOccurred()) return  res;
+                logger.info(String.format("notifying %s for his permission setup", newMangerEmail));
+                String msg = String.format("You have been granted with a manager permission in store %d by %s",
+                        store.getStoreId().value, loggedUser.email);
+                notifyUsers(List.of(newManager), msg);
+                return  res;
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);

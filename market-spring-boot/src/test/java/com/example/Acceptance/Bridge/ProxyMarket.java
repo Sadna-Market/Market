@@ -814,4 +814,9 @@ public class ProxyMarket implements MarketBridge {
     public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID) {
         return realMarket.getMyBIDs(uuid,storeID);
     }
+
+    @Override
+    public void modifyMessages(String uuid) {
+        realMarket.modifyMessages(uuid);
+    }
 }

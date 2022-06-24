@@ -186,7 +186,7 @@ public class SystemTests extends MarketTests {
         res = market.login(uuid,newManager);
         assertFalse(res.errorOccurred());
         uuid = res.value;
-
+        market.modifyMessages(uuid);
         String read = readFile(newManager.username);
         assertFalse(read.isEmpty());
     }

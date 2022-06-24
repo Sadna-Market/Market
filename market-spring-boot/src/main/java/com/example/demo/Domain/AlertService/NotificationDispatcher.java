@@ -34,7 +34,7 @@ public class NotificationDispatcher {
         realTimeListeners.put(sessionId, new ConcurrentLinkedQueue<>());
         logger.info(String.format("added new session %s", sessionId));
         //for testing
-        realTimeListeners.get(sessionId).add(new Notification("Connected to websocket successfully!"));
+//        realTimeListeners.get(sessionId).add(new Notification("Connected to websocket successfully!"));
         return true;
     }
 

@@ -86,6 +86,12 @@ public class api implements Iapi {
         return iMarket.getAllusers();
     }
 
+    @PostMapping("modifyDelayMessages/{uuid}")
+    public SLResponseOBJ<Boolean> modifyDelayMessages(@PathVariable("uuid") String uuid) {
+        iMarket.modifyDelayMessages(uuid);
+        return new SLResponseOBJ<>(true,-1);
+    }
+
     @Override
     @PostMapping("getProductTypeInfo/{productTypeID}")
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(@PathVariable("productTypeID")Integer productTypeId) {
