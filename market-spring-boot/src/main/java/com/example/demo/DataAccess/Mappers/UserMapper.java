@@ -8,11 +8,14 @@ import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ShoppingBagService;
 import com.example.demo.DataAccess.Services.StoreService;
 import com.example.demo.DataAccess.Services.UserService;
+import com.example.demo.Domain.Market.Permission;
+import com.example.demo.Domain.StoreModel.History;
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Domain.UserModel.ShoppingBag;
 import com.example.demo.Domain.UserModel.ShoppingCart;
 import com.example.demo.Domain.UserModel.User;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,8 +99,26 @@ public class UserMapper {
             ShoppingBag bag = new ShoppingBag(store,dataUser.getUsername(),productQuantity);
             shoppingBagHash.put(storeId , bag);
         }
+
+
+        List<Permission> grantee = PermissionMapper.getInstance().getGranteePermissions(dataUser.getUsername());
+        List<Permission> grantor = PermissionMapper.getInstance().getGrantorPermissions(dataUser.getUsername());
+        List<History> histories = HistoryMapper.getInstance().getUserHistory(dataUser.getUsername());
+        if(grantee == null || grantor == null || histories == null)
+        {
+            return null;
+        }
         ShoppingCart shoppingCart = new ShoppingCart(dataUser.getUsername(),shoppingBagHash);
         u.setShoppingCart(shoppingCart);
+        u.setGrantorPermission(grantor);
+        u.setSafeGrantorPermission(Collections.synchronizedList(grantor));
+
+        u.setAccessPermission(grantee);
+        u.setSafeAccessPermission(grantee);
+
+        u.setHistories(histories);
+
+
         return u;
 
     }

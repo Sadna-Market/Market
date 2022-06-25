@@ -70,6 +70,10 @@ public class User {
         this.grantorPermission = grantorPermission;
     }
 
+    public void setPassword(String password) {
+        Password = password;
+    }
+
     public List<Permission> getSafeAccessPermission() {
         return safeAccessPermission;
     }

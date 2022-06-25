@@ -57,6 +57,8 @@ public class PermissionMapper {
     public void  setDataService(DataServices dataServices){
         this.dataServices = dataServices;
     }
+
+
     public List<Permission> getStorePermission(Integer storeId)
     {
          List<DataPermission> dataPermissionList =dataServices.getPermissionService().getPermissionStore(storeId);
@@ -76,13 +78,33 @@ public class PermissionMapper {
          return storePermissions;
     }
 
-    public List<Permission> getGrantorPermissions(Integer storeId)
+    public List<Permission> getGrantorPermissions(String grantor)
     {
-        List<DataPermission> dataPermissionList =dataServices.getPermissionService().getPermissionStore(storeId);
+        List<DataPermission> dataPermissionList =dataServices.getPermissionService().getAllPermissionsGrantor(grantor);
         List<Permission> storePermissions = new LinkedList<>();
         for(DataPermission dataPermission : dataPermissionList) {
-            String grantor = dataPermission.getPermissionId().getGrantorId();
+            int storeId =dataPermission.getPermissionId().getStoreId();
             String grantee= dataPermission.getPermissionId().getGranteeId();
+            if (permissions.containsKey(new Triple(grantee,grantor,storeId))){
+                storePermissions.add( permissions.get(new Triple(grantee,grantor,storeId)));
+            }
+            else {
+                Triple t = new Triple(grantee, grantor, storeId);
+                Permission domainPermission = convertPermissionToDomain(t);
+                storePermissions.add(domainPermission);
+            }
+        }
+        return storePermissions;
+    }
+
+
+    public List<Permission> getGranteePermissions(String grantee)
+    {
+        List<DataPermission> dataPermissionList =dataServices.getPermissionService().getAllPermissionsGrantor(grantee);
+        List<Permission> storePermissions = new LinkedList<>();
+        for(DataPermission dataPermission : dataPermissionList) {
+            int storeId =dataPermission.getPermissionId().getStoreId();
+            String grantor= dataPermission.getPermissionId().getGrantorId();
             if (permissions.containsKey(new Triple(grantee,grantor,storeId))){
                 storePermissions.add( permissions.get(new Triple(grantee,grantor,storeId)));
             }
