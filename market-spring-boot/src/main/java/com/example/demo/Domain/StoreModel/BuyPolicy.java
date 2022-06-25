@@ -6,6 +6,7 @@ import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
+import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.UserModel.ShoppingBag;
 import com.example.demo.Service.ServiceObj.ServiceBuyPolicy;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,6 +29,15 @@ public class BuyPolicy {
 
     public BuyPolicy(ServiceBuyPolicy buyPolicy) {
         this.rules = new ConcurrentHashMap<>();
+    }
+
+    //for upload store from db
+    public BuyPolicy(ConcurrentHashMap<Integer, BuyRule> buyRules){
+        this.rules = buyRules;
+        int maxID = 1;
+        for(Integer id : buyRules.keySet())
+            if(id>maxID) maxID = id;
+        idCounter = new AtomicInteger(maxID+1);
     }
 
     public BuyPolicy() {
@@ -95,4 +105,8 @@ public class BuyPolicy {
         BuyPolicy.dataServices = dataServices;
     }
 
+    public DResponseObj<BuyRule> getBuyRuleByID(int buyRuleID) {
+        BuyRule buyRule = rules.get(buyRuleID);
+        return buyRule == null ? new DResponseObj<>(null,ErrorCode.BUY_RULE_NOT_EXIST) : new DResponseObj<>(buyRule);
+    }
 }

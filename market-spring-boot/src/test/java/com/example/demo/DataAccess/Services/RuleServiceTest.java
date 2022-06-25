@@ -377,6 +377,38 @@ class RuleServiceTest {
         }
     }
 
+    @Test
+    @Transactional
+    void getStoreWithRules() {
+        Store store = new Store("myStore", new DiscountPolicy(), new BuyPolicy(), "niv@gmail.com");
+        DataStore dataStore = store.getDataObject();
+        storeService.insertStore(dataStore);
+
+        DiscountRule rule1 = new ConditionStoreDiscountRule(new ShoppingBagPred(1, 2, 3), 50);
+        DiscountRule rule2 = new ConditionCategoryDiscountRule(new CategoryPred(1, 17, 2, 20), 40);
+        DiscountRule or = new OrDiscountRule(List.of(rule1, rule2), 1, 60);
+        DiscountRule rule3 = new ConditionProductDiscountRule(new ProductPred(1, 2, 3), 30);
+        DiscountRule rule4 = new AddDiscountRule(List.of(rule1, rule2));
+        DiscountRule and = new AndDiscountRule(List.of(or, rule3, rule4), 2, 90);
+        DiscountRule xor = new XorDiscountRule(List.of(and, rule1), "Big Discount");
+
+        assertTrue(store.addNewDiscountRule(xor).value);
+        assertTrue(store.addNewDiscountRule(rule1).value);
+        DataStore s = storeService.getStoreById(1);
+        assertEquals(2,s.getDiscountRules().size());
+
+        ObjectMapper mapper = new ObjectMapper();
+        s.getDiscountRules().forEach(dataDiscountRule -> {
+            try {
+                DiscountRule convertedToObj = mapper.readValue(dataDiscountRule.getRule(), DiscountRule.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+        });
+    }
+
+
 
 
 }

@@ -46,6 +46,10 @@ public abstract class CompositionDiscountRule implements DiscountRule{
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public abstract DResponseObj<DiscountRuleSL> convertToDiscountRuleSL();
 
     public double getPercentDiscount() {
@@ -60,8 +64,5 @@ public abstract class CompositionDiscountRule implements DiscountRule{
         return discount;
     }
 
-    public int getId() {
-        return id;
-    }
 
 }

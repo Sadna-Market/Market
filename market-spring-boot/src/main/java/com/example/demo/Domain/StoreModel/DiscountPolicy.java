@@ -5,6 +5,7 @@ import com.example.demo.DataAccess.Entity.DataDiscountRule;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.StoreModel.BuyRules.BuyRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.AndDiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.DiscountRule;
 import com.example.demo.Domain.StoreModel.DiscountRule.OrDiscountRule;
@@ -34,6 +35,15 @@ public class DiscountPolicy {
 
     public DiscountPolicy(ServiceDiscountPolicy discountPolicy) {
         this.rules = new ConcurrentHashMap<>();
+    }
+
+    //for upload store from db
+    public DiscountPolicy(ConcurrentHashMap<Integer, DiscountRule> discountRules){
+        this.rules = discountRules;
+        int maxID = 1;
+        for(Integer id : discountRules.keySet())
+            if(id>maxID) maxID = id;
+        idCounter = new AtomicInteger(maxID+1);
     }
 
     public DiscountPolicy() {
@@ -135,5 +145,10 @@ public class DiscountPolicy {
 
     public DataDiscountRule getDataObject() {
         return new DataDiscountRule();
+    }
+
+    public DResponseObj<DiscountRule> getDiscountRuleByID(int discountRuleID) {
+        DiscountRule discountRule = rules.get(discountRuleID);
+        return discountRule == null ? new DResponseObj<>(null,ErrorCode.DISCOUNT_RULE_NOT_EXIST) : new DResponseObj<>(discountRule);
     }
 }

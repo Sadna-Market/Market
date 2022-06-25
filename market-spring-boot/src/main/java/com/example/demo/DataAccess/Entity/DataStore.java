@@ -80,7 +80,7 @@ public class DataStore {
             fetch = FetchType.EAGER,
             mappedBy = "store",
             orphanRemoval = true) /*when store is fetched from db then fetch the DiscountPolicy too*/
-    private Set<DataDiscountRule> buyRules;
+    private Set<DataBuyRule> buyRules;
 
 
 //    @OneToMany(
@@ -201,11 +201,11 @@ public class DataStore {
         this.discountRules = discountRule;
     }
 
-    public Set<DataDiscountRule> getBuyRules() {
+    public Set<DataBuyRule> getBuyRules() {
         return buyRules;
     }
 
-    public void setBuyRules(Set<DataDiscountRule> buyRules) {
+    public void setBuyRules(Set<DataBuyRule> buyRules) {
         this.buyRules = buyRules;
     }
 

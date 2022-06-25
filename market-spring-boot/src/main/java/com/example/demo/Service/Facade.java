@@ -1,7 +1,6 @@
 package com.example.demo.Service;
 
 import com.example.demo.DataAccess.Services.DataServices;
-import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -24,7 +23,6 @@ import com.example.demo.configuration.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 
 import java.text.ParseException;
@@ -1135,6 +1133,40 @@ public class Facade implements IMarket {
             converted.add(drSL.value);
         }
         return new SLResponseOBJ<>(converted);
+    }
+
+    /**
+     * return buy rule by id of buy rule
+     * @param userId
+     * @param storeId
+     * @param buyRuleID
+     * @return buy rule if exist else error
+     */
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(String userId, int storeId, int buyRuleID){
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeId < 0 || buyRuleID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<BuyRule> res = market.getBuyRuleByID(UUID.fromString(userId), storeId, buyRuleID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) :
+                 new SLResponseOBJ<>(res.value.convertToBuyRuleSL());
+    }
+
+    /**
+     * return disocunt rule by id of buy rule
+     * @param userId
+     * @param storeId
+     * @param discountRuleID
+     * @return discount rule if exist else error
+     */
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(String userId, int storeId, int discountRuleID){
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeId < 0 || discountRuleID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<DiscountRule> res = market.getDiscountRuleByID(UUID.fromString(userId), storeId, discountRuleID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) :
+                new SLResponseOBJ<>(res.value.convertToDiscountRuleSL());
     }
 
 

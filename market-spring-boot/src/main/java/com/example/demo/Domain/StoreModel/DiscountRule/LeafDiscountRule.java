@@ -48,4 +48,5 @@ public abstract class LeafDiscountRule implements DiscountRule{
     public int getId() {
         return id;
     }
+
 }

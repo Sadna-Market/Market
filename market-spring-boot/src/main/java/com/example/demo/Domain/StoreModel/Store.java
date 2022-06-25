@@ -68,6 +68,25 @@ public class Store {
         this.bids = new ConcurrentLinkedDeque<>();
     }
 
+    //upload store from db
+    public Store(int storeId,String name,ConcurrentHashMap<Integer, ProductStore> products, String founder, boolean isOpen, int rate,
+                 int numOfRated, ConcurrentHashMap<Integer,History> history, ConcurrentHashMap<Integer, DiscountRule> discountRules,
+                 ConcurrentHashMap<Integer,BuyRule> buyRules, List<Permission> permission,ConcurrentLinkedDeque<BID> bids){
+        this.storeId = storeId;
+        this.name = name;
+        this.inventory = new Inventory(storeId,products);
+        this.founder = founder;
+        this.isOpen = isOpen;
+        this.rate = rate;
+        this.numOfRated = numOfRated;
+        this.history = history;
+        this.discountPolicy = new DiscountPolicy(discountRules);
+        this.buyPolicy = new BuyPolicy(buyRules);
+        this.permission = permission;
+        this.safePermission = Collections.synchronizedList(permission);;
+        this.bids = bids;
+    }
+
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
 
 
@@ -323,7 +342,7 @@ public class Store {
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule) {
         if(discountPolicy == null)
             discountPolicy = new DiscountPolicy();
-        return discountPolicy.addNewDiscountRule(discountRule,storeId);
+        return discountPolicy.addNewDiscountRule(discountRule,storeId+1);
     }
 
     //requirement II.4.2
@@ -345,6 +364,13 @@ public class Store {
         return discountPolicy.combineXORDiscountRules(rules,decision,storeId);
     }
 
+    public DResponseObj<BuyRule> getBuyRuleByID(int buyRuleID) {
+        return buyPolicy.getBuyRuleByID(buyRuleID);
+    }
+
+    public DResponseObj<DiscountRule> getDiscountRuleByID(int discountRuleID) {
+        return discountPolicy.getDiscountRuleByID(discountRuleID);
+    }
 
     //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
     public void addPermission(Permission p){
@@ -610,6 +636,9 @@ public class Store {
     public void setRate(int rate) {
         this.rate = rate;
     }
+
+
+
 }
 
 
