@@ -131,6 +131,7 @@ class PermissionServiceTest {
         market.addNewStoreManger(uuid,storeId,username3);
         uuid = market.logout(uuid).value;
         uuid = market.login(uuid,"sysmanager@gmail.com","Shalom123$").value;
+         // var x = permissionService.getAllPermissionsGrantor(username2);
         market.cancelMembership(uuid,username);
         var user = userService.getUserByUsername(username);
         var store =storeService.getStoreById(storeId);
