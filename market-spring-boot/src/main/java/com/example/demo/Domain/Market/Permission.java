@@ -30,6 +30,14 @@ public class Permission {
 
     private List<permissionType.permissionEnum> granteePermissionTypes;
 
+    public void setGranteeType(userTypes granteeType) {
+        this.granteeType = granteeType;
+    }
+
+    public void setGrantorType(userTypes grantorType) {
+        this.grantorType = grantorType;
+    }
+
     private userTypes granteeType;
     private userTypes grantorType;
 

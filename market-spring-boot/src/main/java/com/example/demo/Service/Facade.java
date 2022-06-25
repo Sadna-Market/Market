@@ -1928,17 +1928,19 @@ public class Facade implements IMarket {
     public boolean isMember2(String user){
         return userManager.isMember(user).value;
     }
-
-    @PostConstruct
+@PostConstruct
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
         BuyPolicy.setDataServices(dataServices);
+        PermissionManager.setDataServices(dataServices);
         HistoryMapper.getInstance().setDataService(dataServices);
         UserMapper.getInstance().setDataService(dataServices);
         StoreMapper.getInstance().setDataService(dataServices);
         ProductTypeMapper.getInstance().setDataService(dataServices);
-        HistoryMapper.getInstance().setDataService(dataServices);
         PermissionMapper.getInstance().setDataService(dataServices);
+        Inventory.setDataServices(dataServices);
+        ProductType.setDataServices(dataServices);
+        Store.setDataServices(dataServices);
     }
 }

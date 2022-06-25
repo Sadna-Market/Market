@@ -5,13 +5,11 @@ import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.permissionType;
+import com.example.demo.Domain.Market.userTypes;
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Domain.UserModel.User;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PermissionMapper {
@@ -112,7 +110,7 @@ public class PermissionMapper {
 
     public List<Permission> getGranteePermissions(String grantee)
     {
-        List<DataPermission> dataPermissionList =dataServices.getPermissionService().getAllPermissionsGrantor(grantee);
+        List<DataPermission> dataPermissionList =dataServices.getPermissionService().getAllPermissionsGrantee(grantee);
         List<Permission> storePermissions = new LinkedList<>();
         for(DataPermission dataPermission : dataPermissionList) {
             int storeId =dataPermission.getPermissionId().getStoreId();
@@ -135,7 +133,7 @@ public class PermissionMapper {
         permissions.put(t,res);
         //insert before
 
-        List<PermissionType> permissionTypes = dataPermission.getGranteePermissionTypes().stream().collect(Collectors.toList());
+        List<PermissionType> permissionTypes = new ArrayList<>(dataPermission.getGranteePermissionTypes());
         List<permissionType.permissionEnum> permissionTypesDomain = permissionTypes.stream().map(PermissionEnum -> permissionType.permissionEnum.valueOf(PermissionEnum.name())).collect(Collectors.toList());
 
         User tor = UserMapper.getInstance().getUser(t.grantor);
@@ -144,7 +142,8 @@ public class PermissionMapper {
 
 
 
-
+        permissions.get(t).setGranteeType(userTypes.valueOf(dataPermission.getGranteeType().name()));
+        permissions.get(t).setGrantorType(userTypes.valueOf(dataPermission.getGrantorType().name()));
         permissions.get(t).setGrantee(tee);
         permissions.get(t).setGrantor(tor);
         permissions.get(t).setStore(store);
