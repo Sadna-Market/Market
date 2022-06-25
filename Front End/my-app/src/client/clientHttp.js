@@ -683,6 +683,20 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         },
+        getBuyRuleByID:async(uuid,storeid,buyRuleID)=>{
+            let path = apiUrl.concat(`getBuyRuleByID/${uuid}/${storeid}/${buyRuleID}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
+        getDiscountRuleByID:async(uuid,storeid,discountRuleID)=>{
+            let path = apiUrl.concat(`getDiscountRuleByID/${uuid}/${storeid}/${discountRuleID}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
         removeStoreOwner:async(uuid,storeid,OwnerEmail)=>{
             let path = apiUrl.concat(`removeStoreOwner/${uuid}/${storeid}/${OwnerEmail}`);
             return await axios.get(path).then((res)=>{
