@@ -1,8 +1,10 @@
 package com.example.demo.DataAccess.Mappers;
 
 import com.example.demo.DataAccess.Entity.DataPermission;
+import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Market.Permission;
+import com.example.demo.Domain.Market.permissionType;
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Domain.UserModel.User;
 
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PermissionMapper {
 
@@ -38,6 +41,15 @@ public class PermissionMapper {
             this.grantee = grantee;
             this.grantor = grantor;
             this.storeId = storeId;
+        }
+    }
+
+
+    public void removePermision(String grantee,String grantor ,int StoreID)
+    {
+        if(permissions.containsKey(new Triple(grantee,grantor,StoreID)))
+        {
+            permissions.remove(new Triple(grantee,grantor,StoreID));
         }
     }
 
@@ -71,7 +83,7 @@ public class PermissionMapper {
              }
              else {
                  Triple t = new Triple(grantee, grantor, storeId);
-                 Permission domainPermission = convertPermissionToDomain(t);
+                 Permission domainPermission = convertPermissionToDomain(t,dataPermission);
                  storePermissions.add(domainPermission);
              }
          }
@@ -90,7 +102,7 @@ public class PermissionMapper {
             }
             else {
                 Triple t = new Triple(grantee, grantor, storeId);
-                Permission domainPermission = convertPermissionToDomain(t);
+                Permission domainPermission = convertPermissionToDomain(t,dataPermission);
                 storePermissions.add(domainPermission);
             }
         }
@@ -110,28 +122,33 @@ public class PermissionMapper {
             }
             else {
                 Triple t = new Triple(grantee, grantor, storeId);
-                Permission domainPermission = convertPermissionToDomain(t);
+                Permission domainPermission = convertPermissionToDomain(t,dataPermission);
                 storePermissions.add(domainPermission);
             }
         }
         return storePermissions;
     }
 
-    private Permission convertPermissionToDomain(Triple t){
+    private Permission convertPermissionToDomain(Triple t, DataPermission dataPermission){
         Permission res = new Permission(null,null,null);
 
         permissions.put(t,res);
         //insert before
 
+        List<PermissionType> permissionTypes = dataPermission.getGranteePermissionTypes().stream().collect(Collectors.toList());
+        List<permissionType.permissionEnum> permissionTypesDomain = permissionTypes.stream().map(PermissionEnum -> permissionType.permissionEnum.valueOf(PermissionEnum.name())).collect(Collectors.toList());
 
         User tor = UserMapper.getInstance().getUser(t.grantor);
         User tee = UserMapper.getInstance().getUser(t.grantee);
         Store store = StoreMapper.getInstance().getStore(t.storeId);
 
+
+
+
         permissions.get(t).setGrantee(tee);
         permissions.get(t).setGrantor(tor);
         permissions.get(t).setStore(store);
-
+        permissions.get(t).setGranteePermissionTypes(permissionTypesDomain);
 
         return res;
     }

@@ -2,6 +2,7 @@ package com.example.demo.Domain.UserModel;
 
 import com.example.demo.DataAccess.CompositeKeys.PermissionId;
 import com.example.demo.DataAccess.Entity.DataUser;
+import com.example.demo.DataAccess.Mappers.PermissionMapper;
 import com.example.demo.DataAccess.Mappers.UserMapper;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ProductTypeService;
@@ -70,7 +71,9 @@ public class UserManager {
                     continue;
                 }
                 else {
-                    members.put(u,users.get(u));
+                    if (!members.containsKey(u)) {
+                        members.put(u, users.get(u));
+                    }
                 }
             }
         }
@@ -415,6 +418,11 @@ public class UserManager {
                 return new DResponseObj<>(false, ErrorCode.DB_ERROR);
             }
         }
+        //----------------------------mapper-------------------------------
+        UserMapper.getInstance().remove(email);
+        //--------------------------------------------------------------
+
+
         return new DResponseObj<>(true, -1);
     }
 
@@ -427,6 +435,11 @@ public class UserManager {
         User ownerToRemove = members.get(ownerEmail);
         DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeOwnerPermissionCompletely(ownerToRemove, store, loggedUser);
         if (!removePermission.errorOccurred()) {
+
+            //--------------------mapper-------------------------------
+            PermissionMapper.getInstance().removePermision(ownerToRemove.email,loggedUser.email,store.getStoreId().value);
+            //---------------------------------------------------
+
             //change all permission grantor to the founder (because we delete the grantor user)
             String founder = store.getFounder().value;
             User founderUser = getMember(founder).value;
@@ -437,6 +450,7 @@ public class UserManager {
                     ownerToRemove.removeGrantorPermission(permission);
                 }
             }
+
             //notify
             logger.info(String.format("notifying %s for his permission removal", ownerEmail));
             String msg = String.format("Your permission as owner in store %d was removed by %s",
@@ -463,6 +477,11 @@ public class UserManager {
         String msg = String.format("Your permission as manager in store %d was removed by %s",
                 store.getStoreId().value, loggedUser.email);
         notifyUsers(List.of(ManagerToRemove), msg);
+
+        //--------------------mapper-------------------------------
+        PermissionMapper.getInstance().removePermision(ManagerToRemove.email,loggedUser.email,store.getStoreId().value);
+        //---------------------------------------------------
+
         return removePermission;
     }
 

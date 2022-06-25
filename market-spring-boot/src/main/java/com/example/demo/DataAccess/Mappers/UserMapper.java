@@ -29,6 +29,11 @@ public class UserMapper {
         static UserMapper single_instance = new UserMapper();
 
     }
+    public void remove(String email){
+        if(users.containsKey(email)){
+            users.remove(email);
+        }
+    }
 
     private UserMapper() {
         this.users = new ConcurrentHashMap<>();
@@ -58,7 +63,6 @@ public class UserMapper {
 
     public Map<String,User> getAllUsers(){
         List<DataUser> dataUserList = dataServices.getUserService().getAllUsers();
-        Map<String ,User> users = new HashMap<>();
         System.out.println(dataUserList);
         for (DataUser dataUser: dataUserList
         ) {

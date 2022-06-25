@@ -3,10 +3,12 @@ package com.example.demo.DataAccess.Mappers;
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.StoreService;
+import com.example.demo.Domain.StoreModel.ProductStore;
 import com.example.demo.Domain.StoreModel.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +21,8 @@ public class StoreMapper {
     Map<Integer, Store> stores;
     private static class StoreMapperWrapper {
         static StoreMapper single_instance = new StoreMapper();
-
     }
+
 
 
     private StoreMapper() {
@@ -67,23 +69,23 @@ public class StoreMapper {
             if (stores.containsKey(storeId)) {
                 res.put(storeId, stores.get(storeId));
             } else {
-
-                DataStore dataStore = dataServices.getStoreService().getStoreById(storeId);
-                if(dataStore == null){
-                    return null;
+                Store store = convertToDomainStore(ds);
+                if(ds == null){
+                    throw new IllegalArgumentException();
                 }
-                Store store = convertToDomainStore(dataStore);
                 stores.put(storeId,store);
+
             }
 
         }
-        return res;
+        return stores;
     }
 
 
 
     private Store convertToDomainStore(DataStore dataStore){
-        return null;
-        //todo
+        Store store =new Store(dataStore.getStoreId(),dataStore.getName(),null,null,dataStore.getFounder());
+        stores.put(dataStore.getStoreId(),store);
+        return store;
     }
 }

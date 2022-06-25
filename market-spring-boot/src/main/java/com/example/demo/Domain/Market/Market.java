@@ -59,10 +59,8 @@ public class Market {
         return new DResponseObj<>(closeStores.containsKey(StoreID));
     }
     public void initAllSoresFromTheDb(){
-
         if(dataServices!=null) {
             StoreMapper storeMapper = StoreMapper.getInstance();
-
             Map<Integer, Store> allStores = storeMapper.getAllStores();
             for (Integer storeId : allStores.keySet()) {
                 Store s = allStores.get(storeId);
@@ -74,6 +72,22 @@ public class Market {
             }
         }
     }
+
+    public void initAllProductTypes(){
+        if(dataServices!=null) {
+            StoreMapper storeMapper = StoreMapper.getInstance();
+            Map<Integer, Store> allStores = storeMapper.getAllStores();
+            for (Integer storeId : allStores.keySet()) {
+                Store s = allStores.get(storeId);
+                if (s.isOpen().value) {
+                    this.stores.put(storeId, s);
+                } else {
+                    this.closeStores.put(storeId, s);
+                }
+            }
+        }
+    }
+
     //1.1
     //pre: -
     //post: the external Services connect
@@ -789,6 +803,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
+        userManager.getDbUserIfNeed(newOnerEmail);
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreOwner, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -801,6 +816,8 @@ public class Market {
     //pre: the store exist in the system and uuid is grantor of owner
     //post: the owner is not owner.
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, int storeId, String ownerEmail) {
+        userManager.getDbUserIfNeed(ownerEmail);
+
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -812,6 +829,7 @@ public class Market {
 
 
     public DResponseObj<Boolean> removeStoreMenager(UUID userId, int storeId, String ownerEmail) {
+        userManager.getDbUserIfNeed(ownerEmail);
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -825,6 +843,8 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
     public DResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
+        userManager.getDbUserIfNeed(newMangermail);
+
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreManager, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -837,6 +857,8 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm, boolean onof) {
+        userManager.getDbUserIfNeed(mangerMail);
+
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setManagerPermissions, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());

@@ -1,9 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.DataAccess.Mappers.HistoryMapper;
-import com.example.demo.DataAccess.Mappers.ProductTypeMapper;
-import com.example.demo.DataAccess.Mappers.StoreMapper;
-import com.example.demo.DataAccess.Mappers.UserMapper;
+import com.example.demo.DataAccess.Mappers.*;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
@@ -61,6 +58,8 @@ public class Facade implements IMarket {
     @PostConstruct
     public void foo()
     {
+        market.initAllSoresFromTheDb();
+        userManager.getallDbUsers();
     }
 
 
@@ -1942,6 +1941,7 @@ public class Facade implements IMarket {
         StoreMapper.getInstance().setDataService(dataServices);
         ProductTypeMapper.getInstance().setDataService(dataServices);
         HistoryMapper.getInstance().setDataService(dataServices);
+        PermissionMapper.getInstance().setDataService(dataServices);
 
     }
 }

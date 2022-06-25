@@ -14,19 +14,14 @@ import java.util.Set;
 
 public class HistoryMapper {
 
-    HashMap<Integer,List<History>> storeHistory;
-    HashMap<String, List<History>> userHistory;
-
-    HashMap<Integer, History> allHistories;
+   HashMap<Integer,History> historyHashMap;
     DataServices dataServices;
 
     private static class HistoryMapperWrapper {
         static HistoryMapper single_instance = new HistoryMapper();
     }
     private HistoryMapper() {
-        this.storeHistory = new HashMap<>();
-        this.userHistory = new HashMap<>();
-        this.allHistories = new HashMap<>();
+        historyHashMap= new HashMap<>();
     }
 
     public static HistoryMapper getInstance() {
@@ -39,62 +34,61 @@ public class HistoryMapper {
 
     public List<History> getStoreHistory(Integer StoreId)
     {
-        if(storeHistory.containsKey(StoreId)){
-            return storeHistory.get(StoreId);
-        }
+
         List<DataHistory>  dataHistories= dataServices.getHistoryService().getAllHistoryByStoreId(StoreId);
         if(dataHistories==null){
             return null;
         }
         List<History> storeH = new LinkedList<>();
         for(DataHistory dataHistory : dataHistories){
-            storeH.add(convertToDomainHistoryStore(dataHistory,StoreId));
-        }
+            if(historyHashMap.containsKey(dataHistory.getHistoryId())){
+                storeH.add(historyHashMap.get(dataHistory.getHistoryId()));
+            }
+            else {
+                storeH.add(convertToDomainHistory(dataHistory));
+            }
+            }
+
         return storeH;
     }
 
 
     public List<History> getUserHistory(String email)
     {
-        if(userHistory.containsKey(email)){
-            return userHistory.get(email);
-        }
+
         List<DataHistory>  dataHistories= dataServices.getHistoryService().getAllHistoryByUsername(email);
         if(dataHistories==null){
             return null;
         }
         List<History> userH = new LinkedList<>();
-        userHistory.put(email,userH);
-
         for(DataHistory dataHistory : dataHistories){
-            convertToDomainHistoryUser(dataHistory,email);
+            if(historyHashMap.containsKey(dataHistory.getHistoryId())){
+                userH.add(historyHashMap.get(dataHistory.getHistoryId()));
+            }
+            else {
+                userH.add(convertToDomainHistory(dataHistory));
+            }
         }
         return userH;
     }
 
-
-    private History convertToDomainHistoryStore(DataHistory dataHistory, Integer storeId)
+    public History convertToDomainHistory(DataHistory dataHistory)
     {
-        Set<DataProductStoreHistory> DA= dataHistory.getProducts();
-        //insert history to the mapper befor hard case
-        History history = new History(dataHistory.getHistoryId(),dataHistory.getSupplyId(),dataHistory.getFinalPrice(),dataHistory.getUser());
-        storeHistory.get(storeId).add(history);
-        List<ProductStore> productStores = getProductStores(DA);
-        history.setProducts(productStores);
+        History history = new History(dataHistory.getTID(),dataHistory.getSupplyId(),dataHistory.getFinalPrice(),dataHistory.getUser());
+        historyHashMap.put(dataHistory.getHistoryId(),history);
+        // insert before
+
+        List<ProductStore> list = getProductStores(dataHistory.getProducts());
+        if(list ==null){
+            throw new IllegalArgumentException();
+        }
+        history.setProducts(list);
         return history;
+
     }
 
 
-    private History convertToDomainHistoryUser(DataHistory dataHistory, String email)
-    {
-        Set<DataProductStoreHistory> DA= dataHistory.getProducts();
-        //insert history to the mapper befor hard case
-        History history = new History(dataHistory.getHistoryId(),dataHistory.getSupplyId(),dataHistory.getFinalPrice(),email);
-        userHistory.get(email).add(history);
-        List<ProductStore> productStores = getProductStores(DA);
-        history.setProducts(productStores);
-        return history;
-    }
+
     private List<ProductStore> getProductStores(Set<DataProductStoreHistory> DA) {
         List<ProductStore> productStores = new LinkedList<>();
         for(DataProductStoreHistory dataProductStoreHistory : DA){

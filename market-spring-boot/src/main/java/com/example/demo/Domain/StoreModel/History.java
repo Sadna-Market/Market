@@ -85,7 +85,6 @@ public class History {
                             dataProductStoreHistory.getQuantity(),
                             dataProductStoreHistory.getPrice());
                 }).collect(Collectors.toList());
-//        this.user = dhistory.getUser().getUsername();
         return this;
     }
 }
