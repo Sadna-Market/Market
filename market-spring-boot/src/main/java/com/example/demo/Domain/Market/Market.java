@@ -991,6 +991,17 @@ public class Market {
         }
     }
 
+    public DResponseObj<Boolean> isFounder(UUID uuid, int storeId) {
+        DResponseObj<User> user = userManager.getLoggedUser(uuid);
+        if (user.errorOccurred()) return new DResponseObj<>(user.getErrorMsg());
+        DResponseObj<String> email = user.getValue().getEmail();
+        if (email.errorOccurred()) return new DResponseObj<>(email.getErrorMsg());
+        DResponseObj<Store> s = getStore(storeId);
+        if (s.errorOccurred() || s.value == null) return new DResponseObj<>(s.getErrorMsg());
+        return new DResponseObj<>(s.value.getFounder().value.equals(email.value));
+    }
+
+
     /*************************************************private methods*****************************************************/
 
 
@@ -1452,7 +1463,6 @@ public class Market {
         l.add(userBID.value);
         userManager.notifyUsers(l, msg);
     }
-
 
 
 

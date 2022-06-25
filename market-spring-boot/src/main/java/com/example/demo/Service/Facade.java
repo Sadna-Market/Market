@@ -1539,6 +1539,7 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(lst, -1);
     }
 
+
     public UserManager getUserManager() {
         return userManager;
     }
@@ -1592,6 +1593,16 @@ public class Facade implements IMarket {
         if (minRate < 0 || list == null)
             return new SLResponseOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         return new SLResponseOBJ<>(market.filterByStoreRate(list, minRate));
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isFounderUUID(String uuid, int storeId){
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.isFounder(UUID.fromString(uuid), storeId);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false, res.errorMsg) : new SLResponseOBJ<>(res.value);
     }
 
 
