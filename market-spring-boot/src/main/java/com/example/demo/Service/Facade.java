@@ -807,6 +807,7 @@ public class Facade implements IMarket {
 
         if (founder == null || founder.equals(""))
             return new SLResponseOBJ<>(-1, ErrorCode.NOTSTRING);
+        founder = founder.toLowerCase();
         DResponseObj<Integer> res = market.OpenNewStore(UUID.fromString(userId), name, founder,
                 new DiscountPolicy(discountPolicy), new BuyPolicy(buyPolicy));
         return new SLResponseOBJ<>(res.value, res.errorMsg);
@@ -1286,6 +1287,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        mangerEmil = mangerEmil.toLowerCase();
         return new SLResponseOBJ<>(market.addNewStoreManager(UUID.fromString(userId), storeId, mangerEmil));
     }
 
@@ -1323,6 +1325,7 @@ public class Facade implements IMarket {
         } catch (Exception e) {
             return new SLResponseOBJ<>(false, ErrorCode.INVALID_PERMISSION_TYPE);
         }
+        mangerEmil = mangerEmil.toLowerCase();
         return new SLResponseOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, perm, onof));
     }
 
@@ -1395,6 +1398,7 @@ public class Facade implements IMarket {
      */
     @Override
     public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
+        cancelMemberUsername = cancelMemberUsername.toLowerCase();
         DResponseObj<List<Store>> res = userManager.cancelMembership(UUID.fromString(uuid), cancelMemberUsername);
         if (res.errorOccurred()) return new SLResponseOBJ<>(false, res.errorMsg);
         return market.deleteStoresFromMarket(res.value);
@@ -1908,5 +1912,9 @@ public class Facade implements IMarket {
         ShoppingBag.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
         BuyPolicy.setDataServices(dataServices);
+        Inventory.setDataServices(dataServices);
+        ProductType.setDataServices(dataServices);
+        Store.setDataServices(dataServices);
+        PermissionManager.setDataServices(dataServices);
     }
 }

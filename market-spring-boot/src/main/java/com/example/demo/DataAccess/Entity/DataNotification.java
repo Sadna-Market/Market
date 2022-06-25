@@ -45,7 +45,7 @@ public class DataNotification {
     }
 
     public String getMessage() {
-        return "[" + sentDate.toString() + "] " + message;
+        return message;
     }
 
     public void setMessage(String message) {

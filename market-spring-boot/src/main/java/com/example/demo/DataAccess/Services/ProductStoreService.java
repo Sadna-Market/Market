@@ -1,14 +1,17 @@
 package com.example.demo.DataAccess.Services;
 
 import com.example.demo.DataAccess.Entity.DataProductStore;
+import com.example.demo.DataAccess.Entity.DataProductType;
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Repository.ProductStoreRepository;
+import com.example.demo.DataAccess.Repository.ProductTypeRepository;
 import com.example.demo.DataAccess.Repository.StoreRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,17 +20,20 @@ public class ProductStoreService {
 
     private final ProductStoreRepository productStoreRepository;
     private final StoreRepository storeRepository;
+    private final ProductTypeRepository productTypeRepository;
+
     @Autowired
-    public ProductStoreService(ProductStoreRepository productStoreRepository, StoreRepository storeRepository) {
+    public ProductStoreService(ProductStoreRepository productStoreRepository, StoreRepository storeRepository, ProductTypeRepository productTypeRepository) {
         this.productStoreRepository = productStoreRepository;
         this.storeRepository = storeRepository;
+        this.productTypeRepository = productTypeRepository;
     }
 
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean insertProductStore(DataProductStore productStore, int storeId) {
         try {
             Optional<DataStore> store = storeRepository.findById(storeId);
-            if(store.isEmpty()){
+            if (store.isEmpty()) {
                 logger.warn(String.format("store %d is not present in db", storeId));
                 return false;
             }
@@ -39,6 +45,57 @@ public class ProductStoreService {
             return true;
         } catch (Exception e) {
             logger.error(String.format("failed to insert productStore %s into db, ERROR: %s", productStore.getProductType().getProductName(), e.getMessage()));
+            return false;
+        }
+    }
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public List<DataProductStore> getProductStoreByStoreId(int storeId) {
+        try {
+            var dataStore = storeRepository.findById(storeId);
+            if (dataStore.isEmpty()) {
+                logger.error(String.format("store %d is not present in db", storeId));
+                return null;
+            }
+            var dataProductStoreList = productStoreRepository.findAllByStore(dataStore.get());
+            logger.info(String.format("fetched productStores of store %d successfully from db", storeId));
+            return dataProductStoreList;
+        } catch (Exception e) {
+            logger.error(String.format("failed to fetch productStores of store %d from db, ERROR: %s", storeId, e.getMessage()));
+            return null;
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean deleteProductStore(int productTypeId, int storeId) {
+        try {
+            productStoreRepository.deleteByProductTypeIdStoreId(productTypeId, storeId);
+            logger.info(String.format("deleted productStore in store %d successfully from db", storeId));
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to delete productStore in store %d from db, ERROR: %s", storeId, e.getMessage()));
+            return false;
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean updateProductStore(int productTypeId, int storeId, double price, int quantity) {
+        try {
+            if (quantity == -1) {
+                productStoreRepository.updatePrice(productTypeId, storeId, price);
+                logger.info(String.format("updated product store %d  to price %f successfully in db",
+                        productTypeId, price));
+            } else {
+                productStoreRepository.updateQuantity(productTypeId, storeId, quantity);
+                logger.info(String.format("updated product store %d  to quantity %d successfully in db",
+                        productTypeId, quantity));
+            }
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to updated product store %d  to %s %f in db, ERROR: %s",
+                    productTypeId,
+                    quantity == -1? "price" : "quantity",
+                    price,
+                    e.getMessage()));
             return false;
         }
     }

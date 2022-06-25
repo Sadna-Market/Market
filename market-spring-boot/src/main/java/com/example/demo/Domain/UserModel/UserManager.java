@@ -1,5 +1,6 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.CompositeKeys.PermissionId;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ProductTypeService;
@@ -180,6 +181,7 @@ public class UserManager {
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
             GuestVisitors.remove(userID);
+            logger.debug(String.format("removed guest uuid %s, added member %s with uuid: %s",userID,LogUser.email,newMemberUUid));
             return new DResponseObj<>(newMemberUUid);
         } else {
             logger.debug("Login email: " + email + " the password is not correct");
@@ -192,6 +194,7 @@ public class UserManager {
 
     public void modifyDelayMessages(UUID uuid){
         var user = LoginUsers.get(uuid);
+        logger.debug(String.format("modifying messages of user %s that has uuid: %s",user.email,uuid));
         alertService.modifyDelayIfExist(user.email, uuid);
     }
 
@@ -619,7 +622,7 @@ public class UserManager {
             }
         });
         loggedInUsers.forEach(uuid -> {
-            alertService.notifyUser(uuid, msg);
+            alertService.notifyUser(uuid, msg,LoginUsers.get(uuid).email);
         });
         alertService.notifyUsers(notLoggedInUsers);
 //        notLoggedInUsers.forEach(username -> {
@@ -670,6 +673,8 @@ public class UserManager {
         if (getCancel.errorOccurred()) return new DResponseObj<>(null, getCancel.errorMsg);
 
         User toCancelUser = getCancel.value;
+        var permissionIds = toCancelUser.getAccessPermission().value.stream().map(Permission::getPermissionId).collect(Collectors.toList());
+        deleteUsersPermissionFromDB(toCancelUser, permissionIds);
         DResponseObj<List<Store>> listOfStoreToDelete = PermissionManager.getInstance().removeAllPermissions(toCancelUser);
         if (listOfStoreToDelete.errorOccurred()) return listOfStoreToDelete;
 
@@ -681,11 +686,24 @@ public class UserManager {
                 User founderUser = getMember(founder).value;
                 permission.setGrantor(founderUser);
                 founderUser.addGrantorPermission(permission);
+                if(dataServices!=null && dataServices.getPermissionService()!=null){
+                    String newGrantor = founderUser.email,oldGrantor = toCancelUser.email, grantee = permission.getGrantee().value.email;
+                    int storeId = store.getStoreId().value;
+                    dataServices.getPermissionService().updatePermissionGrantor(oldGrantor,newGrantor,grantee,storeId);
+                }
             }
         }
         //remove instance of member for good
         deleteMemberPermanently(toCancelUser);
         return listOfStoreToDelete;
+    }
+
+    private void deleteUsersPermissionFromDB(User toCancelUser, List<PermissionId> permissionIds) {
+        if (dataServices != null && dataServices.getPermissionService() != null) {
+            if (!dataServices.getPermissionService().deletePermissions(permissionIds)) {
+                logger.error(String.format("failed to remove all user %s permissions", toCancelUser.getEmail().value));
+            }
+        }
     }
 
     private void deleteMemberPermanently(User toCancelUser) {

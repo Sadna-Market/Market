@@ -96,4 +96,20 @@ public class ProductTypeService {
         }
     }
 
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean updateProductRate(int productTypeId, int rate, int counterRate) {
+        try {
+            productTypeRepository.updateProductRate(productTypeId,rate,counterRate);
+            logger.info(String.format("updated product type %d rate to %d successfully in db",
+                    productTypeId,rate));
+
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to updated product type  %d to rate %d in db, ERROR: %s",
+                    productTypeId,rate,
+                    e.getMessage()));
+            return false;
+        }
+    }
+
 }
