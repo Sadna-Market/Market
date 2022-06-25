@@ -82,6 +82,12 @@ public class DataStore {
             orphanRemoval = true) /*when store is fetched from db then fetch the DiscountPolicy too*/
     private Set<DataBuyRule> buyRules;
 
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "store",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
+    private Set<DataBID> bids = new HashSet<>();
 
 //    @OneToMany(
 //            fetch = FetchType.EAGER,
@@ -224,5 +230,13 @@ public class DataStore {
                 ", discountRules=" + discountRules +
                 ", buyRules=" + buyRules +
                 '}';
+    }
+
+    public Set<DataBID> getBids() {
+        return bids;
+    }
+
+    public void setBids(Set<DataBID> bids) {
+        this.bids = bids;
     }
 }

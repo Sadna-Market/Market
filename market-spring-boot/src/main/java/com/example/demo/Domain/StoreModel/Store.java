@@ -1,5 +1,6 @@
 package com.example.demo.Domain.StoreModel;
 
+import com.example.demo.DataAccess.Entity.DataBID;
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.DataAccess.Services.DataServices;
@@ -646,6 +647,10 @@ public class Store {
         dataStore.setOpen(this.isOpen);
         dataStore.setNumOfRated(this.numOfRated);
         dataStore.setFounder(this.founder);
+        Set<DataBID> s = new HashSet<>();
+        //TODO: dor!
+        //this.bids.forEach(bid -> s.add(bid.getDataObject(dataStore)));
+        dataStore.setBids(s);
         return dataStore;
     }
 
