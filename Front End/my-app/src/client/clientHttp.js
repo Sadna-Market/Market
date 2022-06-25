@@ -613,6 +613,12 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         },
+        isFounderUUID:async(uuid,storeID)=>{
+            let path = apiUrl.concat(`isFounderUUID/${uuid}/${storeID}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
         isOwnerUUID:async(uuid,storeID)=>{
             let path = apiUrl.concat(`isOwnerUUID/${uuid}/${storeID}`);
             return await axios.get(path).then((res)=>{

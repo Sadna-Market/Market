@@ -668,6 +668,12 @@ public class api implements Iapi {
     }
 
     @Override
+    @GetMapping("isFounderUUID/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> isFounderUUID(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) {
+        return iMarket.isFounderUUID(uuid, storeId);
+    }
+
+    @Override
     @GetMapping("isOwnerUUID/{uuid}/{storeId}")
     public SLResponseOBJ<Boolean> isOwnerUUID(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) {
         return iMarket.isOwnerUUID(uuid, storeId);
