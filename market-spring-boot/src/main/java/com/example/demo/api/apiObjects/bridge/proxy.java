@@ -461,7 +461,6 @@ public class proxy implements IMarket {
     @Override
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId) {
         if(REAL==null){
-
             return new SLResponseOBJ<>(null,-1);
         }
         return REAL.getBuyPolicy(userId,storeId);    }
@@ -474,6 +473,22 @@ public class proxy implements IMarket {
             return new SLResponseOBJ<>(null,-1);
         }
         return REAL.getDiscountPolicy(userId,storeId);
+    }
+
+    @Override
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(String userId, int storeId, int buyRuleID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getBuyRuleByID(userId,storeId,buyRuleID);
+    }
+
+    @Override
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(String userId, int storeId, int discountRuleID) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null,-1);
+        }
+        return REAL.getDiscountRuleByID(userId,storeId,discountRuleID);
     }
 
     @Override
@@ -688,6 +703,14 @@ public class proxy implements IMarket {
     }
 
     @Override
+    public SLResponseOBJ<Boolean> isFounderUUID(String uuid, int storeId) {
+        if(REAL==null){
+            return new SLResponseOBJ<>(null, -1);
+        }
+        return REAL.isFounderUUID(uuid,storeId);
+    }
+
+    @Override
     public SLResponseOBJ<Boolean> isOwnerUUID(String uuid, int storeId) {
         if(REAL==null){
             return new SLResponseOBJ<>(null, -1);
@@ -811,5 +834,11 @@ public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int sto
         }
         return REAL.getAllMembers(userId);
 
+    }
+
+    public void modifyDelayMessages(String uuid) {
+        if(REAL != null){
+            REAL.modifyDelayMessages(uuid);
+        }
     }
 }

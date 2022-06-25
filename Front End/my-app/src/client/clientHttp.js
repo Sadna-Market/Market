@@ -613,6 +613,12 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         },
+        isFounderUUID:async(uuid,storeID)=>{
+            let path = apiUrl.concat(`isFounderUUID/${uuid}/${storeID}`);
+            return await axios.get(path).then((res)=>{
+                return res.data;
+            })
+        },
         isOwnerUUID:async(uuid,storeID)=>{
             let path = apiUrl.concat(`isOwnerUUID/${uuid}/${storeID}`);
             return await axios.get(path).then((res)=>{
@@ -678,6 +684,20 @@ export const createApiClientHttp = () => {
         },
         getDiscountPolicy:async(uuid,storeid)=>{
             let path = apiUrl.concat(`getDiscountPolicy/${uuid}/${storeid}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
+        getBuyRuleByID:async(uuid,storeid,buyRuleID)=>{
+            let path = apiUrl.concat(`getBuyRuleByID/${uuid}/${storeid}/${buyRuleID}`);
+            return await axios.get(path).then((res)=>{
+
+                return res.data;
+            })
+        },
+        getDiscountRuleByID:async(uuid,storeid,discountRuleID)=>{
+            let path = apiUrl.concat(`getDiscountRuleByID/${uuid}/${storeid}/${discountRuleID}`);
             return await axios.get(path).then((res)=>{
 
                 return res.data;
@@ -858,6 +878,12 @@ export const createApiClientHttp = () => {
                 return res.data;
             })
         } ,
+        modifyDelayMessages:async(uuid)=>{
+            let path = apiUrl.concat(`modifyDelayMessages/${uuid}`);
+            return await axios.post(path).then((res)=>{
+                return res.data;
+            })
+        }
     }
 }
 /*

@@ -96,6 +96,18 @@ public class PermissionService {
         }
     }
 
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean deletePermissions(List<PermissionId> permissionIds) {
+        try {
+            permissionRepository.deleteAllById(permissionIds);
+            logger.info("deleted list of permissions");
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to delete list of permissions from db, ERROR: %s",
+                    e.getMessage()));
+            return false;
+        }
+    }
 
 
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
@@ -135,5 +147,34 @@ public class PermissionService {
             return null;
         }
     }
+
+    @Transactional(rollbackFor = {Exception.class})
+    public void updatePermissionGrantor(String oldGrantor, String newGrantor, String grantee, int storeId) {
+        try {
+            var allPerms = permissionRepository.findAllByPermissionId_GrantorIdAndPermissionId_GranteeIdAndPermissionId_StoreId(oldGrantor, grantee, storeId);
+            permissionRepository.deleteAll(allPerms);
+            allPerms.forEach(p -> p.getPermissionId().setGrantorId(newGrantor));
+            permissionRepository.saveAllAndFlush(allPerms);
+            logger.info(String.format("updated grantor to %s to permission (grantor,grantee,store)~(%s,%s,%d) in db",
+                    oldGrantor,
+                    newGrantor,
+                    grantee, storeId));
+        } catch (Exception e) {
+            logger.error(String.format("failed to update permission grantor %s in db", oldGrantor));
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public List<DataPermission> getPermissionStore(int storeId) {
+        try {
+            var permissions = permissionRepository.findAllByPermissionId_StoreId(storeId);
+            logger.info(String.format("fetched all permissions of store %d from db", storeId));
+            return permissions;
+        } catch (Exception e) {
+            logger.error(String.format("failed to fetch all permissions of store %d, ERROR: %s", storeId, e.getMessage()));
+            return null;
+        }
+    }
+
 
 }

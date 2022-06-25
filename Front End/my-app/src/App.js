@@ -9,8 +9,11 @@ import SignUpManager from "./components/Manager/SignUpManager";
 import {createApiClientHttp} from "../../my-app/src/client/clientHttp";
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
-
+// import createApiClientHttp from "../src/client/clientHttp.js";
+import {errorCode} from "../src/ErrorCodeGui"
 function App(props) {
+    const apiClientHttp = createApiClientHttp();
+    const [enteredError, SetError] = useState("");
     console.log("App")
     let stompClient = null; //save this instance
     let serverChannelURI = "http://localhost:8090/notifications";
@@ -59,8 +62,7 @@ function App(props) {
         console.log("Error on attemp to connect with web-socket [is server on?]");
         //show an error on to the user
     }
-    let apiClientHttp = createApiClientHttp();
-    const [enteredError, SetError] = useState("");
+
 
     // const [UUID, SetUUID] = useState("-1");
     let UUID='-5'
@@ -93,7 +95,7 @@ function App(props) {
     const [updateMarket, b] = useState("");
 
 
-    const loginHandler = (newUUID,email,systemManager) => {
+    async function loginHandler(newUUID,email,systemManager){
         UUID=newUUID
        setBarcommand(
             <Bar
@@ -111,9 +113,17 @@ function App(props) {
         connect();
         console.log("after login")
         console.log("email"+email)
+        await new Promise(r => setTimeout(r, 2000));
+        const modifyDelayMessagesResponse = await apiClientHttp.modifyDelayMessages(UUID);
+        console.log("modifyDelayMessagesResponse",modifyDelayMessagesResponse)
+        if (modifyDelayMessagesResponse.errorMsg !== -1) {
+            SetError(errorCode.get(modifyDelayMessagesResponse.errorMsg))
+        } else {
+
+        }
 
         setCommand(<Market uuid={newUUID} useremail={email} isLogin={true} isSystemManager={systemManager}/>);
-    };
+    }
 
     //todo: generate UUId of GUEST
     const logoutHandler = (uuid1) => {

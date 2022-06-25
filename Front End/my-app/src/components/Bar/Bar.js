@@ -58,7 +58,7 @@ const Bar = (props) => {
       const isSystemManagerUUIDResponse = await apiClientHttp.isSystemManagerUUID(loginResponse.value);
 
       if (isSystemManagerUUIDResponse.errorMsg=== -1){
-        systemManager=true
+        systemManager=isSystemManagerUUIDResponse.value;
       }
       SetError("")
       setUserName(email);

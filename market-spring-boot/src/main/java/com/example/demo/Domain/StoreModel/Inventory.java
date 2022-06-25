@@ -2,16 +2,18 @@ package com.example.demo.Domain.StoreModel;
 
 //import com.example.demo.DataAccess.Entity.DataInventory;
 import com.example.demo.DataAccess.Entity.DataProductStore;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Response.DResponseObj;
+import com.example.demo.Domain.UserModel.ShoppingBag;
 import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Inventory {
-
+    private static DataServices dataServices;
 
     /////////////////////////////////////////// Fields //////////////////////////////////////////////////////////////
     private ConcurrentHashMap<Integer, ProductStore> products;  // productTypeID, ProductStore
@@ -28,12 +30,19 @@ public class Inventory {
         products = new ConcurrentHashMap<>();
     }
 
+
+    //for upload store from db
+    public Inventory(int storeId,ConcurrentHashMap<Integer, ProductStore> products){
+        this.storeId = storeId;
+        this.products = products;
+    }
+
+    /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
+
     public DResponseObj<Boolean> haseItem(int itemId){
         return products.containsKey(itemId)? new DResponseObj<>(true,-1): new DResponseObj<>(false, ErrorCode.PRODUCT_DOESNT_EXIST_IN_THE_STORE);
     }
 
-
-    /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
 
     public DResponseObj<Boolean> isProductExistInStock(int productId, int quantity) {
         ProductStore productStore = products.get(productId);
@@ -61,10 +70,15 @@ public class Inventory {
             return new DResponseObj<>(false,ErrorCode.PRODUCTALLREADYINSTORE);
         } else {
             ProductStore toAdd = new ProductStore(newProduct, quantity, price);
-//            var data = toAdd.getDataObject();
-//            productStoreService.inserProductStore(data,storeId);
+            //db
+            if(dataServices!=null && dataServices.getProductStoreService()!=null) {
+                var dataProductStore = toAdd.getDataObject();
+                if(!dataServices.getProductStoreService().insertProductStore(dataProductStore, storeId)){
+                    logger.error(String.format("failed to add product store to store %d",storeId));
+                }
+            }
             products.put(productStore.getValue(), toAdd);
-            logger.info("Inventory added productId:" + newProduct.getProductID());
+            logger.info("Inventory added productId:" + newProduct.getProductID().value);
             return newProduct.addStore(storeId);
         }
     }
@@ -79,6 +93,12 @@ public class Inventory {
             logger.warn("try to remove productId:" + productId + " but inventory not contains this product");
             return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         } else {
+            //db
+            if(dataServices!=null && dataServices.getProductStoreService()!=null) {
+                if(!dataServices.getProductStoreService().deleteProductStore(productId, storeId)){
+                    logger.error(String.format("failed to add product store to store %d",storeId));
+                }
+            }
             DResponseObj<Boolean> success = removed.getProductType().removeStore(storeId);
             if(success.getValue())
                 logger.info("Inventory remove productId:" + productId);
@@ -121,6 +141,14 @@ public class Inventory {
             long stamp = productStore.getProductLock().writeLock();
             try {
                 productStore.setQuantity(quantity);
+                //db
+                if(dataServices != null && dataServices.getProductStoreService()!=null) {
+                    if(!dataServices.getProductStoreService().updateProductStore(productId,storeId,productStore.getPrice().value,quantity)){
+                        logger.error(String.format("failed to update price %d of product %d",
+                                quantity,
+                                productId));
+                    }
+                }
                 logger.info("Inventory set quantity of productId:" + productId + "to " + quantity);
                 return new DResponseObj<>(true);
             }finally {
@@ -139,6 +167,14 @@ public class Inventory {
             long stamp = productStore.getProductLock().writeLock();
             try{
                 productStore.setPrice(price);
+                //db
+                if(dataServices != null && dataServices.getProductStoreService()!=null) {
+                    if(!dataServices.getProductStoreService().updateProductStore(productId,storeId,price,-1)){
+                        logger.error(String.format("failed to update price %f of product %d",
+                                price,
+                                productId));
+                    }
+                }
                 logger.info("Inventory set price of productId:" + productId + "to " + price);
                 return new DResponseObj<>(true);
             }finally {
@@ -261,6 +297,13 @@ public class Inventory {
 
     public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> getProducts() {
         return new DResponseObj<>(products);
+    }
+    public static void setDataServices(DataServices dataServices) {
+        Inventory.dataServices = dataServices;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
 //    public DataInventory getDataObject() {

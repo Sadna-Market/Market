@@ -45,8 +45,8 @@ public class AlertService implements IAlertService {
      * @param msg  the message to pop to the client through the websocket
      * @return true if success, else false
      */
-    public void notifyUser(UUID uuid, String msg) {
-        var notification = new Notification(msg);
+    public void notifyUser(UUID uuid, String msg,String email) {
+        var notification = new Notification(msg,email);
         if (sessionMapper.containsKey(uuid)) {
             String sessionID = sessionMapper.get(uuid);
             if (!dispatcher.addNotification(sessionID, notification)) {
@@ -54,7 +54,7 @@ public class AlertService implements IAlertService {
                 return;
             }
         }
-        logger.error("didnt find sessionID in sessionMapper");
+        logger.error(String.format("didnt find sessionID of uuid [%s] in sessionMapper",uuid));
     }
 
 
@@ -79,6 +79,7 @@ public class AlertService implements IAlertService {
      * @param sessionID the sessionID that WebSocket generated
      */
     public void addListener(UUID uuid, String sessionID) {
+        logger.debug(String.format("added (%s,%s) to sessionMapper",uuid,sessionID));
         sessionMapper.put(uuid, sessionID);
         if(!dispatcher.addNewSession(sessionID)){
             logger.error(String.format("failed to add session %s when adding to be listener",sessionID));
@@ -92,8 +93,12 @@ public class AlertService implements IAlertService {
      * @param sessionID
      */
     public void removeListener(UUID uuid, String sessionID) {
-        sessionMapper.remove(uuid);
-        dispatcher.removeSession(sessionID);
+        if(sessionMapper.remove(uuid)!=null){
+            logger.debug(String.format("removed (%s,%s) to sessionMapper",uuid,sessionID));
+            dispatcher.removeSession(sessionID);
+        }else {
+            logger.error(String.format("failed to remove (%s,%s) to sessionMapper - not found in mapper", uuid, sessionID));
+        }
     }
 
     /**
@@ -129,7 +134,7 @@ public class AlertService implements IAlertService {
             return;
         }
         List<Notification> notifications = dataNotificationList.stream()
-                .map(dataNotification -> new Notification(dataNotification.getMessage()))
+                .map(dataNotification -> new Notification(dataNotification.getMessage(),username))
                 .collect(Collectors.toList());
         var sessionID = sessionMapper.get(uuid);
         dispatcher.importDelayedNotifications(sessionID,notifications);

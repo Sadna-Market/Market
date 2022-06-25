@@ -980,6 +980,10 @@ public class RealMarket implements MarketBridge {
         return new ATResponseObj<>(res.value);
     }
 
+    public void modifyMessages(String uuid) {
+        market.modifyDelayMessages(uuid);
+    }
+
 
 }
 

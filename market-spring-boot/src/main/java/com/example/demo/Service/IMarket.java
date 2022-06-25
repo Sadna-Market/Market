@@ -113,7 +113,8 @@ public interface IMarket {
     public SLResponseOBJ<Boolean> combineXORDiscountRules(String userId , int storeId, String decision, List<Integer> rules);
     public SLResponseOBJ<List<BuyRuleSL>> getBuyPolicy(String userId, int storeId);
     public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(String userId, int storeId);
-
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(String userId, int storeId, int buyRuleID);
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(String userId, int storeId, int discountRuleID);
 
     //2.4.4
     public SLResponseOBJ<Boolean> addNewStoreOwner(String UserId, int StoreId, String OwnerEmail);
@@ -160,6 +161,7 @@ public interface IMarket {
     public SLResponseOBJ<List<ServiceStore>> getAllStores();
     public SLResponseOBJ<List<ServiceProductType>> getAllProducts();
     public SLResponseOBJ<List<ServiceProductStore>> getAllProductsInStore(int storeID);
+    public SLResponseOBJ<Boolean> isFounderUUID(String uuid, int storeId);
     public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);
@@ -179,7 +181,7 @@ public interface IMarket {
 
     public SLResponseOBJ<List<String>> getAllMembers(String userId);
 
-
+    public void modifyDelayMessages(String uuid);
 
 
 

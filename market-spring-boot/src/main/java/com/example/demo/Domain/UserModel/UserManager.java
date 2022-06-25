@@ -1,5 +1,6 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.CompositeKeys.PermissionId;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.DataAccess.Mappers.UserMapper;
 import com.example.demo.DataAccess.Services.DataServices;
@@ -62,6 +63,7 @@ public class UserManager {
     public void getallDbUsers(){
         if(dataServices != null){
             UserMapper userMapper = UserMapper.getInstance();
+
             Map<String, User> users =userMapper.getAllUsers();
             for(String u: users.keySet()){
                 if(members.containsKey(u)||users.get(u)==null){
@@ -90,6 +92,7 @@ public class UserManager {
             if(user==null){
                 logger.debug("user not exsist in the db : "+email);
                 return;
+
             }
            members.put(email,user);
         }
@@ -146,6 +149,7 @@ public class UserManager {
         logger.debug("UserManager GuestVisit");
         UUID newid = UUID.randomUUID();
         User guest = new User();
+        logger.debug(String.format("%s -> guest",newid));
         GuestVisitors.put(newid, guest);
         return new DResponseObj<>(newid);
     }
@@ -225,7 +229,7 @@ public class UserManager {
             UUID newMemberUUid = UUID.randomUUID();
             LoginUsers.put(newMemberUUid, LogUser);
             GuestVisitors.remove(userID);
-            alertService.modifyDelayIfExist(LogUser.email, newMemberUUid);
+            logger.debug(String.format("removed guest uuid %s, added member %s with uuid: %s",userID,LogUser.email,newMemberUUid));
             return new DResponseObj<>(newMemberUUid);
         } else {
             logger.debug("Login email: " + email + " the password is not correct");
@@ -234,6 +238,12 @@ public class UserManager {
             return a;
         }
 
+    }
+
+    public void modifyDelayMessages(UUID uuid){
+        var user = LoginUsers.get(uuid);
+        logger.debug(String.format("modifying messages of user %s that has uuid: %s",user.email,uuid));
+        alertService.modifyDelayIfExist(user.email, uuid);
     }
 
     public boolean isEmailLoged(String email) {
@@ -357,7 +367,13 @@ public class UserManager {
             User loggedUser = LoginUsers.get(userId);
             if (isOwner(userId, store).value) {
                 User newOwner = members.get(newOwnerEmail);
-                return loggedUser.addNewStoreOwner(newOwner, store);
+                var res =  loggedUser.addNewStoreOwner(newOwner, store);
+                if(res.errorOccurred()) return  res;
+                logger.info(String.format("notifying %s for his permission setup", newOwnerEmail));
+                String msg = String.format("You have been granted with an owner permission in store %d by %s",
+                      store.getStoreId().value, loggedUser.email);
+                notifyUsers(List.of(newOwner), msg);
+                return res;
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
@@ -421,20 +437,32 @@ public class UserManager {
                     ownerToRemove.removeGrantorPermission(permission);
                 }
             }
+            //notify
+            logger.info(String.format("notifying %s for his permission removal", ownerEmail));
+            String msg = String.format("Your permission as owner in store %d was removed by %s",
+                    store.getStoreId().value, loggedUser.email);
+            notifyUsers(List.of(ownerToRemove), msg);
         }
         return removePermission;
     }
 
 
-    public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String MenagerEmail) {
-        getDbUserIfNeed(MenagerEmail);
+
+    public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String ManagerEmail) {
+
+        getDbUserIfNeed(ManagerEmail);
 
         logger.debug("UserManager removeStoreManager");
         if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         User loggedUser = LoginUsers.get(userId);
         if (!isOwner(userId, store).value) return new DResponseObj<>(false, ErrorCode.NOTOWNER);
-        User MenagerToRemove = members.get(MenagerEmail);
-        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(MenagerToRemove, store, loggedUser);
+        User ManagerToRemove = members.get(ManagerEmail);
+        DResponseObj<Boolean> removePermission = PermissionManager.getInstance().removeManagerPermissionCompletely(ManagerToRemove, store, loggedUser);
+        if(removePermission.errorOccurred()) return removePermission;
+        logger.info(String.format("notifying %s for his permission removal", ManagerEmail));
+        String msg = String.format("Your permission as manager in store %d was removed by %s",
+                store.getStoreId().value, loggedUser.email);
+        notifyUsers(List.of(ManagerToRemove), msg);
         return removePermission;
     }
 
@@ -469,7 +497,14 @@ public class UserManager {
             User loggedUser = LoginUsers.get(uuid);
             if (isOwner(uuid, store).value) {
                 User newManager = members.get(newMangerEmail);
-                return loggedUser.addNewStoreManager(newManager, store);
+                var res = loggedUser.addNewStoreManager(newManager, store);
+                if(res.errorOccurred()) return res;
+                if(res.errorOccurred()) return  res;
+                logger.info(String.format("notifying %s for his permission setup", newMangerEmail));
+                String msg = String.format("You have been granted with a manager permission in store %d by %s",
+                        store.getStoreId().value, loggedUser.email);
+                notifyUsers(List.of(newManager), msg);
+                return  res;
             }
         }
         DResponseObj<Boolean> a = new DResponseObj<Boolean>(false);
@@ -661,7 +696,7 @@ public class UserManager {
             }
         });
         loggedInUsers.forEach(uuid -> {
-            alertService.notifyUser(uuid, msg);
+            alertService.notifyUser(uuid, msg,LoginUsers.get(uuid).email);
         });
         alertService.notifyUsers(notLoggedInUsers);
 //        notLoggedInUsers.forEach(username -> {
@@ -713,6 +748,8 @@ public class UserManager {
         if (getCancel.errorOccurred()) return new DResponseObj<>(null, getCancel.errorMsg);
 
         User toCancelUser = getCancel.value;
+        var permissionIds = toCancelUser.getAccessPermission().value.stream().map(Permission::getPermissionId).collect(Collectors.toList());
+        deleteUsersPermissionFromDB(toCancelUser, permissionIds);
         DResponseObj<List<Store>> listOfStoreToDelete = PermissionManager.getInstance().removeAllPermissions(toCancelUser);
         if (listOfStoreToDelete.errorOccurred()) return listOfStoreToDelete;
 
@@ -724,11 +761,24 @@ public class UserManager {
                 User founderUser = getMember(founder).value;
                 permission.setGrantor(founderUser);
                 founderUser.addGrantorPermission(permission);
+                if(dataServices!=null && dataServices.getPermissionService()!=null){
+                    String newGrantor = founderUser.email,oldGrantor = toCancelUser.email, grantee = permission.getGrantee().value.email;
+                    int storeId = store.getStoreId().value;
+                    dataServices.getPermissionService().updatePermissionGrantor(oldGrantor,newGrantor,grantee,storeId);
+                }
             }
         }
         //remove instance of member for good
         deleteMemberPermanently(toCancelUser);
         return listOfStoreToDelete;
+    }
+
+    private void deleteUsersPermissionFromDB(User toCancelUser, List<PermissionId> permissionIds) {
+        if (dataServices != null && dataServices.getPermissionService() != null) {
+            if (!dataServices.getPermissionService().deletePermissions(permissionIds)) {
+                logger.error(String.format("failed to remove all user %s permissions", toCancelUser.getEmail().value));
+            }
+        }
     }
 
     private void deleteMemberPermanently(User toCancelUser) {

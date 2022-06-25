@@ -26,8 +26,8 @@ public interface DiscountRule {
     static Logger logger = Logger.getLogger(DiscountRule.class);
 
     DResponseObj<Double> howMuchDiscount(String username, int age,ConcurrentHashMap<ProductStore, Integer> shoppingBag);
-    //DResponseObj<String> getDiscountRule();
     void setID(int id);
+    int getId();
     DResponseObj<DiscountRuleSL> convertToDiscountRuleSL();
     double getPercentDiscount();
 
@@ -47,4 +47,7 @@ public interface DiscountRule {
             return null;
         }
     }
+
+    //DResponseObj<String> getDiscountRule();
+
 }

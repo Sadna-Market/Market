@@ -24,7 +24,7 @@ public interface Iapi {
     public SLResponseOBJ<Integer> getStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store") int Store) ;
     public SLResponseOBJ<Boolean> newStoreRate(@PathVariable("uuid")String uuid,@PathVariable("Store")int Store,@PathVariable("rate") int rate) ;
     public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() ;
-
+    public SLResponseOBJ<Boolean> modifyDelayMessages(String uuid);
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(Integer productTypeId);
 
     //1.1
@@ -41,9 +41,11 @@ public interface Iapi {
 
     public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
     public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(String userId, int storeId, int buyRuleID);
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(String userId, int storeId, int discountRuleID);
 
 
-    public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
+        public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
 
 
         // 2.1.1 when a user enter to the system he recognized us a guest visitor
@@ -176,6 +178,7 @@ public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int sto
     public SLResponseOBJ<List<ServiceUser>> getloggedOutMembers(String uuid) ;
 
     public SLResponseOBJ<List<ServiceUser>> getloggedInMembers(String uuid) ;
+    public SLResponseOBJ<Boolean> isFounderUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isOwnerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isManagerUUID(String uuid , int storeId);
     public SLResponseOBJ<Boolean> isSystemManagerUUID(String uuid);

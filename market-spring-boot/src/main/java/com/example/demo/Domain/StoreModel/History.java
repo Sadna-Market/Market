@@ -66,19 +66,10 @@ public class History {
 
     public DataHistory getDataObject() {
         DataHistory dataHistory = new DataHistory();
-        dataHistory.setHistoryId(this.TID);
+        dataHistory.setTID(TID);
         dataHistory.setFinalPrice(this.finalPrice);
         dataHistory.setSupplyId(this.supplyID);
-        Set<DataProductStoreHistory> productStores = products.stream()
-                .map(productStore -> {
-                    DataProductStoreHistory productStoreHistory = new DataProductStoreHistory();
-                    productStoreHistory.setPrice(productStore.getPrice().value);
-                    productStoreHistory.setQuantity(productStore.getQuantity().value);
-                    productStoreHistory.setProductType(productStore.getDataObject().getProductType());
-                    return productStoreHistory;
-                })
-                .collect(Collectors.toSet());
-        dataHistory.setProducts(productStores);
+        dataHistory.setUser(user);
         return dataHistory;
     }
 
@@ -94,7 +85,7 @@ public class History {
                             dataProductStoreHistory.getQuantity(),
                             dataProductStoreHistory.getPrice());
                 }).collect(Collectors.toList());
-        this.user = dhistory.getUser().getUsername();
+//        this.user = dhistory.getUser().getUsername();
         return this;
     }
 }

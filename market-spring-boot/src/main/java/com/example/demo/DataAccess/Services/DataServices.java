@@ -30,6 +30,9 @@ public class DataServices {
     @Autowired
     private ShoppingBagService shoppingBagService;
 
+    @Autowired
+    private ProductStoreService productStoreService;
+
     public ShoppingBagService getShoppingBagService() {
         return shoppingBagService;
     }
@@ -92,5 +95,9 @@ public class DataServices {
 
     public void setHistoryService(HistoryService historyService) {
         this.historyService = historyService;
+    }
+
+    public ProductStoreService getProductStoreService() {
+        return productStoreService;
     }
 }

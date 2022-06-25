@@ -58,7 +58,7 @@ public class UserMapper {
         Map<String ,User> users = new HashMap<>();
         System.out.println(dataUserList);
         for (DataUser dataUser: dataUserList
-             ) {
+        ) {
             String userEmail = dataUser.getUsername();
             if(users.containsKey(dataUser.getUsername())){
                 users.put(userEmail,users.get(userEmail));

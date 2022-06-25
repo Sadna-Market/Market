@@ -2,6 +2,7 @@ package com.example.demo.Domain.StoreModel;
 
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Enums.PermissionType;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.Permission;
 import com.example.demo.Domain.Market.ProductType;
@@ -16,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.locks.StampedLock;
+import java.util.stream.Collectors;
 
 public class Store {
 
@@ -36,6 +38,7 @@ public class Store {
 
     private final StampedLock historyLock = new StampedLock();
     static Logger logger=Logger.getLogger(Store.class);
+    private static DataServices dataServices;
 
     /////////////////////////////////////////////// Constructors ///////////////////////////////////////////////////
 
@@ -66,6 +69,25 @@ public class Store {
         this.discountPolicy = discountPolicy; //this version is null
         this.buyPolicy = buyPolicy; //this version is null
         this.bids = new ConcurrentLinkedDeque<>();
+    }
+
+    //upload store from db
+    public Store(int storeId,String name,ConcurrentHashMap<Integer, ProductStore> products, String founder, boolean isOpen, int rate,
+                 int numOfRated, ConcurrentHashMap<Integer,History> history, ConcurrentHashMap<Integer, DiscountRule> discountRules,
+                 ConcurrentHashMap<Integer,BuyRule> buyRules, List<Permission> permission,ConcurrentLinkedDeque<BID> bids){
+        this.storeId = storeId;
+        this.name = name;
+        this.inventory = new Inventory(storeId,products);
+        this.founder = founder;
+        this.isOpen = isOpen;
+        this.rate = rate;
+        this.numOfRated = numOfRated;
+        this.history = history;
+        this.discountPolicy = new DiscountPolicy(discountRules);
+        this.buyPolicy = new BuyPolicy(buyRules);
+        this.permission = permission;
+        this.safePermission = Collections.synchronizedList(permission);;
+        this.bids = bids;
     }
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
@@ -196,6 +218,17 @@ public class Store {
         }
         History newHistory = new History(TID, SupplyID, finalPrice, productsBuy, user);
         history.put(TID, newHistory);
+        //db
+        if(dataServices!= null && dataServices.getHistoryService()!=null) {
+            var dataHistory = newHistory.getDataObject();
+            var productStoreHistorys = productsBuy.stream().map(p -> p.getDataHistoryObject(dataHistory)).collect(Collectors.toSet());
+            dataHistory.setProducts(productStoreHistorys);
+            dataHistory.setStore(this.storeId);
+            if(!dataServices.getHistoryService().insertHistory(dataHistory)){
+                logger.error(String.format("failed to persist history tid %d",dataHistory.getTID()));
+            }
+
+        }
         logger.info("new history added to storeId: "+ storeId + " ,TID: " + TID);
         return new DResponseObj<>(newHistory);
     }
@@ -278,6 +311,12 @@ public class Store {
             this.rate = rate;
         else
             this.rate = ((this.rate*(numOfRated-1)) + rate) / numOfRated;
+        //db
+        if (dataServices != null && dataServices.getStoreService() != null) {
+            if (!dataServices.getStoreService().updateStoreRate(storeId, rate, numOfRated)) {
+                logger.error(String.format("failed to updated rate %d of store %s in db", rate, name));
+            }
+        }
         logger.info("storeId: "+storeId+" rate update to: " + rate );
         return new DResponseObj<>(true);
     }
@@ -323,7 +362,7 @@ public class Store {
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule) {
         if(discountPolicy == null)
             discountPolicy = new DiscountPolicy();
-        return discountPolicy.addNewDiscountRule(discountRule,storeId);
+        return discountPolicy.addNewDiscountRule(discountRule,storeId+1);
     }
 
     //requirement II.4.2
@@ -345,6 +384,13 @@ public class Store {
         return discountPolicy.combineXORDiscountRules(rules,decision,storeId);
     }
 
+    public DResponseObj<BuyRule> getBuyRuleByID(int buyRuleID) {
+        return buyPolicy.getBuyRuleByID(buyRuleID);
+    }
+
+    public DResponseObj<DiscountRule> getDiscountRuleByID(int discountRuleID) {
+        return discountPolicy.getDiscountRuleByID(discountRuleID);
+    }
 
     //requirement II.4.4 & II.4.6 & II.4.7 (only owners)
     public void addPermission(Permission p){
@@ -610,6 +656,11 @@ public class Store {
     public void setRate(int rate) {
         this.rate = rate;
     }
+
+    public static void setDataServices(DataServices dataServices){
+        Store.dataServices = dataServices;
+    }
+
 }
 
 

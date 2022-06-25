@@ -609,5 +609,7 @@ public interface MarketBridge {
      */
     public ATResponseObj<List<ServiceBID>> getMyBIDs(String uuid, int storeID);
 
+    public void modifyMessages(String uuid);
+
 
     }

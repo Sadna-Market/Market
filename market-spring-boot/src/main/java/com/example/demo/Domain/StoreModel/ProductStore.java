@@ -1,7 +1,9 @@
 package com.example.demo.Domain.StoreModel;
 
 //import com.example.demo.DataAccess.Entity.DataInventory;
+import com.example.demo.DataAccess.Entity.DataHistory;
 import com.example.demo.DataAccess.Entity.DataProductStore;
+import com.example.demo.DataAccess.Entity.DataProductStoreHistory;
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -76,5 +78,14 @@ public class ProductStore {
         dataProductStore.setPrice(this.price);
         dataProductStore.setQuantity(this.quantity);
         return dataProductStore;
+    }
+
+    public DataProductStoreHistory getDataHistoryObject(DataHistory history){
+        DataProductStoreHistory h = new DataProductStoreHistory();
+        h.setProductType(this.productType.getDataObject());
+        h.setHistory(history);
+        h.setQuantity(this.quantity);
+        h.setPrice(this.price);
+        return h;
     }
 }

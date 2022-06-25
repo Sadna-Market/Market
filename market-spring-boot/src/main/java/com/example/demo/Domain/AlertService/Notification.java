@@ -7,16 +7,16 @@ import java.time.LocalDate;
 public class Notification {
 
     private String sentTo;
-    private String text;
+    public String text;
     private LocalDate sentDate;
 
     public Notification() {
     }
 
-    public Notification(String text) {
-        sentDate = LocalDate.now();
-        this.text = text;
-    }
+//    public Notification(String text) {
+//        sentDate = LocalDate.now();
+//        this.text = text;
+//    }
 
     //for db delayed
     public Notification(String text, String sendTo) {

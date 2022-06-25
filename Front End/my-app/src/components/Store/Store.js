@@ -32,6 +32,7 @@ const Store = (props) => {
     const [rate, Setrate] = useState("");
     const [isOwner, SetisOwner] = useState(false);
     const [isManager, SetisManager] = useState(false);
+    const [isFounder, SetisFounder] = useState(false);
 
     const [tempRateMe, settempRateMe] = useState();
 
@@ -81,7 +82,15 @@ const Store = (props) => {
             } else {
                 SetisManager(isManagerUUIDResponse.value)
             }
+            const isFounderUUIDResponse = await apiClientHttp.isFounderUUID(UUID, storeID);
+            let str3 = JSON.stringify(isFounderUUIDResponse);
+            console.log("isFounderUUIDResponse    " + str3)
 
+            if (isFounderUUIDResponse.errorMsg !== -1) {
+                SetError(errorCode.get(isFounderUUIDResponse.errorMsg))
+            } else {
+                SetisFounder(isFounderUUIDResponse.value)
+            }
 
         }
 
@@ -190,23 +199,7 @@ const Store = (props) => {
     // const [permission, setPermission] = useState("");
     let permission = "";
     //check ig uuid is manager in this store
-    if (isManager) {
-        permission = (
-            <>
-                <button onClick={rulesHandler}>Rules</button>
-                <button onClick={addProductHandler}> Add Product</button>
-                <button onClick={removeProductHandler}> Remove Product</button>
-                <button onClick={editProductHandler}> Edit Product</button>
-                <button onClick={addManagerHandler}> Add Manager</button>
-                <button onClick={removeManagerHandler}> Remove Manager</button>
-                <button onClick={editPermissionHandler}> Edit Permission</button>
-                <h2></h2>
-                <button onClick={historyHandler}> History</button>
-                <button onClick={policyHandler}> Discount Policy</button>
-                <button onClick={buyingHandler}> Buy Policy</button>
-            </>
-        );
-    } else if (isOwner) {
+    if (isFounder){
         permission = (
             <>
                 <button onClick={rulesHandler}>Rules</button>
@@ -219,13 +212,44 @@ const Store = (props) => {
                 <h2></h2>
                 <button onClick={closeStoreHandler}> Close Store</button>
                 <button onClick={historyHandler}> History</button>
-                <button onClick={policyHandler}> Discount Policy</button>
-                <button onClick={buyingHandler}> Buy Policy</button>
+
+            </>
+        );
+    }
+ else if (isOwner) {
+        permission = (
+            <>
+                <button onClick={rulesHandler}>Rules</button>
+                <button onClick={addProductHandler}> Add Product</button>
+                <button onClick={removeProductHandler}> Remove Product</button>
+                <button onClick={editProductHandler}> Edit Product</button>
+                <button onClick={addManagerHandler}> Add Manager</button>
+                <button onClick={removeManagerHandler}> Remove Manager</button>
+                <button onClick={editPermissionHandler}> Edit Permission</button>
+                <h2></h2>
+                {/*<button onClick={closeStoreHandler}> Close Store</button>*/}
+                <button onClick={historyHandler}> History</button>
+
             </>
         );
     }
 
+    else if (isManager) {
+        permission = (
+            <>
+                {/*<button onClick={rulesHandler}>Rules</button>*/}
+                {/*<button onClick={addProductHandler}> Add Product</button>*/}
+                {/*<button onClick={removeProductHandler}> Remove Product</button>*/}
+                {/*<button onClick={editProductHandler}> Edit Product</button>*/}
+                {/*<button onClick={addManagerHandler}> Add Manager</button>*/}
+                {/*<button onClick={removeManagerHandler}> Remove Manager</button>*/}
+                {/*<button onClick={editPermissionHandler}> Edit Permission</button>*/}
+                <h2></h2>
+                <button onClick={historyHandler}> History</button>
 
+            </>
+        );
+    }
     const [command, setCommand] = useState(
         <>
             {/*<h2>Founder: {founder}</h2>*/}
@@ -269,6 +293,8 @@ const Store = (props) => {
                 <h2>Rate: {rate}</h2>
             </h3>
             <button onClick={BIDHandler}>BID</button>
+            <button onClick={policyHandler}> Discount Policy</button>
+            <button onClick={buyingHandler}> Buy Policy</button>
             {permission}
             <div>{command}</div>
             <div className="bar__control">

@@ -34,7 +34,7 @@ public class NotificationDispatcher {
         realTimeListeners.put(sessionId, new ConcurrentLinkedQueue<>());
         logger.info(String.format("added new session %s", sessionId));
         //for testing
-        realTimeListeners.get(sessionId).add(new Notification("Connected to websocket successfully!"));
+//        realTimeListeners.get(sessionId).add(new Notification("Connected to websocket successfully!"));
         return true;
     }
 
@@ -55,17 +55,16 @@ public class NotificationDispatcher {
                 ConcurrentLinkedQueue<Notification> notifications = entry.getValue();
                 if (!notifications.isEmpty()) {
                     String sessionID = entry.getKey();
-                    logger.info("Sending notification to " + sessionID);
-
                     SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
                     headerAccessor.setSessionId(sessionID);
                     headerAccessor.setLeaveMutable(true);
 
                     for (Notification notification : notifications) {
+                        logger.info(String.format("Sending to %s msg: %s",notification.getSentTo(), notification.text));
                         template.convertAndSendToUser(
                                 sessionID,
                                 "/notification/item",
-                                notification.getText(),
+                                notification.text,
                                 headerAccessor.getMessageHeaders());
                     }
                     entry.getValue().clear(); //dispose all messages for that person ->maybe can add to history in DB
@@ -93,10 +92,11 @@ public class NotificationDispatcher {
         }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < notifications.size() - 1; i++) {
-            builder.append(notifications.get(i).getText()).append("\n");
+            builder.append(notifications.get(i).getText()).append("$");
         }
-        builder.append(notifications.get(notifications.size()-1));
-        realTimeListeners.get(sessionID).add(new Notification(builder.toString()));
+        builder.append(notifications.get(notifications.size()-1).getText());
+        String concatedMessage = builder.toString();
+        realTimeListeners.get(sessionID).add(new Notification(concatedMessage,notifications.get(0).getSentTo()));
         logger.info("added all delayed notifications of user to real time map");
     }
 

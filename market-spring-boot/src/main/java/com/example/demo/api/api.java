@@ -86,6 +86,12 @@ public class api implements Iapi {
         return iMarket.getAllusers();
     }
 
+    @PostMapping("modifyDelayMessages/{uuid}")
+    public SLResponseOBJ<Boolean> modifyDelayMessages(@PathVariable("uuid") String uuid) {
+        iMarket.modifyDelayMessages(uuid);
+        return new SLResponseOBJ<>(true,-1);
+    }
+
     @Override
     @PostMapping("getProductTypeInfo/{productTypeID}")
     public SLResponseOBJ<ServiceProductType> getProductTypeInfo(@PathVariable("productTypeID")Integer productTypeId) {
@@ -662,6 +668,12 @@ public class api implements Iapi {
     }
 
     @Override
+    @GetMapping("isFounderUUID/{uuid}/{storeId}")
+    public SLResponseOBJ<Boolean> isFounderUUID(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) {
+        return iMarket.isFounderUUID(uuid, storeId);
+    }
+
+    @Override
     @GetMapping("isOwnerUUID/{uuid}/{storeId}")
     public SLResponseOBJ<Boolean> isOwnerUUID(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) {
         return iMarket.isOwnerUUID(uuid, storeId);
@@ -744,6 +756,17 @@ public class api implements Iapi {
         return iMarket.addNewDiscountRule(uuid, storeId, p.DiscountParse(map));
     }
 
+    @Override
+    @GetMapping("getBuyRuleByID/{uuid}/{storeId}/{buyRuleID}")
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) {
+        return iMarket.getBuyRuleByID(uuid,storeId,buyRuleID);
+    }
+
+    @Override
+    @GetMapping("getDiscountRuleByID/{uuid}/{storeId}/{discountRuleID}")
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId,@PathVariable("discountRuleID") int discountRuleID) {
+        return iMarket.getDiscountRuleByID(uuid,storeId,discountRuleID);
+    }
 
 
     @Override

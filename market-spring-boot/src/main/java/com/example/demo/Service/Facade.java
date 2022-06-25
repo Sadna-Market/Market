@@ -5,7 +5,6 @@ import com.example.demo.DataAccess.Mappers.ProductTypeMapper;
 import com.example.demo.DataAccess.Mappers.StoreMapper;
 import com.example.demo.DataAccess.Mappers.UserMapper;
 import com.example.demo.DataAccess.Services.DataServices;
-import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -28,7 +27,6 @@ import com.example.demo.configuration.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 
 import javax.annotation.PostConstruct;
@@ -823,6 +821,7 @@ public class Facade implements IMarket {
 
         if (founder == null || founder.equals(""))
             return new SLResponseOBJ<>(-1, ErrorCode.NOTSTRING);
+        founder = founder.toLowerCase();
         DResponseObj<Integer> res = market.OpenNewStore(UUID.fromString(userId), name, founder,
                 new DiscountPolicy(discountPolicy), new BuyPolicy(buyPolicy));
         return new SLResponseOBJ<>(res.value, res.errorMsg);
@@ -1151,6 +1150,40 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(converted);
     }
 
+    /**
+     * return buy rule by id of buy rule
+     * @param userId
+     * @param storeId
+     * @param buyRuleID
+     * @return buy rule if exist else error
+     */
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(String userId, int storeId, int buyRuleID){
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeId < 0 || buyRuleID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<BuyRule> res = market.getBuyRuleByID(UUID.fromString(userId), storeId, buyRuleID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) :
+                 new SLResponseOBJ<>(res.value.convertToBuyRuleSL());
+    }
+
+    /**
+     * return disocunt rule by id of buy rule
+     * @param userId
+     * @param storeId
+     * @param discountRuleID
+     * @return discount rule if exist else error
+     */
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(String userId, int storeId, int discountRuleID){
+        if (userId == null || userId.equals(""))
+            return new SLResponseOBJ<>(null, ErrorCode.NOTSTRING);
+        if (storeId < 0 || discountRuleID < 0)
+            return new SLResponseOBJ<>(null, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<DiscountRule> res = market.getDiscountRuleByID(UUID.fromString(userId), storeId, discountRuleID);
+        return res.errorOccurred() ? new SLResponseOBJ<>(null,res.errorMsg) :
+                new SLResponseOBJ<>(res.value.convertToDiscountRuleSL());
+    }
+
 
     @Override
     public SLResponseOBJ<Boolean> addNewStoreOwner(String userId, int storeId, String ownerEmail) {
@@ -1268,6 +1301,7 @@ public class Facade implements IMarket {
             return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
         if (storeId < 0)
             return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        mangerEmil = mangerEmil.toLowerCase();
         return new SLResponseOBJ<>(market.addNewStoreManager(UUID.fromString(userId), storeId, mangerEmil));
     }
 
@@ -1305,6 +1339,7 @@ public class Facade implements IMarket {
         } catch (Exception e) {
             return new SLResponseOBJ<>(false, ErrorCode.INVALID_PERMISSION_TYPE);
         }
+        mangerEmil = mangerEmil.toLowerCase();
         return new SLResponseOBJ<>(market.setManagerPermissions(UUID.fromString(userId), storeId, mangerEmil, perm, onof));
     }
 
@@ -1377,6 +1412,7 @@ public class Facade implements IMarket {
      */
     @Override
     public SLResponseOBJ<Boolean> cancelMembership(String uuid, String cancelMemberUsername) {
+        cancelMemberUsername = cancelMemberUsername.toLowerCase();
         DResponseObj<List<Store>> res = userManager.cancelMembership(UUID.fromString(uuid), cancelMemberUsername);
         if (res.errorOccurred()) return new SLResponseOBJ<>(false, res.errorMsg);
         return market.deleteStoresFromMarket(res.value);
@@ -1517,6 +1553,7 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<>(lst, -1);
     }
 
+
     public UserManager getUserManager() {
         return userManager;
     }
@@ -1570,6 +1607,16 @@ public class Facade implements IMarket {
         if (minRate < 0 || list == null)
             return new SLResponseOBJ<>(null, ErrorCode.NOTVALIDINPUT);
         return new SLResponseOBJ<>(market.filterByStoreRate(list, minRate));
+    }
+
+    @Override
+    public SLResponseOBJ<Boolean> isFounderUUID(String uuid, int storeId){
+        if (uuid == null || uuid.equals(""))
+            return new SLResponseOBJ<>(false, ErrorCode.NOTSTRING);
+        if (storeId < 0)
+            return new SLResponseOBJ<>(false, ErrorCode.NEGATIVENUMBER);
+        DResponseObj<Boolean> res = market.isFounder(UUID.fromString(uuid), storeId);
+        return res.errorOccurred() ? new SLResponseOBJ<>(false, res.errorMsg) : new SLResponseOBJ<>(res.value);
     }
 
 
@@ -1864,6 +1911,11 @@ public class Facade implements IMarket {
         return new SLResponseOBJ<List<String>>(res);
     }
 
+    public void modifyDelayMessages(String uuid) {
+        if(uuid != null)
+            userManager.modifyDelayMessages(UUID.fromString(uuid));
+    }
+
     @Override
     public SLResponseOBJ<List<HashMap<String, Object>>> getAllusers() {
         return new SLResponseOBJ<>(userManager.getAllusers());
@@ -1890,5 +1942,6 @@ public class Facade implements IMarket {
         StoreMapper.getInstance().setDataService(dataServices);
         ProductTypeMapper.getInstance().setDataService(dataServices);
         HistoryMapper.getInstance().setDataService(dataServices);
+
     }
 }
