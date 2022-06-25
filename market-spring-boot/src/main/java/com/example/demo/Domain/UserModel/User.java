@@ -93,7 +93,13 @@ public class User {
         shoppingCart = new ShoppingCart(email);
         this.dateOfBirth = dateOfBirth;
     }
-
+    public User(String email, String password, String phoneNumber, LocalDate dateOfBirth,ShoppingCart shoppingCart) {
+        this.email = email;
+        this.Password = password;
+        this.phoneNumber = phoneNumber;
+        this.shoppingCart = shoppingCart;
+        this.dateOfBirth = dateOfBirth;
+    }
     public DResponseObj<Boolean> resetCart (){
         shoppingCart=new ShoppingCart(this.email);
         return new DResponseObj<Boolean>(true);

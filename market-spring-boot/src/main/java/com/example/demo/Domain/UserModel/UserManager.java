@@ -2,6 +2,7 @@ package com.example.demo.Domain.UserModel;
 
 import com.example.demo.DataAccess.CompositeKeys.PermissionId;
 import com.example.demo.DataAccess.Entity.DataUser;
+import com.example.demo.DataAccess.Mappers.UserMapper;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.DataAccess.Services.UserService;
@@ -59,6 +60,41 @@ public class UserManager {
 
     static Logger logger = Logger.getLogger(UserManager.class);
 
+    public void getallDbUsers(){
+        if(dataServices.getStoreService()!=null &&
+        dataServices.getUserService()!= null &
+        dataServices.getShoppingBagService()!=null){
+            UserMapper userMapper = UserMapper.getInstance(dataServices.getUserService(),dataServices.getShoppingBagService(),dataServices.getStoreService());
+            Map<String, User> users =userMapper.getAllUsers();
+            for(String u: users.keySet()){
+                if(members.containsKey(u)||users.get(u)==null){
+                    continue;
+                }
+                else {
+                    members.put(u,users.get(u));
+                }
+            }
+        }
+    }
+
+
+    public void getDbUserIfNeed(String email){
+        if(members.containsKey(email)){
+            return;
+        }
+        if(dataServices.getStoreService()!=null &&
+                dataServices.getUserService()!= null &
+                        dataServices.getShoppingBagService()!=null){
+            UserMapper userMapper = UserMapper.getInstance(dataServices.getUserService(),dataServices.getShoppingBagService(),dataServices.getStoreService());
+            User user =userMapper.getUser(email);
+            if(user==null){
+                logger.debug("user not exsist in the db : "+email);
+            }
+           members.put(email,user);
+        }
+    }
+
+
     @Autowired
     public UserManager(IAlertService alertService) { //For real application dependency injection
         this.alertService = alertService;
@@ -76,10 +112,12 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> isMember(String email) {
+        getDbUserIfNeed(email);
         return members.containsKey(email) ? new DResponseObj<>(true, -1) : new DResponseObj<>(false, ErrorCode.NOTMEMBER);
     }
 
     public DResponseObj<List<HashMap<String, Object>>> getAllusers() {
+        getallDbUsers();
         List<HashMap<String, Object>> res = new LinkedList<>();
         for (User mem : members.values()) {
             if (isLogged(mem)) {
@@ -99,6 +137,7 @@ public class UserManager {
 
 
     public Boolean isLogged(User user) {
+        getDbUserIfNeed(user.email);
         return LoginUsers.values().contains(user);
     }
 
@@ -112,6 +151,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> isOwner(String email, Store store) {
+        getDbUserIfNeed(email);
         if (!members.containsKey(email)) {
             logger.debug("not a member, email:" + email);
             return new DResponseObj<>(ErrorCode.NOTMEMBER);
@@ -125,6 +165,8 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> isManager(String email, Store store) {
+        getDbUserIfNeed(email);
+
         if (!members.containsKey(email)) {
             logger.debug("not a member, email:" + email);
             return new DResponseObj<>(ErrorCode.NOTMEMBER);
@@ -155,6 +197,8 @@ public class UserManager {
 
 
     public DResponseObj<UUID> Login(UUID userID, String email, String password) {
+        getDbUserIfNeed(email);
+
         logger.debug("UserManager Login email: " + email);
         if (!GuestVisitors.containsKey(userID)) {
             logger.debug("UserManager Login email: " + email + " NOT online");
@@ -199,6 +243,8 @@ public class UserManager {
     }
 
     public boolean isEmailLoged(String email) {
+        getDbUserIfNeed(email);
+
         for (User u : LoginUsers.values()) {
             if (u.email.equals(email)) {
                 return true;
@@ -214,6 +260,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> ishasSystemManager() {
+        getallDbUsers();
         for (String mail : members.keySet()) {
             if (PermissionManager.getInstance().isSystemManager(mail).value) {
                 return new DResponseObj<>(true);
@@ -236,6 +283,8 @@ public class UserManager {
 
 
     public DResponseObj<Boolean> AddNewMember(UUID uuid, String email, String Password, String phoneNumber, LocalDate dateOfBirth) {
+        getDbUserIfNeed(email);
+
 
         long stamp = LockUsers.writeLock();
         try {
@@ -282,6 +331,9 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> isFounder(Store store, String email) {
+        getDbUserIfNeed(email);
+
+
         if (!members.containsKey(email)) {
             return new DResponseObj<Boolean>(false, ErrorCode.NOTMEMBER);
         }
@@ -290,6 +342,8 @@ public class UserManager {
 
 
     public DResponseObj<Boolean> isOwner(UUID user, Store store) {
+        getDbUserIfNeed(store.getFounder().value);
+
         if (!isLogged(user).value) {
             return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         }
@@ -300,6 +354,10 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, Store store, String newOwnerEmail) {
+        getDbUserIfNeed(store.getFounder().value);
+        getDbUserIfNeed(newOwnerEmail);
+
+
         logger.debug("UserManager addNewStoreOwner");
         if (isLogged(userId).value) {
             User loggedUser = LoginUsers.get(userId);
@@ -320,6 +378,7 @@ public class UserManager {
     }
 
     public DResponseObj<List<String>> getAllMembers(UUID userId) {
+        getallDbUsers();
         DResponseObj<Boolean> res = isLogged(userId);
         if (res.errorOccurred() || !res.value) return new DResponseObj<>(ErrorCode.NOTLOGGED);
         if (!LoginUsers.containsKey(userId)) return new DResponseObj<>(ErrorCode.NOTMEMBER);
@@ -334,6 +393,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> removeMember(UUID userId, String email) {
+        getallDbUsers();
         DResponseObj<Boolean> res = isLogged(userId);
         if (res.errorOccurred() || !res.value) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         if (!LoginUsers.containsKey(userId)) return new DResponseObj<>(false, ErrorCode.NOTMEMBER);
@@ -355,6 +415,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, Store store, String ownerEmail) {
+        getDbUserIfNeed(ownerEmail);
         logger.debug("UserManager removeStoreOwner");
         if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         User loggedUser = LoginUsers.get(userId);
@@ -383,6 +444,9 @@ public class UserManager {
 
 
     public DResponseObj<Boolean> removeStoreManager(UUID userId, Store store, String ManagerEmail) {
+
+        getDbUserIfNeed(ManagerEmail);
+
         logger.debug("UserManager removeStoreManager");
         if (isLogged(userId).errorOccurred()) return new DResponseObj<>(false, ErrorCode.NOTLOGGED);
         User loggedUser = LoginUsers.get(userId);
@@ -421,6 +485,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> addNewStoreManager(UUID uuid, Store store, String newMangerEmail) {
+        getDbUserIfNeed(newMangerEmail);
         logger.debug("UserManager addNewStoreManager");
 
         if (isLogged(uuid).value) {
@@ -444,6 +509,7 @@ public class UserManager {
 
 
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, Store store, String email, permissionType.permissionEnum perm, boolean onof) {
+        getDbUserIfNeed(email);
         logger.debug("UserManager setManagerPermissions");
         if (isLogged(userId).value) {
             User loggedUser = LoginUsers.get(userId);
@@ -486,6 +552,7 @@ public class UserManager {
      * @return boolean
      */
     public DResponseObj<UUID> isLogged(String username) {
+        getDbUserIfNeed(username);
         logger.debug("UserManager isLogged");
         for (Map.Entry<UUID, User> entry : LoginUsers.entrySet()) {
             if (entry.getValue().email.equals(username))
@@ -532,6 +599,7 @@ public class UserManager {
     }
 
     public DResponseObj<Boolean> changePassword(UUID uuid, String email, String password, String newPassword) {
+        getDbUserIfNeed(email);
         if (!isOnline(uuid).value) {
             return new DResponseObj<>(ErrorCode.NOTONLINE);
         }
@@ -595,6 +663,7 @@ public class UserManager {
     }
 
     public DResponseObj<User> getMember(String email) {
+        getDbUserIfNeed(email);
         if (members.containsKey(email)) {
             logger.info(String.format("member %s is present, returning the member", email));
             return new DResponseObj<>(members.get(email), -1);
@@ -658,6 +727,7 @@ public class UserManager {
      * @return list of the stores that the user was the founder to cancel
      */
     public DResponseObj<List<Store>> cancelMembership(UUID uuid, String cancelMemberUsername) {
+        getDbUserIfNeed(cancelMemberUsername);
         //check if the username is a member
         DResponseObj<Boolean> isMember = isMember(cancelMemberUsername);
         if (isMember.errorOccurred()) return new DResponseObj<>(null, isMember.errorMsg);
