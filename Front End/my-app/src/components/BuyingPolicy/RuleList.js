@@ -72,9 +72,10 @@ const RuleList = (props) => {
       getAllRules()
     }
   };
-
+  // let UUID = props.uuid;
+  // let storeID = props.storeID;
   const infoHandler = (ruleID) => {
-    props.onInfo(ruleID);
+    props.onInfo(ruleID,UUID,storeID);
   };
 
   let expensesContent = enteredrules.map((expense) => (

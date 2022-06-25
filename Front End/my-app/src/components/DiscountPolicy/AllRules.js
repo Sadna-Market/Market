@@ -9,10 +9,10 @@ const AllRules = (props) => {
   let storeID = props.storeID;
   const [searchRule, setRule] = useState("");
 
-  const infoRuleHandler = (ruleID) => {
-    setCommand(<RuleInfo ruleID={ruleID} />);
+  const infoRuleHandler = (ruleID,UUID,storeID) => {
+    setCommand(<RuleInfo ruleID={ruleID} uuid={UUID} storeID={storeID}/>);
   };
-
+//    const getRuleInfoResponse = await apiClientHttp.getBuyRuleByID( props.uuid,props.storeID,props.ruleID);
   const [command, setCommand] = useState(
     <RuleList
       search={searchRule}

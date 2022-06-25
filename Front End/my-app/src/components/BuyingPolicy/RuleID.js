@@ -21,7 +21,7 @@ const RuleID = (props) => {
 
   const infoHandler = () => {
     if (info == "") {
-      setInfo(<RuleInfo ruleID={ruleID} />);
+      setInfo(<RuleInfo ruleID={ruleID} uuid={UUID} storeID={storeID}/>);
     } else {
       setInfo("");
     }
