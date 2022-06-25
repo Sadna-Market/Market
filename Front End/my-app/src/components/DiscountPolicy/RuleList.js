@@ -73,7 +73,7 @@ const RuleList = (props) => {
   }
 
   const infoHandler = (ruleID) => {
-    props.onInfo(ruleID);
+    props.onInfo(ruleID,UUID,storeID);
   };
 
   let expensesContent = enteredrules.map((expense) => (

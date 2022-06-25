@@ -44,13 +44,13 @@ const ConditionRule = (props) => {
 
   const showHandler1 = (ruleID) => {
     SetError("")
-    setCommand1(<RuleInfo ruleID={ruleID} />);
+    setCommand1(<RuleInfo ruleID={ruleID} uuid={UUID} storeID={storeID}/>);
     setIfRule(ruleID);
   };
 
   const showHandler2 = (ruleID) => {
     SetError("")
-    setCommand2(<RuleInfo ruleID={ruleID} />);
+    setCommand2(<RuleInfo ruleID={ruleID} uuid={UUID} storeID={storeID}/>);
     setThenRule(ruleID);
   };
 

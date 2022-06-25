@@ -12,7 +12,7 @@ const AllRules = (props) => {
   const [searchRule, setRule] = useState("");
 
   const infoRuleHandler = (ruleID) => {
-    setCommand(<RuleInfo ruleID={ruleID} />);
+    setCommand(<RuleInfo ruleID={ruleID} uuid={UUID} storeID={storeID}/>);
   };
 
   const [command, setCommand] = useState(
