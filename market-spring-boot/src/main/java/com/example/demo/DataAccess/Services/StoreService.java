@@ -1,12 +1,15 @@
 package com.example.demo.DataAccess.Services;
 
+import com.example.demo.DataAccess.Entity.DataPermission;
 import com.example.demo.DataAccess.Entity.DataStore;
+import com.example.demo.DataAccess.Repository.PermissionRepository;
 import com.example.demo.DataAccess.Repository.StoreRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,15 +18,18 @@ public class StoreService {
     private static final Logger logger = Logger.getLogger(StoreService.class);
 
     private final StoreRepository storeRepository;
+    private final PermissionRepository permissionRepository;
 
     @Autowired
-    public StoreService(StoreRepository storeRepository){
+    public StoreService(StoreRepository storeRepository, PermissionRepository permissionRepository) {
         this.storeRepository = storeRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     /**
      * This insertion creates a Store row in db
      * Note: InventoryID + BuyPolicyID + DiscountPolicyID are generated! the id's are in the store object that called this function.
+     *
      * @param store
      * @return true if success, else false
      */
@@ -42,22 +48,22 @@ public class StoreService {
     }
 
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
-    public boolean deleteStore(int storeId){
-        try{
+    public boolean deleteStore(int storeId) {
+        try {
             storeRepository.deleteById(storeId);
             logger.info(String.format("deleted store %d successfully from db", storeId));
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(String.format("failed to delete store %d from db, ERROR: %s", storeId, e.getMessage()));
             return false;
         }
     }
 
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
-    public boolean updateStore(DataStore store){
-        try{
+    public boolean updateStore(DataStore store) {
+        try {
             Optional<DataStore> dataStore = storeRepository.findById(store.getStoreId());
-            if(dataStore.isEmpty()){
+            if (dataStore.isEmpty()) {
                 logger.warn(String.format("store %d is not present in db", store.getStoreId()));
                 return false;
             }
@@ -65,7 +71,7 @@ public class StoreService {
             storeRepository.saveAndFlush(dataStore.get());
             logger.info(String.format("updated store %d successfully in db", dataStore.get().getStoreId()));
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(String.format("failed to updated store %d in db, ERROR: %s", store.getStoreId(), e.getMessage()));
             return false;
         }
@@ -75,7 +81,7 @@ public class StoreService {
     public DataStore getStoreById(int storeId) {
         try {
             Optional<DataStore> store = storeRepository.findById(storeId);
-            if(store.isEmpty()){
+            if (store.isEmpty()) {
                 logger.warn(String.format("store %d is not present in db", storeId));
                 return null;
             }
@@ -86,6 +92,7 @@ public class StoreService {
             return null;
         }
     }
+
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public List<DataStore> getAllStores() {
         try {
@@ -95,6 +102,51 @@ public class StoreService {
         } catch (Exception e) {
             logger.error(String.format("failed to fetch all stores from db, ERROR: %s", e.getMessage()));
             return null;
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean updateStoreIsOpen(int storeId, boolean isOpen) {
+        try {
+            storeRepository.updatedIsOpen(storeId, isOpen);
+            logger.info(String.format("updated store %d as %s successfully in db",
+                    storeId, isOpen ? "open" : "close"));
+
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to updated store %d as %s in db, ERROR: %s",
+                    storeId, isOpen ? "open" : "close",
+                    e.getMessage()));
+            return false;
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public boolean updateStoreRate(int storeId, int rate, int numOfRated) {
+        try {
+            storeRepository.updateStoreRate(storeId, rate, numOfRated);
+            logger.info(String.format("updated store %d rate to %d successfully in db",
+                    storeId, rate));
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to updated store %d to rate %d in db, ERROR: %s",
+                    storeId, rate,
+                    e.getMessage()));
+            return false;
+        }
+    }
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean deleteStores(List<Integer> storeIds) {
+        try {
+            storeRepository.deleteAllById(storeIds);
+            List<DataPermission> pemissions = new ArrayList<>();
+            storeIds.forEach(i-> pemissions.addAll(permissionRepository.findAllByPermissionId_StoreId(i)));
+            permissionRepository.deleteAll(pemissions);
+            logger.info("deleted stores successfully from db");
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to delete stores from db, ERROR: %s", e.getMessage()));
+            return false;
         }
     }
 }

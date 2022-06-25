@@ -1,5 +1,6 @@
 package com.example.demo.Domain.UserModel;
 
+import com.example.demo.DataAccess.CompositeKeys.PermissionId;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ProductTypeService;
@@ -672,6 +673,8 @@ public class UserManager {
         if (getCancel.errorOccurred()) return new DResponseObj<>(null, getCancel.errorMsg);
 
         User toCancelUser = getCancel.value;
+        var permissionIds = toCancelUser.getAccessPermission().value.stream().map(Permission::getPermissionId).collect(Collectors.toList());
+        deleteUsersPermissionFromDB(toCancelUser, permissionIds);
         DResponseObj<List<Store>> listOfStoreToDelete = PermissionManager.getInstance().removeAllPermissions(toCancelUser);
         if (listOfStoreToDelete.errorOccurred()) return listOfStoreToDelete;
 
@@ -683,11 +686,24 @@ public class UserManager {
                 User founderUser = getMember(founder).value;
                 permission.setGrantor(founderUser);
                 founderUser.addGrantorPermission(permission);
+                if(dataServices!=null && dataServices.getPermissionService()!=null){
+                    String newGrantor = founderUser.email,oldGrantor = toCancelUser.email, grantee = permission.getGrantee().value.email;
+                    int storeId = store.getStoreId().value;
+                    dataServices.getPermissionService().updatePermissionGrantor(oldGrantor,newGrantor,grantee,storeId);
+                }
             }
         }
         //remove instance of member for good
         deleteMemberPermanently(toCancelUser);
         return listOfStoreToDelete;
+    }
+
+    private void deleteUsersPermissionFromDB(User toCancelUser, List<PermissionId> permissionIds) {
+        if (dataServices != null && dataServices.getPermissionService() != null) {
+            if (!dataServices.getPermissionService().deletePermissions(permissionIds)) {
+                logger.error(String.format("failed to remove all user %s permissions", toCancelUser.getEmail().value));
+            }
+        }
     }
 
     private void deleteMemberPermanently(User toCancelUser) {
