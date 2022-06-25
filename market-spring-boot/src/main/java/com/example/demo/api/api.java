@@ -750,6 +750,17 @@ public class api implements Iapi {
         return iMarket.addNewDiscountRule(uuid, storeId, p.DiscountParse(map));
     }
 
+    @Override
+    @GetMapping("getBuyRuleByID/{uuid}/{storeId}/{buyRuleID}")
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) {
+        return iMarket.getBuyRuleByID(uuid,storeId,buyRuleID);
+    }
+
+    @Override
+    @GetMapping("getDiscountRuleByID/{uuid}/{storeId}/{discountRuleID}")
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId,@PathVariable("discountRuleID") int discountRuleID) {
+        return iMarket.getDiscountRuleByID(uuid,storeId,discountRuleID);
+    }
 
 
     @Override

@@ -30,12 +30,19 @@ public class Inventory {
         products = new ConcurrentHashMap<>();
     }
 
+
+    //for upload store from db
+    public Inventory(int storeId,ConcurrentHashMap<Integer, ProductStore> products){
+        this.storeId = storeId;
+        this.products = products;
+    }
+
+    /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
+
     public DResponseObj<Boolean> haseItem(int itemId){
         return products.containsKey(itemId)? new DResponseObj<>(true,-1): new DResponseObj<>(false, ErrorCode.PRODUCT_DOESNT_EXIST_IN_THE_STORE);
     }
 
-
-    /////////////////////////////////////////// Methods /////////////////////////////////////////////////////////////
 
     public DResponseObj<Boolean> isProductExistInStock(int productId, int quantity) {
         ProductStore productStore = products.get(productId);

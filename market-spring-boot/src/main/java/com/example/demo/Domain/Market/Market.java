@@ -751,6 +751,22 @@ public class Market {
         return s.value.getDiscountPolicy();
     }
 
+
+    public DResponseObj<BuyRule> getBuyRuleByID(UUID userId, int storeId, int buyRuleID) {
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewBuyRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.getBuyRuleByID(buyRuleID);
+    }
+
+    public DResponseObj<DiscountRule> getDiscountRuleByID(UUID userId, int storeId, int discountRuleID) {
+        if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
+        DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.addNewDiscountRule);
+        if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
+        Store store = result.getValue();
+        return store.getDiscountRuleByID(discountRuleID);
+    }
     //2.4.4
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
@@ -1436,6 +1452,8 @@ public class Market {
         l.add(userBID.value);
         userManager.notifyUsers(l, msg);
     }
+
+
 
 
     class Tuple<E, T> {

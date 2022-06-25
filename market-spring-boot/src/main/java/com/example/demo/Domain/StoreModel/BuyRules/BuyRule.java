@@ -30,6 +30,7 @@ public interface BuyRule {
     DResponseObj<Boolean> passRule(String user,int age, ConcurrentHashMap<ProductStore, Integer> shoppingBag);
     /*DResponseObj<String> getBuyRule();*/
     void setID(int id);
+    int getId();
     DResponseObj<BuyRuleSL> convertToBuyRuleSL();
 
     @JsonIgnore

@@ -41,9 +41,11 @@ public interface Iapi {
 
     public SLResponseOBJ<Boolean> addNewBuyRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
     public SLResponseOBJ<Boolean> addNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@RequestBody Map<String,Object> map) ;
+    public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(String userId, int storeId, int buyRuleID);
+    public SLResponseOBJ<DiscountRuleSL> getDiscountRuleByID(String userId, int storeId, int discountRuleID);
 
 
-    public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
+        public SLResponseOBJ<Boolean> removeNewDiscountRule(@PathVariable("uuid")String uuid,@PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) ;
 
 
         // 2.1.1 when a user enter to the system he recognized us a guest visitor
