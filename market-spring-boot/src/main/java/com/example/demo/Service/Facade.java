@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 
+import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -47,8 +48,9 @@ public class Facade implements IMarket {
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
-        initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
         setDataRefs();
+        initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
+
     }
 
 
@@ -1919,6 +1921,7 @@ public class Facade implements IMarket {
         return userManager.isMember(user).value;
     }
 
+    @PostConstruct
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
