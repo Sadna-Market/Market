@@ -1,9 +1,16 @@
 package com.example.demo.DataAccess.Services;
 
+import com.example.Acceptance.Obj.ATResponseObj;
+import com.example.Acceptance.Obj.Address;
+import com.example.Acceptance.Obj.CreditCard;
+import com.example.Acceptance.Obj.History;
+import com.example.Acceptance.Obj.ItemDetail;
 import com.example.demo.DataAccess.Entity.*;
 import com.example.demo.Domain.Market.ProductType;
 import com.example.demo.Domain.StoreModel.*;
 import com.example.demo.Domain.UserModel.User;
+import com.example.demo.Service.Facade;
+import com.example.demo.Service.ServiceObj.*;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,49 +38,61 @@ class HistoryServiceTest {
     @Autowired
     private ProductStoreService productStoreService;
 
-//    @Test
-////    @Transactional
-//    void insertHistory() {
-//        User user = new User("niv@gmail.com", "1qaz2wsx3edc$RFV", "0522222222", LocalDate.of(1993, 8, 13));
-//        DataUser dataUser = user.getDataObject();
-//        assertTrue(userService.insertUser(dataUser));
-//
-//        ProductType productType = new ProductType("myProduct","blbabla",3);
-//        DataProductType dataProductType = productType.getDataObject();
-//        assertTrue(productTypeService.insertProductType(dataProductType));
-//        productType.setProductID(dataProductType.getProductTypeId());
-//
-//        Store store = new Store("hanut", new DiscountPolicy(), new BuyPolicy(), "yaki@gmail.com");
-//        DataStore dataStore = store.getDataObject();
-//        assertTrue(storeService.insertStore(dataStore));
-//        store.setStoreId(dataStore.getStoreId());
-//
-//        ProductStore productStore = new ProductStore(productType,3,4.5);
-//        DataProductStore dataProductStore = productStore.getDataObject();
-//        assertTrue(productStoreService.insertProductStore(dataProductStore,store.getStoreId().value));
-//
-//
-//        productType.addStore(store.getStoreId().value);
-//        var data = productType.getDataObject();
-//        assertTrue(productTypeService.updateProductType(data));
-//
-//        store.setRate(8);
-//        store.getInventory().value.addNewProductStore(productType,productStore);
-//        var dataStore1 = store.getDataObject();
-//        assertTrue(storeService.updateStore(dataStore1));
-//
-//        History history = new History(22,1,4.5,List.of(productStore),"niv@gmail.com");
-//        var dataHistory = history.getDataObject();
-//        assertTrue(historyService.insertHistory(dataHistory,store.getStoreId().value,user.getEmail().value));
-//
-//        //action
-//    }
-//
-//    @Test
-//    void getAllHistoryByUsername() {
-//    }
-//
-//    @Test
-//    void getAllHistoryByStoreId() {
-//    }
+    public int IPHONE_5_ID;
+    public int IPHONE_6_ID;
+    public int SCREEN_FULL_HD_ID;
+    public int GALAXY_ID;
+    private User member;
+    private int existing_storeID;
+
+    @Autowired
+    Facade market;
+
+    @Test
+    void purchaseCart_Success() {
+        //pre conditions
+        populateItemsAndStore();
+        String uuid = market.guestVisit().value;
+        uuid = market.login(uuid,member.getEmail().value,"Shalom123$").value;
+        market.addProductToShoppingBag(uuid,existing_storeID,IPHONE_5_ID,1);
+        market.addProductToShoppingBag(uuid,existing_storeID,IPHONE_6_ID,1);
+
+        CreditCard creditCard = new CreditCard("1111222233334444", "11/23", "111");
+        Address address = new Address("Tel-Aviv", "Nordau 3", 3);
+        var res = market.orderShoppingCart(uuid,"sss","aaa",1,new ServiceCreditCard(creditCard.num,creditCard.expire,creditCard.cvv));
+        assertFalse(res.errorOccurred());
+
+        var sh = historyService.getAllHistoryByStoreId(existing_storeID);
+        var uh = historyService.getAllHistoryByUsername(member.getEmail().value);
+
+    }
+
+
+    protected void populateItemsAndStore() {
+        String uuid = market.guestVisit().value;
+        uuid = market.login(uuid, "sysManager@gmail.com", "Shalom123$").value;
+        ItemDetail item1 = new ItemDetail("iphone5", 1, 10, List.of("phone"), "phone");
+        ItemDetail item2 = new ItemDetail("iphone6", 1, 60, List.of("phone"), "phone");
+        ItemDetail item3 = new ItemDetail("screenFULLHD", 3, 10, List.of("TV"), "screen");
+        ItemDetail item4 = new ItemDetail("galaxyS10", 1, 10, List.of("phone"), "phone");
+        IPHONE_5_ID = market.addNewProductType(uuid, "iphone5", "phone", 1).value;
+        IPHONE_6_ID = market.addNewProductType(uuid, "iphone6", "phone", 1).value;
+        SCREEN_FULL_HD_ID = market.addNewProductType(uuid, "SCREEN_FULL_HD_ID", "screen", 2).value;
+        GALAXY_ID = market.addNewProductType(uuid, "GALAXY_ID", "phone", 1).value;
+        uuid = market.logout(uuid).value;
+
+
+        member = new User("niv@gmail.com", "SHalom123$", "0523222222", LocalDate.of(1993, 11, 11));
+        var res = market.addNewMember(uuid,member.getEmail().value,"Shalom123$","0666666666","11/11/1993");
+        assertFalse(res.errorOccurred());
+        uuid = market.login(uuid, member.getEmail().value, "Shalom123$").value;
+        existing_storeID = market.openNewStore(uuid, "moshe", member.getEmail().value,
+                new ServiceDiscountPolicy(),
+                new ServiceBuyPolicy(),
+                new ServiceBuyStrategy()).value;
+        market.addNewProductToStore(uuid,existing_storeID,IPHONE_5_ID,10,1);
+        market.addNewProductToStore(uuid,existing_storeID,IPHONE_6_ID,60,1);
+        market.addNewProductToStore(uuid,existing_storeID,SCREEN_FULL_HD_ID,10,3);
+        uuid = market.logout(uuid).value;
+    }
 }

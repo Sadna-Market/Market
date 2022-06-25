@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface HistoryRepository extends JpaRepository<DataHistory,Integer> {
-    List<DataHistory> findAllByUser(DataUser user);
-    List<DataHistory> findAllByStore(DataStore store);
+    List<DataHistory> findAllByUser(String user);
+    List<DataHistory> findAllByStore(Integer store);
 }

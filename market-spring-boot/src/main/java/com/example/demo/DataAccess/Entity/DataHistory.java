@@ -8,8 +8,20 @@ import java.util.Set;
 @Table(name = "history")
 public class DataHistory {
     @Id
+    @SequenceGenerator(
+            name = "history_sequence",
+            sequenceName = "history_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "history_sequence"
+    )
     @Column(name = "history_id")
     private Integer historyId;
+
+    @Column(name = "TID")
+    private Integer TID;
 
     @Column(name = "supply_id")
     private Integer supplyId;
@@ -23,29 +35,11 @@ public class DataHistory {
             orphanRemoval = true)
     private Set<DataProductStoreHistory> products = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "store_id",
-            referencedColumnName = "store_id",
-            foreignKey = @ForeignKey(
-                    name = "store_fk"
-            ))
-    private DataStore store;
+    @Column(name = "store_id")
+    private Integer store;
 
-    @ManyToOne
-    @JoinColumn(name = "username",
-            referencedColumnName = "username",
-            foreignKey = @ForeignKey(
-                    name = "user_fk"
-            ))
-    private DataUser user;
-
-    public DataStore getDataStore() {
-        return store;
-    }
-
-    public void setDataStore(DataStore dataStore) {
-        this.store = dataStore;
-    }
+    @Column(name = "username")
+    private String user;
 
     public DataHistory() {
     }
@@ -82,31 +76,36 @@ public class DataHistory {
 //        this.products = products;
 //    }
 
-    public DataStore getStore() {
-        return store;
-    }
-
-    public void setStore(DataStore store) {
-        this.store = store;
-    }
-
-
-    public DataUser getUser() {
-        return user;
-    }
-
-    public void setUser(DataUser userHistory) {
-        this.user = userHistory;
-    }
-
     public Set<DataProductStoreHistory> getProducts() {
         return products;
     }
 
     public void setProducts(Set<DataProductStoreHistory> products) {
-        products.forEach(dataProductStoreHistory -> {
-            dataProductStoreHistory.setHistory(this);
-        });
+        this.products.clear();
         this.products = products;
+    }
+
+    public Integer getTID() {
+        return TID;
+    }
+
+    public void setTID(Integer TID) {
+        this.TID = TID;
+    }
+
+    public Integer getStore() {
+        return store;
+    }
+
+    public void setStore(Integer store) {
+        this.store = store;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }
