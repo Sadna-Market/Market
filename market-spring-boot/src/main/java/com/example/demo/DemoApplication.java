@@ -42,7 +42,6 @@ public class DemoApplication {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             config c = config.get_instance();
-
             Properties props = new Properties();
             props.put("server.port", c.getJsonInit().server_port);
             props.put("spring.datasource.url", c.getJsonInit().spring_datasource_url);
