@@ -1,12 +1,15 @@
 package com.example.demo.DataAccess.Services;
 
+import com.example.demo.DataAccess.Entity.DataPermission;
 import com.example.demo.DataAccess.Entity.DataStore;
+import com.example.demo.DataAccess.Repository.PermissionRepository;
 import com.example.demo.DataAccess.Repository.StoreRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +18,12 @@ public class StoreService {
     private static final Logger logger = Logger.getLogger(StoreService.class);
 
     private final StoreRepository storeRepository;
+    private final PermissionRepository permissionRepository;
 
     @Autowired
-    public StoreService(StoreRepository storeRepository) {
+    public StoreService(StoreRepository storeRepository, PermissionRepository permissionRepository) {
         this.storeRepository = storeRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     /**
@@ -119,14 +124,28 @@ public class StoreService {
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean updateStoreRate(int storeId, int rate, int numOfRated) {
         try {
-            storeRepository.updateStoreRate(storeId,rate,numOfRated);
+            storeRepository.updateStoreRate(storeId, rate, numOfRated);
             logger.info(String.format("updated store %d rate to %d successfully in db",
-                    storeId,rate));
+                    storeId, rate));
             return true;
         } catch (Exception e) {
             logger.error(String.format("failed to updated store %d to rate %d in db, ERROR: %s",
-                    storeId,rate,
+                    storeId, rate,
                     e.getMessage()));
+            return false;
+        }
+    }
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean deleteStores(List<Integer> storeIds) {
+        try {
+            storeRepository.deleteAllById(storeIds);
+            List<DataPermission> pemissions = new ArrayList<>();
+            storeIds.forEach(i-> pemissions.addAll(permissionRepository.findAllByPermissionId_StoreId(i)));
+            permissionRepository.deleteAll(pemissions);
+            logger.info("deleted stores successfully from db");
+            return true;
+        } catch (Exception e) {
+            logger.error(String.format("failed to delete stores from db, ERROR: %s", e.getMessage()));
             return false;
         }
     }

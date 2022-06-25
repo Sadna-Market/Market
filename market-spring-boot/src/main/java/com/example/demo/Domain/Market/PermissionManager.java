@@ -1,5 +1,6 @@
 package com.example.demo.Domain.Market;
 
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
@@ -16,6 +17,7 @@ public class PermissionManager {
     private List<Permission> allDeletedPermissions;
     private String systemManagerEmail;
     static Logger logger = Logger.getLogger(PermissionManager.class);
+    private static DataServices dataServices;
 
 
     private static class PermissionManagerWrapper {
@@ -161,7 +163,7 @@ public class PermissionManager {
             logger.warn("Their is no owner - owner connection to the grantee and grantor in this store\n");
             return new DResponseObj<>(false, ErrorCode.MISTAKEPERMISSIONTYPE);
         }
-        if (isFounder(grantee,store).value) {
+        if (isFounder(grantee, store).value) {
             logger.warn("can't remove permission founder\n");
             return new DResponseObj<>(false, ErrorCode.CAN_NOT_REMOVE_FOUNDER_PERMISSION);
         }
@@ -169,7 +171,25 @@ public class PermissionManager {
         grantee.removeAccessPermission(ownerPermission);
         grantor.removeGrantorPermission(ownerPermission);
         store.removePermission(ownerPermission);
+        //db
+        removePermissionFromDB(store, ownerPermission);
         return new DResponseObj<>(true);
+    }
+
+    private void removePermissionFromDB(Store store, Permission ownerPermission) {
+        if (dataServices != null && dataServices.getPermissionService() != null) {
+            var pid = ownerPermission.getPermissionId();
+            if (!dataServices.getPermissionService().deletePermission(pid)) {
+                logger.error(String.format("failed to remove permission of (grantee,grantor,store)" +
+                                "~(%s,%s,%s) -> granteeType %s and grantorType: %s",
+                        ownerPermission.getGrantee().value.getEmail().value,
+                        ownerPermission.getGrantor().value.getEmail().value,
+                        store.getStoreId().value,
+                        ownerPermission.getGranteeType().value.name(),
+                        ownerPermission.getGrantorType().value.name()
+                ));
+            }
+        }
     }
 
 /*
@@ -222,6 +242,8 @@ public class PermissionManager {
         }
         ManagerPermission.addManagerPermission(permissionType);
         logger.info("New manager permission type was added successfully\n");
+        //db
+        updatedPermissionInDB(permissionType,ManagerPermission);
         return new DResponseObj<>(true);
     }
 
@@ -253,7 +275,22 @@ public class PermissionManager {
             return new DResponseObj<>(false, ErrorCode.MISTAKEPERMISSIONTYPE);
         }
         logger.info("Manager permission type removed successfully\n");
-        return new DResponseObj<>(ManagerPermission.removeManagerPermission(permissionType).value);
+        var res = ManagerPermission.removeManagerPermission(permissionType);
+        if (!res.value) return res;
+        updatedPermissionInDB(permissionType, ManagerPermission);
+        return res;
+    }
+
+    private void updatedPermissionInDB(permissionType.permissionEnum permissionType, Permission ManagerPermission) {
+        if (dataServices != null && dataServices.getPermissionService() != null) {
+            var data = ManagerPermission.getDataObject();
+            if (!dataServices.getPermissionService().updatePermissionType(data)) {
+                logger.error(String.format("failed to update manager permission of user %s the permission type %s",
+                        ManagerPermission.getGrantee().value.getEmail().value,
+                        permissionType.name()
+                ));
+            }
+        }
     }
 
 
@@ -278,7 +315,8 @@ public class PermissionManager {
         grantee.removeAccessPermission(ManagerPermission);
         grantor.removeGrantorPermission(ManagerPermission);
         store.removePermission(ManagerPermission);
-
+        //db
+        removePermissionFromDB(store, ManagerPermission);
         return new DResponseObj<>(true);
     }
 
@@ -286,16 +324,15 @@ public class PermissionManager {
         List<Store> deleteStore = new ArrayList<>();
         List<Permission> allPermissions = toCancelUser.getAccessPermission().value;
         allPermissions.forEach(permission -> {
-            if(permission.getGrantor().value == null){  //means that the user is a founder of the store
+            if (permission.getGrantor().value == null) {  //means that the user is a founder of the store
                 //add to close the store
                 deleteStore.add(permission.getStore().value);
-            }
-            else{ //if the toCancelUser is not a founder only update the store and the grantor permissions
+            } else { //if the toCancelUser is not a founder only update the store and the grantor permissions
                 permission.getStore().value.removePermission(permission);
                 permission.getGrantor().value.removeGrantorPermission(permission);
             }
         });
-        return new DResponseObj<>(deleteStore,-1);
+        return new DResponseObj<>(deleteStore, -1);
     }
 
     //requirement II.4.11 a
@@ -415,22 +452,23 @@ public class PermissionManager {
 
     /**
      * gets all owners of this store including the contributor of the store.
+     *
      * @param store
      * @param type
      * @return list of user of type in store
      */
-    public DResponseObj<List<User>> getAllUserByTypeInStore(Store store,userTypes type) {
+    public DResponseObj<List<User>> getAllUserByTypeInStore(Store store, userTypes type) {
         List<User> users = new ArrayList<>();
         List<Permission> accessPermissionStore = store.getSafePermission().value;
         for (Permission p : accessPermissionStore) {
-            if(p.getGranteeType().value.equals(type))
+            if (p.getGranteeType().value.equals(type))
                 users.add(p.getGrantee().value);
         }
         return new DResponseObj<>(users);
     }
 
 
-    public void reset(){
+    public void reset() {
         allDeletedPermissions = new ArrayList<>();
         systemManagerEmail = null;
     }
@@ -444,6 +482,8 @@ public class PermissionManager {
             User Grantor = alreadyManagerPermission.getGrantor().value;
             if (Grantor != null) // necessary? can be manager without grantor?
                 Grantor.removeGrantorPermission(alreadyManagerPermission);
+            //db
+            removePermissionFromDB(store, alreadyManagerPermission);
         }
     }
 
@@ -453,8 +493,17 @@ public class PermissionManager {
         else {
             Permission per = new Permission(grantee, store, null);
             per.setPermissionTypes(granteeType, grantorType);
-            store.addPermission(per);
-            grantee.addAccessPermission(per);
+            //db
+            if (dataServices != null && dataServices.getPermissionService() != null) {
+                var dataPermission = per.getDataObject();
+                if (!dataServices.getPermissionService().insertPermission(dataPermission)) {
+                    logger.error(String.format("failed to add permission of owner %s to new store %d",
+                            grantee.getEmail().value,
+                            store.getStoreId().value));
+                }
+            }
+            store.addPermission(per); //on load this per will be added to store
+            grantee.addAccessPermission(per); //on load this per will be added to store
             return true;
         }
     }
@@ -462,6 +511,16 @@ public class PermissionManager {
     private void initializePermission(User grantee, Store store, User grantor, userTypes granteeType, userTypes grantorType) {
         Permission per = new Permission(grantee, store, grantor);
         per.setPermissionTypes(granteeType, grantorType);
+        //db
+        if (dataServices != null && dataServices.getPermissionService() != null) {
+            var dataPermission = per.getDataObject();
+            if (!dataServices.getPermissionService().insertPermission(dataPermission)) {
+                logger.error(String.format("failed to add permission of granteeType: %s and grantorType: %s in store %d",
+                        granteeType.name(),
+                        grantorType.name(),
+                        store.getStoreId().value));
+            }
+        }
         store.addPermission(per);
         grantee.addAccessPermission(per);
         grantor.addGrantorPermission(per);
@@ -480,6 +539,10 @@ public class PermissionManager {
             }
         }
         return null;
+    }
+
+    public static void setDataServices(DataServices dataServices) {
+        PermissionManager.dataServices = dataServices;
     }
 
 /*    private List<Permission> getPermission(User grantee, Store store) {

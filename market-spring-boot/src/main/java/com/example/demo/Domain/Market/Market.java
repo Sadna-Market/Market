@@ -1208,7 +1208,9 @@ public class Market {
         logger.info("deleting stores from the market");
         boolean b = true;
         long stamp = lock_stores.writeLock();
+        List<Integer> storeIds = new ArrayList<>();
         for (Store store : storesToDelete) { //delete from memory for good
+            storeIds.add(store.getStoreId().value);
             Store s = stores.remove(store.getStoreId().value);
             b = b & (s != null);
             if (s == null) {
@@ -1218,6 +1220,12 @@ public class Market {
         if (!b) return new SLResponseOBJ<>(false, ErrorCode.FAIL_DELETE_STORE);
         //notify the owners/managers that has permissions in those stores that the store is deleted.
         notifyOwnersAndManagersStoreDeleted(storesToDelete);
+        //db
+        if(dataServices!=null && dataServices.getStoreService()!=null){
+            if (!dataServices.getStoreService().deleteStores(storeIds)) {
+                logger.error("failed to delete list of stores from db");
+            }
+        }
         lock_stores.unlockWrite(stamp);
         return new SLResponseOBJ<>(true, -1);
     }

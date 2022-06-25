@@ -52,7 +52,6 @@ public class DataPermission {
     @Enumerated(EnumType.STRING)
     private Set<PermissionType> granteePermissionTypes = new HashSet<>();
 
-
     public DataPermission() {
     }
 

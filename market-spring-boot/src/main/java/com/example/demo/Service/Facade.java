@@ -1883,5 +1883,6 @@ public class Facade implements IMarket {
         Inventory.setDataServices(dataServices);
         ProductType.setDataServices(dataServices);
         Store.setDataServices(dataServices);
+        PermissionManager.setDataServices(dataServices);
     }
 }

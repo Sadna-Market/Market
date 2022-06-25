@@ -10,6 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PermissionRepository extends JpaRepository<DataPermission, PermissionId> {
+    List<DataPermission> findAllByPermissionId_StoreId(Integer store);
+    List<DataPermission> findAllByPermissionId_GrantorIdAndPermissionId_GranteeIdAndPermissionId_StoreId(String grantor,String grantee,Integer store);
 }
