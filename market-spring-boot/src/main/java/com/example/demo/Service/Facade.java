@@ -43,35 +43,32 @@ public class Facade implements IMarket {
 
     @Autowired
     public Facade(UserManager userManager, DataServices dataServices) {
-
         this.userManager = userManager;
         this.dataServices = dataServices;
-        setDataRefs();
-
         this.market = new Market(this.userManager, dataServices);
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
+        setDataRefs();
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
 
-    }
-    @PostConstruct
-    public void foo()
-    {
-        market.initAllSoresFromTheDb();
-        userManager.getallDbUsers();
     }
 
 
     public Facade() {
-
         this.userManager = new UserManager();
         this.market = new Market(this.userManager, new DataServices());
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
+    }
 
+    @PostConstruct
+    public void foo()
+    {
+        market.initAllSoresFromTheDb();
+        userManager.getallDbUsers();
     }
 
     public SLResponseOBJ<Boolean> removeMember(String userId, String email) {
@@ -1932,6 +1929,7 @@ public class Facade implements IMarket {
         return userManager.isMember(user).value;
     }
 
+    @PostConstruct
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
@@ -1942,6 +1940,5 @@ public class Facade implements IMarket {
         ProductTypeMapper.getInstance().setDataService(dataServices);
         HistoryMapper.getInstance().setDataService(dataServices);
         PermissionMapper.getInstance().setDataService(dataServices);
-
     }
 }
