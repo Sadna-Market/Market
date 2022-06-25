@@ -91,7 +91,6 @@ public class HistoryMapper {
         //insert history to the mapper befor hard case
         History history = new History(dataHistory.getHistoryId(),dataHistory.getSupplyId(),dataHistory.getFinalPrice(),email);
         userHistory.get(email).add(history);
-
         List<ProductStore> productStores = getProductStores(DA);
         history.setProducts(productStores);
         return history;

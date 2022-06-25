@@ -1,9 +1,14 @@
 package com.example.demo.DataAccess.Mappers;
 
+import com.example.demo.DataAccess.Entity.DataPermission;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.Market.Permission;
+import com.example.demo.Domain.StoreModel.Store;
+import com.example.demo.Domain.UserModel.User;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class PermissionMapper {
@@ -52,11 +57,62 @@ public class PermissionMapper {
     public void  setDataService(DataServices dataServices){
         this.dataServices = dataServices;
     }
-//    public Permission getStorePermmision(Integer storeId)
-//    {
-//
-//
-//    }
+    public List<Permission> getStorePermission(Integer storeId)
+    {
+         List<DataPermission> dataPermissionList =dataServices.getPermissionService().getPermissionStore(storeId);
+         List<Permission> storePermissions = new LinkedList<>();
+         for(DataPermission dataPermission : dataPermissionList) {
+             String grantor = dataPermission.getPermissionId().getGrantorId();
+             String grantee= dataPermission.getPermissionId().getGranteeId();
+             if (permissions.containsKey(new Triple(grantee,grantor,storeId))){
+                 storePermissions.add( permissions.get(new Triple(grantee,grantor,storeId)));
+             }
+             else {
+                 Triple t = new Triple(grantee, grantor, storeId);
+                 Permission domainPermission = convertPermissionToDomain(t);
+                 storePermissions.add(domainPermission);
+             }
+         }
+         return storePermissions;
+    }
+
+    public List<Permission> getGrantorPermissions(Integer storeId)
+    {
+        List<DataPermission> dataPermissionList =dataServices.getPermissionService().getPermissionStore(storeId);
+        List<Permission> storePermissions = new LinkedList<>();
+        for(DataPermission dataPermission : dataPermissionList) {
+            String grantor = dataPermission.getPermissionId().getGrantorId();
+            String grantee= dataPermission.getPermissionId().getGranteeId();
+            if (permissions.containsKey(new Triple(grantee,grantor,storeId))){
+                storePermissions.add( permissions.get(new Triple(grantee,grantor,storeId)));
+            }
+            else {
+                Triple t = new Triple(grantee, grantor, storeId);
+                Permission domainPermission = convertPermissionToDomain(t);
+                storePermissions.add(domainPermission);
+            }
+        }
+        return storePermissions;
+    }
+
+    private Permission convertPermissionToDomain(Triple t){
+        Permission res = new Permission(null,null,null);
+
+        permissions.put(t,res);
+        //insert before
+
+
+        User tor = UserMapper.getInstance().getUser(t.grantor);
+        User tee = UserMapper.getInstance().getUser(t.grantee);
+        Store store = StoreMapper.getInstance().getStore(t.storeId);
+
+        permissions.get(t).setGrantee(tee);
+        permissions.get(t).setGrantor(tor);
+        permissions.get(t).setStore(store);
+
+
+        return res;
+    }
 
 
 }

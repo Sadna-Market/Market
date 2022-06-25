@@ -27,6 +27,14 @@ public class Permission {
     private userTypes granteeType;
     private userTypes grantorType;
 
+    public void setGrantee(User grantee) {
+        this.grantee = grantee;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
     public Permission(User grantee, Store store, User grantor) {
         this.grantee = grantee;
         this.store = store;
