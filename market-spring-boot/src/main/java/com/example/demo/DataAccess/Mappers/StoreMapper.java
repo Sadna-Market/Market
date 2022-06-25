@@ -1,6 +1,7 @@
 package com.example.demo.DataAccess.Mappers;
 
 import com.example.demo.DataAccess.Entity.DataStore;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.StoreService;
 import com.example.demo.Domain.StoreModel.Store;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,25 +13,28 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StoreMapper {
-    StoreService storeService;
+
+    DataServices dataServices;
+
     Map<Integer, Store> stores;
     private static class StoreMapperWrapper {
-        static StoreMapper single_instance(StoreService storeService) {
+        static StoreMapper single_instance = new StoreMapper();
 
-           return new StoreMapper(storeService);
-        }
     }
 
 
-    private StoreMapper(StoreService storeService) {
-        this.storeService = storeService;
+    private StoreMapper() {
 
 
         this.stores = new ConcurrentHashMap<>();
     }
 
-    public static StoreMapper getInstance(StoreService storeService) {
-        return StoreMapperWrapper.single_instance(storeService);
+    public void  setDataService(DataServices dataServices){
+        this.dataServices = dataServices;
+    }
+
+    public static StoreMapper getInstance() {
+        return StoreMapperWrapper.single_instance;
     }
 
     public Store getStore(Integer storeId)
@@ -39,7 +43,7 @@ public class StoreMapper {
             return stores.get(storeId);
         }
 
-        DataStore dataStore = storeService.getStoreById(storeId);
+        DataStore dataStore = dataServices.getStoreService().getStoreById(storeId);
         if(dataStore == null){
             return null;
         }
@@ -51,7 +55,7 @@ public class StoreMapper {
 
 
     public Map<Integer, Store> getAllStores() {
-        List<DataStore> dataStoreList = storeService.getAllStores();
+        List<DataStore> dataStoreList = dataServices.getStoreService().getAllStores();
         Map<Integer, Store> res = new HashMap<>();
 
         if (dataStoreList == null) {
@@ -64,7 +68,7 @@ public class StoreMapper {
                 res.put(storeId, stores.get(storeId));
             } else {
 
-                DataStore dataStore = storeService.getStoreById(storeId);
+                DataStore dataStore = dataServices.getStoreService().getStoreById(storeId);
                 if(dataStore == null){
                     return null;
                 }

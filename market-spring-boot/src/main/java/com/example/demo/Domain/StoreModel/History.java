@@ -6,6 +6,7 @@ import com.example.demo.DataAccess.Entity.DataProductStoreHistory;
 import com.example.demo.Domain.Market.ProductType;
 import org.apache.log4j.Logger;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +28,20 @@ public class History {
         this.user = user;
     }
 
+    public void setProducts(List<ProductStore> products) {
+        this.products = products;
+    }
+
     public History() {
+    }
+
+    public History(Integer TID, Integer supplyID, Double finalPrice, String user) {
+        this.TID = TID;
+        this.supplyID = supplyID;
+        this.finalPrice = finalPrice;
+        this.user = user;
+        List<ProductStore> products=new LinkedList<>();
+
     }
 
     public int getTID() {

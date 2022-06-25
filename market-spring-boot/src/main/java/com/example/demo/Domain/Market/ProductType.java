@@ -29,7 +29,18 @@ public class ProductType {
     private int category;
     public List<Integer> stores=new ArrayList<>();
 
+    public ProductType(int productID, int rate, int counter_rates, String productName, String description, int category, List<Integer> stores) {
+        this.productID = productID;
+        this.rate = rate;
+        this.counter_rates = counter_rates;
+        this.productName = productName;
+        this.description = description;
+        this.category = category;
+        this.stores = stores;
+    }
+
     private StampedLock lock_stores= new StampedLock(),rateLock=new StampedLock();
+
 
     public ProductType(int productID, String productName, String description,int category) {
         this.category = category;

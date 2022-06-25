@@ -1,5 +1,9 @@
 package com.example.demo.Service;
 
+import com.example.demo.DataAccess.Mappers.HistoryMapper;
+import com.example.demo.DataAccess.Mappers.ProductTypeMapper;
+import com.example.demo.DataAccess.Mappers.StoreMapper;
+import com.example.demo.DataAccess.Mappers.UserMapper;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ProductTypeService;
 import com.example.demo.Domain.ErrorCode;
@@ -27,6 +31,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
+import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -43,24 +48,33 @@ public class Facade implements IMarket {
 
     @Autowired
     public Facade(UserManager userManager, DataServices dataServices) {
+
         this.userManager = userManager;
         this.dataServices = dataServices;
+        setDataRefs();
+
         this.market = new Market(this.userManager, dataServices);
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
-        setDataRefs();
+
+    }
+    @PostConstruct
+    public void foo()
+    {
     }
 
 
     public Facade() {
+
         this.userManager = new UserManager();
         this.market = new Market(this.userManager, new DataServices());
         JsonUser a = config.get_instance().getJsonInit().admin;
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
+
     }
 
     public SLResponseOBJ<Boolean> removeMember(String userId, String email) {
@@ -1871,5 +1885,10 @@ public class Facade implements IMarket {
         ShoppingBag.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
         BuyPolicy.setDataServices(dataServices);
+        HistoryMapper.getInstance().setDataService(dataServices);
+        UserMapper.getInstance().setDataService(dataServices);
+        StoreMapper.getInstance().setDataService(dataServices);
+        ProductTypeMapper.getInstance().setDataService(dataServices);
+        HistoryMapper.getInstance().setDataService(dataServices);
     }
 }

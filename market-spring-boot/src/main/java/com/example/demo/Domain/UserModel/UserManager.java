@@ -60,10 +60,8 @@ public class UserManager {
     static Logger logger = Logger.getLogger(UserManager.class);
 
     public void getallDbUsers(){
-        if(dataServices.getStoreService()!=null &&
-        dataServices.getUserService()!= null &
-        dataServices.getShoppingBagService()!=null){
-            UserMapper userMapper = UserMapper.getInstance(dataServices.getUserService(),dataServices.getShoppingBagService(),dataServices.getStoreService());
+        if(dataServices != null){
+            UserMapper userMapper = UserMapper.getInstance();
             Map<String, User> users =userMapper.getAllUsers();
             for(String u: users.keySet()){
                 if(members.containsKey(u)||users.get(u)==null){
@@ -81,13 +79,17 @@ public class UserManager {
         if(members.containsKey(email)){
             return;
         }
+        if(dataServices==null){
+            return;
+        }
         if(dataServices.getStoreService()!=null &&
                 dataServices.getUserService()!= null &
                         dataServices.getShoppingBagService()!=null){
-            UserMapper userMapper = UserMapper.getInstance(dataServices.getUserService(),dataServices.getShoppingBagService(),dataServices.getStoreService());
+            UserMapper userMapper = UserMapper.getInstance();
             User user =userMapper.getUser(email);
             if(user==null){
                 logger.debug("user not exsist in the db : "+email);
+                return;
             }
            members.put(email,user);
         }

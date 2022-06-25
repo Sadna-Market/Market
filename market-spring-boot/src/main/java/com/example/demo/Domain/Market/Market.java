@@ -50,7 +50,7 @@ public class Market {
         this.userManager = userManager;
         ExternalService.getInstance();
         purchase = new Purchase();
-        initAllSoresFromTheDb ();
+//        initAllSoresFromTheDb ();
     }
 
     /*************************************************Functions*********************************************************/
@@ -58,8 +58,8 @@ public class Market {
         return new DResponseObj<>(closeStores.containsKey(StoreID));
     }
     public void initAllSoresFromTheDb(){
-        if(dataServices.getShoppingBagService()!=null) {
-            StoreMapper storeMapper = StoreMapper.getInstance(dataServices.getStoreService());
+        if(dataServices!=null) {
+            StoreMapper storeMapper = StoreMapper.getInstance();
             Map<Integer, Store> allStores = storeMapper.getAllStores();
             for (Integer storeId : allStores.keySet()) {
                 Store s = allStores.get(storeId);

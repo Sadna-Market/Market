@@ -4,6 +4,7 @@ import com.example.demo.DataAccess.Entity.DataShoppingBag;
 import com.example.demo.DataAccess.Entity.DataUser;
 import com.example.demo.DataAccess.Repository.ShoppingBagRepository;
 import com.example.demo.DataAccess.Repository.UserRepository;
+import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.DataAccess.Services.ShoppingBagService;
 import com.example.demo.DataAccess.Services.StoreService;
 import com.example.demo.DataAccess.Services.UserService;
@@ -18,30 +19,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserMapper {
-    UserService userService ;
-    ShoppingBagService shoppingBagService ;
 
-    StoreService storeService;
+    DataServices dataServices;
     Map<String, User> users;
     private static class UserMapperWrapper {
-        static UserMapper single_instance(UserService userService ,
-                                          ShoppingBagService shoppingBagService ,
-                                          StoreService storeService) {
+        static UserMapper single_instance = new UserMapper();
 
-         return    new UserMapper(userService, shoppingBagService, storeService);
-        }
     }
 
-    private UserMapper(UserService userService ,
-                       ShoppingBagService shoppingBagService ,
-                       StoreService storeService) {
+    private UserMapper() {
         this.users = new ConcurrentHashMap<>();
     }
 
-    public static UserMapper getInstance(UserService userService ,
-                                         ShoppingBagService shoppingBagService ,
-                                         StoreService storeService) {
-        return UserMapperWrapper.single_instance(userService, shoppingBagService, storeService);
+    public static UserMapper getInstance() {
+        return UserMapperWrapper.single_instance;
     }
 
     public User getUser(String email)
@@ -49,20 +40,23 @@ public class UserMapper {
         if(users.containsKey(email)){
             return users.get(email);
         }
-        DataUser dataUser = userService.getUserByUsername(email);
-        List<DataShoppingBag> dataShoppingBags = shoppingBagService.getUserShoppingBags(email);
+        DataUser dataUser = dataServices.getUserService().getUserByUsername(email);
+        if(dataUser == null){
+            return null;
+        }
+        List<DataShoppingBag> dataShoppingBags = dataServices.getShoppingBagService().getUserShoppingBags(email);
+
         User user= convertToUserDomain(dataUser,dataShoppingBags);
         if(user == null){
             return null;
         }
-        users.put(email,user);
         return user;
-
     }
 
     public Map<String,User> getAllUsers(){
-        List<DataUser> dataUserList = userService.getAllUsers();
+        List<DataUser> dataUserList = dataServices.getUserService().getAllUsers();
         Map<String ,User> users = new HashMap<>();
+        System.out.println(dataUserList);
         for (DataUser dataUser: dataUserList
              ) {
             String userEmail = dataUser.getUsername();
@@ -70,12 +64,12 @@ public class UserMapper {
                 users.put(userEmail,users.get(userEmail));
             }
             else {
-                List<DataShoppingBag> dataShoppingBags = shoppingBagService.getUserShoppingBags(userEmail);
+                List<DataShoppingBag> dataShoppingBags = dataServices.getShoppingBagService().getUserShoppingBags(userEmail);
                 User user = convertToUserDomain(dataUser,dataShoppingBags);
                 if(user == null){
                     continue;
                 }
-                users.put(userEmail,user);
+                //users.put(userEmail,user); the insertion is in the convertion
             }
         }
         return users;
@@ -85,6 +79,9 @@ public class UserMapper {
     private User convertToUserDomain(DataUser dataUser,List<DataShoppingBag> dataShoppingBags){
         //make the Shopping bag hash;
         ConcurrentHashMap<Integer , ShoppingBag> shoppingBagHash = new ConcurrentHashMap<>();
+        User u=new User(dataUser.getUsername(),dataUser.getPassword(),dataUser.getPhoneNumber(),dataUser.getDateOfBirth());
+        users.put(dataUser.getUsername(), u);
+        //insert user before starting parse the hard properies
         for(DataShoppingBag shoppingBag : dataShoppingBags)
         {
             ConcurrentHashMap<Integer, Integer> productQuantity =  new ConcurrentHashMap<>(shoppingBag.getProductQuantity());
@@ -92,7 +89,7 @@ public class UserMapper {
             if(storeId == null){
                 throw new IllegalArgumentException();
             }
-            Store store = StoreMapper.getInstance(storeService).getStore(storeId);
+            Store store = StoreMapper.getInstance().getStore(storeId);
             if(store == null){
                 throw new IllegalArgumentException(); //todo remove it to log and continue. need it for checks now
             }
@@ -100,6 +97,13 @@ public class UserMapper {
             shoppingBagHash.put(storeId , bag);
         }
         ShoppingCart shoppingCart = new ShoppingCart(dataUser.getUsername(),shoppingBagHash);
-        return new User(dataUser.getUsername(),dataUser.getPassword(),dataUser.getPhoneNumber(),dataUser.getDateOfBirth(),shoppingCart);
+        u.setShoppingCart(shoppingCart);
+        return u;
+
     }
+
+    public void  setDataService(DataServices dataServices){
+        this.dataServices = dataServices;
+    }
+
 }
