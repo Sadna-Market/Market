@@ -26,7 +26,7 @@ const NewStore = (props) => {
     //todo: open Store
     async function openHandler() {
         cleanHandler();//founder can change to props.useremail
-        console.log("openNewStoreResponse");
+        console.log("props.uuid, name,founde",props.uuid, name,founder);
 
         const openNewStoreResponse = await apiClientHttp.openNewStore(props.uuid, name,founder);
 
@@ -35,6 +35,8 @@ const NewStore = (props) => {
         } else {
             props.onMarket(openNewStoreResponse.value);
         }
+        console.log("openNewStoreResponse");
+
         console.log(openNewStoreResponse);
 
     }
