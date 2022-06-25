@@ -176,5 +176,29 @@ public class PermissionService {
         }
     }
 
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public List<DataPermission> getAllPermissionsGrantee(String grantee) {
+        try {
+            var allperms = permissionRepository.findAllByPermissionId_GranteeId(grantee);
+            logger.info(String.format("fetched all permissions of grantee %s from db", grantee));
+            return allperms;
+        } catch (Exception e) {
+            logger.error(String.format("failed to fetch all permissions of grantee %s, ERROR: %s", grantee, e.getMessage()));
+            return null;
+        }
+    }
+
+    @Transactional(rollbackFor = {Exception.class}, timeout = 10)
+    public List<DataPermission> getAllPermissionsGrantor(String grantor) {
+        try {
+            var allperms = permissionRepository.findAllByPermissionId_GrantorId(grantor);
+            logger.info(String.format("fetched all permissions of grantor %s from db", grantor));
+            return allperms;
+        } catch (Exception e) {
+            logger.error(String.format("failed to fetch all permissions of grantor %s, ERROR: %s", grantor, e.getMessage()));
+            return null;
+        }
+    }
+
 
 }

@@ -14,6 +14,8 @@ import java.util.List;
 
 @Repository
 public interface PermissionRepository extends JpaRepository<DataPermission, PermissionId> {
+    List<DataPermission> findAllByPermissionId_GranteeId(String grantee);
+    List<DataPermission> findAllByPermissionId_GrantorId(String grantor);
     List<DataPermission> findAllByPermissionId_StoreId(Integer store);
     List<DataPermission> findAllByPermissionId_GrantorIdAndPermissionId_GranteeIdAndPermissionId_StoreId(String grantor,String grantee,Integer store);
 }
