@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.locks.StampedLock;
+import java.util.stream.Collectors;
 
 public class Store {
 
@@ -198,6 +199,17 @@ public class Store {
         }
         History newHistory = new History(TID, SupplyID, finalPrice, productsBuy, user);
         history.put(TID, newHistory);
+        //db
+        if(dataServices!= null && dataServices.getHistoryService()!=null) {
+            var dataHistory = newHistory.getDataObject();
+            var productStoreHistorys = productsBuy.stream().map(p -> p.getDataHistoryObject(dataHistory)).collect(Collectors.toSet());
+            dataHistory.setProducts(productStoreHistorys);
+            dataHistory.setStore(this.storeId);
+            if(!dataServices.getHistoryService().insertHistory(dataHistory)){
+                logger.error(String.format("failed to persist history tid %d",dataHistory.getTID()));
+            }
+
+        }
         logger.info("new history added to storeId: "+ storeId + " ,TID: " + TID);
         return new DResponseObj<>(newHistory);
     }

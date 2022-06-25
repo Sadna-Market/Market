@@ -126,7 +126,6 @@ class PermissionServiceTest {
         uuid = market.login(uuid,username,password).value;
         var storeId = market.openNewStore(uuid,"moshe",username,new ServiceDiscountPolicy(),new ServiceBuyPolicy(),new ServiceBuyStrategy()).value;
         market.addNewStoreOwner(uuid,storeId,username2);
-
         uuid = market.logout(uuid).value;
         uuid = market.login(uuid,username2,password).value;
         market.addNewStoreManger(uuid,storeId,username3);
