@@ -32,6 +32,7 @@ const Store = (props) => {
     const [rate, Setrate] = useState("");
     const [isOwner, SetisOwner] = useState(false);
     const [isManager, SetisManager] = useState(false);
+    const [isFounder, SetisFounder] = useState(false);
 
     const [tempRateMe, settempRateMe] = useState();
 
@@ -81,7 +82,16 @@ const Store = (props) => {
             } else {
                 SetisManager(isManagerUUIDResponse.value)
             }
-
+            //    const [isFounder, SetisFounder] = useState(false);
+            // const isFounderUUIDResponse = await apiClientHttp.isFounderUUID(UUID, storeID);
+            // let str2 = JSON.stringify(isFounderUUIDResponse);
+            // console.log("isManagerUUIDResponse    " + str2)
+            //
+            // if (isFounderUUIDResponse.errorMsg !== -1) {
+            //     SetError(errorCode.get(isFounderUUIDResponse.errorMsg))
+            // } else {
+            //     SetisFounder(isFounderUUIDResponse.value)
+            // }
 
         }
 
@@ -190,16 +200,34 @@ const Store = (props) => {
     // const [permission, setPermission] = useState("");
     let permission = "";
     //check ig uuid is manager in this store
+    // if (isFounder){
+    //     permission = (
+    //         <>
+    //             <button onClick={rulesHandler}>Rules</button>
+    //             <button onClick={addProductHandler}> Add Product</button>
+    //             <button onClick={removeProductHandler}> Remove Product</button>
+    //             <button onClick={editProductHandler}> Edit Product</button>
+    //             <button onClick={addManagerHandler}> Add Manager</button>
+    //             <button onClick={removeManagerHandler}> Remove Manager</button>
+    //             <button onClick={editPermissionHandler}> Edit Permission</button>
+    //             <h2></h2>
+    //             <button onClick={closeStoreHandler}> Close Store</button>
+    //             <button onClick={historyHandler}> History</button>
+    //             <button onClick={policyHandler}> Discount Policy</button>
+    //             <button onClick={buyingHandler}> Buy Policy</button>
+    //         </>
+    //     );
+    // }
     if (isManager) {
         permission = (
             <>
                 <button onClick={rulesHandler}>Rules</button>
-                <button onClick={addProductHandler}> Add Product</button>
-                <button onClick={removeProductHandler}> Remove Product</button>
-                <button onClick={editProductHandler}> Edit Product</button>
-                <button onClick={addManagerHandler}> Add Manager</button>
-                <button onClick={removeManagerHandler}> Remove Manager</button>
-                <button onClick={editPermissionHandler}> Edit Permission</button>
+                {/*<button onClick={addProductHandler}> Add Product</button>*/}
+                {/*<button onClick={removeProductHandler}> Remove Product</button>*/}
+                {/*<button onClick={editProductHandler}> Edit Product</button>*/}
+                {/*<button onClick={addManagerHandler}> Add Manager</button>*/}
+                {/*<button onClick={removeManagerHandler}> Remove Manager</button>*/}
+                {/*<button onClick={editPermissionHandler}> Edit Permission</button>*/}
                 <h2></h2>
                 <button onClick={historyHandler}> History</button>
                 <button onClick={policyHandler}> Discount Policy</button>
@@ -217,7 +245,7 @@ const Store = (props) => {
                 <button onClick={removeManagerHandler}> Remove Manager</button>
                 <button onClick={editPermissionHandler}> Edit Permission</button>
                 <h2></h2>
-                <button onClick={closeStoreHandler}> Close Store</button>
+                {/*<button onClick={closeStoreHandler}> Close Store</button>*/}
                 <button onClick={historyHandler}> History</button>
                 <button onClick={policyHandler}> Discount Policy</button>
                 <button onClick={buyingHandler}> Buy Policy</button>
