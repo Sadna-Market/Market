@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Inventory {
     private static DataServices dataServices;
 
+
     /////////////////////////////////////////// Fields //////////////////////////////////////////////////////////////
     private ConcurrentHashMap<Integer, ProductStore> products;  // productTypeID, ProductStore
     private int storeId;
@@ -293,6 +294,10 @@ public class Inventory {
             lst.add(productStore);
         });
         return new DResponseObj<>(lst,-1);
+    }
+
+    public void setProducts(ConcurrentHashMap<Integer, ProductStore> products) {
+        this.products = products;
     }
 
     public DResponseObj<ConcurrentHashMap<Integer,ProductStore>> getProducts() {

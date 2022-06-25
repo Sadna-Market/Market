@@ -33,6 +33,9 @@ public class DataServices {
     @Autowired
     private ProductStoreService productStoreService;
 
+    @Autowired
+    private BIDService bidService;
+
     public ShoppingBagService getShoppingBagService() {
         return shoppingBagService;
     }
@@ -100,4 +103,9 @@ public class DataServices {
     public ProductStoreService getProductStoreService() {
         return productStoreService;
     }
+
+    public BIDService getBidService() {
+        return bidService;
+    }
+
 }

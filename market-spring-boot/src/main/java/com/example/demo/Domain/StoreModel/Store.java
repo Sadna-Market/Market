@@ -1,6 +1,7 @@
 package com.example.demo.Domain.StoreModel;
 
 import com.example.demo.DataAccess.Entity.DataBID;
+import com.example.demo.DataAccess.Entity.DataDiscountRule;
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.DataAccess.Services.DataServices;
@@ -73,22 +74,21 @@ public class Store {
     }
 
     //upload store from db
-    public Store(int storeId,String name,ConcurrentHashMap<Integer, ProductStore> products, String founder, boolean isOpen, int rate,
-                 int numOfRated, ConcurrentHashMap<Integer,History> history, ConcurrentHashMap<Integer, DiscountRule> discountRules,
-                 ConcurrentHashMap<Integer,BuyRule> buyRules, List<Permission> permission,ConcurrentLinkedDeque<BID> bids){
+    public Store(int storeId,String name, String founder, boolean isOpen, int rate,
+                 int numOfRated){
         this.storeId = storeId;
         this.name = name;
-        this.inventory = new Inventory(storeId,products);
+        this.inventory = new Inventory(storeId);
         this.founder = founder;
         this.isOpen = isOpen;
         this.rate = rate;
         this.numOfRated = numOfRated;
-        this.history = history;
-        this.discountPolicy = new DiscountPolicy(discountRules);
-        this.buyPolicy = new BuyPolicy(buyRules);
-        this.permission = permission;
-        this.safePermission = Collections.synchronizedList(permission);;
-        this.bids = bids;
+        this.history = new ConcurrentHashMap<>();
+        this.discountPolicy = new DiscountPolicy();
+        this.buyPolicy = new BuyPolicy();
+        this.permission = new ArrayList<>();
+        this.safePermission = new ArrayList<>();
+        this.bids = new ConcurrentLinkedDeque<>();
     }
 
     /////////////////////////////////////////////// Methods ///////////////////////////////////////////////////////
@@ -421,6 +421,17 @@ public class Store {
         return owners;
     }
 
+    public DResponseObj<Boolean> reopenStore() {
+        DResponseObj<Boolean> success = inventory.tellProductStoreIsReopen();
+        if (success.errorOccurred())
+            return success;
+        else {
+            isOpen = true;
+            logger.info("storeId: " + storeId + " reopen");
+            return new DResponseObj<>(success.getValue());
+        }
+    }
+
     public DResponseObj<Boolean> createBID(String email, int productID, int quantity, int totalPrice) {
         DResponseObj<Boolean> quantityEx = inventory.isProductExistInStock(productID,quantity);
         if(quantityEx.errorOccurred()) return new DResponseObj<>(false,quantityEx.errorMsg);
@@ -430,10 +441,34 @@ public class Store {
         DResponseObj<ProductStore> productStore = inventory.getProductInfo(productID);
         if(productStore.errorOccurred()) return new DResponseObj<>(false,ErrorCode.PRODUCTNOTEXISTINSTORE);
         String productName = productStore.value.getProductType().getProductName().value;
-        BID b = new BID(email,productID,productName,quantity,totalPrice,approves);
-        if(exist != null) bids.remove(exist);
+        if(exist != null) {   // remove from db
+            bids.remove(exist);
+            if (dataServices != null && dataServices.getBidService() != null) {
+                if (!dataServices.getBidService().removeBID(exist.getBIDID(storeId)))
+                    return new DResponseObj<>(false, ErrorCode.DB_ERROR);
+            }
+        }
+        BID b = new BID(storeId,email,productID,productName,quantity,totalPrice,approves);
         bids.add(b);
+        addBIDToDB(b);
         return new DResponseObj<>(true);
+    }
+
+    private void addBIDToDB(BID bid){
+        if (dataServices != null && dataServices.getBidService() != null) { //because no autowire in AT
+            DataStore dataStore = dataServices.getStoreService().getStoreById(storeId);
+            if(dataStore == null){
+                logger.warn(String.format("store %d is not present in db", storeId));
+                throw new IllegalArgumentException("fail to get data store for add BID to db");
+            }
+            else {
+                DataBID dataBID = bid.getDataObject(dataStore);
+                if (!dataServices.getBidService().insertBID(dataBID)) {
+                    logger.warn(String.format("fail to add BID to store %d - database", storeId));
+                    throw new IllegalArgumentException("fail to add BID to db");
+                }
+            }
+        }
     }
 
     private ConcurrentHashMap<String,Boolean> createApprovesHashMap(){
@@ -449,6 +484,10 @@ public class Store {
         for(BID b : bids){
             if(b.getUsername().equals(email) && b.getProductID()==productID){
                 bids.remove(b);
+                if (dataServices != null && dataServices.getBidService() != null) {
+                    if (!dataServices.getBidService().removeBID(b.getBIDID(storeId)))
+                        return new DResponseObj<>(false, ErrorCode.DB_ERROR);
+                    }
                 return new DResponseObj<>(true);
             }
         }
@@ -553,16 +592,7 @@ public class Store {
         return new DResponseObj<>(b);
     }
 
-    public DResponseObj<Boolean> reopenStore() {
-        DResponseObj<Boolean> success = inventory.tellProductStoreIsReopen();
-        if (success.errorOccurred())
-            return success;
-        else {
-            isOpen = true;
-            logger.info("storeId: " + storeId + " reopen");
-            return new DResponseObj<>(success.getValue());
-        }
-    }
+
 
     /////////////////////////////////////////////// Getters and Setters /////////////////////////////////////////////
 
@@ -648,8 +678,7 @@ public class Store {
         dataStore.setNumOfRated(this.numOfRated);
         dataStore.setFounder(this.founder);
         Set<DataBID> s = new HashSet<>();
-        //TODO: dor!
-        //this.bids.forEach(bid -> s.add(bid.getDataObject(dataStore)));
+        this.bids.forEach(bid -> s.add(bid.getDataObject(dataStore)));
         dataStore.setBids(s);
         return dataStore;
     }
@@ -665,6 +694,20 @@ public class Store {
     public static void setDataServices(DataServices dataServices){
         Store.dataServices = dataServices;
     }
+
+    public void setPermission(List<Permission> permission) {
+        this.permission = permission;
+        this.safePermission = Collections.synchronizedList(permission);
+    }
+
+    public void setSafePermission(List<Permission> safePermission) {
+        this.safePermission = safePermission;
+    }
+
+    public void setBids(ConcurrentLinkedDeque<BID> bids) {
+        this.bids = bids;
+    }
+
 
 }
 
