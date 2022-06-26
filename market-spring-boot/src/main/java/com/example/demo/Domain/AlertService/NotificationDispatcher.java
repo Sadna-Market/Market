@@ -100,4 +100,9 @@ public class NotificationDispatcher {
         logger.info("added all delayed notifications of user to real time map");
     }
 
+    public void notifyUsers(String msg) {
+        realTimeListeners.forEach((s, notifications) -> {
+            notifications.add(new Notification(msg));
+        });
+    }
 }
