@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 //import logo from "./logo.svg";
 import "./App.css";
 import Bar from "./components/Bar/Bar.js";
+
 import Market from "./components/Market/Market";
 import SignUp from "./components/Bar/SignUp";
 import InitMarket from "./components/Bar/InitMarket";

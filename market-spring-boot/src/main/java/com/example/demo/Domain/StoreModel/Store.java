@@ -363,7 +363,7 @@ public class Store {
     public DResponseObj<Boolean> addNewDiscountRule(DiscountRule discountRule) {
         if(discountPolicy == null)
             discountPolicy = new DiscountPolicy();
-        return discountPolicy.addNewDiscountRule(discountRule,storeId+1);
+        return discountPolicy.addNewDiscountRule(discountRule,storeId);//+1
     }
 
     //requirement II.4.2

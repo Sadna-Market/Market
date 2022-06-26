@@ -954,10 +954,14 @@ public class Market {
         logger.info("notifying owners&managers with permission about BID");
         List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
         List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
-        managersOfStore.forEach(m -> {
-            if (!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID, m, store).value)
+        for(User m : managersOfStore) {
+            if (!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID, m, store).value) {
                 managersOfStore.remove(m);
-        });
+                if(managersOfStore.size()==0){
+                    break;
+                }
+            }
+        }
         ownersAndManagers.addAll(managersOfStore);  // after filter managers of stores
         userManager.notifyUsers(ownersAndManagers, msg);
     }
