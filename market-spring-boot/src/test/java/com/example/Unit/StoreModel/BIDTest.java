@@ -16,7 +16,7 @@ class BIDTest {
     @BeforeEach
     void setUp() {
         approves.put("niv@gmail.com",false);
-        b = new BID("dor@gmail.com",2,"Sony",5,100,approves);
+        b = new BID(1,"dor@gmail.com",2,"Sony",5,100,approves);
     }
 
     @Test
