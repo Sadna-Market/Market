@@ -51,6 +51,7 @@ public class DemoApplication {
             props.put("spring.jpa.show-sql", c.getJsonInit().spring_jpa_show_sql);
             props.put("spring.jpa.properties.hibernate.dialect", c.getJsonInit().spring_jpa_properties_hibernate_dialect);
             props.put("spring.jpa.properties.hibernate.format.sql", c.getJsonInit().spring_jpa_properties_hibernate_format_sql);
+            props.put("spring.datasource.hikari.connection-timeout",c.getJsonInit().spring_datasource_hikari_connection_timeout);
             return props;
         } catch (Exception e) {
             logger.warn("error in init file");

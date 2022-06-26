@@ -13,10 +13,10 @@ public class Notification {
     public Notification() {
     }
 
-//    public Notification(String text) {
-//        sentDate = LocalDate.now();
-//        this.text = text;
-//    }
+    public Notification(String text) {
+        sentDate = LocalDate.now();
+        this.text = text;
+    }
 
     //for db delayed
     public Notification(String text, String sendTo) {
