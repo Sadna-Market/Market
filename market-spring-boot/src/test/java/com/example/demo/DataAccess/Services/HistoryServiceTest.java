@@ -95,4 +95,8 @@ class HistoryServiceTest {
         market.addNewProductToStore(uuid,existing_storeID,SCREEN_FULL_HD_ID,10,3);
         uuid = market.logout(uuid).value;
     }
+
+
+
+
 }

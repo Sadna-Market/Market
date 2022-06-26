@@ -3,6 +3,7 @@ package com.example.demo.Domain.Market;
 import Stabs.PurchaseStab;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
+import com.example.demo.DataAccess.Mappers.ProductTypeMapper;
 import com.example.demo.DataAccess.Mappers.StoreMapper;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
@@ -75,14 +76,10 @@ public class Market {
 
     public void initAllProductTypes(){
         if(dataServices!=null) {
-            StoreMapper storeMapper = StoreMapper.getInstance();
-            Map<Integer, Store> allStores = storeMapper.getAllStores();
-            for (Integer storeId : allStores.keySet()) {
-                Store s = allStores.get(storeId);
-                if (s.isOpen().value) {
-                    this.stores.put(storeId, s);
-                } else {
-                    this.closeStores.put(storeId, s);
+            List<ProductType> t = ProductTypeMapper.getInstance().getAllProductTypes();
+            for(ProductType productType : t){
+                if(!productTypes.containsKey(productType.getProductID())){
+                    productTypes.put(productType.getProductID().value,productType);
                 }
             }
         }
@@ -1017,7 +1014,8 @@ public class Market {
     //post: market receive this store to the user.
 
     public DResponseObj<Store> getStore(int storeID) {
-        if (storeID <= 0 | storeID >= storeCounter) {
+
+        if (dataServices == null && (storeID <= 0 | storeID >= storeCounter)) {
             logger.warn("the StoreID is illegal");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }

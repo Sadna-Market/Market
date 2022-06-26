@@ -135,11 +135,20 @@ public class PermissionMapper {
 
         List<PermissionType> permissionTypes = new ArrayList<>(dataPermission.getGranteePermissionTypes());
         List<permissionType.permissionEnum> permissionTypesDomain = permissionTypes.stream().map(PermissionEnum -> permissionType.permissionEnum.valueOf(PermissionEnum.name())).collect(Collectors.toList());
+        User tor ;
+        User tee ;
+        Store store;
+        if(!t.grantee.equals(t.grantor)) {
+             tor = UserMapper.getInstance().getUser(t.grantor);
+             tee = UserMapper.getInstance().getUser(t.grantee);
+             store = StoreMapper.getInstance().getStore(t.storeId);
+        }
+        else {
+             tor = null;
+             tee = UserMapper.getInstance().getUser(t.grantee);
+             store = StoreMapper.getInstance().getStore(t.storeId);
 
-        User tor = UserMapper.getInstance().getUser(t.grantor);
-        User tee = UserMapper.getInstance().getUser(t.grantee);
-        Store store = StoreMapper.getInstance().getStore(t.storeId);
-
+        }
 
 
         permissions.get(t).setGranteeType(userTypes.valueOf(dataPermission.getGranteeType().name()));
