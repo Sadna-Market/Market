@@ -1,6 +1,9 @@
 package com.example.demo.DataAccess.Entity;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,12 +37,14 @@ public class DataStore {
             fetch = FetchType.EAGER,
             mappedBy = "store"
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<DataProductStore> productStores = new HashSet<>();
 
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "store"
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<DataShoppingBag> shoppingBags = new HashSet<>();
 
 
@@ -70,18 +75,18 @@ public class DataStore {
     )
     private Set<DataHistory> history = new HashSet<>();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, /*when the store gets deleted then the DiscountPolicy gets deleted*/
+    @OneToMany(cascade = CascadeType.PERSIST, /*when the store gets deleted then the DiscountPolicy gets deleted*/
             /*CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */
             fetch = FetchType.EAGER,
-            mappedBy = "store",
-            orphanRemoval = true) /*when store is fetched from db then fetch the DiscountPolicy too*/
+            mappedBy = "store") /*when store is fetched from db then fetch the DiscountPolicy too*/
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<DataDiscountRule> discountRules;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, /*when the store gets deleted then the DiscountPolicy gets deleted*/
+    @OneToMany(cascade = CascadeType.PERSIST, /*when the store gets deleted then the DiscountPolicy gets deleted*/
             /*CascadeType.PERSIST /* when saving the store then save the DiscountPolicy too */
             fetch = FetchType.EAGER,
-            mappedBy = "store",
-            orphanRemoval = true) /*when store is fetched from db then fetch the DiscountPolicy too*/
+            mappedBy = "store") /*when store is fetched from db then fetch the DiscountPolicy too*/
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<DataBuyRule> buyRules;
 
     @OneToMany(fetch = FetchType.EAGER,

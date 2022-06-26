@@ -1,5 +1,8 @@
 package com.example.demo.DataAccess.Entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -43,13 +46,14 @@ public class DataProductType {
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "productType",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+            cascade = CascadeType.PERSIST
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<DataProductStore> productStores = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "productType",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+            cascade = CascadeType.PERSIST
     )
     private Set<DataProductStoreHistory> productStoreHistory = new HashSet<>();
 

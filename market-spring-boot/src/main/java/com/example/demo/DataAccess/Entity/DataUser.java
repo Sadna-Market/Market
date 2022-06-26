@@ -1,5 +1,8 @@
 package com.example.demo.DataAccess.Entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -28,6 +31,7 @@ public class DataUser {
             fetch = FetchType.EAGER,
             mappedBy = "user"
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<DataShoppingBag> shoppingBags = new HashSet<>();
 
 
