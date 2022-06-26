@@ -1,6 +1,5 @@
 package com.example.demo.Service;
 
-import com.example.demo.DataAccess.Mappers.*;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
@@ -62,13 +61,6 @@ public class Facade implements IMarket {
         System.out.println(a.email + " " + a.password + " " + a.phoneNumber + " " + a.dateOfBirth);
         System.out.println(config.isMakeState);
         initMarket(a.email, a.password, a.phoneNumber, a.dateOfBirth);
-    }
-
-    @PostConstruct
-    public void foo()
-    {
-        market.initAllSoresFromTheDb();
-        userManager.getallDbUsers();
     }
 
     public SLResponseOBJ<Boolean> removeMember(String userId, String email) {
@@ -1928,19 +1920,16 @@ public class Facade implements IMarket {
     public boolean isMember2(String user){
         return userManager.isMember(user).value;
     }
-@PostConstruct
+
+    @PostConstruct
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
         BuyPolicy.setDataServices(dataServices);
-        PermissionManager.setDataServices(dataServices);
-        HistoryMapper.getInstance().setDataService(dataServices);
-        UserMapper.getInstance().setDataService(dataServices);
-        StoreMapper.getInstance().setDataService(dataServices);
-        ProductTypeMapper.getInstance().setDataService(dataServices);
-        PermissionMapper.getInstance().setDataService(dataServices);
         Inventory.setDataServices(dataServices);
         ProductType.setDataServices(dataServices);
         Store.setDataServices(dataServices);
+        PermissionManager.setDataServices(dataServices);
+        BID.setDataServices(dataServices);
     }
 }
