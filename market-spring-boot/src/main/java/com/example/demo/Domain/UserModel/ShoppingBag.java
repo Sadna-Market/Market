@@ -28,7 +28,11 @@ public class ShoppingBag {
         this.store = store;
         this.username = username;
     }
-
+    public ShoppingBag(Store store, String username,ConcurrentHashMap<Integer, Integer> productQuantity){
+        this.productQuantity = productQuantity;
+        this.store = store;
+        this.username = username;
+    }
     public ShoppingBag(){}
 
     public DResponseObj<Boolean> isContainProduct(int pid) {
@@ -116,6 +120,12 @@ public class ShoppingBag {
 
     public static void setDataServices(DataServices dataServices) {
         ShoppingBag.dataServices = dataServices;
+    }
+
+    public void reset() {
+        this.store = null;
+        this.username = null;
+        this.productQuantity.clear();
     }
 
 //    public ShoppingBag fromData(DataShoppingBag shoppingBag) {

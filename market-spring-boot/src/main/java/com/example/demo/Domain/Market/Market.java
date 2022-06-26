@@ -3,6 +3,8 @@ package com.example.demo.Domain.Market;
 import Stabs.PurchaseStab;
 import Stabs.StoreStab;
 import Stabs.UserManagerStab;
+import com.example.demo.DataAccess.Mappers.ProductTypeMapper;
+import com.example.demo.DataAccess.Mappers.StoreMapper;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Response.DResponseObj;
@@ -49,11 +51,38 @@ public class Market {
         this.userManager = userManager;
         ExternalService.getInstance();
         purchase = new Purchase();
+//        initAllSoresFromTheDb ();
+
     }
 
     /*************************************************Functions*********************************************************/
     public DResponseObj<Boolean> isStoreClosed(int StoreID) {
         return new DResponseObj<>(closeStores.containsKey(StoreID));
+    }
+    public void initAllSoresFromTheDb(){
+        if(dataServices!=null) {
+            StoreMapper storeMapper = StoreMapper.getInstance();
+            Map<Integer, Store> allStores = storeMapper.getAllStores();
+            for (Integer storeId : allStores.keySet()) {
+                Store s = allStores.get(storeId);
+                if (s.isOpen().value) {
+                    this.stores.put(storeId, s);
+                } else {
+                    this.closeStores.put(storeId, s);
+                }
+            }
+        }
+    }
+
+    public void initAllProductTypes(){
+        if(dataServices!=null) {
+            List<ProductType> t = ProductTypeMapper.getInstance().getAllProductTypes();
+            for(ProductType productType : t){
+                if(!productTypes.containsKey(productType.getProductID())){
+                    productTypes.put(productType.getProductID().value,productType);
+                }
+            }
+        }
     }
 
     //1.1
@@ -655,7 +684,9 @@ public class Market {
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
-
+        if(store == null) {
+            return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+        }
         return store.setProductPrice(productId, price);
     }
 
@@ -668,6 +699,10 @@ public class Market {
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
+        if(store==null)
+        {
+            return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+        }
 
         return store.setProductQuantity(productId, quantity);
     }
@@ -771,6 +806,7 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be owner on this store.
     public DResponseObj<Boolean> addNewStoreOwner(UUID userId, int storeId, String newOnerEmail) {
+        userManager.getDbUserIfNeed(newOnerEmail);
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreOwner, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -783,6 +819,8 @@ public class Market {
     //pre: the store exist in the system and uuid is grantor of owner
     //post: the owner is not owner.
     public DResponseObj<Boolean> removeStoreOwner(UUID userId, int storeId, String ownerEmail) {
+        userManager.getDbUserIfNeed(ownerEmail);
+
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -794,6 +832,7 @@ public class Market {
 
 
     public DResponseObj<Boolean> removeStoreMenager(UUID userId, int storeId, String ownerEmail) {
+        userManager.getDbUserIfNeed(ownerEmail);
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Store> result = checkValidRules(userId, storeId, permissionType.permissionEnum.removeStoreOwner);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -807,6 +846,8 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user became to be manager on this store.
     public DResponseObj<Boolean> addNewStoreManager(UUID userId, int storeId, String newMangermail) {
+        userManager.getDbUserIfNeed(newMangermail);
+
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.addNewStoreManager, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -819,6 +860,8 @@ public class Market {
     //pre: the store exist in the system.
     //post: other user that already manager became to be manager on this store with other permissions.
     public DResponseObj<Boolean> setManagerPermissions(UUID userId, int storeId, String mangerMail, permissionType.permissionEnum perm, boolean onof) {
+        userManager.getDbUserIfNeed(mangerMail);
+
         if (isStoreClosed(storeId).value) return new DResponseObj<>(null, ErrorCode.STORE_IS_CLOSED);
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setManagerPermissions, null);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
@@ -836,6 +879,9 @@ public class Market {
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         Store store = s.value;
+        if(store == null) {
+            return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+        }
         if (!store.getFounder().value.equals(logIN.value.getEmail().value)) {
             logger.warn("only founder can close store");
             return new DResponseObj<>(false, ErrorCode.NOPERMISSION);
@@ -917,10 +963,14 @@ public class Market {
         logger.info("notifying owners&managers with permission about BID");
         List<User> ownersAndManagers = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.owner).value;
         List<User> managersOfStore = PermissionManager.getInstance().getAllUserByTypeInStore(store, userTypes.manager).value;
-        managersOfStore.forEach(m -> {
-            if (!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID, m, store).value)
+        for(User m : managersOfStore) {
+            if (!PermissionManager.getInstance().hasPermission(permissionType.permissionEnum.ManageBID, m, store).value) {
                 managersOfStore.remove(m);
-        });
+                if(managersOfStore.size()==0){
+                    break;
+                }
+            }
+        }
         ownersAndManagers.addAll(managersOfStore);  // after filter managers of stores
         userManager.notifyUsers(ownersAndManagers, msg);
     }
@@ -977,14 +1027,19 @@ public class Market {
     //post: market receive this store to the user.
 
     public DResponseObj<Store> getStore(int storeID) {
-        if (storeID <= 0 | storeID >= storeCounter) {
+
+        if (dataServices == null && (storeID <= 0 | storeID >= storeCounter)) {
             logger.warn("the StoreID is illegal");
             return new DResponseObj<>(ErrorCode.NOTVALIDINPUT);
         }
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock.");
         try {
-            return new DResponseObj<>(stores.get(storeID));
+            Store s = stores.get(storeID);
+            if(s == null) {
+                return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+            }
+            return new DResponseObj<>(s);
         } finally {
             lock_stores.unlockRead(stamp);
             logger.debug("released the ReadLock.");
@@ -1253,6 +1308,12 @@ public class Market {
                 logger.error("failed to delete list of stores from db");
             }
         }
+        //update the product types
+        productTypes.forEach((integer, productType) -> {
+            storesToDelete.forEach(store -> {
+               productType.removeStore(store.getStoreId().value);
+            });
+        });
         lock_stores.unlockWrite(stamp);
         return new SLResponseOBJ<>(true, -1);
     }

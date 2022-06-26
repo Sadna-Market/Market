@@ -14,6 +14,7 @@ public class JsonInit {
     public String spring_jpa_properties_hibernate_dialect;
     public String spring_jpa_properties_hibernate_format_sql;
     public Integer server_port;
+    public Long spring_datasource_hikari_connection_timeout;
 
     public JsonUser getAdmin() {
         return admin;

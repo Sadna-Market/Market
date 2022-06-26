@@ -16,30 +16,6 @@ public class DataPermission {
     @EmbeddedId
     private PermissionId permissionId;
 
-//    @ManyToOne
-//    @MapsId("storeId")
-//    @JoinColumn(name = "store",
-//            nullable = false,
-//            referencedColumnName = "store_id",
-//            foreignKey = @ForeignKey(name = "storeId_fk"))
-//    private DataStore store;
-//
-//    @ManyToOne
-//    @MapsId("granteeId")
-//    @JoinColumn(name = "grantee",
-//            nullable = false,
-//            referencedColumnName = "username",
-//            foreignKey = @ForeignKey(name = "user_grantee_fk"))
-//    private DataUser grantee;
-//
-//    @ManyToOne
-//    @MapsId("grantorId")
-//    @JoinColumn(name = "grantor",
-//            nullable = false,
-//            referencedColumnName = "username",
-//            foreignKey = @ForeignKey(name = "user_grantor_fk"))
-//    private DataUser grantor;
-
     @Enumerated(EnumType.STRING)
     private UserType granteeType;
 

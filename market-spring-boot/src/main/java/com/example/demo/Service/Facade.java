@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.DataAccess.Mappers.*;
 import com.example.demo.DataAccess.Services.DataServices;
 import com.example.demo.Domain.ErrorCode;
 import com.example.demo.Domain.Market.*;
@@ -68,7 +69,13 @@ public class Facade implements IMarket {
         email = email.toLowerCase();
         return new SLResponseOBJ<>(userManager.removeMember(UUID.fromString(userId), email));
     }
-
+    @PostConstruct
+    public void foo()
+    {
+        market.initAllProductTypes();
+        market.initAllSoresFromTheDb();
+        userManager.getallDbUsers();
+    }
 
     @Override
     public SLResponseOBJ<Boolean> initMarket(String email, String Password, String phoneNumber, String dateOfBirth) {
@@ -1924,6 +1931,7 @@ public class Facade implements IMarket {
     @PostConstruct
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
+        ShoppingCart.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
         BuyPolicy.setDataServices(dataServices);
         Inventory.setDataServices(dataServices);
@@ -1931,5 +1939,11 @@ public class Facade implements IMarket {
         Store.setDataServices(dataServices);
         PermissionManager.setDataServices(dataServices);
         BID.setDataServices(dataServices);
+
+        HistoryMapper.getInstance().setDataService(dataServices);
+        UserMapper.getInstance().setDataService(dataServices);
+        StoreMapper.getInstance().setDataService(dataServices);
+        ProductTypeMapper.getInstance().setDataService(dataServices);
+        PermissionMapper.getInstance().setDataService(dataServices);
     }
 }
