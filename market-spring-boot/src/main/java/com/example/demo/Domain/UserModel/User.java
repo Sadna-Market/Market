@@ -105,7 +105,7 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
     public DResponseObj<Boolean> resetCart (){
-        shoppingCart=new ShoppingCart(this.email);
+        shoppingCart.resetCart();
         return new DResponseObj<Boolean>(true);
     }
     public User() {

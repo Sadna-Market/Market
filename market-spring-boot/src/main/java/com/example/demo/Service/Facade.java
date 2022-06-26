@@ -1931,6 +1931,7 @@ public class Facade implements IMarket {
     @PostConstruct
     private void setDataRefs() {
         ShoppingBag.setDataServices(dataServices);
+        ShoppingCart.setDataServices(dataServices);
         DiscountPolicy.setDataServices(dataServices);
         BuyPolicy.setDataServices(dataServices);
         Inventory.setDataServices(dataServices);

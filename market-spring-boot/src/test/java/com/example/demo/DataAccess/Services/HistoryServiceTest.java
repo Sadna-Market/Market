@@ -65,6 +65,11 @@ class HistoryServiceTest {
         var sh = historyService.getAllHistoryByStoreId(existing_storeID);
         var uh = historyService.getAllHistoryByUsername(member.getEmail().value);
 
+        String uuid1 = market.guestVisit().value;
+//        market.closeStore(uuid,existing_storeID);
+        uuid1 = market.login(uuid1,"sysmanager@gmail.com","Shalom123$").value;
+        market.cancelMembership(uuid1,member.getEmail().value);
+
     }
 
 

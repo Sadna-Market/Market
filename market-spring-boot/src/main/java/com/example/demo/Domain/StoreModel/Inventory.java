@@ -121,14 +121,27 @@ public class Inventory {
                 if(quantityInInventory>=quantity) {
                     productStore.setQuantity(quantityInInventory - quantity);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + (quantityInInventory-quantity));
+                    //db
+                    updatedProductStoreOrPrice(productId, quantityInInventory - quantity, productStore);
                     return new DResponseObj<>(quantity,-1);
                 }else {
                     productStore.setQuantity(0);
                     logger.info("Inventory set quantity of productId:" + productId + "to " + 0);
+                    updatedProductStoreOrPrice(productId, 0, productStore);
                     return new DResponseObj<>(quantityInInventory,-1);
                 }
             }finally {
                 productStore.getProductLock().unlockWrite(stamp);
+            }
+        }
+    }
+
+    private void updatedProductStoreOrPrice(int productId, int quantity, ProductStore productStore) {
+        if (dataServices != null && dataServices.getProductStoreService() != null) {
+            if (!dataServices.getProductStoreService().updateProductStore(productId, storeId, productStore.getPrice().value, quantity)) {
+                logger.error(String.format("failed to update price %d of product %d",
+                        quantity,
+                        productId));
             }
         }
     }
@@ -143,13 +156,7 @@ public class Inventory {
             try {
                 productStore.setQuantity(quantity);
                 //db
-                if(dataServices != null && dataServices.getProductStoreService()!=null) {
-                    if(!dataServices.getProductStoreService().updateProductStore(productId,storeId,productStore.getPrice().value,quantity)){
-                        logger.error(String.format("failed to update price %d of product %d",
-                                quantity,
-                                productId));
-                    }
-                }
+                updatedProductStoreOrPrice(productId, quantity, productStore);
                 logger.info("Inventory set quantity of productId:" + productId + "to " + quantity);
                 return new DResponseObj<>(true);
             }finally {
@@ -169,13 +176,7 @@ public class Inventory {
             try{
                 productStore.setPrice(price);
                 //db
-                if(dataServices != null && dataServices.getProductStoreService()!=null) {
-                    if(!dataServices.getProductStoreService().updateProductStore(productId,storeId,price,-1)){
-                        logger.error(String.format("failed to update price %f of product %d",
-                                price,
-                                productId));
-                    }
-                }
+                updatedProductStoreOrPrice(productId,-1,productStore);
                 logger.info("Inventory set price of productId:" + productId + "to " + price);
                 return new DResponseObj<>(true);
             }finally {

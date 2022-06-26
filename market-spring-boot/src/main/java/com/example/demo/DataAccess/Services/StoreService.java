@@ -3,6 +3,7 @@ package com.example.demo.DataAccess.Services;
 import com.example.demo.DataAccess.Entity.DataPermission;
 import com.example.demo.DataAccess.Entity.DataStore;
 import com.example.demo.DataAccess.Repository.PermissionRepository;
+import com.example.demo.DataAccess.Repository.ProductTypeRepository;
 import com.example.demo.DataAccess.Repository.StoreRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

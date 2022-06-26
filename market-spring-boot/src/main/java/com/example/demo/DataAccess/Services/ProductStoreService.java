@@ -80,11 +80,11 @@ public class ProductStoreService {
     @Transactional(rollbackFor = {Exception.class}, timeout = 10)
     public boolean updateProductStore(int productTypeId, int storeId, double price, int quantity) {
         try {
-            if (quantity == -1) {
+            if (quantity == -1) { /// then update price only
                 productStoreRepository.updatePrice(productTypeId, storeId, price);
                 logger.info(String.format("updated product store %d  to price %f successfully in db",
                         productTypeId, price));
-            } else {
+            } else { // then update quantity only
                 productStoreRepository.updateQuantity(productTypeId, storeId, quantity);
                 logger.info(String.format("updated product store %d  to quantity %d successfully in db",
                         productTypeId, quantity));
