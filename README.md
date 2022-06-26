@@ -42,7 +42,7 @@ register - array of all the users to register :
 "dateOfBirth" : "25/10/1984
 
 
-stores - object , key - email of the users , value - store properties
+stores - object , key - email of the users , value -array of store properties
 
 {
  "u2@gmail.com": [
@@ -53,7 +53,7 @@ stores - object , key - email of the users , value - store properties
  ]
 
 
-add_item - object with the key :"email of the user" , and the value is object with the key : "store name" and the value is the array of items
+add_item -items we want add to stores, object with the key :"email of the user" , and the value is object with the key : "store name" and the value is the array of items
 
 
 {
@@ -67,9 +67,8 @@ add_item - object with the key :"email of the user" , and the value is object wi
  ]
  }
  
-addManager - 
-
-"u2@gmail.com": object with key : "email of grantors" , value : object with key: "store name" and the value is array of permessions
+addManager - managers we want to add to the system
+object with key : "email of grantors" , value : object with key: "store name" and the value is array of permessions
 
 "u2@gmail.com": {
  "s1": [
@@ -81,7 +80,9 @@ addManager -
 }
 }
 
-addOwner - object with key : "email of grantor" , value : object with key: "store name" ,value: arry of emails of new owners 
+addOwner - 
+owners we want to add to the system
+object with key : "email of grantor" , value : object with key: "store name" ,value: arry of emails of new owners 
 
 
 "u2@gmail.com": {
