@@ -118,6 +118,12 @@ public class ShoppingBag {
         ShoppingBag.dataServices = dataServices;
     }
 
+    public void reset() {
+        this.store = null;
+        this.username = null;
+        this.productQuantity.clear();
+    }
+
 //    public ShoppingBag fromData(DataShoppingBag shoppingBag) {
 //        this.username = shoppingBag.getShoppingBagId().getUsername();
 //        /*this.store =

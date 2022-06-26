@@ -1253,6 +1253,12 @@ public class Market {
                 logger.error("failed to delete list of stores from db");
             }
         }
+        //update the product types
+        productTypes.forEach((integer, productType) -> {
+            storesToDelete.forEach(store -> {
+               productType.removeStore(store.getStoreId().value);
+            });
+        });
         lock_stores.unlockWrite(stamp);
         return new SLResponseOBJ<>(true, -1);
     }

@@ -32,11 +32,15 @@ public class DataStore {
 
     @OneToMany(
             fetch = FetchType.EAGER,
-            mappedBy = "store",
-            orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+            mappedBy = "store"
     )
     private Set<DataProductStore> productStores = new HashSet<>();
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "store"
+    )
+    private Set<DataShoppingBag> shoppingBags = new HashSet<>();
 
 
     @Column(
@@ -62,9 +66,7 @@ public class DataStore {
     private Integer numOfRated;
 
     @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "store",
-            orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+            mappedBy = "store"
     )
     private Set<DataHistory> history = new HashSet<>();
 

@@ -43,14 +43,12 @@ public class DataProductType {
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "productType",
-            orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
     private Set<DataProductStore> productStores = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "productType",
-            orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
     private Set<DataProductStoreHistory> productStoreHistory = new HashSet<>();

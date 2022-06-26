@@ -24,6 +24,12 @@ public class DataUser {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            mappedBy = "user"
+    )
+    private Set<DataShoppingBag> shoppingBags = new HashSet<>();
+
 
     public DataUser() {
     }

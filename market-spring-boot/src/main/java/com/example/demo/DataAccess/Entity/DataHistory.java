@@ -31,8 +31,7 @@ public class DataHistory {
 
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "history",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true)
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<DataProductStoreHistory> products = new HashSet<>();
 
     @Column(name = "store_id")
