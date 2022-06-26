@@ -28,7 +28,11 @@ public class ShoppingBag {
         this.store = store;
         this.username = username;
     }
-
+    public ShoppingBag(Store store, String username,ConcurrentHashMap<Integer, Integer> productQuantity){
+        this.productQuantity = productQuantity;
+        this.store = store;
+        this.username = username;
+    }
     public ShoppingBag(){}
 
     public DResponseObj<Boolean> isContainProduct(int pid) {

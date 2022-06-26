@@ -70,6 +70,10 @@ public class User {
         this.grantorPermission = grantorPermission;
     }
 
+    public void setPassword(String password) {
+        Password = password;
+    }
+
     public List<Permission> getSafeAccessPermission() {
         return safeAccessPermission;
     }
@@ -93,7 +97,13 @@ public class User {
         shoppingCart = new ShoppingCart(email);
         this.dateOfBirth = dateOfBirth;
     }
-
+    public User(String email, String password, String phoneNumber, LocalDate dateOfBirth,ShoppingCart shoppingCart) {
+        this.email = email;
+        this.Password = password;
+        this.phoneNumber = phoneNumber;
+        this.shoppingCart = shoppingCart;
+        this.dateOfBirth = dateOfBirth;
+    }
     public DResponseObj<Boolean> resetCart (){
         shoppingCart.resetCart();
         return new DResponseObj<Boolean>(true);

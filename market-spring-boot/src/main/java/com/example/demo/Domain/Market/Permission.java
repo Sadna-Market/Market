@@ -4,6 +4,7 @@ import com.example.demo.DataAccess.CompositeKeys.PermissionId;
 import com.example.demo.DataAccess.Entity.DataPermission;
 import com.example.demo.DataAccess.Enums.PermissionType;
 import com.example.demo.DataAccess.Enums.UserType;
+import com.example.demo.DataAccess.Mappers.PermissionMapper;
 import com.example.demo.Domain.Response.DResponseObj;
 import com.example.demo.Domain.StoreModel.Store;
 import com.example.demo.Domain.UserModel.User;
@@ -22,10 +23,31 @@ public class Permission {
     }
 
     private User grantor;//who give the permission
+
+    public void setGranteePermissionTypes(List<permissionType.permissionEnum> granteePermissionTypes) {
+        this.granteePermissionTypes = granteePermissionTypes;
+    }
+
     private List<permissionType.permissionEnum> granteePermissionTypes;
+
+    public void setGranteeType(userTypes granteeType) {
+        this.granteeType = granteeType;
+    }
+
+    public void setGrantorType(userTypes grantorType) {
+        this.grantorType = grantorType;
+    }
 
     private userTypes granteeType;
     private userTypes grantorType;
+
+    public void setGrantee(User grantee) {
+        this.grantee = grantee;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
 
     public Permission(User grantee, Store store, User grantor) {
         this.grantee = grantee;
@@ -70,7 +92,9 @@ public class Permission {
     }
 
     public DResponseObj<Boolean> removeManagerPermission(permissionType.permissionEnum permissionType) {
-        return new DResponseObj<>(granteePermissionTypes.remove(permissionType));
+        DResponseObj<Boolean> res = new DResponseObj<>(granteePermissionTypes.remove(permissionType));
+
+        return res;
     }
 
     public DResponseObj<Store> getStore() {
