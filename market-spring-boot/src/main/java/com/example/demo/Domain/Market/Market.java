@@ -684,7 +684,9 @@ public class Market {
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
-
+        if(store == null) {
+            return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+        }
         return store.setProductPrice(productId, price);
     }
 
@@ -697,6 +699,10 @@ public class Market {
         DResponseObj<Tuple<Store, ProductType>> result = checkValid(userId, storeId, permissionType.permissionEnum.setProductPriceInStore, productId);
         if (result.errorOccurred()) return new DResponseObj<>(result.getErrorMsg());
         Store store = result.getValue().item1;
+        if(store==null)
+        {
+            return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+        }
 
         return store.setProductQuantity(productId, quantity);
     }
@@ -873,6 +879,9 @@ public class Market {
         DResponseObj<Store> s = getStore(storeId);
         if (s.errorOccurred()) return new DResponseObj<>(s.getErrorMsg());
         Store store = s.value;
+        if(store == null) {
+            return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+        }
         if (!store.getFounder().value.equals(logIN.value.getEmail().value)) {
             logger.warn("only founder can close store");
             return new DResponseObj<>(false, ErrorCode.NOPERMISSION);
@@ -1026,7 +1035,11 @@ public class Market {
         long stamp = lock_stores.readLock();
         logger.debug("catch the ReadLock.");
         try {
-            return new DResponseObj<>(stores.get(storeID));
+            Store s = stores.get(storeID);
+            if(s == null) {
+                return new DResponseObj<>(null, ErrorCode.STORE_IS_NOT_EXIST);
+            }
+            return new DResponseObj<>(s);
         } finally {
             lock_stores.unlockRead(stamp);
             logger.debug("released the ReadLock.");
