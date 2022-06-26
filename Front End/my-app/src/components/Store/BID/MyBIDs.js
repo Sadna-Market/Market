@@ -35,6 +35,8 @@ const MyBIDs = (props) => {
                     originPrice: getMyBIDsResponse.value[i].originPrice,
                     counterPrice: getMyBIDsResponse.value[i].counterPrice,
                     status: getMyBIDsResponse.value[i].status,
+                    username: getMyBIDsResponse.value[i].username,
+
                 })
 
             }
@@ -58,6 +60,7 @@ const MyBIDs = (props) => {
 
     let enteredBIDss = enteredBIDs.map((expense) => (
         <Status
+            username={expense.username}
             originPrice={expense.originPrice}
             counterPrice={expense.counterPrice}
             id={expense.id}
@@ -74,6 +77,7 @@ const MyBIDs = (props) => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
             <h3>Status</h3>
             <div>
                 <ul className="products-list">{enteredBIDss}</ul>

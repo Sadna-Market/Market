@@ -63,6 +63,7 @@ const MainBID = (props) => {
 
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <ul className="products-list">{productIDs}</ul>
     </div>
   );

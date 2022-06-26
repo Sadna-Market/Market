@@ -82,9 +82,11 @@ const Offer = (props) => {
     return (
         <li>
             <Card className="product-item">
+                <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
                 <div className="product-item__price">#{productID}</div>
                 <div className="product-item__description">
                     <h2>{name}</h2>
+                    <h2>username {props.username}</h2>
                     <h2>counter Price: {props.counterPrice} </h2>
                     <h2>quantity : {props.quantity} </h2>
                     {props.status === "Waiting" ? (

@@ -95,6 +95,7 @@ const AllOffers = (props) => {
 
     return (
         <div>
+            <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
             <h3>Offers</h3>
             <div>
                 <ul className="products-list">{productIDs}</ul>

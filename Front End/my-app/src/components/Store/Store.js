@@ -69,7 +69,7 @@ const Store = (props) => {
             console.log("isOwnerUUIDResponse    " + str)
 
             if (isOwnerUUIDResponse.errorMsg !== -1) {
-                SetError(errorCode.get(isOwnerUUIDResponse.errorMsg))
+                // SetError(errorCode.get(isOwnerUUIDResponse.errorMsg))
             } else {
                 SetisOwner(isOwnerUUIDResponse.value)
             }
@@ -78,7 +78,7 @@ const Store = (props) => {
             console.log("isManagerUUIDResponse    " + str2)
 
             if (isManagerUUIDResponse.errorMsg !== -1) {
-                SetError(errorCode.get(isManagerUUIDResponse.errorMsg))
+                // SetError(errorCode.get(isManagerUUIDResponse.errorMsg))
             } else {
                 SetisManager(isManagerUUIDResponse.value)
             }
@@ -87,7 +87,7 @@ const Store = (props) => {
             console.log("isFounderUUIDResponse    " + str3)
 
             if (isFounderUUIDResponse.errorMsg !== -1) {
-                SetError(errorCode.get(isFounderUUIDResponse.errorMsg))
+                // SetError(errorCode.get(isFounderUUIDResponse.errorMsg))
             } else {
                 SetisFounder(isFounderUUIDResponse.value)
             }

@@ -20,7 +20,7 @@ const BID = (props) => {
     const isOwnerUUIDResponse = await apiClientHttp.isOwnerUUID(UUID, storeID);
 
     if (isOwnerUUIDResponse.errorMsg !== -1) {
-      SetError(errorCode.get(isOwnerUUIDResponse.errorMsg))
+      // SetError(errorCode.get(isOwnerUUIDResponse.errorMsg))
     } else {
       SetisOwner(isOwnerUUIDResponse.value)
     }
@@ -84,6 +84,7 @@ const BID = (props) => {
   //todo: return what return from this function
   return (
     <div>
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>BID Store #{storeID}</h3>
       <div>
         <button onClick={createBIDHandler}> Create BID</button>

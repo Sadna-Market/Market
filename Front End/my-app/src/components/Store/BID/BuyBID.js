@@ -64,6 +64,7 @@ const BuyBID = (props) => {
 
   return (
     <div className="products">
+      <div style={{ color: 'black',position: 'relative',background: '#c51244',fontSize: 15 }}>{enteredError}</div>
       <h3>Credit Card</h3>
       <div className="products__controls">
         <div className="products__control">
