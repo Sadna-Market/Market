@@ -127,7 +127,7 @@ public class Initilizer {
                     SLResponseOBJ<Boolean> re = facade.addNewStoreManger(uuid, sid, (String) MEMB.keySet().toArray()[0]);
                     if (re.errorOccurred()) throw new IllegalArgumentException();
                     for (String perm : (List<String>) MEMB.values().toArray()[0]) {
-                        re = facade.setManagerPermissions(uuid, sid, (String) MEMB.keySet().toArray()[0], perm, false);
+                        re = facade.setManagerPermissions(uuid, sid, (String) MEMB.keySet().toArray()[0], perm, true);
                         if (re.errorOccurred()) throw new IllegalArgumentException();
                     }
                 }

@@ -28,18 +28,8 @@
       "password": "abcA!123",
       "phoneNumber": "0538265477",
       "dateOfBirth" : "25/10/1984"
-    },
-    {
-      "email": "u5@gmail.com",
-      "password": "abcA!123",
-      "phoneNumber": "0538265477",
-      "dateOfBirth" : "25/10/1984"
-    }, {
-      "email": "u6@gmail.com",
-      "password": "abcA!123",
-      "phoneNumber": "0538265477",
-      "dateOfBirth" : "25/10/1984"
     }
+
   ],
   "register": [
     {
@@ -62,17 +52,6 @@
     },
     {
       "email": "u4@gmail.com",
-      "password": "abcA!123",
-      "phoneNumber": "0538265477",
-      "dateOfBirth" : "25/10/1984"
-    },
-    {
-      "email": "u5@gmail.com",
-      "password": "abcA!123",
-      "phoneNumber": "0538265477",
-      "dateOfBirth" : "25/10/1984"
-    }, {
-      "email": "u6@gmail.com",
       "password": "abcA!123",
       "phoneNumber": "0538265477",
       "dateOfBirth" : "25/10/1984"
@@ -109,13 +88,7 @@
       ]
     }
   },
-  "addOwner": {
-    "u2@gmail.com": {
-    "s1": [
-      "u4@gmail.com","u5@gmail.com"
-    ]
-  }
-  },
-  "Logoutandleave": ["u5@gmail.com","u2@gmail.com"]
+
+  "Logoutandleave": ["u1@gmail.com","u2@gmail.com","u3@gmail.com","u4@gmail.com"]
 
 }
