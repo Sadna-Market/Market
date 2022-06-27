@@ -237,13 +237,13 @@ const Store = (props) => {
     else if (isManager) {
         permission = (
             <>
-                {/*<button onClick={rulesHandler}>Rules</button>*/}
-                {/*<button onClick={addProductHandler}> Add Product</button>*/}
-                {/*<button onClick={removeProductHandler}> Remove Product</button>*/}
-                {/*<button onClick={editProductHandler}> Edit Product</button>*/}
-                {/*<button onClick={addManagerHandler}> Add Manager</button>*/}
-                {/*<button onClick={removeManagerHandler}> Remove Manager</button>*/}
-                {/*<button onClick={editPermissionHandler}> Edit Permission</button>*/}
+                <button onClick={rulesHandler}>Rules</button>
+                <button onClick={addProductHandler}> Add Product</button>
+                <button onClick={removeProductHandler}> Remove Product</button>
+                <button onClick={editProductHandler}> Edit Product</button>
+                <button onClick={addManagerHandler}> Add Manager</button>
+                <button onClick={removeManagerHandler}> Remove Manager</button>
+                <button onClick={editPermissionHandler}> Edit Permission</button>
                 <h2></h2>
                 <button onClick={historyHandler}> History</button>
 
