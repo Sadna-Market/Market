@@ -190,4 +190,10 @@ public SLResponseOBJ<String> getBIDStatus(String uuid, String userEmail, int sto
 
     public SLResponseOBJ<List<DiscountRuleSL>> getDiscountPolicy(@PathVariable("uuid") String uuid, @PathVariable("storeId") int storeId) ;
 
+
+    public SLResponseOBJ<Boolean> Test1();
+    public SLResponseOBJ<Boolean> Test2();
+    public SLResponseOBJ<Integer> Test3();
+    public SLResponseOBJ<Integer> Test4();
+    public SLResponseOBJ<Integer> Test5();
     }

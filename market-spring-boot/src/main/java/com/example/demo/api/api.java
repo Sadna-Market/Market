@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping(path = "api")
@@ -756,6 +754,14 @@ public class api implements Iapi {
         return iMarket.addNewDiscountRule(uuid, storeId, p.DiscountParse(map));
     }
 
+    private SLResponseOBJ<Integer> cast(SLResponseOBJ<Boolean> b){
+        if (b.errorOccurred()){
+            return new SLResponseOBJ<>(1);
+        }
+        else
+            return new SLResponseOBJ<>(1);
+    }
+
     @Override
     @GetMapping("getBuyRuleByID/{uuid}/{storeId}/{buyRuleID}")
     public SLResponseOBJ<BuyRuleSL> getBuyRuleByID(@PathVariable("uuid")String uuid, @PathVariable("storeId") int storeId,@PathVariable("buyRuleID") int buyRuleID) {
@@ -792,5 +798,100 @@ public class api implements Iapi {
         return iMarket.getDiscountPolicy(uuid, storeId);
     }
 
+
+    private SLResponseOBJ<String> loginTest(){
+        SLResponseOBJ<String> uuid = guestVisit();
+        if (uuid.errorOccurred()) return new SLResponseOBJ<>(1);
+
+        int randomNum1 = ThreadLocalRandom.current().nextInt(0, 10000000);
+        int randomNum2 = ThreadLocalRandom.current().nextInt(0, 10000000);
+        String email = "test12_" + randomNum1 + "_" +randomNum2 +"@gmail.com";
+        String pass = "Aa123!456";
+        String phone = "0528974561";
+        String date = new Date().toString();
+        SLResponseOBJ<Boolean> reg = iMarket.addNewMember(uuid.getValue(),email,pass,phone,date);
+        if (reg.errorOccurred()) return new SLResponseOBJ<>(1);
+        return iMarket.login(uuid.getValue(), email, pass);
+    }
+
+    private SLResponseOBJ<Boolean> addNewMemberTest(){
+        SLResponseOBJ<String> uuid = guestVisit();
+        if (uuid.errorOccurred()) return new SLResponseOBJ<>(1);
+
+        int randomNum1 = ThreadLocalRandom.current().nextInt(0, 10000000);
+        int randomNum2 = ThreadLocalRandom.current().nextInt(0, 10000000);
+        String email = "test222_" + randomNum1 + "_" +randomNum2 +"@gmail.com";
+        String pass = "Aa123!456";
+        String phone = "0528974561";
+        String date = new Date().toString();
+        return iMarket.addNewMember(uuid.getValue(),email,pass,phone,date);
+    }
+    @Override
+    @GetMapping("Test1")
+    public SLResponseOBJ<Boolean> Test1(){
+        int randomNum1 = ThreadLocalRandom.current().nextInt(1, 4);
+        if(randomNum1==1){//visit
+            return guestVisit().errorOccurred()?  new SLResponseOBJ<>(1): new SLResponseOBJ<>(true);
+        }
+        if(randomNum1==2){//register
+            return addNewMemberTest();
+        }
+        else{
+            return loginTest().errorOccurred()? new SLResponseOBJ<>(1): new SLResponseOBJ<>();
+        }
+    }
+
+    @Override
+    @GetMapping("Test2")
+    public SLResponseOBJ<Boolean> Test2(){
+        int randomNum1 = ThreadLocalRandom.current().nextInt(1, 3);
+        if(randomNum1==1){//visit
+            return guestVisit().errorOccurred()?  new SLResponseOBJ<>(12): new SLResponseOBJ<>(true);
+        }
+        else{
+            return loginTest().errorOccurred()? new SLResponseOBJ<>(1): new SLResponseOBJ<>();
+        }
+    }
+
+    @Override
+    @GetMapping("Test3")
+    public SLResponseOBJ<Integer> Test3(){
+        return openNewStore();
+    }
+
+    @Override
+    @GetMapping("Test4")
+    public SLResponseOBJ<Integer> Test4(){
+        SLResponseOBJ<String> uuid = loginTest();
+        if (uuid.errorOccurred()) return  new SLResponseOBJ<>(1);
+        return iMarket.orderShoppingCart(uuid.getValue(),"a","b",12,new ServiceCreditCard("4580748514572036","12/26","123")).errorOccurred()? new SLResponseOBJ<>(1) : new SLResponseOBJ<>();
+    }
+
+    @Override
+    @GetMapping("Test5")
+    public SLResponseOBJ<Integer> Test5(){
+        int randomNum1 = ThreadLocalRandom.current().nextInt(1, 5);
+        switch(randomNum1) {
+            case 1:
+                return cast(Test1());
+            case 2:
+                return cast(Test2());
+            case 3:
+                return Test3();
+            default:
+                return Test4();
+        }
+    }
+
+
+
+    private SLResponseOBJ<Integer> openNewStore() {
+        SLResponseOBJ<String> uuid = loginTest();
+        if(uuid.errorOccurred()) return new SLResponseOBJ<>(1);
+        int randomNum1 = ThreadLocalRandom.current().nextInt(0, 10000000);
+        int randomNum2 = ThreadLocalRandom.current().nextInt(0, 10000000);
+        String name = "store_" + randomNum1 + "_" +randomNum2;
+        return iMarket.openNewStore(uuid.getValue(), name, "test", new ServiceDiscountPolicy(), new ServiceBuyPolicy(), new ServiceBuyStrategy());
+    }
 }
 
